@@ -2,7 +2,7 @@
 
 This is a database-driven blogging platform which, unlike traditional blogging platforms, is based around two central ideas:
 
-* Liveblogging (as pioneered by [Dave Winer](http://www.scriptingnews.com) at [Liveblog](http://reader.liveblog.co/davewiner?id=1423419123000)
+* Liveblogging (as pioneered by [Dave Winer](http://www.scriptingnews.com) at [Liveblog](http://reader.liveblog.co/davewiner)
 * Topic-oriented blogging
 
 Instead of following the traditional blogging format which presents independent posts presented in reverse chronological order and loosely grouped by tags, furthermore promotes the idea of creating topics, such as [Better Call Saul](http://www.amctv.com/shows/better-call-saul), and then posting interrelated posts as children to that topic which can be linked together in a variety of ways. When a new post is added to a topic, it thus has a context not only by topic but in its relation to other posts in that topic (and possibly to other topics). You end up with a web of thoughts and ideas that are updated in real time that users can explore in their own ways. Each topic becomes a distributed blog post which evolves as you do.
