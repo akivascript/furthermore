@@ -15,11 +15,13 @@ The plan at this stage is to use React on the front-end with either [Om](https:/
 
 Tests are being written using the wonderfully terse [expectations](https://github.com/jaycfields/expectations). I'm going to try really hard to write tests first this time around. [fingers crossed]
 
+Task tracking is being handled by [Trello](https://trello.com/b/FLVazkwc/furthermore). A very special thanks to Trello for donating some Gold so that I can have fancy backgrounds. A fancy lad like myself absolutely *must* have fancy backgrounds.
+
 I'll be tracking my time using [Wakatime](http://www.wakatime.com).
 
 ### The Road Ahead
 
-My plan is to 'live code' this thing from the initial commit to v1.0 and beyond. I'll be posting conversational updates on my [Twitter account](https://www.twitter.com/akiva). Lengthier status reports will be posted [here](https://www.github.com/akivaschoen/UPDATES.md); it'll also serve as a kinda-sorta blog, too. All of my triumphs, mistakes, rabbit holes, and brilliant ideas will play out along with constant code commits so people who are curious can see how an app like this can be developed.
+My plan is to 'live code' this thing from the initial commit to v1.0 and beyond. I'll be posting conversational updates on my [Twitter account](https://www.twitter.com/akiva). Lengthier status reports will be posted [here](https://www.github.com/akivaschoen/furthermore/UPDATES.md); it'll also serve as a kinda-sorta blog, too. All of my triumphs, mistakes, rabbit holes, and brilliant ideas will play out along with constant code commits so people who are curious can see how an app like this can be developed.
 
 My first milestone will be when I'm able to deploy Furthermore to Heroku and start blogging there regardless of how ugly it looks. A dynamic UI will come later.
 
