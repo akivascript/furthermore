@@ -16,19 +16,16 @@
    :body "What's up?"})
 
 (defn prepare-post
-  "Transforms and/or 'typogrifies' all relevant values in a post for
-  publication as HTML."
+  "Typogrifies and processes Markdown for all values in a post
+  in preparation for publication as HTML.
+
+  This must happen each time a post is displayed; posts are stored
+  in the database in their original Markdown formats."
   [post]
-  (letfn [(typogrify [p ks]
-            (if-not (nil? (get-in p ks))
-               (update-in p ks smarten-text)
-               p))]
     (let [xform-text (comp smarten-text convert-to-html)]
       post (-> post
                (update :body xform-text)
-               (update :title smarten-text)
-               (typogrify [:next :title])
-               (typogrify [:previous :title])))))
+               (update :title smarten-text))))
 
 (defn render-post
   "Takes a post and passes it through a template determined by
