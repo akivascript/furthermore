@@ -21,7 +21,7 @@ I'll be tracking my time using [Wakatime](http://www.wakatime.com).
 
 ### The Road Ahead
 
-My plan is to 'live code' this thing from the initial commit to v1.0 and beyond. I'll be posting conversational updates on my [Twitter account](https://www.twitter.com/akiva). Lengthier status reports will be posted [here](https://www.github.com/akivaschoen/furthermore/UPDATES.md); it'll also serve as a kinda-sorta blog, too. All of my triumphs, mistakes, rabbit holes, and brilliant ideas will play out along with constant code commits so people who are curious can see how an app like this can be developed.
+My plan is to 'live code' this thing from the initial commit to v1.0 and beyond. I'll be posting conversational updates on my [Twitter account](https://www.twitter.com/akiva). Lengthier status reports will be posted [here](https://github.com/akivaschoen/furthermore/blob/dev/UPDATES.md); it'll also serve as a kinda-sorta blog, too. All of my triumphs, mistakes, rabbit holes, and brilliant ideas will play out along with constant code commits so people who are curious can see how an app like this can be developed.
 
 My first milestone will be when I'm able to deploy Furthermore to Heroku and start blogging there regardless of how ugly it looks. A dynamic UI will come later.
 
