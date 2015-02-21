@@ -2,6 +2,11 @@
 
 ## Day 1: Friday, February 20, 2015
 
+### Last Minute Productivity
+* Adding a handshake between Furthermore and MongoDB was easy as I already had Mongo installed. I was using it for xyzzwhy development months ago. All I needed to do, really, was to add shell aliases to easily start and stop the server.
+* Added Monger and environ dependencies and stuck the connection URI in a profiles.clj which I use to keep stuff I don't want checked in to the public repo.
+* I use an atom for the db object simply so I can avoid having to bind every action to the connection. I'm not convinced this is the best way although it certainly is the most convenient. It'll do for now.
+
 ### Wasted Afternoon
 * Again with the yak shaving: burned up a lot of time trying to get Wakatime to work with Emacs. I failed even with some help from the Wakatime guys. Will tackle again next week. For now, back to coding.
 * Furthermore can now create posts and topics and add references to each other. Need to make a note that eventually I'm going to run into a circular reference and figure out if that's going to be a Bad Thing or not. Instinct says, 'No.'
