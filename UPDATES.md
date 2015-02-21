@@ -2,6 +2,9 @@
 
 ## Day 1: Friday, February 20, 2015
 
+### Wasted Afternoon
+* Again with the yak shaving: burned up a lot of time trying to get Wakatime to work with Emacs. I failed even with some help from the Wakatime guys. Will tackle again next week. For now, back to coding.
+
 ### Creating Posts
 * Wasted too much time looking at different CLJS tools and debating with myself whether I really needed the traditional MVC folder structure.
 * Ripped a bunch of code from the Clojure subwave rebuild so getting a post created and rendered was a snap.
