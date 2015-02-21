@@ -7,6 +7,10 @@
 
 (slr/set-resource-path! "/Users/akiva/Code/projects/furthermore/src/furthermore/views/")
 
+(defn add-reference
+  [reference target]
+  (update target :references conj reference))
+
 (defn convert-to-html
   [text]
   (md-to-html-string text))
