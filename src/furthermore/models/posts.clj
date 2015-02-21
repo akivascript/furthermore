@@ -6,11 +6,12 @@
   "Returns an empty default post."
   []
   {:type :post
+   :id 1
    :title "New Post"
    :authors ["John Doe"]
    :date (l/local-now)
    :tags []
-   :references {}
+   :references '()
    :body "What's up?"})
 
 (defn prepare-post
