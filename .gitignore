@@ -12,5 +12,5 @@ pom.xml.asc
 dev/
 public/
 resources/inbox/
- resources/drafts/
- resources/img/
+resources/drafts/
+resources/img/
