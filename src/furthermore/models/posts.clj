@@ -9,7 +9,8 @@
    :id 1
    :title "New Post"
    :authors ["John Doe"]
-   :date (l/local-now)
+   :created-on (l/local-now)
+   :last-updated (l/local-now)
    :tags []
    :references '()
    :body "What's up?"})
