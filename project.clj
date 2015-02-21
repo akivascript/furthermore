@@ -10,6 +10,7 @@
                  [environ "1.0.0"]
                  [om "0.8.0-rc1"]
                  [markdown-clj "0.9.62"]
+                 [com.novemberain/monger "2.0.1"]
                  [ring-server "0.4.0"]
                  [selmer "0.8.0"]
                  [typographer "1.0.0"]]
@@ -19,6 +20,7 @@
   :ring {:handler furthermore.handler/app
          :init furthermore.handler/init
          :destroy furthermore.handler/destroy}
+  :main furthermore.handler
   :cljsbuild {:builds [{:id "furthermore"
                         :source-paths ["src/furthermore_cljs"]
                         :compiler {:output-to "furthermore.js"
