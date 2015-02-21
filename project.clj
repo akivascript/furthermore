@@ -10,7 +10,7 @@
                  [environ "1.0.0"]
                  [om "0.8.0-rc1"]
                  [markdown-clj "0.9.62"]
-                 [com.novemberain/monger "2.0.1"]
+                 [com.novemberain/monger "2.1.0"]
                  [ring-server "0.4.0"]
                  [selmer "0.8.0"]
                  [typographer "1.0.0"]]
@@ -32,9 +32,8 @@
              :production {:ring {:open-browser? false,
                                  :stacktraces? false,
                                  :auto-reload? false}}
-             :dev {:dependencies [[expectations "2.0.13"]
-                                  [ring-mock "0.1.5"]
-                                  [ring/ring-devel "1.3.2"]]
-                   :source-paths ["dev"]
-                   :repl-options {:init-ns furthermore.handler}}})
-
+             :dev [:private {:dependencies [[expectations "2.0.16"]
+                                            [ring-mock "0.1.5"]
+                                            [ring/ring-devel "1.3.2"]]
+                             :source-paths ["dev"]
+                             :repl-options {:init-ns furthermore.handler}}]})

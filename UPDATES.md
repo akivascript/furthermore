@@ -1,5 +1,21 @@
 # The Furthermore Protoblog
 
+## Day 2: Saturday, February 21, 2015
+
+### The Hardest Part About Coding...
+* ...is when your tools get in the way.
+* Suddenly Leiningen can't find Expectations using lein-autoexpect which I use to automatically re-run all tests when source code changes. Flip over to another project with a similar project.clj and it works. Flip back to Furthermore, it doesn't work. This kind of stuff drives me crazy.
+* Checked ~/.m2/repository and expectations is there. Went ahead and deleted the directory and ran `lein deps` to re-install it. No go.
+* Checked the classpath and expectations is *not* there even after re-installing the dependency.
+* Deleted the expectations directory again and now it's not even bothering to re-download Expectations. So I go nuclear and delete the entire .m2 directory and get lein to download everything again.
+* Figured it out. User error, of course. Forgot that I had added profiles.clj which also had some :dev stuff in it. Leiningen clobbers keys when it comes to finding the same profile in multiple places so the :dev key in profiles.clj was over-writing the :dev key in project.clj (because profiles.clj takes precedence) which thus made all of my dev profile dependencies disappear. Oy vey.
+* On the positive side, I've now learned about how you can combine profiles in Leiningen by using a vector rather than a map. Now I've a :private key in profiles.clj and the 'public' dev in project.clj which refers to the :private key. Okay. Now that *that's* done...
+
+### Whoa There, Lil Fella
+* Happily jumped into saving entities—posts and topics so far—only to comically screech my tires as I began to dream up different scenarios about how entities should be stored: which ones are allowed to be top-level (topics only?), can a post belong to more than one topic (e.g., Clojure *and* Furthermore or is Clojure better served as a tag...), and stuff like that. 
+* The saving part is made easy by Monger, by the way. How I structure the data in Mongo? Therein lies yon challenge. I figure my first draft will fail so I might as well, as Kevin Rose put it, fail *fast* and often... fast being emphasized by me.
+
+
 ## Day 1: Friday, February 20, 2015
 
 ### Last Minute Productivity
