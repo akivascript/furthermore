@@ -3,10 +3,7 @@
             [furthermore.pages :refer :all]))
 
 (defn create-topic
-  []
-  {:title "New Topic"
-   :author "John Doe"
-   :created-on (l/local-now)
-   :last-updated (l/local-now)
-   :tags []
-   :references '()})
+  [title]
+  (-> (create-page)
+      (assoc :type :topic)
+      (assoc :title title)))

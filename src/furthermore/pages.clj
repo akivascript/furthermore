@@ -2,14 +2,28 @@
   (:require [clojure.string :as str]
             [clj-time.local :as l]
             [markdown.core :refer :all]
+            [monger.util :refer [random-uuid]]
             [selmer.parser :as slr]
             [typographer.core :as t]))
 
 (slr/set-resource-path! "/Users/akiva/Code/projects/furthermore/src/furthermore/views/")
 
+(defn create-page
+  "Returns an empty default page."
+  []
+  {:id (random-uuid)
+   :title "New Post"
+   :authors ["John Doe"]
+   :created-on (l/local-now)
+   :last-updated (l/local-now)
+   :tags []
+   :references []})
+
 (defn add-reference
-  [reference target]
-  (update target :references conj reference))
+  [page reference]
+  (if (= (:type reference) :topic)
+    (assoc page :topageic (:id reference))
+    (update page :references conj (:id reference))))
 
 (defn convert-to-html
   [text]

@@ -1,9 +1,15 @@
 (ns furthermore.repository
   (:require [environ.core :refer [env]]
+            [monger.collection :refer [insert insert-batch remove]]
             [monger.core :refer [connect-via-uri]]
-            [monger.collection :refer [insert-batch remove]]))
+            [monger.joda-time :refer :all]))
 
 (def db (atom nil))
+
+(defmulti save-post :type)
+
+(defmethod save-post :post [entity]
+  (insert @db "blog" entity))
 
 (defn initialize-db-connection
   []

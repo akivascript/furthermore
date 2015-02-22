@@ -11,6 +11,8 @@ which is completely interruptive. It points to fringe-mode and ac-ispell. I'm co
 * I tried switching to a different version of Emacs [Emacs for OS X](http://emacsformacosx.com/) but the errors continued so I'm back to the version installed through brew (emacs-mac).
 * Anyway, I was originally going to use the standard document embedding model of MongoDB so I can handle database transactions atomically. But, since a document can reference and be referenced any number of other documents, a document would thus be able to appear many times and updating that document all over the place is nightmare-inducing.
 * Plus, coding toward references rather than embedding makes it easier to swap out MongoDB for something like PostgreSQL. Time for a bit of refactoring!
+* And document saving is handled.
+
 
 ## Day 2: Saturday, February 21, 2015
 
