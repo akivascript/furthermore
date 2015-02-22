@@ -12,18 +12,22 @@
   "Returns an empty default page."
   []
   {:id (random-uuid)
-   :title "New Post"
+   :title "New Page"
    :authors ["John Doe"]
    :created-on (l/local-now)
    :last-updated (l/local-now)
    :tags []
    :references []})
 
+(defn create-link
+  [post link-type]
+  {:id (:id post)
+   :type link-type})
+
 (defn add-reference
-  [page reference]
-  (if (= (:type reference) :topic)
-    (assoc page :topageic (:id reference))
-    (update page :references conj (:id reference))))
+  [referrer referee link-type]
+  {:referrer (update referrer :references conj (create-link referee link-type))
+   :referee (update referee :references conj (create-link referrer link-type))})
 
 (defn convert-to-html
   [text]

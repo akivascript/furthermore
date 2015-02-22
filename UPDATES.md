@@ -2,6 +2,13 @@
 
 ## Day 3: Sunday, February, 22, 2015
 
+### References Everywhere
+* Now all posts must have a 'parent'. That parent can be a topic which is the only top-level entity allowed. I'm not thinking too much about UI yet but when a topic is displayed, the top-level posts are shown with some indicator of references.
+* What I had never even thought of was that all references are two-way. This avoids being unable to retrace your steps as you explore a topic.
+* References, or links, now have types. A parent is just a special link type. So far, the only other link type is simply 'post'. But I imagine 'tweet' might be another. And 'image'. If nothing else, it'll allow sorting and filtering of references when viewing a post and it would also allow me to inject special handlers when a particular type of link is visited. Custom CSS. For instance, a different Selmer template could be used.
+* Even more importantly, it gives me a point where I can enact optimizations. For example, I can pre-load certain link types. 
+* I'm starting to get more comfortable with my choices here.
+
 ### Back to the Database
 * I was originally going to use the standard document embedding model of MongoDB so I can handle database transactions atomically. But, since a document can reference and be referenced any number of other documents, a document would thus be able to appear many times and updating that document all over the place is nightmare-inducing.
 * Plus, coding toward references rather than embedding makes it easier to swap out MongoDB for something like PostgreSQL. Time for a bit of refactoring!
