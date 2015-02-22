@@ -2,16 +2,20 @@
 
 ## Day 3: Sunday, February, 22, 2015
 
-### Database Work
-* Clojure is in some ways like JavaScript in that it has a few eccentricities. Unlike JavaScript, however, Clojure's eccentricities are grounded in a reasonable and logical foundation. What we really need is basically a Clojure equivalent of JavaScript: The Good Parts. For instance, new Clojurists get fouled up by conj behaving differently based on the collection or how assoc and related functions will take a PersistentArrayMap but return a PersistentHashMap which destroys any order the original map might have had. Stuff like that.
+### Back to the Database
+* I was originally going to use the standard document embedding model of MongoDB so I can handle database transactions atomically. But, since a document can reference and be referenced any number of other documents, a document would thus be able to appear many times and updating that document all over the place is nightmare-inducing.
+* Plus, coding toward references rather than embedding makes it easier to swap out MongoDB for something like PostgreSQL. Time for a bit of refactoring!
+* And document saving and referencing is handled.
+
+### Meanwhile, Back at the Horror Show
 * More Emacs issues. Something is kicking back an elisp error:
     (error "Invalid search bound (wrong side of point)")
     search-forward("\n" 687 t)
-which is completely interruptive. It points to fringe-mode and ac-ispell. I'm convinced it's ac-ispell as disabling fringe-mode didn't seem to help at all. I don't really need spellcheck anyway so I've disabled it. Here's hoping.
+which is completely interruptive. It points to fringe-mode and ac-ispell. If it's ispell, that's fine; I don't need that anyway. fringe-mode is pretty helpful, though. And aesthetically pleasing. Burrowing deeper, it might have to do with how Emacs displays icons in the fringe (e.g., to display git differences).
 * I tried switching to a different version of Emacs [Emacs for OS X](http://emacsformacosx.com/) but the errors continued so I'm back to the version installed through brew (emacs-mac).
-* Anyway, I was originally going to use the standard document embedding model of MongoDB so I can handle database transactions atomically. But, since a document can reference and be referenced any number of other documents, a document would thus be able to appear many times and updating that document all over the place is nightmare-inducing.
-* Plus, coding toward references rather than embedding makes it easier to swap out MongoDB for something like PostgreSQL. Time for a bit of refactoring!
-* And document saving is handled.
+
+### Brief Note
+* Clojure is in some ways like JavaScript in that it has a few eccentricities. Unlike JavaScript, however, Clojure's eccentricities are grounded in a reasonable and logical foundation. What we really need is basically a Clojure equivalent of JavaScript: The Good Parts. For instance, new Clojurists get fouled up by conj behaving differently based on the collection or how assoc and related functions will take a PersistentArrayMap but return a PersistentHashMap which destroys any order the original map might have had. Stuff like that.
 
 
 ## Day 2: Saturday, February 21, 2015
