@@ -8,10 +8,10 @@
             [furthermore.routes.home :refer [home-routes]]))
  
 (defn init []
-  (println "furthermore is starting"))
+  (println "Furthermore is starting"))
 
 (defn destroy []
-  (println "furthermore is shutting down"))
+  (println "Furthermore is shutting down"))
 
 (defroutes app-routes
   (route/resources "/")

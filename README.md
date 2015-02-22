@@ -16,6 +16,8 @@ The plan at this stage is to use React on the front-end with either [Om](https:/
 
 Tests are being written using the wonderfully terse [expectations](https://github.com/jaycfields/expectations). I'm going to try really hard to write tests first this time around. [fingers crossed]
 
+My development environment is currently a MacBook Air running Yosemite. I've been all my life a hardcore vimmer but I've recently been giving Emacs+Evil a go (using [Spacemacs](https://github.com/syl20bnr/spacemacs) in particular). I'm using [Emacs for Mac OS X](http://emacsformacosx.com/) installed via brew. (Note: It's astonishingly crashy (at least it is with Spacemacs). Sometimes just a window locks up but at least twice a day Emacs will peg the CPU and won't let go until I issue a Force Quit. But when it's cruising? It's fantastic.)
+
 Task tracking is being handled by [Trello](https://trello.com/b/FLVazkwc/furthermore). A very special thanks to Trello for donating some Gold so that I can have fancy backgrounds. A fancy lad like myself absolutely *must* have fancy backgrounds.
 
 I'll be tracking my time using [Wakatime](http://www.wakatime.com).

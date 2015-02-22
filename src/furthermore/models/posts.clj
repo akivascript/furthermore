@@ -3,17 +3,21 @@
             [furthermore.pages :refer :all]))
 
 (defn create-post
-  "Returns an empty default post."
-  []
-  {:type :post
-   :id 1
-   :title "New Post"
-   :authors ["John Doe"]
-   :created-on (l/local-now)
-   :last-updated (l/local-now)
-   :tags []
-   :references '()
-   :body "What's up?"})
+  "Returns an empty default post. All posts must have a reference;
+  they cannot exist without context and thus cannot be orphaned. An
+  orphaned post would never be displayed."
+  ([] (create-post nil))
+  ([title & references]
+   (let [post (-> (create-page)
+                  (assoc :type :post)
+                  (assoc :body "What's up?"))
+         post (if-not (nil? title)
+                (assoc post :title title)
+                post)
+         post (if-not (nil? references)
+                (add-references post references)
+                post)]
+     post)))
 
 (defn prepare-post
   "Typogrifies and processes Markdown for all values in a post
