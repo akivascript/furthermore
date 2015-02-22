@@ -7,8 +7,8 @@
   "Returns an empty default post. All posts must have a reference;
   they cannot exist without context and thus cannot be orphaned. An
   orphaned post would never be displayed."
-  [parent & {:keys [title] :or {title "New Post"}}]
-  (let [post (-> (create-page)
+  [parent & {:keys [title tags] :or {title "New Post"}}]
+  (let [post (-> (create-page tags)
                  (assoc :type :post)
                  (assoc :title title)
                  (assoc :body "What's up?")

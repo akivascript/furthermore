@@ -10,14 +10,17 @@
 
 (defn create-page
   "Returns an empty default page."
-  []
-  {:_id (random-uuid)
-   :title "New Page"
-   :authors ["John Doe"]
-   :created-on (l/local-now)
-   :last-updated (l/local-now)
-   :tags #{}
-   :references #{}})
+  [& tags]
+  (let [page {:_id (random-uuid)
+              :title "New Page"
+              :authors ["John Doe"]
+              :created-on (l/local-now)
+              :last-updated (l/local-now)
+              :tags #{}
+              :references #{}}]
+    (if-not (nil? tags)
+      (apply (fn [x] (reduce #(update %1 :tags conj %2) page x)) tags)
+      page)))
 
 (defn create-link
   [entity link-type]
