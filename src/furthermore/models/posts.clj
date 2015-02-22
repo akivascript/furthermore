@@ -6,18 +6,14 @@
   "Returns an empty default post. All posts must have a reference;
   they cannot exist without context and thus cannot be orphaned. An
   orphaned post would never be displayed."
-  ([] (create-post nil))
-  ([title & references]
-   (let [post (-> (create-page)
-                  (assoc :type :post)
-                  (assoc :body "What's up?"))
-         post (if-not (nil? title)
-                (assoc post :title title)
-                post)
-         post (if-not (nil? references)
-                (add-references post references)
-                post)]
-     post)))
+  [parent & title]
+  (as-> (create-page) p
+    (assoc p :type :post)
+    (assoc p :body "What's up?")
+    (assoc p :parent (:id parent))
+    (if-not (nil? title)
+      (assoc p :title title)
+      (assoc p :title "New Post"))))
 
 (defn prepare-post
   "Typogrifies and processes Markdown for all values in a post
