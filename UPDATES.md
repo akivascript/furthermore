@@ -1,14 +1,26 @@
 # The Furthermore Protoblog
 
+## Day 3: Sunday, February, 22, 2015
+
+### Database Work
+* Clojure is in some ways like JavaScript in that it has a few eccentricities. Unlike JavaScript, however, Clojure's eccentricities are grounded in a reasonable and logical foundation. What we really need is basically a Clojure equivalent of JavaScript: The Good Parts. For instance, new Clojurists get fouled up by conj behaving differently based on the collection or how assoc and related functions will take a PersistentArrayMap but return a PersistentHashMap which destroys any order the original map might have had. Stuff like that.
+* More Emacs issues. Something is kicking back an elisp error:
+    (error "Invalid search bound (wrong side of point)")
+    search-forward("\n" 687 t)
+which is completely interruptive. It points to fringe-mode and ac-ispell. I'm convinced it's ac-ispell as disabling fringe-mode didn't seem to help at all. I don't really need spellcheck anyway so I've disabled it. Here's hoping.
+* I tried switching to a different version of Emacs [Emacs for OS X](http://emacsformacosx.com/) but the errors continued so I'm back to the version installed through brew (emacs-mac).
+* Anyway, I was originally going to use the standard document embedding model of MongoDB so I can handle database transactions atomically. But, since a document can reference and be referenced any number of other documents, a document would thus be able to appear many times and updating that document all over the place is nightmare-inducing.
+* Plus, coding toward references rather than embedding makes it easier to swap out MongoDB for something like PostgreSQL. Time for a bit of refactoring!
+
 ## Day 2: Saturday, February 21, 2015
 
 ### The Hardest Part About Coding...
 * ...is when your tools get in the way.
-* Suddenly Leiningen can't find Expectations using lein-autoexpect which I use to automatically re-run all tests when source code changes. Flip over to another project with a similar project.clj and it works. Flip back to Furthermore, it doesn't work. This kind of stuff drives me crazy.
+* Suddenly Leiningen can't find expectations using lein-autoexpect which I use to automatically re-run all tests when source code changes. Flip over to another project with a similar project.clj and it works. Flip back to Furthermore, it doesn't work. This kind of stuff drives me crazy.
 * Checked ~/.m2/repository and expectations is there. Went ahead and deleted the directory and ran `lein deps` to re-install it. No go.
 * Checked the classpath and expectations is *not* there even after re-installing the dependency.
 * Deleted the expectations directory again and now it's not even bothering to re-download Expectations. So I go nuclear and delete the entire .m2 directory and get lein to download everything again.
-* Figured it out. User error, of course. Forgot that I had added profiles.clj which also had some :dev stuff in it. Leiningen clobbers keys when it comes to finding the same profile in multiple places so the :dev key in profiles.clj was over-writing the :dev key in project.clj (because profiles.clj takes precedence) which thus made all of my dev profile dependencies disappear. Oy vey.
+* Figured it out. User error,  of course. Forgot that I had added profiles.clj which also had some :dev stuff in it. Leiningen clobbers keys when it comes to finding the same profile in multiple places so the :dev key in profiles.clj was over-writing the :dev key in project.clj (because profiles.clj takes precedence) which thus made all of my dev profile dependencies disappear. Oy vey.
 * On the positive side, I've now learned about how you can combine profiles in Leiningen by using a vector rather than a map. Now I've a :private key in profiles.clj and the 'public' dev in project.clj which refers to the :private key. Okay. Now that *that's* done...
 
 ### Whoa There, Lil Fella
