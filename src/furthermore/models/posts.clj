@@ -1,19 +1,22 @@
 (ns furthermore.models.posts
   (:require [clj-time.local :as l]
-            [furthermore.pages :refer :all]))
+            [furthermore.pages :refer :all]
+            [furthermore.repository :refer :all]))
 
 (defn create-post
   "Returns an empty default post. All posts must have a reference;
   they cannot exist without context and thus cannot be orphaned. An
   orphaned post would never be displayed."
-  [parent & title]
-  (as-> (create-page) p
-    (assoc p :type :post)
-    (assoc p :body "What's up?")
-    (assoc p :parent (:id parent))
-    (if-not (nil? title)
-      (assoc p :title title)
-      (assoc p :title "New Post"))))
+  [parent & {:keys [title] :or {title "New Post"}}]
+  (let [post (-> (create-page)
+                 (assoc :type :post)
+                 (assoc :title title)
+                 (assoc :body "What's up?")
+                 (assoc :parent (create-link parent (:type parent))))
+        parent (update parent :references conj (create-link post :post))]
+    (add-db-queue post)
+    (add-db-queue parent)
+    {:post post :parent parent}))
 
 (defn prepare-post
   "Typogrifies and processes Markdown for all values in a post
