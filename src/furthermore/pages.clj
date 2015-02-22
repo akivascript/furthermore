@@ -11,17 +11,17 @@
 (defn create-page
   "Returns an empty default page."
   []
-  {:id (random-uuid)
+  {:_id (random-uuid)
    :title "New Page"
    :authors ["John Doe"]
    :created-on (l/local-now)
    :last-updated (l/local-now)
-   :tags []
-   :references []})
+   :tags #{}
+   :references #{}})
 
 (defn create-link
-  [post link-type]
-  {:id (:id post)
+  [entity link-type]
+  {:_id (:_id entity)
    :type link-type})
 
 (defn add-reference
