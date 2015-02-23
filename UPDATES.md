@@ -2,12 +2,17 @@
 
 ## Day 3: Sunday, February, 22, 2015
 
+### Winding Down for the Day
+* Tagging is in.
+* Database reads are done whether it's grabbing all topics, grabbing all references, grabbing a single reference, etc.
+* Rendering to HTML is already done and I could easily start pushing out HTML files but... I'm getting kind of tired! Might save that for tomorrow unless I catch a second wind.
+
 ### Database Victory
 * Created a hash-map which contains all entities that need to be updated the next time a commit is made to the database.
 * References are now two-way and everything upserts to the database perfectly.
 * Technically, at this point, I could start posting to the blog although there's not much I can do with it after that.
 * Next stop: enable tagging of posts and topics. It'll be a simple matter.
-* After that, reading things out of the database and doing something with those references. If work continues at this decent pace, I should be able to produce HTML pages. Maybe even enough to move this bloggage to its own site.
+* After that, reading things out of the database and doing something with those references. If work continues at this decent pace, I should be able to produce HTML pages by tonight. Maybe even enough to move this bloggage to its own site.
 
 ### References Everywhere
 * Now all posts must have a 'parent'. That parent can be a topic which is the only top-level entity allowed. I'm not thinking too much about UI yet but when a topic is displayed, the top-level posts are shown with some indicator of references.
