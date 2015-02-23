@@ -4,7 +4,8 @@
             [markdown.core :refer :all]
             [monger.util :refer [random-uuid]]
             [selmer.parser :as slr]
-            [typographer.core :as t]))
+            [typographer.core :as t]
+            [furthermore.repository :refer :all]))
 
 (slr/set-resource-path! "/Users/akiva/Code/projects/furthermore/src/furthermore/views/")
 
@@ -35,6 +36,10 @@
 (defn convert-to-html
   [text]
   (md-to-html-string text))
+
+(defn get-references
+  [page]
+  (map #(read-entity {:type (:type %) :_id (:_id %)}) (:references page)))
 
 (defn get-template
   [page]
