@@ -12,3 +12,7 @@
                 (assoc t :title title))]
     (add-db-queue topic)
     topic))
+
+(defn get-all-topics
+  []
+  (read-all "topics"))
