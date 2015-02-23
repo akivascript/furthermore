@@ -25,10 +25,9 @@
   This must happen each time a post is displayed; posts are stored
   in the database in their original Markdown formats."
   [post]
-    (let [xform-text (comp smarten-text convert-to-html)]
-      post (-> post
-               (update :body xform-text)
-               (update :title smarten-text))))
+  (-> post
+      (update :body (comp smarten-text convert-to-html))
+      (update :title smarten-text)))
 
 (defn render-post
   "Takes a post and passes it through a template determined by
