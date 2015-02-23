@@ -18,6 +18,12 @@
     (add-db-queue parent)
     {:post post :parent parent}))
 
+(defn get-posts
+  "Returns a list of posts. Used to gather posts referenced by
+  a topic or post."
+  [posts]
+  (map #(read-entity {:type :post :_id (:_id %)}) posts))
+
 (defn prepare-post
   "Typogrifies and processes Markdown for all values in a post
   in preparation for publication as HTML.
