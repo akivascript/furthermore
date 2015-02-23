@@ -7,16 +7,21 @@
   "Returns an empty default post. All posts must have a reference;
   they cannot exist without context and thus cannot be orphaned. An
   orphaned post would never be displayed."
-  [parent & {:keys [title tags] :or {title "New Post"}}]
+  [parent topic & {:keys [title tags] :or {title "New Post"}}]
   (let [post (-> (create-page tags)
                  (assoc :type :post)
                  (assoc :title title)
                  (assoc :body "What's up?")
-                 (assoc :parent (create-link parent (:type parent))))
-        parent (update parent :references conj (create-link post :post))]
+                 (assoc :parent (create-link parent (:type parent)))
+                 (assoc :topic (create-link topic (:type topic))))
+        parent (-> (get-db-queue (:_id parent)) (update :references conj (create-link post :post)))]
     (add-db-queue post)
     (add-db-queue parent)
     {:post post :parent parent}))
+
+(defn get-post
+  [id]
+  (read-entity {:type :post :_id id}))
 
 (defn prepare-post
   "Typogrifies and processes Markdown for all values in a post
