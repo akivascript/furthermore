@@ -1,6 +1,17 @@
 # The Furthermore Protoblog
 
-## Day 3: Sunday, February, 22, 2015
+## Day 4: Monday, February 23, 2015
+
+### A Little Light Planning
+* Spent a little time this morning adding a bunch of stuff to Trello. I have now a pretty decent plan in mind on what I need to do and the order in which I need to do it to reach alpha status.
+* It's all coming together surprisingly quickly. Topics, posts, references, tags, database, rendering.
+* Now on to getting up at least a mildly tolerable UI.
+
+
+## Day 3: Sunday, February 22, 2015
+
+### Just a Little Bit More...
+* Just realized that doing the database by reference rather than embeds was a good idea (along with two-way references) because it will make deleting posts a snap since I can touch every referenced post and remove the soon-to-be-deleted post's :_id. Boom.
 
 ### Winding Down for the Day
 * Tagging is in.
