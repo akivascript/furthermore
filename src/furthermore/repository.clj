@@ -37,9 +37,7 @@
                      e))
         refs (:references entity)]
     (if-not (empty? refs)
-      (apply #(update-in entity
-                         [:references (.indexOf refs %) :type] keyword)
-             refs)
+      (reduce #(update-in %1 [:references (.indexOf refs %2) :type] keyword) entity refs)
       entity)))
 
 (defmulti save-entity :type)
@@ -60,7 +58,7 @@
 
 (defn read-all
   [coll]
-  (mc/find-maps @db coll))
+  (map parse-entity (mc/find-maps @db coll)))
 
 (defn process-db-queue
   []
