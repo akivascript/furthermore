@@ -26,7 +26,7 @@
 (defn create-link
   [entity link-type]
   {:_id (:_id entity)
-   :type link-type})
+   :type (keyword link-type)})
 
 (defn add-reference
   [referrer referee link-type]

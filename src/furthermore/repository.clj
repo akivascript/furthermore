@@ -1,5 +1,6 @@
 (ns furthermore.repository
-  (:require [environ.core :refer [env]]
+  (:require [clj-time.local :as l]
+            [environ.core :refer [env]]
             [monger.collection :as mc]
             [monger.core :refer [connect-via-uri]]
             [monger.joda-time :refer :all]))
@@ -43,9 +44,11 @@
 
 (defmulti save-entity :type)
 (defmethod save-entity :post [entity]
-  (mc/upsert @db "posts" {:_id (:_id entity)} entity))
+  (let [entity (assoc entity :last-updated (l/local-now))]
+    (mc/upsert @db "posts" {:_id (:_id entity)} entity)))
 (defmethod save-entity :topic [entity]
-  (mc/upsert @db "topics" {:_id (:_id entity)} entity))
+  (let [entity (assoc entity :last-updated (l/local-now))]
+    (mc/upsert @db "topics" {:_id (:_id entity)} entity)))
 
 (defmulti read-entity :type)
 (defmethod read-entity :post [request]
