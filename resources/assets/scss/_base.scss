@@ -1,0 +1,10 @@
+$background-color: #fafaf7;
+$link-color: #8798a7;
+$green: #7f887f;
+$light-gray: #aaaaaa;
+
+@mixin borders ($radius) {
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	border-radius: $radius;
+}

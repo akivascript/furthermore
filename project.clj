@@ -11,29 +11,30 @@
                  [om "0.8.0-rc1"]
                  [markdown-clj "0.9.62"]
                  [com.novemberain/monger "2.1.0"]
-                 [ring-server "0.4.0"]
+                 [ring/ring-defaults "0.1.4"]
                  [selmer "0.8.0"]
                  [typographer "1.0.0"]]
   :plugins [[lein-cljsbuild "1.0.6-SNAPSHOT"]
             [lein-environ "1.0.0"]
-            [lein-ring "0.8.12"]]
+            [lein-ring "0.9.2"]]
+  :main furthermore.handler
   :ring {:handler furthermore.handler/app
          :init furthermore.handler/init
          :destroy furthermore.handler/destroy}
-  :main furthermore.handler
   :cljsbuild {:builds [{:id "furthermore"
                         :source-paths ["src/furthermore_cljs"]
                         :compiler {:output-to "furthermore.js"
                                    :output-dir "public/js"
-                                   :optimizations :whitespace 
+                                   :optimizations :whitespace
                                    :pretty-print true
                                    :source-map true}}]}
   :profiles {:uberjar {:aot :all}
-             :production {:ring {:open-browser? false,
-                                 :stacktraces? false,
+             :production {:ring {:open-browser? false
+                                 :stacktraces? false
                                  :auto-reload? false}}
              :dev [:private {:dependencies [[expectations "2.0.16"]
+                                            [javax.servlet/servlet-api "2.5"]
                                             [ring-mock "0.1.5"]
                                             [ring/ring-devel "1.3.2"]]
-                             :source-paths ["dev"]
+                             ;:source-paths ["dev"]
                              :repl-options {:init-ns furthermore.handler}}]})

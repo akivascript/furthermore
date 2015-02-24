@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-xs-12 banner">
+                <img src="img/desks.png" class="img-responsive">
+            </div>
+        </div>
+    </div>
+    {% for post in page %}
+    {% include "_post.html" %}
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

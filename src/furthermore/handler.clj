@@ -1,17 +1,18 @@
 (ns furthermore.handler
-  (:require [compojure.core :refer [defroutes routes]]
-            [ring.middleware.resource :refer [wrap-resource]]
-            [ring.middleware.file-info :refer [wrap-file-info]]
-            [hiccup.middleware :refer [wrap-base-url]]
-            [compojure.handler :as handler]
+  (:require [compojure.core :refer :all]
             [compojure.route :as route]
+            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [furthermore.repository :refer :all]
             [furthermore.routes.home :refer [home-routes]]))
- 
+
+(selmer.parser/cache-off!)
+
 (defn init []
-  (println "Furthermore is starting"))
+  (println "Furthermore is starting up...")
+  (initialize-db-connection))
 
 (defn destroy []
-  (println "Furthermore is shutting down"))
+  (println "Furthermore is shutting down..."))
 
 (defroutes app-routes
   (route/resources "/")
@@ -19,5 +20,4 @@
 
 (def app
   (-> (routes home-routes app-routes)
-      (handler/site)
-      (wrap-base-url)))
+      (wrap-defaults site-defaults)))

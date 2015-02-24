@@ -1,8 +1,8 @@
 (ns furthermore.routes.home
-  (:require [compojure.core :refer :all]))
+  (:require [compojure.core :refer :all]
+            [furthermore.views.home :refer :all]))
 
-(defn home []
-  ([:h1 "Hello World!"]))
+(defn home-page [] (index))
 
 (defroutes home-routes
-  (GET "/" [] (home)))
+  (GET "/" [] (home-page)))
