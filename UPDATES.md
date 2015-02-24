@@ -2,6 +2,15 @@
 
 ## Day 5: Tuesday, February 24, 2015
 
+### Rendering the Home Page
+* The base site layout is complete.
+* The home page lists the most recent posts as expected although some links aren't enabled yet. I still need to add references and a link to the topic.
+* The navbar is unpopulated as well.
+* It's all responsive although there are a few bugs I'd like to work out. For instance, is it possible to change the text justification based on screen size? I'd like to center some stuff that is normally flush left or flush right otherwise when elements get stacked on small screens.
+* I'm borrowing the layout and style from subwave and I'm not really sure if that's the way I want to go but it should all be easily changeable.
+* I definitely prefer Selmer over Jade (and thus Hiccup which is similar to Jade).
+* Next up: a topic index and the changelog along with finalizing stuff on the home page. 
+
 ### Unstuck
 * It ended up being a combination of things. The primary culprit was that I was referencing a file attached to the handler namespace that sets up some things for REPL development. ring did not like this at all. Removing the reference helped. The other issue was some deprecated ring dependencies. Those are gone now too.
 * Thus, web server is up and serving a very ugly home page with the latest posts listed. Progress, finally.
