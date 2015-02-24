@@ -5,6 +5,8 @@
             [furthermore.repository :refer :all]
             [furthermore.routes.home :refer [home-routes]]))
 
+(selmer.parser/cache-off!)
+
 (defn init []
   (println "Furthermore is starting up...")
   (initialize-db-connection))

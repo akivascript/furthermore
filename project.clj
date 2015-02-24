@@ -7,7 +7,6 @@
                  [org.clojure/clojurescript "0.0-2850"]
                  [clj-time "0.9.0"]
                  [compojure "1.3.2"]
-                 [conveyor "0.2.8"]
                  [environ "1.0.0"]
                  [om "0.8.0-rc1"]
                  [markdown-clj "0.9.62"]
@@ -33,10 +32,7 @@
              :production {:ring {:open-browser? false
                                  :stacktraces? false
                                  :auto-reload? false}}
-             :dev [:private {:dependencies [[conveyor-sass "0.2.8"]
-                                            [conveyor-compass "0.2.8"]
-                                            [conveyor-clojurescript "0.2.8"]
-                                            [expectations "2.0.16"]
+             :dev [:private {:dependencies [[expectations "2.0.16"]
                                             [javax.servlet/servlet-api "2.5"]
                                             [ring-mock "0.1.5"]
                                             [ring/ring-devel "1.3.2"]]

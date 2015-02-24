@@ -1,0 +1,83 @@
+@import 'base';
+
+body {
+    background-color: #f5f5f5;
+}
+
+code, kbd, pre, samp {
+    font-family: 'source code pro';
+}
+
+.banner {
+    text-align: center;
+
+    img {
+        display: block;
+        margin: 0px auto;
+        clear: right;
+        
+        @include borders (10px);
+        border: 1px solid #aaa;
+    }
+}
+
+.page-header {
+    margin-top: 63px;
+    padding-top: 9.5px;
+    border-bottom: none;
+}
+
+.post {
+    .content {
+        @include borders (15px);
+
+        p {
+            margin: 0px;
+        }
+        
+        .title {
+            border-bottom: 1px solid #bbb;
+            color: #b99;
+        }
+
+        .btn-tag {
+            padding: 2px 6px;
+            @include borders (5px);
+
+            background-color: #8798a7;
+            border-color: #8798a7;
+
+            font-size: 80%;
+            
+            a:hover {
+                background-color: #6f7d8a;
+                border-color: #6f7d8a;
+            }
+        }
+
+        .body {
+            padding: 10px;
+
+            font-size: 90%;
+            color: #555;
+        }
+
+        .footer {
+            # border-top: 1px dotted #ccc;
+            
+            font-size: 90%;
+            
+            color: $light-gray;
+            
+            .topic {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.page-footer {
+    margin-top: 11.5px;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
