@@ -2,6 +2,10 @@
 
 ## Day 5: Tuesday, February 24, 2015
 
+### Unstuck
+* It ended up being a combination of things. The primary culprit was that I was referencing a file attached to the handler namespace that sets up some things for REPL development. ring did not like this at all. Removing the reference helped. The other issue was some deprecated ring dependencies. Those are gone now too.
+* Thus, web server is up and serving a very ugly home page with the latest posts listed. Progress, finally.
+
 ### Stuck
 * I didn't get much done yesterday. When I did sit down to finally get some coding done on this project, I decided to prop up the web server first. And, for some reason, it decided to stop working regardless of what I tried. I've made no changes to the files Compojure/Ring touch to get going and display a 'Hello World' page but I was faced with a NullPointerException anyway. I created another app, just to see, and it worked. I went through the two apps line by line and made sure they're the same: they are. Still doesn't work.
 * Frustrated, I gave up and watched Better Call Saul.
