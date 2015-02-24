@@ -14,7 +14,8 @@
                  (assoc :body "What's up?")
                  (assoc :parent (create-link parent (:type parent)))
                  (assoc :topic (create-link topic (:type topic))))
-        parent (-> (get-db-queue (:_id parent)) (update :references conj (create-link post :post)))]
+        parent (-> (get-db-queue (:_id parent))
+                   (update :references conj (create-link post :post)))]
     (add-db-queue post)
     (add-db-queue parent)
     {:post post :parent parent}))
@@ -26,8 +27,8 @@
 (defn get-posts
   "Returns a list of posts. Used to gather posts referenced by
   a topic or post."
-  [posts]
-  (map #(get-post (:_id %)) posts))
+  ([] (read-all "posts"))
+  ([posts] (map #(get-post (:_id %)) posts)))
 
 (defn prepare-post
   "Typogrifies and processes Markdown for all values in a post

@@ -7,7 +7,7 @@
             [typographer.core :as t]
             [furthermore.repository :refer :all]))
 
-(slr/set-resource-path! "/Users/akiva/Code/projects/furthermore/src/furthermore/views/")
+(slr/set-resource-path! "/Users/akiva/Code/projects/furthermore/resources/html/templates/")
 
 (defn create-page
   "Returns an empty default page."
@@ -46,9 +46,10 @@
   (str (name (:type page)) ".html"))
   
 (defn render-page
-  [page]
-  (let [data {:page page}]
-    (slr/render-file (get-template page) data)))
+  ([page] (let [data {:page page}]
+            (slr/render-file (get-template page) data)))
+  ([page template] (let [data {:page page}]
+                     (slr/render-file (str template ".html") data))))
 
 (defn smarten-text
   "Returns a string in which is replaced all relevant punctuation with
