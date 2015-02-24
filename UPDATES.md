@@ -1,5 +1,14 @@
 # The Furthermore Protoblog
 
+## Day 5: Tuesday, February 24, 2015
+
+### Stuck
+* I didn't get much done yesterday. When I did sit down to finally get some coding done on this project, I decided to prop up the web server first. And, for some reason, it decided to stop working regardless of what I tried. I've made no changes to the files Compojure/Ring touch to get going and display a 'Hello World' page but I was faced with a NullPointerException anyway. I created another app, just to see, and it worked. I went through the two apps line by line and made sure they're the same: they are. Still doesn't work.
+* Frustrated, I gave up and watched Better Call Saul.
+* This morning, determined to get this solved, I'm going to completely delete (after a backup, of course) my project.clj, handler.clj, and any other related file and copy them over from the empty app that does work and see what happens. If I have to, I'll rebuild the whole thing from scratch, even if it forces me to restart the git local repo and lose my history.
+* I'd rather be coding.
+
+
 ## Day 4: Monday, February 23, 2015
 
 ### A Little Light Planning
