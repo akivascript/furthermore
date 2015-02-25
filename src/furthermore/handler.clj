@@ -3,7 +3,7 @@
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [furthermore.repository :refer :all]
-            [furthermore.routes.home :refer [home-routes]]))
+            [furthermore.views.home :refer :all]))
 
 (selmer.parser/cache-off!)
 
@@ -18,6 +18,9 @@
   (route/resources "/")
   (route/not-found "Not Found"))
 
+(defroutes main-routes
+  (GET "/" [] (index)))
+
 (def app
-  (-> (routes home-routes app-routes)
+  (-> (routes main-routes app-routes)
       (wrap-defaults site-defaults)))
