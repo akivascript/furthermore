@@ -1,11 +1,24 @@
 @import 'base';
 
+a {
+    color: #005FDA;
+
+    &:hover {
+        text-decoration: none;
+        color: #000;
+    }
+}
+
 body {
-    background-color: #f5f5f5;
+    background-color: #fbf8f4;
 }
 
 code, kbd, pre, samp {
     font-family: 'source code pro';
+}
+
+.navbar-default {
+    background-color: #3a5265;
 }
 
 .banner {
@@ -31,6 +44,8 @@ code, kbd, pre, samp {
     .content {
         @include borders (15px);
 
+        background-color: #fefefe;
+        
         p {
             margin: 0px;
         }
