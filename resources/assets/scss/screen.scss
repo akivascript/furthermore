@@ -10,7 +10,7 @@ a {
 }
 
 body {
-    background-color: #fbf8f4;
+    background-color: #fbf9f4;
 }
 
 code, kbd, pre, samp {
@@ -18,7 +18,7 @@ code, kbd, pre, samp {
 }
 
 .navbar-default {
-    background-color: #3a5265;
+    background-color: #465871;
 }
 
 .banner {
@@ -41,10 +41,13 @@ code, kbd, pre, samp {
 }
 
 .post {
+    margin-bottom: 15px;
+    
     .content {
         @include borders (15px);
 
-        background-color: #fefefe;
+    padding: 15px;
+        background-color: #fbfbfb;
         
         p {
             margin: 0px;
