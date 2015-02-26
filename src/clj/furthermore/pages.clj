@@ -48,7 +48,7 @@
 (defn get-template
   [page]
   (str (name (:type page)) ".html"))
-  
+
 (defn render-page
   ([page] (let [data {:page page
                       :site site-config}]

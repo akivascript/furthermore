@@ -21,6 +21,18 @@ code, kbd, pre, samp {
     background-color: #465871;
 }
 
+.page-content {
+    margin-top: 63px;
+    padding-top: 9.5px;
+}
+
+.page-header {
+    margin-top: 63px;
+    padding-top: 9.5px;
+    border-bottom: none;
+}
+
+
 .banner {
     text-align: center;
 
@@ -32,12 +44,6 @@ code, kbd, pre, samp {
         @include borders (10px);
         border: 1px solid #aaa;
     }
-}
-
-.page-header {
-    margin-top: 63px;
-    padding-top: 9.5px;
-    border-bottom: none;
 }
 
 .post {
@@ -98,4 +104,17 @@ code, kbd, pre, samp {
     margin-top: 11.5px;
     padding: 15px;
     border-top: 1px solid #ddd;
+}
+
+.topic {
+    .title {
+        display: inline-block;
+        padding-right: 10px;
+        font-weight: bold;
+    }
+    .date {
+        display: inline-block;
+        font-style: italics;
+        color: #aaa;
+    }
 }

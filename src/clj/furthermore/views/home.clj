@@ -3,7 +3,7 @@
             [furthermore.models.posts :refer :all]
             [furthermore.models.topics :refer :all]))
 
-(defn index
+(defn render-home
   []
   (let [posts (->> (get-posts)
                    (map prepare-post)
