@@ -1,5 +1,30 @@
 # The Furthermore Protoblog
 
+## Day 7: Thursday, February 26, 2015
+
+### The Figwheel/Weasel Rabbit Hole
+* Getting ClojureScript up and running wasn't as easy as I would have expected it to be. In fact, I'm convinced now that going directly for a one-size-fits-all solution like (Chestnut)[https://github.com/plexus/chestnut] isn't always the best way to go especially if you're just learning all of this. However, I wanted to get rolling with Om and React as quickly as possible so it seemed a good idea at the time.
+* I retrofitted my project with what I saw from Chestnut excepting Enlive since I'm using Selmer. I was able to get Figwheel up and going fairly quickly but ended up getting into a fight getting my tiny ClojureScript test file to compile properly. What I failed to notice was that the code in Chestnut was auto-inserting via Enlive some rather necessary <script> references into the HTML file. Since Selmer's generating the HTML and serving it via Ring and I had gotten rid of Enlive (and killed the reference to the code that did the inserting), this all got lost in the mess. Once I realized what I had done, it was merely a matter of adding the <script> references to my base HTML template and off to the races I went. Except...
+* ...weasel wouldn't launch. I could get the page served and the test script worked fine but Firefox's Console was filling up with messages that a web socket couldn't be made. I traced it to an error in Chas Emerick's (piggieback)[https://github.com/cemerick/piggieback] and posted to the clojure-tools Google group about it.
+* Meanwhile, I discovered that Figwheel now has a built-in REPL which seems to do what weasel would do. I ripped out all the weasel and piggieback references and I seem to have the same set-up that had been promised me when I was a wee lad.
+* Now I can get actually get to work on the topics page now that I have all of this sorted out.
+* I think I might one day create and publish a Leiningen template with all of this baked in and call it portabello or something. I'm sure I'll want all of this done again.
+* One last thing, after a Spacemacs update or two and a emacs-mac brew update, everything has been mostly stable. Wakatime is still broken but none of the issues I was experiencing days ago have cropped up again. Knock wood.
+
+
+## Day 6: Wednesday, February 25, 2015
+
+### Enter: ClojureScript
+* Of course, no introduction is too terribly easy. I've read about ClojureScript but never actually included it into a project and, unfortunately, the documentation that's out there doesn't explain much and in some places is contradictory. So it took some trial and error just to get all the pieces in the right place and loading properly. Burned about an hour on it.
+* The 'gotcha' in my case seems to have been getting the pieces in the right place and referring to the right namespace. Some of the tutorials out there completely ignore the assignation of :main and :asset-path in project.clj. Perhaps they aren't necessary but they were for me. I plan on coming back sooner or later and writing up a tutorial post on getting CLJS up and running. I want to get figwheel and weasel in there as well.
+* I'm currently working on the topics page, by the way, and need CLJS to allow the reader to click on a topic and post to reveal references.
+
+### Early Morning Thoughts
+* Sometimes it's tough to keep my head wrapped around what I'm trying to accomplish here when it comes to the UI. I try not to spend too much time thinking about it but it's something I'm going to have to deal with properly sooner or later. If I didn't care about responsive design, it'd be so much easier but I do so it isn't.
+* Merged routes into the handler. The site isn't complex enough (yet; if ever) to warrant individual namespaces for routers. Maybe individual posts.
+* Also, I really need to come up with and buy a domain name for the blog. I know the one I want but I really can't justify spending $35 on a domain name because of the TLD. But it's a good one.
+
+
 ## Day 5: Tuesday, February 24, 2015
 
 ### Rendering the Home Page

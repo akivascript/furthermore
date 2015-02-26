@@ -1,6 +1,13 @@
 /target
 /classes
 /checkouts
+dev/
+public/
+tmp/
+.hg/
+resources/inbox/
+resources/drafts/
+resources/img/
 pom.xml
 pom.xml.asc
 *.jar
@@ -8,11 +15,4 @@ pom.xml.asc
 /.lein-*
 /.nrepl-port
 .hgignore
-.hg/
-dev/
-public/
-resources/inbox/
-resources/drafts/
-resources/img/
-.sass-cache
 *sass*
