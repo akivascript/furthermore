@@ -40,9 +40,15 @@ You will need [Leiningen][1] 1.7.0 or above installed.
 
 ## Running
 
-To start a web server for the application, run:
+My current development setup is to have two REPLs running: one with Ring and one with Figwheel:
 
-    lein ring server
+	lein repl
+	(run)
+
+And
+
+	lein figwheel
+	(use 'furthermore.core)
 
 ## License
 
