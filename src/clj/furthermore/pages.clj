@@ -1,5 +1,6 @@
 (ns furthermore.pages
   (:require [clojure.string :as str]
+            [clj-time.coerce :as c]
             [clj-time.local :as l]
             [markdown.core :refer :all]
             [monger.util :refer [random-uuid]]
@@ -8,7 +9,6 @@
             [furthermore.repository :refer :all]))
 
 (slr/set-resource-path! "/Users/akiva/Code/projects/furthermore/resources/assets/html/templates/")
-(slr/cache-off!)
 
 (def site-config
   {:title "Whatever"})
@@ -37,9 +37,19 @@
   {:referrer (update referrer :references conj (create-link referee link-type))
    :referee (update referee :references conj (create-link referrer link-type))})
 
+(defn convert-to-java-date
+  [joda-date]
+  (c/to-date joda-date))
+
 (defn convert-to-html
   [text]
   (md-to-html-string text))
+
+(defn generate-response
+  [data & [status]]
+  {:status (or status 200)
+   :headers {"Content-Type" "application/edn"}
+   :body (pr-str data)})
 
 (defn get-references
   [page]

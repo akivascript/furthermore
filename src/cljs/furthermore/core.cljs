@@ -1,19 +1,45 @@
-(ns furthermore.core
-  (:require [figwheel.client :as fw]
-            [om.core :as om :include-macros true]
-            [om.dom :as dom :include-macros true]))
+(ns ^:figwheel-always furthermore.core
+    (:require [ajax.core :as ajax]
+              [cljs.reader :as reader]
+              [goog.events :as events]
+              [om.core :as om :include-macros true]
+              [om.dom :as dom :include-macros true])
+    (:import [goog.net XhrIo]
+             goog.net.EventType
+             [goog.events EventType]))
 
-(defonce app-state (atom {:text "It works!"}))
+(enable-console-print!)
 
-(defn main
-  []
-  (om/root
-    (fn [app owner]
-      (reify
-        om/IRender
-        (render [_]
-          (dom/h1 nil (:text app)))))
-    app-state
-    {:target (. js/document (getElementById "main"))}))
+(def ^:private meths
+  {:get "GET"
+   :put "PUT"
+   :post "POST"
+   :delete "DELETE"})
 
-(main)
+(defonce app-state (atom {:text "Oh" :topics []}))
+
+(defn display
+  [show]
+  (if show
+    #js {}
+    #js {:display "none"}))
+
+(defn topics-view
+  [app owner]
+  (reify
+    om/IWillMount
+    (will-mount [_]
+      (ajax/GET "/topics" {:handler #(om/transact! app :topics (fn [_] %))
+                           :error-handler #(.error js/console %)}))
+    om/IRender
+    (render [_]
+      (apply dom/div #js {:className "Topics"}
+             (map (fn [text] (dom/div
+                             #js {:style #js {:textDecoration "underline"}}
+                             (:title text))) (:topics app))))))
+
+(om/root
+ topics-view
+ app-state
+ {:target (. js/document (getElementById "topics"))})
+

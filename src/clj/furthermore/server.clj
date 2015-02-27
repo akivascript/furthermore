@@ -4,6 +4,7 @@
             [compojure.route :as route]
             [compojure.handler :refer [api]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            [ring.middleware.edn :as edn]
             [ring.middleware.reload :as reload]
             [ring.adapter.jetty :refer [run-jetty]]
             [furthermore.dev :refer [is-dev? start-figwheel]]
@@ -14,13 +15,15 @@
 (defroutes routes
   (route/resources "/")
   (route/resources "/react" {:root "react"})
-  (GET "/" [] (render-home))
-  (GET "/topics" [] (render-topics)))
-  (route/not-found "Not Found")
+  (GET "/" [] (slurp "resources/public/index.html"))
+  (GET "/topics" [] (topics))
+  ;(route/files "/" {:root "resources/public"})
+  (route/not-found "Not Found"))
 
 (def http-handler
   (if is-dev?
-    (reload/wrap-reload (wrap-defaults #'routes api-defaults))
+    (-> (reload/wrap-reload (wrap-defaults #'routes api-defaults))
+        (edn/wrap-edn-params))
     (wrap-defaults routes api-defaults)))
 
 (defn run [& [port]]

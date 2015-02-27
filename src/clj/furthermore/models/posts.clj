@@ -39,7 +39,9 @@
   [post]
   (-> post
       (update :body (comp smarten-text convert-to-html))
-      (update :title smarten-text)))
+      (update :title smarten-text)
+      (update :created-on convert-to-java-date)
+      (update :last-updated convert-to-java-date)))
 
 (defn render-post
   "Takes a post and passes it through a template determined by
