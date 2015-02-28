@@ -24,13 +24,20 @@
          (assoc topic :references))))
 
 (defn get-topic
-  [id]
-  (->> (read-entity {:type :topic :_id id})
-       prepare-topic))
+  [id & prepare]
+  (let [topic (read-entity {:type :topic :_id id})]
+    (if-not (or prepare
+                (= prepare :false))
+      (prepare-topic)
+      topic)))
 
 (defn get-topics
-  []
-  (->> (read-all "topics")
-       (map prepare-topic)
-       (sort-by #(:title %))
-       vec))
+  [& prepare]
+  (let [topics (read-all "topics")]
+    (if-not (or prepare
+                (= prepare :false))
+      (->> topics
+           (map prepare-topic)
+           (sort-by #(:title %))
+           vec)
+      topics)))

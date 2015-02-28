@@ -8,6 +8,7 @@
                  [org.clojure/clojurescript "0.0-2913" :scope "provided"]
                  [clj-time "0.9.0"]
                  [cljs-ajax "0.3.10"]
+                 [com.andrewmcveigh/cljs-time "0.3.2"]
                  [compojure "1.3.2"]
                  [environ "1.0.0"]
                  [markdown-clj "0.9.63"]
