@@ -4,14 +4,8 @@
             [clj-time.local :as l]
             [markdown.core :refer :all]
             [monger.util :refer [random-uuid]]
-            [selmer.parser :as slr]
             [typographer.core :as t]
             [furthermore.repository :refer :all]))
-
-(slr/set-resource-path! "/Users/akiva/Code/projects/furthermore/resources/assets/html/templates/")
-
-(def site-config
-  {:title "Whatever"})
 
 (defn create-page
   "Returns an empty default page."
@@ -45,30 +39,25 @@
   [text]
   (md-to-html-string text))
 
-(defn generate-response
-  [data & [status]]
-  {:status (or status 200)
-   :headers {"Content-Type" "application/edn"}
-   :body (pr-str data)})
-
 (defn get-references
   [page]
-  (map #(read-entity {:type (:type %) :_id (:_id %)}) (:references page)))
+  (mapv #(read-entity {:type (:type %) :_id (:_id %)}) (:references page)))
 
 (defn get-template
   [page]
   (str (name (:type page)) ".html"))
-
-(defn render-page
-  ([page] (let [data {:page page
-                      :site site-config}]
-            (slr/render-file (get-template page) data)))
-  ([page template] (let [data {:page page
-                                      :site site-config}]
-                     (slr/render-file (str template ".html") data))))
 
 (defn smarten-text
   "Returns a string in which is replaced all relevant punctuation with
   typographic punction (i.e., curly quotes, proper ellipses, et al.)."
   [text]
   (t/smarten text))
+
+(comment
+  (defn render-page
+    ([page] (let [data {:page page
+                        :site site-config}]
+              (slr/render-file (get-template page) data)))
+    ([page template] (let [data {:page page
+                                 :site site-config}]
+                       (slr/render-file (str template ".html") data)))))

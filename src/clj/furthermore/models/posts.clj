@@ -4,9 +4,6 @@
             [furthermore.repository :refer :all]))
 
 (defn create-post
-  "Returns an empty default post. All posts must have a reference;
-  they cannot exist without context and thus cannot be orphaned. An
-  orphaned post would never be displayed."
   [parent topic & {:keys [title tags] :or {title "New Post"}}]
   (let [post (-> (create-page tags)
                  (assoc :type :post)
@@ -20,22 +17,7 @@
     (add-db-queue parent)
     {:post post :parent parent}))
 
-(defn get-post
-  [id]
-  (read-entity {:type :post :_id id}))
-
-(defn get-posts
-  "Returns a list of posts. Used to gather posts referenced by
-  a topic or post."
-  ([] (read-all "posts"))
-  ([posts] (map #(get-post (:_id %)) posts)))
-
 (defn prepare-post
-  "Typogrifies and processes Markdown for all values in a post
-  in preparation for publication as HTML.
-
-  This must happen each time a post is displayed; posts are stored
-  in the database in their original Markdown formats."
   [post]
   (-> post
       (update :body (comp smarten-text convert-to-html))
@@ -43,11 +25,14 @@
       (update :created-on convert-to-java-date)
       (update :last-updated convert-to-java-date)))
 
-(defn render-post
-  "Takes a post and passes it through a template determined by
-  post :type. This HTML string is saved to disk in a directory
-  determined by the post's date and title as part of the site
-  compile."
-  [post]
-  (let [html (-> post prepare-post render-page)]
-     html))
+(defn get-post
+  [id]
+  (->> (read-entity {:type :post :_id id})
+       prepare-post))
+
+(defn get-posts
+  [posts]
+  (->> (map #(get-post (:_id %)) posts)
+       (sort-by #(:last-updated %))
+       reverse
+       vec))

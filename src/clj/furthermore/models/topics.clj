@@ -14,6 +14,23 @@
     (add-db-queue topic)
     topic))
 
+(defn prepare-topic
+  [topic]
+  (let [topic (-> topic
+                  (update :title smarten-text)
+                  (update :created-on convert-to-java-date)
+                  (update :last-updated convert-to-java-date))]
+    (->> (get-posts (:references topic))
+         (assoc topic :references))))
+
+(defn get-topic
+  [id]
+  (->> (read-entity {:type :topic :_id id})
+       prepare-topic))
+
 (defn get-topics
   []
-  (read-all "topics"))
+  (->> (read-all "topics")
+       (map prepare-topic)
+       (sort-by #(:title %))
+       vec))
