@@ -28,7 +28,7 @@
 
 (defn get-post
   [id & prepare]
-  (let [post (read-entity {:type :post :_id id})]
+  (let [post (read-entity "posts" {:_id id})]
     (if-not (or prepare
                 (= prepare :false))
       (prepare-post post)

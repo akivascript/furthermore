@@ -25,10 +25,10 @@
 
 (defn get-topic
   [id & prepare]
-  (let [topic (read-entity {:type :topic :_id id})]
+  (let [topic (read-entity "topics" {:_id id})]
     (if-not (or prepare
                 (= prepare :false))
-      (prepare-topic)
+      (prepare-topic topic)
       topic)))
 
 (defn get-topics

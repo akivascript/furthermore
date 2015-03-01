@@ -3,7 +3,8 @@
             [environ.core :refer [env]]
             [monger.collection :as mc]
             [monger.core :refer [connect-via-uri]]
-            [monger.joda-time :refer :all]))
+            [monger.joda-time :refer :all]
+            [monger.operators :refer :all]))
 
 (def ^:private db (atom nil))
 (def ^:private db-queue (atom {}))
@@ -33,28 +34,27 @@
   (let [entity (as-> entity e
                    (update e :type keyword)
                    (if-not (nil? (:parent e))
-                     (update-in e [:parent :type] keyword) 
+                     (update-in e [:parent :type] keyword)
                      e))
         refs (:references entity)]
     (if-not (empty? refs)
       (reduce #(update-in %1 [:references (.indexOf refs %2) :type] keyword) entity refs)
       entity)))
 
-(defmulti save-entity :type)
-(defmethod save-entity :post [entity]
-  (let [entity (assoc entity :last-updated (l/local-now))]
-    (mc/upsert @db "posts" {:_id (:_id entity)} entity)))
-(defmethod save-entity :topic [entity]
-  (let [entity (assoc entity :last-updated (l/local-now))]
-    (mc/upsert @db "topics" {:_id (:_id entity)} entity)))
+(defn read-entity
+  [type request]
+  (let [entity (mc/find-map-by-id @db (name type) (:_id request))]
+    (parse-entity entity)))
 
-(defmulti read-entity :type)
-(defmethod read-entity :post [request]
-  (let [post (mc/find-map-by-id @db "posts" (:_id request))]
-    (parse-entity post)))
-(defmethod read-entity :topic [request]
-  (let [topic (mc/find-map-by-id @db "topics" (:_id request))]
-    (parse-entity topic)))
+(defn find-entities
+  [type field criterion]
+  (mc/find-maps @db (name type)
+                {(keyword field) {$regex (name criterion) $options "i"}}))
+
+(defn save-entity
+  [type entity]
+  (let [entity (assoc entity :last-updated (l/local-now))]
+    (mc/upsert @db (name type) {:_id (:_id entity)} entity)))
 
 (defn read-all
   [coll]
