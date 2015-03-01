@@ -7,28 +7,32 @@
   :dependencies [[org.clojure/clojure "1.7.0-alpha5"]
                  [org.clojure/clojurescript "0.0-2913" :scope "provided"]
                  [clj-time "0.9.0"]
+                 [cljs-ajax "0.3.10"]
+                 [com.andrewmcveigh/cljs-time "0.3.2"]
                  [compojure "1.3.2"]
                  [environ "1.0.0"]
                  [markdown-clj "0.9.63"]
                  [com.novemberain/monger "2.1.0"]
-                 [om "0.8.0-rc1"]
+                 [org.omcljs/om "0.8.8"]
+                 [prismatic/om-tools "0.3.10"]
                  [ring "1.3.2"]
                  [ring/ring-defaults "0.1.4"]
-                 [selmer "0.8.0"]
+                 [fogus/ring-edn "0.2.0"]
+                 [sablono "0.3.4"]
                  [typographer "1.0.0"]]
   :plugins [[lein-cljsbuild "1.0.6-SNAPSHOT"]
             [lein-environ "1.0.0"]]
   :source-paths ["src/clj"]
-  :ring {:handler furthermore.server/app
-         :init furthermore.server/init
-         :destroy furthermore.server/destroy}
+  :resource-paths ["resources"]
   :uberjar-name "furthermore-test.jar"
   :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
                              :compiler {:output-to "resources/public/js/furthermore.js"
                                         :output-dir "resources/public/js/out"
-                                        :source-map "resources/public/js/out.js.map"
-                                        :preamble ["react/react.min.js"]
-                                        :externs ["react/externs/react.js"]
+                                        :asset-path "js/out"
+                                        :main furthermore.dev
+                                        :source-map true
+                                        :source-map-timestamp true
+                                        :cache-analysis true
                                         :optimizations :none
                                         :pretty-print true}}}}
   :profiles {:uberjar {:source-paths ["env/prod/clj"]
@@ -49,6 +53,5 @@
                                         :css-dirs ["resources/public/css"]
                                         :server-logfile "tmp/logs/figwheel-server.log"}
                              :source-paths ["env/dev/clj"]
-                             :repl-options {:init-ns furthermore.server
-                                            :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+                             :repl-options {:init-ns furthermore.server}
                              :cljsbuild {:builds {:app {:source-paths ["env/dev/cljs"]}}}}]})

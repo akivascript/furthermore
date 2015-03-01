@@ -46,55 +46,57 @@ code, kbd, pre, samp {
     }
 }
 
-.post {
-    margin-bottom: 15px;
-    
-    .content {
-        @include borders (15px);
+#index {
+    .post {
+        margin-bottom: 15px;
 
-    padding: 15px;
-        background-color: #fbfbfb;
-        
-        p {
-            margin: 0px;
-        }
-        
-        .title {
-            border-bottom: 1px solid #bbb;
-            color: #b99;
-        }
+        .content {
+            @include borders (15px);
 
-        .btn-tag {
-            padding: 2px 6px;
-            @include borders (5px);
+        padding: 15px;
+            background-color: #fbfbfb;
 
-            background-color: #8798a7;
-            border-color: #8798a7;
-
-            font-size: 80%;
-            
-            a:hover {
-                background-color: #6f7d8a;
-                border-color: #6f7d8a;
+            p {
+                margin: 0px;
             }
-        }
 
-        .body {
-            padding: 10px;
+            .title {
+                border-bottom: 1px solid #bbb;
+                color: #b99;
+            }
 
-            font-size: 90%;
-            color: #555;
-        }
+            .btn-tag {
+                padding: 2px 6px;
+                @include borders (5px);
 
-        .footer {
-            # border-top: 1px dotted #ccc;
-            
-            font-size: 90%;
-            
-            color: $light-gray;
-            
-            .topic {
-                font-weight: bold;
+                background-color: #8798a7;
+                border-color: #8798a7;
+
+                font-size: 80%;
+
+                a:hover {
+                    background-color: #6f7d8a;
+                    border-color: #6f7d8a;
+                }
+            }
+
+            .body {
+                padding: 10px;
+
+                font-size: 90%;
+                color: #555;
+            }
+
+            .footer {
+                # border-top: 1px dotted #ccc;
+
+                font-size: 90%;
+
+                color: $light-gray;
+
+                .topic {
+                    font-weight: bold;
+                }
             }
         }
     }
@@ -106,15 +108,16 @@ code, kbd, pre, samp {
     border-top: 1px solid #ddd;
 }
 
-.topic {
-    .title {
-        display: inline-block;
-        padding-right: 10px;
-        font-weight: bold;
-    }
-    .date {
-        display: inline-block;
-        font-style: italics;
-        color: #aaa;
+#topics {
+    .post {
+        .title {
+            display: inline-block;
+            padding-right: 10px;
+            font-weight: bold;
+        }
+        .date {
+            display: inline-block;
+            color: #aaa;
+        }
     }
 }
