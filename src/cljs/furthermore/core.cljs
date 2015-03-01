@@ -1,97 +1,31 @@
 (ns ^:figwheel-always furthermore.core
-    (:require [ajax.core :as ajax]
-              [cljs.reader :as reader]
-              [cljs-time.format :as timef]
+    (:require [om.core :as om :include-macros true]
               [goog.events :as events]
-              [om.core :as om :include-macros true]
-              [om-tools.dom :as dom :include-macros true])
-              ;[sablono.core :as html :refer-macros [html]])
-    (:import [goog.net XhrIo]
-             goog.net.EventType
-             [goog.events EventType]))
+              [goog.history.EventType :as EventType]
+              [secretary.core :as secretary :refer-macros [defroute]]
+              [furthermore.topics :as topics])
+    (:import goog.History))
 
 (enable-console-print!)
 
-(def ^:private meths
-  {:get "GET"
-   :put "PUT"
-   :post "POST"
-   :delete "DELETE"})
+(defonce app-state (atom {:topics []}))
 
-(def app-state (atom {:topics []}))
+(def application {:target (. js/document (getElementById "page-content"))})
 
-(defn format-timestamp
-  [timestamp]
-  (let [ts (-> timestamp js/Date. goog.date.DateTime.)]
-    (timef/unparse (timef/formatter "MMMM d, yyyy") ts)))
+(defroute "/" []
+  (js/console.log "Home page"))
 
-(defn toggle-references
-  [item]
-  (print "Clicked"))
+(defroute "/contents" []
+  (js/console.log "Contents")
+  (om/root
+   topics/load-content
+   app-state
+   application))
 
-(defn make-outline-selector
-  [item]
-  (let [refcount (count (:references item))
-        class (if (:opened item)
-                "glyphicon glyphicon-triangle-bottom small"
-                "glyphicon glyphicon-triangle-right small")]
-    (if (pos? refcount)
-      (dom/span {:class class
-                 :style {:marginRight 3 :color "#aaa"}
-                 :ariaHidden "true"
-                 :onClick #(om/transact! item :opened not)})
-      (dom/span {:class class
-                 :style {:marginRight 3 :visibility "hidden"}
-                 :ariaHidden "true"}))))
+(defroute "/post/:id" [id]
+  (js/console.log (str "Display post id " id)))
 
-(defn get-reference
-  [ref]
-  (ajax/GET (str "/post/" (:_id ref))
-            {:handler #(om/update! ref %)
-             :error-handler #(.error js/console %)}))
+(defroute "*" []
+  (js/console.log "Not found"))
 
-(defn post-view
-  [post owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (doseq [ref (:references post)] (get-reference ref)))
-    om/IRender
-    (render [_]
-      (dom/div {:class "post"}
-               (dom/div {:class "title" :id (:_id post)}
-                        (make-outline-selector post)
-                        (dom/a {:href (str "/post/" (:_id post))}
-                               (:title post)))
-               (dom/div {:class "small date"}
-                        (format-timestamp (:created-on post)))
-               (when (:opened post)
-                 (apply dom/div
-                        {:style {:marginLeft 15}}
-                        (om/build-all post-view (:references post))))))))
-
-(defn topic-view
-  [topic owner]
-  (om/component
-   (dom/div
-    (dom/span {:style {:textDecoration "underline"}}
-              (:title topic))
-    (apply dom/div
-           (om/build-all post-view (:references topic))))))
-
-(defn topics-view
-  [app owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (ajax/GET "/topics" {:handler #(om/transact! app :topics (fn [_] %))
-                           :error-handler #(.error js/console %)}))
-    om/IRender
-    (render [_]
-      (apply dom/div
-             (om/build-all topic-view (:topics app))))))
-
-(om/root
- topics-view
- app-state
- {:target (. js/document (getElementById "topics"))})
+(secretary/dispatch! window.location.pathname)

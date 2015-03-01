@@ -1,6 +1,8 @@
 (ns furthermore.server
   (:require [environ.core :refer [env]]
-            [compojure.core :refer [GET defroutes]]
+            [clojure.java.io :as io]
+            [compojure.core :refer [GET defroutes context]]
+            [compojure.response :refer [render]]
             [compojure.route :as route]
             [compojure.handler :refer [api]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
@@ -19,13 +21,13 @@
    :body (pr-str data)})
 
 (defroutes routes
+  (context "/get" []
+           (GET "/post/:id" [id] (-> id get-post generate-response))
+           (GET "/topic/:id" [id] (-> id get-topic generate-response))
+           (GET "/topics" [] (generate-response (get-topics))))
   (route/resources "/")
   (route/resources "/react" {:root "react"})
-  (GET "/" [] (slurp "resources/public/index.html"))
-  (GET "/post/:id" [id] (-> id get-post generate-response))
-  (GET "/topic/:id" [id] (-> id get-topic generate-response))
-  (GET "/topics" [] (generate-response (get-topics)))
-  (route/not-found "Not Found"))
+  (GET "*" [uri] (render (io/resource "public/index.html") uri)))
 
 (def http-handler
   (if is-dev?
