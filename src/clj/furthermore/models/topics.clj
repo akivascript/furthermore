@@ -21,6 +21,8 @@
                   (update :created-on convert-to-java-date)
                   (update :last-updated convert-to-java-date))]
     (->> (get-posts (:references topic))
+         (sort-by #(:title %))
+         vec
          (assoc topic :references))))
 
 (defn get-topic

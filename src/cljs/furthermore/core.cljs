@@ -31,13 +31,18 @@
 
 (defn make-outline-selector
   [item]
-  (let [class (if (:opened item)
+  (let [refcount (count (:references item))
+        class (if (:opened item)
                 "glyphicon glyphicon-triangle-bottom small"
                 "glyphicon glyphicon-triangle-right small")]
-    (dom/span {:class class
-               :style {:marginRight 3 :color "#aaa"}
-               :ariaHidden "true"
-               :onClick #(om/transact! item :opened not)})))
+    (if (pos? refcount)
+      (dom/span {:class class
+                 :style {:marginRight 3 :color "#aaa"}
+                 :ariaHidden "true"
+                 :onClick #(om/transact! item :opened not)})
+      (dom/span {:class class
+                 :style {:marginRight 3 :visibility "hidden"}
+                 :ariaHidden "true"}))))
 
 (defn get-reference
   [ref]
@@ -56,7 +61,8 @@
       (dom/div {:class "post"}
                (dom/div {:class "title" :id (:_id post)}
                         (make-outline-selector post)
-                        (:title post))
+                        (dom/a {:href (str "/post/" (:_id post))}
+                               (:title post)))
                (dom/div {:class "small date"}
                         (format-timestamp (:created-on post)))
                (when (:opened post)
