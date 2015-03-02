@@ -4,7 +4,8 @@
             [monger.collection :as mc]
             [monger.core :refer [connect-via-uri]]
             [monger.joda-time :refer :all]
-            [monger.operators :refer :all]))
+            [monger.operators :refer :all]
+            [monger.query :refer :all]))
 
 (def ^:private db (atom nil))
 (def ^:private db-queue (atom {}))
@@ -41,6 +42,15 @@
       (reduce #(update-in %1 [:references (.indexOf refs %2) :type] keyword) entity refs)
       entity)))
 
+(defn read-entities
+  ([type]
+   (map parse-entity (mc/find-maps @db type)))
+  ([type criteria limit-by]
+   (with-collection @db type
+     (find {})
+     (sort criteria)
+     (limit limit-by))))
+
 (defn read-entity
   [type request]
   (let [entity (mc/find-map-by-id @db (name type) (:_id request))]
@@ -55,10 +65,6 @@
   [type entity]
   (let [entity (assoc entity :last-updated (l/local-now))]
     (mc/upsert @db (name type) {:_id (:_id entity)} entity)))
-
-(defn read-all
-  [coll]
-  (map parse-entity (mc/find-maps @db coll)))
 
 (defn process-db-queue
   []

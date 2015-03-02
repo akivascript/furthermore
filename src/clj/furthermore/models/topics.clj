@@ -35,7 +35,7 @@
 
 (defn get-topics
   [& prepare]
-  (let [topics (read-all "topics")]
+  (let [topics (read-entities "topics")]
     (if-not (or prepare
                 (= prepare :false))
       (->> topics

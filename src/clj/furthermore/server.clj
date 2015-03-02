@@ -23,11 +23,12 @@
 (defroutes routes
   (context "/get" []
            (GET "/post/:id" [id] (-> id get-post generate-response))
+           (GET "/posts" [] (generate-response (get-posts)))
            (GET "/topic/:id" [id] (-> id get-topic generate-response))
            (GET "/topics" [] (generate-response (get-topics))))
   (route/resources "/")
   (route/resources "/react" {:root "react"})
-  (GET "*" [uri] (render (io/resource "public/index.html") uri)))
+  (GET "*" [uri] (render (io/resource "assets/html/shell.html") uri)))
 
 (def http-handler
   (if is-dev?
