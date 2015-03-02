@@ -25,7 +25,7 @@
    [fogus/ring-edn "0.2.0"]
    [sablono "0.3.4"]
    [secretary "1.2.1"]
-   [typographer "1.0.0"]]
+   [typographer "1.1.0"]]
 
   :plugins
   [[lein-cljsbuild "1.0.6-SNAPSHOT"]

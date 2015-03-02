@@ -5,6 +5,7 @@
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
+            [typographer.core :as t]
             [furthermore.posts :as posts]
             [furthermore.utils :as utils])
     (:import [goog.net XhrIo]
@@ -23,20 +24,25 @@
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
-      (let [{:keys [date time]} (utils/format-timestamp (:last-updated post))]
-        (d/div {:class "col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2"}
+      (let [{:keys [date time]} (utils/format-timestamp (:last-updated post))
+            body (-> (:body post) t/smarten md->html)
+            title (when (:title post)
+                    (t/smarten (:title post)))
+            topic-title (when-let [topic-title (get-in post [:topic :title])]
+                          (t/smarten (get-in post [:topic :title])))]
+        (d/div {:class "col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"}
                (d/div {:class "post"}
                       (d/div {:class "well content"}
-                             (when (:title post)
+                             (when title
                                (d/div {:class "title"}
-                                      (:title post)))
+                                      title))
                              (comment
                                (when (:tags post)
                                  (d/div {:class "tags text-right"}
                                         (om/build-all tags (:tags post)))))
                              (d/div {:class "body"
                                      :dangerouslySetInnerHTML
-                                     {:__html (md->html (:body post))}})
+                                     {:__html body}})
                              (d/div {:class "footer"}
                                     (d/div {:class "row"}
                                            (d/div {:class "col-xs-12 col-sm-6"}
@@ -45,7 +51,7 @@
                                                   (d/div {:class "small text-right date"}
                                                          "Filed under "
                                                          (d/span {:class "topic"}
-                                                                 (get-in post [:topic :title]))
+                                                                 topic-title)
                                                          (d/br)
                                                          (str date " @ " time))))))))))))
 
