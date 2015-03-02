@@ -5,7 +5,7 @@
             [monger.core :refer [connect-via-uri]]
             [monger.joda-time :refer :all]
             [monger.operators :refer :all]
-            [monger.query :refer :all]))
+            [monger.query :as mq]))
 
 (def ^:private db (atom nil))
 (def ^:private db-queue (atom {}))
@@ -23,7 +23,7 @@
 
 (defn get-db-queue
   [id]
-  (val (find @db-queue id)))
+  (val (mq/find @db-queue id)))
 
 (defn list-db-queue
   []
@@ -49,10 +49,10 @@
   ([type]
    (map parse-entity (mc/find-maps @db type)))
   ([type criteria limit-by]
-   (with-collection @db type
-     (find {})
-     (sort criteria)
-     (limit limit-by))))
+   (mq/with-collection @db type
+     (mq/find {})
+     (mq/sort criteria)
+     (mq/limit limit-by))))
 
 (defn read-entity
   [type request]
