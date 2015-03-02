@@ -9,6 +9,9 @@
 
 (def ^:private db (atom nil))
 (def ^:private db-queue (atom {}))
+(def types
+  {:post "posts"
+   :topic "topics"})
 
 (defn add-db-queue
   [entity]
@@ -64,12 +67,12 @@
 (defn save-entity
   [type entity]
   (let [entity (assoc entity :last-updated (l/local-now))]
-    (mc/upsert @db (name type) {:_id (:_id entity)} entity)))
+    (mc/upsert @db (type types) {:_id (:_id entity)} entity)))
 
 (defn process-db-queue
   []
   (doseq [entity (vals @db-queue)]
-    (save-entity entity)))
+    (save-entity (:type entity) entity)))
 
 (defn initialize-db-connection
   []
