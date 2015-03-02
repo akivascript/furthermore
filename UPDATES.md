@@ -1,5 +1,47 @@
 # The Furthermore Protoblog
 
+## Day 10: Sunday, March 1, 2015
+
+### Never Mind All That
+* I went down the rabbit hole a little bit but after about an hour, I decided it wasn't worth the effort just to have syntactical sugar for working with Bootstrap. I'll keep checking for updates to the libraries and come back to it later.
+* With that off the table, creating the home page has been a bit of a snap. Without the niceties of om-bootstrap, the code looks kind of goofy (and incredibly indented) but that's fine.
+* I'm slightly behind schedule—I was really hoping to have it publishable tonight—but everything is definitely in a 'nearly almost there' state. Except for two issues.
+* One: I'm hard-coding the topic in the post displays for the home page. I just need to reference each post's topic to get that topic's title and plug that in. No big deal.
+* Two: The body text of each post is in Markdown and so it gets interpreted which produces HTML. Unfortunately, the browser is just displaying the markup rather than interpreting it further into an expected display; it's just showing the raw markup. I'm sure this isn't a big deal either; I just need to research how to update via React and have it get printed properly to the screen.
+* Overall, I'm pretty happy with how things are going.
+
+### The Neverending Fuss
+* Trying to get om-bootstrap going but it's relying on [schema](https://github.com/Prismatic/schema) which is crying foul:
+    WARNING: ->ValidationError at line 68 is being replaced at line 80 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
+    WARNING: ->NamedError at line 89 is being replaced at line 101 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
+    Compiling "resources/public/js/furthermore.js" failed.
+    clojure.lang.ExceptionInfo: failed compiling file:src/cljs/furthermore/core.cljs
+     at clojure.core$ex_info.invoke (core.clj:4577)
+    Caused by: clojure.lang.ExceptionInfo: java.lang.ExceptionInInitializerError, compiling:(schema/macros.clj:1:1) at line 1 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/core.cljs
+     at clojure.core$ex_info.invoke (core.clj:4577)
+    Caused by: clojure.lang.Compiler$CompilerException: java.lang.ExceptionInInitializerError, compiling:(schema/macros.clj:1:1)
+     at clojure.lang.Compiler.load (Compiler.java:7206)
+    Caused by: java.lang.ExceptionInInitializerError: null
+     at java.lang.Class.forName0 (Class.java:-2)
+    Caused by: java.lang.ClassNotFoundException: riddley.Util
+     at java.net.URLClassLoader$1.run (URLClassLoader.java:372)
+I've seen this before with another component (sablono, I think) and just decided to not use it for now. However, om-bootstrap would be incredibly useful so it looks like I'm going to have to figure out a way to get it sorted by hand.
+* I'm guessing I'll need to somehow adjust om-bootstrap's dependencies to point to a more recent version of schema.
+
+### Routers Within Routers
+* Going with secretary and Compojure together is working great. After a bit of refactoring, I have Compojure taking basically everything that isn't an API call to secretary who then dynamically generates through Om the content that needs to be displayed. I'm really liking this. All I need is a single HTML base file that Om fleshes out based on the user request.
+* This means I can also populate the nav bar dynamically. For example, if I add a new post that has a new tag, it'll auto-populate the tags dropdown menu. Well, it'll do that eventually; right now, the only time it talks to the repository is based on user interaction. I plan on having the UI poll the database regularly, looking for changes. It is a liveblog, after all.
+* Working on the home/index page now. As for the table of contents, I'm not sure if a parent/child outline-style display is the best way to go but luckily the data is stored with very little prescriptive structure so it can be interpreted and displayed in a variety of ways.
+
+### Paving the Way
+* March. Already. Good grief.
+* First up today is ensuring the base HTML file from which the different areas of the site are served is capable of serving up more than one page based on which page is meant to be served: home and TOC, for starters; individual post pages later. Maybe static pages before individual post pages. We'll see.
+* Basically, I want to be able to go to / and display the home page, /contents to display the table of contents, and so forth, and have it use the same HTML file and just build the page inside of it dynamically based on request. While keeping browser history.
+* Time to do some Sunday morning research.
+* Looks like [secretary](https://github.com/gf3/secretary) would do the trick but do I need it? That would leave Compojure to handle just a single user-oriented route "/" and then a bunch of RESTful routes used by Om. A part of me is concerned about having two routers; it would *seem* that I could use Compojure for everything if I can easily pass the URL into Om and then... well, route it from there which is exactly what secretary does anyway.
+* Clearly I've never built an SPA before.
+
+
 ## Day 9: Saturday, February 28, 2015
 
 ### The Figwheel/Om/Sass Carnival of Glory
