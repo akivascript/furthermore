@@ -35,12 +35,19 @@
       post)))
 
 (defn get-posts
-  [posts & prepare]
-  (let [posts (map #(get-post (:_id %)) posts)]
-    (if-not (or prepare
-                (= prepare :false))
+  ([]
+   (let [posts (read-entities "posts"
+                              (array-map :last-updated -1)
+                              10)]
       (->> posts
-           (sort-by #(:last-updated %))
-           reverse
-           vec)
-      posts)))
+           (map prepare-post)
+           vec)))
+  ([posts & prepare]
+   (let [posts (map #(get-post (:_id %)) posts)]
+     (if-not (or prepare
+                 (= prepare :false))
+       (->> posts
+            (sort-by #(:last-updated %))
+            reverse
+            vec)
+       posts))))

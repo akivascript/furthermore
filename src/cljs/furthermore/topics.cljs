@@ -1,14 +1,14 @@
 (ns furthermore.topics
-    (:require [ajax.core :as ajax]
-              [cljs.reader :as reader]
-              [goog.events :as events]
-              [om.core :as om :include-macros true]
-              [om-tools.dom :as dom :include-macros true]
-              [furthermore.posts :as posts]
-              [furthermore.utils :as utils])
-    (:import [goog.net XhrIo]
-             goog.net.EventType
-             [goog.events EventType]))
+  (:require [ajax.core :as ajax]
+            [cljs.reader :as reader]
+            [goog.events :as events]
+            [om.core :as om :include-macros true]
+            [om-tools.dom :as dom :include-macros true]
+            [furthermore.posts :as posts]
+            [furthermore.utils :as utils])
+  (:import [goog.net XhrIo]
+           goog.net.EventType
+           [goog.events EventType]))
 
 (defn make-outline-selector
   [item]
@@ -39,13 +39,13 @@
       (doseq [ref (:references post)] (get-reference ref)))
     om/IRender
     (render [_]
-      (dom/div {:class "post"}
+      (dom/div {:class "col-xs-12 post"}
                (dom/div {:class "title" :id (:_id post)}
                         (make-outline-selector post)
                         (dom/a {:href (str "/get/post/" (:_id post))}
                                (:title post)))
                (dom/div {:class "small date"}
-                        (utils/format-timestamp (:created-on post)))
+                        (:date  (utils/format-timestamp (:created-on post))))
                (when (:opened post)
                  (apply dom/div
                         {:style {:marginLeft 15}}
@@ -54,10 +54,10 @@
 (defn topic-view
   [topic owner]
   (om/component
-   (dom/div
+   (dom/div {:class "col-xs-12"}
     (dom/span {:style {:textDecoration "underline"}}
               (:title topic))
-    (apply dom/div
+    (apply dom/div {:class "row"}
            (om/build-all post-view (:references topic))))))
 
 (defn load-content
@@ -70,5 +70,7 @@
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
-      (apply dom/div {:id "topics"}
-             (om/build-all topic-view (:topics app))))))
+      (dom/div {:id "topics"
+                :class "container"}
+               (apply dom/div {:class "row"}
+                      (om/build-all topic-view (:topics app)))))))

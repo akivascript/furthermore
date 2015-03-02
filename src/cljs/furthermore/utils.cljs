@@ -4,4 +4,5 @@
 (defn format-timestamp
   [timestamp]
   (let [ts (-> timestamp js/Date. goog.date.DateTime.)]
-    (timef/unparse (timef/formatter "MMMM d, yyyy") ts)))
+    {:date (timef/unparse (timef/formatter "MMMM d, yyyy") ts)
+     :time (timef/unparse (timef/formatter "HH:MM") ts)}))
