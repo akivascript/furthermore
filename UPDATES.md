@@ -12,19 +12,21 @@
 
 ### The Neverending Fuss
 * Trying to get om-bootstrap going but it's relying on [schema](https://github.com/Prismatic/schema) which is crying foul:
-    WARNING: ->ValidationError at line 68 is being replaced at line 80 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
-    WARNING: ->NamedError at line 89 is being replaced at line 101 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
-    Compiling "resources/public/js/furthermore.js" failed.
-    clojure.lang.ExceptionInfo: failed compiling file:src/cljs/furthermore/core.cljs
-     at clojure.core$ex_info.invoke (core.clj:4577)
-    Caused by: clojure.lang.ExceptionInfo: java.lang.ExceptionInInitializerError, compiling:(schema/macros.clj:1:1) at line 1 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/core.cljs
-     at clojure.core$ex_info.invoke (core.clj:4577)
-    Caused by: clojure.lang.Compiler$CompilerException: java.lang.ExceptionInInitializerError, compiling:(schema/macros.clj:1:1)
-     at clojure.lang.Compiler.load (Compiler.java:7206)
-    Caused by: java.lang.ExceptionInInitializerError: null
-     at java.lang.Class.forName0 (Class.java:-2)
-    Caused by: java.lang.ClassNotFoundException: riddley.Util
-     at java.net.URLClassLoader$1.run (URLClassLoader.java:372)
+<pre><code>
+WARNING: ->ValidationError at line 68 is being replaced at line 80 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
+WARNING: ->NamedError at line 89 is being replaced at line 101 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
+Compiling "resources/public/js/furthermore.js" failed.
+clojure.lang.ExceptionInfo: failed compiling file:src/cljs/furthermore/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4577)
+Caused by: clojure.lang.ExceptionInfo: java.lang.ExceptionInInitializerError, compiling:(schema/macros.clj:1:1) at line 1 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/core.cljs
+ at clojure.core$ex_info.invoke (core.clj:4577)
+Caused by: clojure.lang.Compiler$CompilerException: java.lang.ExceptionInInitializerError, compiling:(schema/macros.clj:1:1)
+ at clojure.lang.Compiler.load (Compiler.java:7206)
+Caused by: java.lang.ExceptionInInitializerError: null
+ at java.lang.Class.forName0 (Class.java:-2)
+Caused by: java.lang.ClassNotFoundException: riddley.Util
+ at java.net.URLClassLoader$1.run (URLClassLoader.java:372)
+</code></pre>
 I've seen this before with another component (sablono, I think) and just decided to not use it for now. However, om-bootstrap would be incredibly useful so it looks like I'm going to have to figure out a way to get it sorted by hand.
 * I'm guessing I'll need to somehow adjust om-bootstrap's dependencies to point to a more recent version of schema.
 
