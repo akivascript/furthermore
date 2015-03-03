@@ -1,5 +1,27 @@
 # The Furthermore Protoblog
 
+## Day 11: Monday, March 2, 2015
+
+### More Reactification
+* Spent some time converting the static navbar to dynamic and React-driven. The user can now switch between pages without a browser refresh. This includes adding to the history so the back button works. Well, mostly. There are some bugs to iron out but I'm pretty happy with how everything's working.
+* This means there'll be an initial pause in loading when the site is first accessed but, after that, the navigation from page to page is almost instantaneous. It's pretty neat.
+* Tomorrow will be taking care of some bugs relating to this nav work followed by the post page itself. Once those two things are done, I'm going to finalize the layout and then I think it'll be safe to publish and move this blog to there.
+* Exciting, yeah?
+
+### Typographer 1.1.0
+* Without having to change one line of code, I was able to get Typographer working in ClojureScript so now I can display fancy quotes and dashes as well as the raw HTML I need to make this blog work.
+* Typographer is now at Clojars and [here](https://github.com/akivaschoen/typographer) at Github, of course.
+
+### Rendering Issue Sorted
+* There's an option that can be passed to an Om tag—:dangerouslySetInnerHTML—that allows you to pass raw HTML so it will be interpreted by the browser. Normally, I'd not recommend this but it's required for post content since it'll have a load of layout baked in.
+
+### Rendering Issue
+* I woke up and it's still March. I expected it to be April already.
+* Grabbing a post's topic title for the home page display was a cinch.
+* But the browser is still not parsing HTML markup in React-generated components. I thought perhaps this might be an issue with the fact that I was parsing the Markdown in the server so I moved it to CLJS and, well, no change.
+* I also need to make a CLJS version of Typography so I can get fancy quotes back in there. They were being mangled when translated to EDN and transferred to the UI.
+
+
 ## Day 10: Sunday, March 1, 2015
 
 ### Never Mind All That
@@ -12,8 +34,7 @@
 
 ### The Neverending Fuss
 * Trying to get om-bootstrap going but it's relying on [schema](https://github.com/Prismatic/schema) which is crying foul:
-<pre><code>
-WARNING: ->ValidationError at line 68 is being replaced at line 80 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
+<pre><code>WARNING: ->ValidationError at line 68 is being replaced at line 80 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
 WARNING: ->NamedError at line 89 is being replaced at line 101 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
 Compiling "resources/public/js/furthermore.js" failed.
 clojure.lang.ExceptionInfo: failed compiling file:src/cljs/furthermore/core.cljs
@@ -25,8 +46,7 @@ Caused by: clojure.lang.Compiler$CompilerException: java.lang.ExceptionInInitial
 Caused by: java.lang.ExceptionInInitializerError: null
  at java.lang.Class.forName0 (Class.java:-2)
 Caused by: java.lang.ClassNotFoundException: riddley.Util
- at java.net.URLClassLoader$1.run (URLClassLoader.java:372)
-</code></pre>
+ at java.net.URLClassLoader$1.run (URLClassLoader.java:372)</code></pre>
 I've seen this before with another component (sablono, I think) and just decided to not use it for now. However, om-bootstrap would be incredibly useful so it looks like I'm going to have to figure out a way to get it sorted by hand.
 * I'm guessing I'll need to somehow adjust om-bootstrap's dependencies to point to a more recent version of schema.
 
