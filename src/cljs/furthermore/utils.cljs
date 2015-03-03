@@ -7,6 +7,6 @@
     {:date (timef/unparse (timef/formatter "MMMM d, yyyy") ts)
      :time (timef/unparse (timef/formatter "HH:MM") ts)}))
 
-(def set-url
+(defn set-url
   [title url]
   (.pushState js/history (.-state js/history) title url))
