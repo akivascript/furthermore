@@ -20,16 +20,14 @@
    [com.novemberain/monger "2.1.0"]
    [org.omcljs/om "0.8.8"]
    [prismatic/om-tools "0.3.10"]
-   [ring "1.3.2"]
    [ring/ring-defaults "0.1.4"]
-   [fogus/ring-edn "0.2.0"]
-   [sablono "0.3.4"]
    [secretary "1.2.1"]
    [typographer "1.1.0"]]
 
   :plugins
   [[lein-cljsbuild "1.0.6-SNAPSHOT"]
-   [lein-environ "1.0.0"]]
+   [lein-environ "1.0.0"]
+   [lein-ring "0.8.13"]]
 
   :source-paths
   ["src/clj"]
@@ -39,6 +37,8 @@
 
   :uberjar-name
   "furthermore-test.jar"
+
+  :ring {:handler furthermore.server/app}
 
   :cljsbuild
   {:builds {:app {:source-paths ["src/cljs"]
@@ -67,7 +67,9 @@
          {:dependencies
           [[expectations "2.0.16"]
            [figwheel "0.2.5-SNAPSHOT"]
-           [leiningen "2.5.1"]]
+           [leiningen "2.5.1"]
+           [javax.servlet/servlet-api "2.5"]
+           [ring-mock "0.1.5"]]
           :plugins [[lein-figwheel "0.2.5-SNAPSHOT"]]
           :env {:is-dev true}
           :figwheel {:http-server-root "public"

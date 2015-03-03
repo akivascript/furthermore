@@ -1,5 +1,12 @@
 # The Furthermore Protoblog
 
+## Day 12: Tuesday, March 3, 2015
+
+### It Ain't a Day Without Some Hassle
+* Suddenly, Compojure started shitting the bed, refusing to serve any stylesheets or images, claiming 'Resource interpreted as Stylesheet but transferred with MIME type text/html' (for example). I've made no changes to Compojure's routing; I even checked back through the commit history just to be certain. Nope. Just up and started puking this morning.
+* I briefly entertained the idea of just taking the opportunity and jumping to Luminus but decided to just rip out all the Compojure guts that had been put there by whichever lein template I had used to get started and replacing them with the barest minimum from the compojure lein template. And now everything works again.
+
+
 ## Day 11: Monday, March 2, 2015
 
 ### More Reactification
