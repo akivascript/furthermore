@@ -50,7 +50,7 @@
                                                          (d/br)
                                                          (str date " @ " time))))))))))))
 
-(defn construct-page
+(defn get-page
   [app owner]
   (reify
     om/IWillMount

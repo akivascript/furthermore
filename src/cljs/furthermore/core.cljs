@@ -33,8 +33,8 @@
      om/IRender
      (render [_]
        (let [target-page (condp = (:page app)
-                               :home home/construct-page
-                               :contents topics/construct-page)]
+                               :home home/get-page
+                               :contents topics/get-page)]
          (om/build target-page app)))))
  app-state
  application)

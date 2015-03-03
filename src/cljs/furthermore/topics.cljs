@@ -1,16 +1,11 @@
 (ns furthermore.topics
   (:require [ajax.core :as ajax]
-            [cljs.reader :as reader]
-            [goog.events :as events]
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [typographer.core :as t]
             [furthermore.posts :as posts]
-            [furthermore.utils :as utils])
-  (:import [goog.net XhrIo]
-           goog.net.EventType
-           [goog.events EventType]))
+            [furthermore.utils :as utils]))
 
 (defn make-outline-selector
   [item]
@@ -33,7 +28,7 @@
             {:handler #(om/update! ref %)
              :error-handler #(.error js/console %)}))
 
-(defn post-view
+(defn posts
   [post owner]
   (reify
     om/IWillMount
@@ -51,18 +46,18 @@
                (when (:opened post)
                  (apply d/div
                         {:style {:marginLeft 15}}
-                        (om/build-all post-view (:references post))))))))
+                        (om/build-all posts (:references post))))))))
 
-(defn topic-view
+(defn topics
   [topic owner]
   (om/component
    (d/div {:class "col-xs-12"}
     (d/span {:style {:textDecoration "underline"}}
               (:title topic))
     (apply d/div {:class "row"}
-           (om/build-all post-view (:references topic))))))
+           (om/build-all posts (:references topic))))))
 
-(defn construct-page
+(defn get-page
   [app owner]
   (reify
     om/IWillMount
@@ -75,4 +70,4 @@
       (d/div {:id "topics"
                 :class "container"}
                (apply d/div {:class "row"}
-                      (om/build-all topic-view (:topics app)))))))
+                      (om/build-all topics (:topics app)))))))
