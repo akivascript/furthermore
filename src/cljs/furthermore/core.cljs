@@ -4,6 +4,7 @@
               [om.core :as om :include-macros true]
               [secretary.core :as secretary :refer-macros [defroute]]
               [furthermore.home :as home]
+              [furthermore.navigation :as nav]
               [furthermore.topics :as topics])
     (:import goog.History))
 
@@ -12,6 +13,7 @@
 (defonce app-state (atom {:topics [] :posts [] :page :home}))
 
 (def application {:target (. js/document (getElementById "page-content"))})
+(def nav-bar {:target (. js/document (getElementById "nav-bar"))})
 
 (defroute "/" []
   (let [cursor (om/ref-cursor (om/root-cursor app-state))]
@@ -36,5 +38,14 @@
          (om/build target-page app)))))
  app-state
  application)
+
+(om/root
+ (fn [app owner]
+   (reify
+     om/IRender
+     (render [_]
+       (om/build nav/render app))))
+ app-state
+ nav-bar)
 
 (secretary/dispatch! window.location.pathname)
