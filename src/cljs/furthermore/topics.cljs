@@ -2,8 +2,10 @@
   (:require [ajax.core :as ajax]
             [cljs.reader :as reader]
             [goog.events :as events]
+            [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
-            [om-tools.dom :as dom :include-macros true]
+            [om-tools.dom :as d :include-macros true]
+            [typographer.core :as t]
             [furthermore.posts :as posts]
             [furthermore.utils :as utils])
   (:import [goog.net XhrIo]
@@ -17,13 +19,13 @@
                 "glyphicon glyphicon-triangle-bottom small"
                 "glyphicon glyphicon-triangle-right small")]
     (if (pos? refcount)
-      (dom/span {:class class
-                 :style {:marginRight 3 :color "#aaa"}
-                 :ariaHidden "true"
-                 :onClick #(om/transact! item :opened not)})
-      (dom/span {:class class
-                 :style {:marginRight 3 :visibility "hidden"}
-                 :ariaHidden "true"}))))
+      (d/span {:class class
+               :style {:marginRight 3 :color "#aaa"}
+               :ariaHidden "true"
+               :onClick #(om/transact! item :opened not)})
+      (d/span {:class class
+               :style {:marginRight 3 :visibility "hidden"}
+               :ariaHidden "true"}))))
 
 (defn get-reference
   [ref]
@@ -39,28 +41,28 @@
       (doseq [ref (:references post)] (get-reference ref)))
     om/IRender
     (render [_]
-      (dom/div {:class "col-xs-12 post"}
-               (dom/div {:class "title" :id (:_id post)}
+      (d/div {:class "col-xs-12 post"}
+               (d/div {:class "title" :id (:_id post)}
                         (make-outline-selector post)
-                        (dom/a {:href (str "/get/post/" (:_id post))}
+                        (d/a {:href (str "/get/post/" (:_id post))}
                                (:title post)))
-               (dom/div {:class "small date"}
-                        (:date  (utils/format-timestamp (:created-on post))))
+               (d/div {:class "small date"}
+                        (:date (utils/format-timestamp (:created-on post))))
                (when (:opened post)
-                 (apply dom/div
+                 (apply d/div
                         {:style {:marginLeft 15}}
                         (om/build-all post-view (:references post))))))))
 
 (defn topic-view
   [topic owner]
   (om/component
-   (dom/div {:class "col-xs-12"}
-    (dom/span {:style {:textDecoration "underline"}}
+   (d/div {:class "col-xs-12"}
+    (d/span {:style {:textDecoration "underline"}}
               (:title topic))
-    (apply dom/div {:class "row"}
+    (apply d/div {:class "row"}
            (om/build-all post-view (:references topic))))))
 
-(defn load-content
+(defn construct-page
   [app owner]
   (reify
     om/IWillMount
@@ -70,7 +72,7 @@
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
-      (dom/div {:id "topics"
+      (d/div {:id "topics"
                 :class "container"}
-               (apply dom/div {:class "row"}
+               (apply d/div {:class "row"}
                       (om/build-all topic-view (:topics app)))))))

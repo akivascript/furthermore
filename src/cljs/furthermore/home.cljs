@@ -1,16 +1,11 @@
 (ns furthermore.home
   (:require [ajax.core :as ajax]
-            [cljs.reader :as reader]
-            [goog.events :as events]
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [typographer.core :as t]
             [furthermore.posts :as posts]
-            [furthermore.utils :as utils])
-    (:import [goog.net XhrIo]
-             goog.net.EventType
-             [goog.events EventType]))
+            [furthermore.utils :as utils]))
 
 (enable-console-print!)
 
