@@ -2,7 +2,7 @@
 
 ## Day 11: Monday, March 2, 2015
 
-### More Rectification
+### More Reactification
 * Spent some time converting the static navbar to dynamic and React-driven. The user can now switch between pages without a browser refresh. This includes adding to the history so the back button works. Well, mostly. There are some bugs to iron out but I'm pretty happy with how everything's working.
 * This means there'll be an initial pause in loading when the site is first accessed but, after that, the navigation from page to page is almost instantaneous. It's pretty neat.
 * Tomorrow will be taking care of some bugs relating to this nav work followed by the post page itself. Once those two things are done, I'm going to finalize the layout and then I think it'll be safe to publish and move this blog to there.
