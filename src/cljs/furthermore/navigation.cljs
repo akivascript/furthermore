@@ -1,6 +1,8 @@
 (ns furthermore.navigation
   (:require [om.core :as om :include-macros true]
-            [om-tools.dom :as d :include-macros true]))
+            [om-tools.dom :as d :include-macros true]
+            [secretary.core :as secretary :refer-macros [defroute]]
+))
 
 (enable-console-print!)
 
@@ -19,11 +21,11 @@
                  (d/a {:href "#"
                        :class "navbar-brand"
                        :style {:font-family "arimo"}
-                       :onClick #(om/update! app :page :home)}
+                       :onClick #(secretary/dispatch! "/")}
                       "AND FURTHERMORE"))
           (d/div {:class "navbar-collapse collapse"}
                  (d/ul {:class "nav navbar-nav"}
                        (d/li
                         (d/a {:href "#"
-                              :onClick #(om/update! app :page :contents)}
+                              :onClick #(secretary/dispatch! "/contents")}
                              "Table of Contents")))))))

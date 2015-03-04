@@ -3,8 +3,8 @@
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
+            [secretary.core :as secretary]
             [typographer.core :as t]
-            [furthermore.posts :as posts]
             [furthermore.utils :as utils]))
 
 (defn make-outline-selector
@@ -39,7 +39,9 @@
       (d/div {:class "col-xs-12 post"}
                (d/div {:class "title" :id (:_id post)}
                         (make-outline-selector post)
-                        (d/a {:href (str "/get/post/" (:_id post))}
+                        (d/a {:href "#"
+                              :onClick #(secretary/dispatch!
+                                         (str "/post/" (:_id post)))}
                                (:title post)))
                (d/div {:class "small date"}
                         (:date (utils/format-timestamp (:created-on post))))
@@ -50,12 +52,17 @@
 
 (defn topics
   [topic owner]
-  (om/component
-   (d/div {:class "col-xs-12"}
-    (d/span {:style {:textDecoration "underline"}}
-              (:title topic))
-    (apply d/div {:class "row"}
-           (om/build-all posts (:references topic))))))
+  (reify
+    om/IWillMount
+    (will-mount [_]
+      (doseq [ref (:references topic)] (get-reference ref)))
+    om/IRender
+    (render [_]
+      (d/div {:class "col-xs-12"}
+             (d/span {:style {:textDecoration "underline"}}
+                     (:title topic))
+             (apply d/div {:class "row"}
+                    (om/build-all posts (:references topic)))))))
 
 (defn get-page
   [app owner]
