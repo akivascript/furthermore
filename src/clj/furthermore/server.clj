@@ -16,14 +16,18 @@
    :body (pr-str data)})
 
 (defroutes app-routes
+  ;; API calls
   (context "/get" []
            (GET "/post/:id" [id] (-> id get-post generate-response))
            (GET "/posts" [] (generate-response (get-posts)))
            (GET "/topic/:id" [id] (-> id get-topic generate-response))
+           (GET "/topic/:id/refs" [id] (-> id get-topic-references generate-response))
            (GET "/topics" [] (generate-response (get-topics))))
-  (GET "/" [uri] (render (io/resource "assets/html/shell.html") uri))
+  ;; Static resources
   (route/resources "/react" {:root "react"})
-  (route/resources "/"))
+  (route/resources "/")
+  ;; Site requests. This is placed last to serve as a pass-through to secretary
+  (GET "*" [uri] (render (io/resource "assets/html/shell.html") uri)))
 
 
 (def app

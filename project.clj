@@ -38,13 +38,15 @@
   :uberjar-name
   "furthermore-test.jar"
 
+  :main furthermore.core
+
   :ring {:handler furthermore.server/app}
 
   :cljsbuild
   {:builds {:app {:source-paths ["src/cljs"]
                   :compiler {:output-to "resources/public/js/furthermore.js"
                              :output-dir "resources/public/js/out"
-                             :asset-path "js/out"
+                             :asset-path "/js/out"
                              :main furthermore.dev
                              :source-map true
                              :source-map-timestamp true
