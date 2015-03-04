@@ -1,6 +1,21 @@
 # The Furthermore Protoblog
 
+## Day 13: Wednesday, March 4, 2015
+
+### Individual Post Pages
+* Upgraded to MongoDB 3.0 for no other reason than it was part of me running `brew upgrade`. So far so good.
+* Conquered what was blocking me with Om and that was, well, me. Part of me just isn't comfortable shoving *everything* into a single atom especially when that stuff is referenced only by one page but, according to everything I've read, that's exactly what you're supposed to do. So I was trying to shove some stuff into local state or putting up an async channel just to update one tiny thing and it was just a bunch of muck. Gave in to the Om way and, whoa hey, wouldja look at that, it suddenly works as expected.
+* It's all means to an end as now Furthermore can show individual blog posts. Whoo.
+* Meanwhile, stuff I'm doing is starting to introduce bugs for the first time which is kind of neat. This isn't a sign of growing fragility and interdependence, mind you. The bug was brought up because I changed how the server responds to requests for blog data. Previously, it returned an item and went ahead and fleshed out all of its references rather than leaving just the ID to be populated later if necessary. So it was transferring a bunch of stuff that might not even be necessary. For example, on the post page, I just wanted the post's topic's title. But grabbing the topic by ID returned *all* of the data including *all* of the data for each of it's references. Wasteful.
+* This [post](http://stackoverflow.com/questions/22883759/what-is-the-difference-between-application-state-and-component-local-state-in-cl#22914077) was especially useful in helping me understand the different use cases for Om's states.
+
+
 ## Day 12: Tuesday, March 3, 2015
+
+### Research and Learning
+* Spending the evening reading up more on React fundamentals and Flux as well.
+* I spent a bit of time today stymied by Om trying to do something that seems like it should be simple but nothing I did seemed to work. Instead of burning time trying to essentially just jam the pieces together based on bits that DDG searches bring up, I decided instead to spend the time being more positively productive by learning React more deeply. I'd like to see a tutorial written that introduces Om in step-by-step context with learning React. Something like that would have been definitely helpful to me.
+* was: re: could be a future blog post for me.
 
 ### It Ain't a Day Without Some Hassle
 * Suddenly, Compojure started shitting the bed, refusing to serve any stylesheets or images, claiming 'Resource interpreted as Stylesheet but transferred with MIME type text/html' (for example). I've made no changes to Compojure's routing; I even checked back through the commit history just to be certain. Nope. Just up and started puking this morning.
