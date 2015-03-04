@@ -7,6 +7,8 @@
             [typographer.core :as t]
             [furthermore.utils :as utils]))
 
+(enable-console-print!)
+
 (defn make-outline-selector
   [item]
   (let [refcount (count (:references item))
@@ -31,9 +33,6 @@
 (defn posts
   [post owner]
   (reify
-    om/IWillMount
-    (will-mount [_]
-      (doseq [ref (:references post)] (get-reference ref)))
     om/IRender
     (render [_]
       (d/div {:class "col-xs-12 post"}
@@ -46,6 +45,7 @@
                (d/div {:class "small date"}
                         (:date (utils/format-timestamp (:created-on post))))
                (when (:opened post)
+                 (doseq [ref (:references post)] (get-reference ref))
                  (apply d/div
                         {:style {:marginLeft 15}}
                         (om/build-all posts (:references post))))))))
