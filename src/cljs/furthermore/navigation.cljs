@@ -23,7 +23,8 @@
                        :style {:font-family "arimo"}
                        :onClick #(secretary/dispatch! "/")}
                       "AND FURTHERMORE"))
-          (d/div {:class "navbar-collapse collapse"}
+          (d/div {:id "navbar-main"
+                  :class "navbar-collapse collapse"}
                  (d/ul {:class "nav navbar-nav"}
                        (d/li
                         (d/a {:href "#"
