@@ -56,6 +56,7 @@
 
 ### The Neverending Fuss
 * Trying to get om-bootstrap going but it's relying on [schema](https://github.com/Prismatic/schema) which is crying foul:
+
 <pre><code>WARNING: ->ValidationError at line 68 is being replaced at line 80 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
 WARNING: ->NamedError at line 89 is being replaced at line 101 file:/Users/akiva/.m2/repository/prismatic/schema/0.3.1/schema-0.3.1.jar!/schema/utils.cljs
 Compiling "resources/public/js/furthermore.js" failed.
