@@ -21,6 +21,12 @@
 (def application {:target (. js/document (getElementById "page-content"))})
 (def nav-bar {:target (. js/document (getElementById "nav-bar"))})
 
+(defn- set-post
+  [cursor id]
+  (om/update! cursor [:post :id] id)
+  (om/update! cursor [:post :post] nil)
+  (om/update! cursor [:post :topic] nil))
+
 (defroute "/" []
   (let [cursor (om/ref-cursor (om/root-cursor app-state))]
     (om/update! cursor [:page] :home)))
@@ -32,7 +38,7 @@
 (defroute "/post/:id" [id]
   (let [cursor (om/ref-cursor (om/root-cursor app-state))]
     (om/update! cursor [:page] :post)
-    (om/update! cursor [:post :id] id)))
+    (set-post cursor id)))
 
 (om/root
  (fn [app owner]
