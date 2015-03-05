@@ -5,7 +5,8 @@ a {
 
     &:hover {
         text-decoration: none;
-        color: #000;
+
+        color: $faded-blue;
     }
 }
 
@@ -25,11 +26,6 @@ code, kbd, pre, samp {
     font-family: $title-font;
 }
 
-#page-content {
-    margin-top: 63px;
-    padding-top: 9.5px;
-}
-
 .page-header {
     margin-top: 0px;
     border-bottom: none;
@@ -40,15 +36,13 @@ code, kbd, pre, samp {
 
     img {
         display: block;
+
         margin: 0px auto;
         clear: right;
         
         @include borders (10px);
         border: 1px solid #aaa;
     }
-}
-
-#index {
 }
 
 .page-footer {
@@ -66,15 +60,17 @@ code, kbd, pre, samp {
 
     .title {
         border-top: 1px solid #aaa;
-        color: #955;
+
         font-size: 150%;
         font-family: $header-font;
+
+        color: #955;
 
         a {
             color: #955;
 
             &:hover {
-                color: #000;
+                color: $faded-blue;
             }
         }
     }
@@ -99,6 +95,7 @@ code, kbd, pre, samp {
 
         font-family: $body-font;
         font-size: 90%;
+
         color: #555;
     }
 
@@ -113,15 +110,30 @@ code, kbd, pre, samp {
     }
 }
 
+#page-content {
+    margin-top: 63px;
+    padding-top: 9.5px;
+}
+
 #topics {
     .post {
+        margin-bottom: 0px;
+
         .title {
             display: inline-block;
+
             padding-right: 10px;
+
+            border: 0px;
+
+            font-family: $body-font;
+            font-size: 100%;
             font-weight: bold;
         }
+
         .date {
             display: inline-block;
+
             color: #aaa;
         }
     }
