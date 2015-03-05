@@ -20,9 +20,8 @@
                            (d/span {:class "icon-bar"}))
                  (d/a {:href "#"
                        :class "navbar-brand"
-                       :style {:font-family "arimo"}
                        :onClick #(secretary/dispatch! "/")}
-                      "AND FURTHERMORE"))
+                      "WhateveR"))
           (d/div {:id "navbar-main"
                   :class "navbar-collapse collapse"}
                  (d/ul {:class "nav navbar-nav"}

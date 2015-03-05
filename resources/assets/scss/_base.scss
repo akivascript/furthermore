@@ -1,7 +1,13 @@
-$background-color: #fafaf7;
+/* $background-color: #fbf9f4; */
+$background-color: #fcfbf6;
+$faded-blue: #465871;
 $link-color: #8798a7;
-$green: #7f887f;
 $light-gray: #aaaaaa;
+
+$title-font: 'Cinzel Decorative';
+$header-font: 'Crimson Text';
+$body-font: 'Open Sans';
+$code-font: 'Source Code Pro';
 
 @mixin borders ($radius) {
 	-webkit-border-radius: $radius;
