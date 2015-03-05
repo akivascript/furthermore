@@ -13,15 +13,14 @@
   [item]
   (let [refcount (count (:references item))
         class (if (:opened item)
-                "glyphicon glyphicon-triangle-bottom small"
-                "glyphicon glyphicon-triangle-right small")]
+                "glyphicon glyphicon-triangle-bottom small outline-widget"
+                "glyphicon glyphicon-triangle-right small outline-widget")]
     (if (pos? refcount)
       (d/span {:class class
-               :style {:marginRight 3 :color "#aaa"}
                :ariaHidden "true"
                :onClick #(om/transact! item :opened not)})
       (d/span {:class class
-               :style {:marginRight 3 :visibility "hidden"}
+               :style {:visibility "hidden"}
                :ariaHidden "true"}))))
 
 (defn get-reference
