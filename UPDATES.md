@@ -1,5 +1,14 @@
 # The Furthermore Protoblog
 
+## Day 14: Thursday, March 5, 2015
+
+### Focusing On the UI
+* I've been borrowing in its near entirety the layout and colors from my previous and failed blog Backed Up Somewhere. I've known it wasn't what I wanted to do but it gave me a nice layout to look at as I was coding. This morning, I began the work to transition the blog to a new layout. It's still fairly similar but it's getting increasingly different from its predecessor.
+* As I was clicking around, I began to realize how close to 'complete' the site is getting. The very basic functionality is all there with the exception of inter-post references. Although the underlying structure is there, I haven't yet decided on how I want to present it in the UI. I have an idea but it'll be complex due to the responsive design. At regular sizes (probably col-md-* and higher), it'll be three columns on an individual post page. Those columns will have to be repositioned below in a reasonable manner.
+* Before I give the site a soft launch, there are a few more things I want to get done: the site log and tags. Site log will require some back-end work to add logging to all user-facing admin activities. Tagging is already there, I just need to add a tag index page, link to and from posts, and add a Tags drop-down to the navbar.
+* Oh, and I need to settle on the name for the blog. I'm definitely moving it off of backedupsomewhere.com so it can return to its job as a file repository. I have some ideas but none them really get me excited.
+
+
 ## Day 13: Wednesday, March 4, 2015
 
 ### Minor Bug Hunt
