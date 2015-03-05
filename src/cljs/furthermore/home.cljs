@@ -21,7 +21,7 @@
     om/IRender
     (render [_]
       (let [{:keys [date time]} (utils/format-timestamp (:last-updated post))
-            body (-> (:body post) t/smarten md->html)
+            body (-> (:body post) md->html t/smarten)
             title (when (:title post)
                     (t/smarten (:title post)))
             topic-title (when-let [topic-title (get-in post [:topic :title])]

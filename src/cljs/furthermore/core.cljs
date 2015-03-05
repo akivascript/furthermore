@@ -45,11 +45,11 @@
    (reify
      om/IRender
      (render [_]
-       (let [target-page (condp = (:page app)
-                               :home home/get-page
-                               :contents topics/get-page
-                               :post posts/get-page
-                               error/get-page)]
+       (let [target-page (case (:page app)
+                           :home home/get-page
+                           :contents topics/get-page
+                           :post posts/get-page
+                           error/get-page)]
          (om/build target-page app)))))
  app-state
  application)

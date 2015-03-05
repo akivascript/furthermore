@@ -3,29 +3,27 @@
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
+            [secretary.core :as secretary]
             [typographer.core :as t]
             [furthermore.utils :as utils]))
 
 (enable-console-print!)
 
 (defn post-view
-  [app owner]
+  [post owner]
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET (str "/get/post/" (get-in app [:post :id]))
-                {:handler #(om/update! app [:post :post] %)
+      (ajax/GET (str "/get/topic/" (get-in post [:topic :_id]))
+                {:handler #(om/transact! post :topic (fn [_] %))
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
-      (ajax/GET (str "/get/topic/" (get-in app [:post :post :topic :_id]))
-                {:handler #(om/update! app [:post :topic] %)
-                 :error-handler #(.error js/console %)})
-      (let [post (get-in app [:post :post])
-            title (when (:title post) (t/smarten (:title post)))
-            body (-> (:body post) str t/smarten md->html)
-            {:keys [date time]} (utils/format-timestamp (:last-updated post))
-            topic-title (get-in app [:post :topic :title])]
+      (let [{:keys [date time]} (utils/format-timestamp (:last-updated post))
+            body (-> (:body post) t/smarten md->html)
+            title (when (:title post)
+                    (t/smarten (:title post)))
+            topic-title (get-in post [:topic :title])]
         (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3"}
                (d/div {:class "post"}
                       (d/div
@@ -54,9 +52,17 @@
 (defn get-page
   [app owner]
   (reify
+    om/IWillMount
+    (will-mount [_]
+      (ajax/GET (str "/get/post/" (get-in app [:post :id]))
+                {:handler #(om/update! app [:post :post] %)
+                 :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
-      (d/div {:id "posts"
-              :class "container"}
-             (d/div {:class "row"}
-                    (om/build post-view app))))))
+      ;; This is a total hack but the page is loading twice: first returning
+      ;; nil, second returning the post. So we're skipping the nil. 
+      (when-let [post (get-in app [:post :post])]
+        (d/div {:id "posts"
+                :class "container"}
+               (d/div {:class "row"}
+                      (om/build post-view post)))))))
