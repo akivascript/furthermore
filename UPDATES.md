@@ -2,6 +2,12 @@
 
 ## Day 13: Wednesday, March 4, 2015
 
+### Minor Bug Hunt
+* Git has suddenly forgotten the dev branch's remote tracking because why not. Sorted with a quick 'git push -u'.
+* Fixed the issue of the topics page not behaving properly. It was populating the top level posts for a topic but any posts attached below that level (e.g., to another post) were not populating. I moved the function that references them to the action that opens the parent post so they're sure to be there each time.
+* I might want to move that function again because, at least in Chromium, it flickers a little bit as the browser sometimes displays the div before the contents are updated.
+* Fixed a display issue with the posts page in that it wasn't working at all and I'm not sure how it was ever working. It works now. Part of the issue was a bug in my Typographer library. I'll upload 1.1.1 sooner or later.
+
 ### Individual Post Pages
 * Upgraded to MongoDB 3.0 for no other reason than it was part of me running `brew upgrade`. So far so good.
 * Conquered what was blocking me with Om and that was, well, me. Part of me just isn't comfortable shoving *everything* into a single atom especially when that stuff is referenced only by one page but, according to everything I've read, that's exactly what you're supposed to do. So I was trying to shove some stuff into local state or putting up an async channel just to update one tiny thing and it was just a bunch of muck. Gave in to the Om way and, whoa hey, wouldja look at that, it suddenly works as expected.
