@@ -3,6 +3,7 @@
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
+            [secretary.core :as secretary]
             [typographer.core :as t]
             [furthermore.posts :as posts]
             [furthermore.utils :as utils]))
@@ -30,7 +31,10 @@
                       (d/div
                        (when title
                          (d/div {:class "title"}
-                                title))
+                                (d/a {:href "#"
+                                      :onClick #(secretary/dispatch!
+                                                 (str "/post/" (:_id post)))}
+                                     title)))
                        (comment
                          (when (:tags post)
                            (d/div {:class "tags text-right"}
