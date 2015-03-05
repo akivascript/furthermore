@@ -20,6 +20,12 @@ code, kbd, pre, samp {
 
 .navbar-default {
     background-color: $faded-blue;
+
+    .navbar-nav > li {
+        a:hover {
+            background-color: #3D4B60;
+        }
+    }
 }
 
 .navbar-header {
@@ -61,14 +67,13 @@ code, kbd, pre, samp {
 
 .post {
     margin-bottom: 50px;
+    border-top: 1px solid #aaa;
 
     p {
         margin: 0px;
     }
 
     .title {
-        border-top: 1px solid #aaa;
-
         font-size: 150%;
         font-family: $header-font;
 
