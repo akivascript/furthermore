@@ -1,7 +1,7 @@
 @import 'base';
 
 a {
-    color: $faded-blue;
+    color: $link-color;
 
     &:hover {
         text-decoration: none;
@@ -69,6 +69,14 @@ code, kbd, pre, samp {
         color: #955;
         font-size: 150%;
         font-family: $header-font;
+
+        a {
+            color: #955;
+
+            &:hover {
+                color: #000;
+            }
+        }
     }
 
     .btn-tag {
