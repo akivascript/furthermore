@@ -1,7 +1,7 @@
 @import 'base';
 
 a {
-    color: #005FDA;
+    color: $faded-blue;
 
     &:hover {
         text-decoration: none;
@@ -10,15 +10,19 @@ a {
 }
 
 body {
-    background-color: #fbf9f4;
+    background-color: $background-color;
 }
 
 code, kbd, pre, samp {
-    font-family: 'source code pro';
+    font-family: $code-font;
 }
 
 .navbar-default {
-    background-color: #465871;
+    background-color: $faded-blue;
+}
+
+.navbar-header {
+    font-family: $title-font;
 }
 
 #page-content {
@@ -28,7 +32,6 @@ code, kbd, pre, samp {
 
 .page-header {
     margin-top: 0px;
-    padding-bottom: 0px;
     border-bottom: none;
 }
 
@@ -46,65 +49,60 @@ code, kbd, pre, samp {
 }
 
 #index {
-    .post {
-        margin-bottom: 15px;
-
-        .content {
-            @include borders (15px);
-
-        padding: 15px;
-            background-color: #fbfbfb;
-
-            p {
-                margin: 0px;
-            }
-
-            .title {
-                border-bottom: 1px solid #bbb;
-                color: #b99;
-            }
-
-            .btn-tag {
-                padding: 2px 6px;
-                @include borders (5px);
-
-                background-color: #8798a7;
-                border-color: #8798a7;
-
-                font-size: 80%;
-
-                a:hover {
-                    background-color: #6f7d8a;
-                    border-color: #6f7d8a;
-                }
-            }
-
-            .body {
-                padding: 10px;
-
-                font-size: 90%;
-                color: #555;
-            }
-
-            .footer {
-                # border-top: 1px dotted #ccc;
-
-                font-size: 90%;
-
-                color: $light-gray;
-
-                .topic {
-                    font-weight: bold;
-                }
-            }
-        }
-    }
 }
 
 .page-footer {
     margin-top: 11.5px;
     padding: 15px;
     border-top: 1px solid #ddd;
+}
+
+.post {
+    margin-bottom: 50px;
+
+    p {
+        margin: 0px;
+    }
+
+    .title {
+        border-top: 1px solid #aaa;
+        color: #955;
+        font-size: 150%;
+        font-family: $header-font;
+    }
+
+    .btn-tag {
+        padding: 2px 6px;
+        @include borders (5px);
+
+        background-color: #8798a7;
+        border-color: #8798a7;
+
+        font-size: 80%;
+
+        a:hover {
+            background-color: #6f7d8a;
+            border-color: #6f7d8a;
+        }
+    }
+
+    .body {
+        padding: 0px 0px 30px 1px; 
+
+        font-family: $body-font;
+        font-size: 90%;
+        color: #555;
+    }
+
+    .footer {
+        font-size: 90%;
+
+        color: $light-gray;
+
+        .topic {
+            font-weight: bold;
+        }
+    }
 }
 
 #topics {

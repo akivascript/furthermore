@@ -9,7 +9,7 @@
 
 (enable-console-print!)
 
-(defn posts
+(defn post-view
   [post owner]
   (reify
     om/IWillMount
@@ -25,30 +25,30 @@
                     (t/smarten (:title post)))
             topic-title (when-let [topic-title (get-in post [:topic :title])]
                           (t/smarten (get-in post [:topic :title])))]
-        (d/div {:class "col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"}
+        (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3"}
                (d/div {:class "post"}
-                      (d/div {:class "well content"}
-                             (when title
-                               (d/div {:class "title"}
-                                      title))
-                             (comment
-                               (when (:tags post)
-                                 (d/div {:class "tags text-right"}
-                                        (om/build-all tags (:tags post)))))
-                             (d/div {:class "body"
-                                     :dangerouslySetInnerHTML
-                                     {:__html body}})
-                             (d/div {:class "footer"}
-                                    (d/div {:class "row"}
-                                           (d/div {:class "col-xs-12 col-sm-6"}
-                                                  (d/div {:class "small text-left stuff"}))
-                                           (d/div {:class "col-xs-12 col-sm-6"}
-                                                  (d/div {:class "small text-right date"}
-                                                         "Filed under "
-                                                         (d/span {:class "topic"}
-                                                                 topic-title)
-                                                         (d/br)
-                                                         (str date " @ " time))))))))))))
+                      (d/div
+                       (when title
+                         (d/div {:class "title"}
+                                title))
+                       (comment
+                         (when (:tags post)
+                           (d/div {:class "tags text-right"}
+                                  (om/build-all tags (:tags post)))))
+                       (d/div {:class "body"
+                               :dangerouslySetInnerHTML
+                               {:__html body}})
+                       (d/div {:class "footer"}
+                              (d/div {:class "row"}
+                                     (d/div {:class "col-xs-12 col-sm-6"}
+                                            (d/div {:class "small text-left stuff"}))
+                                     (d/div {:class "col-xs-12 col-sm-6"}
+                                            (d/div {:class "small text-right date"}
+                                                   "Filed under "
+                                                   (d/span {:class "topic"}
+                                                           topic-title)
+                                                   (d/br)
+                                                   (str date " @ " time))))))))))))
 
 (defn get-page
   [app owner]
@@ -70,4 +70,4 @@
                                           :class "img-responsive"
                                           :alt "Office desks"}))))
              (apply d/div {:class "row"}
-                    (om/build-all posts (:posts app)))))))
+                    (om/build-all post-view (:posts app)))))))
