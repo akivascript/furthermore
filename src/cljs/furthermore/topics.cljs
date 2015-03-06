@@ -34,20 +34,23 @@
   (reify
     om/IRender
     (render [_]
-      (d/div {:class "col-xs-12 post"}
-               (d/div {:class "title" :id (:_id post)}
-                        (make-outline-selector post)
-                        (d/a {:href "#"
-                              :onClick #(secretary/dispatch!
-                                         (str "/post/" (:_id post)))}
-                               (:title post)))
+      (let [id (:_id post)
+            url (str "/post/" id)]
+        (d/div {:class "col-xs-12 post"}
+               (d/div {:class "title" :id id}
+                      (make-outline-selector post)
+                      (d/a {:href url
+                            :onClick (fn [event]
+                                       (utils/navigate-to url)
+                                       (.preventDefault event))}
+                           (:title post)))
                (d/div {:class "small date"}
-                        (:date (utils/format-timestamp (:created-on post))))
+                      (:date (utils/format-timestamp (:created-on post))))
                (when (:opened post)
                  (doseq [ref (:references post)] (get-reference ref))
                  (apply d/div
                         {:style {:marginLeft 15}}
-                        (om/build-all posts (:references post))))))))
+                        (om/build-all posts (:references post)))))))))
 
 (defn topics
   [topic owner]

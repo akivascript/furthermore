@@ -1,5 +1,6 @@
 (ns furthermore.utils
-  (:require [cljs-time.format :as timef]))
+  (:require [cljs-time.format :as timef]
+            [secretary.core :as secretary]))
 
 (defn format-timestamp
   [timestamp]
@@ -8,5 +9,16 @@
      :time (timef/unparse (timef/formatter "HH:MM") ts)}))
 
 (defn set-url
-  [title url]
-  (.pushState js/history (.-state js/history) title url))
+  [dest]
+  (let [url window.location.pathname]
+    (.pushState js/history url dest dest)))
+
+(defn change-page
+  [dest]
+  (secretary/dispatch! dest))
+
+(defn navigate-to
+  [dest]
+  (do
+    (set-url dest)
+    (change-page dest)))

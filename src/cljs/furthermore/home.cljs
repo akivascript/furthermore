@@ -26,14 +26,16 @@
                     (t/smarten (:title post)))
             topic-title (when-let [topic-title (get-in post [:topic :title])]
                           (t/smarten (get-in post [:topic :title])))]
-        (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3"}
+        (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
                (d/div {:class "post"}
                       (d/div
                        (when title
                          (d/div {:class "title"}
-                                (d/a {:href "#"
-                                      :onClick #(secretary/dispatch!
-                                                 (str "/post/" (:_id post)))}
+                                (d/a {:href (str "/post/" (:_id post))
+                                      :onClick (fn [event]
+                                                 (utils/navigate-to
+                                                  (str "/post/" (:_id post)))
+                                                 (.preventDefault event))}
                                      title)))
                        (comment
                          (when (:tags post)
@@ -70,8 +72,8 @@
                      :class "page-header"}
                     (d/div {:class "row"}
                            (d/div {:class "col-xs-12 banner"}
-                                  (d/img {:src "img/desks.png"
+                                  (d/img {:src "img/notes.png"
                                           :class "img-responsive"
-                                          :alt "Office desks"}))))
+                                          :alt "Notes"}))))
              (apply d/div {:class "row"}
                     (om/build-all post-view (:posts app)))))))
