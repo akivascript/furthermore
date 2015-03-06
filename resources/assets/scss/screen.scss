@@ -130,19 +130,24 @@ code, kbd, pre, samp {
 }
 
 #topics {
+    .topic {
+        font-family: 'Cinzel';
+        font-size: 120%;
+        text-decoration: underline;
+    }
+    
     .post {
         margin-bottom: 0px;
 
-        border: 0px;
-
+        border-top: 0px;
+        
         .title {
             display: inline-block;
 
             padding-right: 10px;
 
-            font-family: $body-font;
-            font-size: 100%;
-            font-weight: bold;
+            font-family: $header-font;
+            font-size: 125%;
         }
 
         .date {

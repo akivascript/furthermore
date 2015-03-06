@@ -61,7 +61,7 @@
     om/IRender
     (render [_]
       (d/div {:class "col-xs-12"}
-             (d/span {:style {:textDecoration "underline"}}
+             (d/span {:class "topic"}
                      (:title topic))
              (apply d/div {:class "row"}
                     (om/build-all posts (:references topic)))))))
