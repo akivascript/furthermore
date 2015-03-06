@@ -2,9 +2,7 @@
   (:require [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
-))
-
-(enable-console-print!)
+            [furthermore.utils :as utils]))
 
 (defn render
   [app owner]
@@ -18,14 +16,18 @@
                            (d/span {:class "icon-bar"})
                            (d/span {:class "icon-bar"})
                            (d/span {:class "icon-bar"}))
-                 (d/a {:href "#"
+                 (d/a {:href "/"
                        :class "navbar-brand"
-                       :onClick #(secretary/dispatch! "/")}
+                       :onClick (fn [event]
+                                  (utils/navigate-to "/")
+                                  (.preventDefault event))}
                       "WhateveR"))
           (d/div {:id "navbar-main"
                   :class "navbar-collapse collapse"}
                  (d/ul {:class "nav navbar-nav"}
                        (d/li
-                        (d/a {:href "#"
-                              :onClick #(secretary/dispatch! "/contents")}
+                        (d/a {:href "/contents"
+                              :onClick (fn [event]
+                                         (utils/navigate-to "/contents")
+                                         (.preventDefault event))}
                              "Table of Contents")))))))

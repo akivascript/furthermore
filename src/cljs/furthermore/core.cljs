@@ -7,7 +7,8 @@
               [furthermore.home :as home]
               [furthermore.navigation :as nav]
               [furthermore.posts :as posts]
-              [furthermore.topics :as topics])
+              [furthermore.topics :as topics]
+              [furthermore.utils :as utils])
     (:import goog.History))
 
 (enable-console-print!)
@@ -21,23 +22,30 @@
 (def application {:target (. js/document (getElementById "page-content"))})
 (def nav-bar {:target (. js/document (getElementById "nav-bar"))})
 
+
 (defn- set-post
   [cursor id]
   (om/update! cursor [:post :id] id)
   (om/update! cursor [:post :post] nil)
   (om/update! cursor [:post :topic] nil))
 
-(defroute "/" []
+(defn route-to
+  [dest url]
   (let [cursor (om/ref-cursor (om/root-cursor app-state))]
-    (om/update! cursor [:page] :home)))
+    (om/update! cursor [:page] dest)
+    (utils/set-url url)
+    cursor))
+
+(secretary/set-config! :prefix "#")
+
+(defroute "/" []
+  (route-to :home "/"))
 
 (defroute "/contents" []
-  (let [cursor (om/ref-cursor (om/root-cursor app-state))]
-    (om/update! cursor [:page] :contents)))
+  (route-to :contents "/contents"))
 
 (defroute "/post/:id" [id]
-  (let [cursor (om/ref-cursor (om/root-cursor app-state))]
-    (om/update! cursor [:page] :post)
+  (let [cursor (route-to :post (str "/post/" id))]
     (set-post cursor id)))
 
 (om/root
@@ -62,5 +70,7 @@
        (om/build nav/render app))))
  app-state
  nav-bar)
+
+(.addEventListener js/window "popstate" #(secretary/dispatch! (.-state %)))
 
 (secretary/dispatch! window.location.pathname)
