@@ -1,5 +1,12 @@
 # The Furthermore Protoblog
 
+## Day 15: Friday, March 6, 2015
+
+### Navigation Hades
+* Something that seems like it should be easy—enabling history navigation for an SPA—turns out to be a bit fussy. I have it implemented but it's buggy. However, I really want to get a version of the site up so I can start blogging there so I'm willing to look past it for now.
+* With that in place, I can move on to the site log and tagging as I had planned yesterday. I'm shooting for a Monday soft launch. No guarantees.
+
+
 ## Day 14: Thursday, March 5, 2015
 
 ### Focusing On the UI
