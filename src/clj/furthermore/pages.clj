@@ -21,15 +21,15 @@
       (apply (fn [x] (reduce #(update %1 :tags conj %2) page x)) tags)
       page)))
 
-(defn create-link
+(defn create-link-to
   [entity link-type]
   {:_id (:_id entity)
    :type (keyword link-type)})
 
 (defn add-reference
   [referrer referee link-type]
-  {:referrer (update referrer :references conj (create-link referee link-type))
-   :referee (update referee :references conj (create-link referrer link-type))})
+  {:referrer (update referrer :references conj (create-link-to referee link-type))
+   :referee (update referee :references conj (create-link-to referrer link-type))})
 
 (defn convert-to-java-date
   [joda-date]

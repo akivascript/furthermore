@@ -1,18 +1,18 @@
 (ns furthermore.models.posts
   (:require [clj-time.local :as l]
+            [clojure.string :as str]
             [furthermore.pages :refer :all]
             [furthermore.repository :refer :all]))
 
 (defn create-post
-  [parent topic & {:keys [title tags] :or {title "New Post"}}]
+  [{:keys [parent topic title tags] :or {title "New Post"}}]
   (let [post (-> (create-page tags)
                  (assoc :type :post)
                  (assoc :title title)
                  (assoc :body "What's up?")
-                 (assoc :parent (create-link parent (:type parent)))
-                 (assoc :topic (create-link topic (:type topic))))
-        parent (-> (get-db-queue (:_id parent))
-                   (update :references conj (create-link post :post)))]
+                 (assoc :parent (create-link-to parent (:type parent)))
+                 (assoc :topic (create-link-to topic (:type topic))))
+        parent (update parent :references conj (create-link-to post :post))]
     (add-db-queue post)
     (add-db-queue parent)
     {:post post :parent parent}))
