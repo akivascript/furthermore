@@ -1,5 +1,18 @@
 # The Furthermore Protoblog
 
+## Day 16: Saturday, March 7, 2015
+
+### Minorly Major (or Majorly Minor) Update
+* Realizing that passing around UUIDs was ugly and unintuitive for users, I've added a url key to posts so now we get links like http://www.domain.com/post/2015-03-05-smurf-violence. This required quite a bit of an update across the board but now the site is a little more flexible. The API now allows specifications based on criterion so I can grab a post by ID or by URL. With just a few updates, I'll be able to request regex searches too.
+* The create-post workflow hasn't changed since day 3, really, and it shows. A post in the act of being created required its parent and topic to already be saved to the db-queue (which is used to gather entities that need to be updated). This was dumb as every post has to have a topic but the topic doesn't need to know every entity that points to it so the topic doesn't need to be updated. And so on and so forth. This has all been changed so that references are taken directly from the database and then cross-referenced entities would get added to the queue so those updated references can be committed to the database. It's much better now.
+* Next I need to change when an entity's last-updated property gets updated. Currently, it's updated any time an entity is committed but this means that entities which are merely gaining a reference are getting their last-updated changed which bumps them to the top of the home page even though no user-facing content changes have been made.
+* After that, the changelog.
+
+
+### Brief Note
+* One thing I've been trying to stop doing is 'while-I'm-here' coding. I'm taking are of a particular task in a branch I've created to reflect me doing that task and I see in some source code some cruft or other minor refactoring I could do. My instinct is to just go ahead and do it. But then I have a non-task-related work bundled up in a task. So I just make a note to do it later so at least I know it'll get done.
+
+
 ## Day 15: Friday, March 6, 2015
 
 ### Navigation Hades
@@ -224,7 +237,7 @@ which is completely interruptive. It points to fringe-mode and ac-ispell. If it'
 * Checked ~/.m2/repository and expectations is there. Went ahead and deleted the directory and ran `lein deps` to re-install it. No go.
 * Checked the classpath and expectations is *not* there even after re-installing the dependency.
 * Deleted the expectations directory again and now it's not even bothering to re-download Expectations. So I go nuclear and delete the entire .m2 directory and get lein to download everything again.
-* Figured it out. User error,  of course. Forgot that I had added profiles.clj which also had some :dev stuff in it. Leiningen clobbers keys when it comes to finding the same profile in multiple places so the :dev key in profiles.clj was over-writing the :dev key in project.clj (because profiles.clj takes precedence) which thus made all of my dev profile dependencies disappear. Oy vey.
+* Figured it out. User error, of course. Forgot that I had added profiles.clj which also had some :dev stuff in it. Leiningen clobbers keys when it comes to finding the same profile in multiple places so the :dev key in profiles.clj was over-writing the :dev key in project.clj (because profiles.clj takes precedence) which thus made all of my dev profile dependencies disappear. Oy vey.
 * On the positive side, I've now learned about how you can combine profiles in Leiningen by using a vector rather than a map. Now I've a :private key in profiles.clj and the 'public' dev in project.clj which refers to the :private key. Okay. Now that *that's* done...
 
 ### Whoa There, Lil Fella
