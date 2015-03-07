@@ -24,8 +24,8 @@
 
 
 (defn- set-post
-  [cursor id]
-  (om/update! cursor [:post :id] id)
+  [cursor url]
+  (om/update! cursor [:post :url] url)
   (om/update! cursor [:post :post] nil)
   (om/update! cursor [:post :topic] nil))
 
@@ -44,9 +44,9 @@
 (defroute "/contents" []
   (route-to :contents "/contents"))
 
-(defroute "/post/:id" [id]
-  (let [cursor (route-to :post (str "/post/" id))]
-    (set-post cursor id)))
+(defroute "/post/:url" [url]
+  (let [cursor (route-to :post (str "/post/" url))]
+    (set-post cursor url)))
 
 (om/root
  (fn [app owner]

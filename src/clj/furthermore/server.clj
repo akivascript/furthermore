@@ -18,9 +18,10 @@
 (defroutes app-routes
   ;; API calls
   (context "/get" []
-           (GET "/post/:id" [id] (-> id get-post generate-response))
+           (GET "/post/id/:id" [id] (-> {:_id id} get-post generate-response))
+           (GET "/post/url/:url" [url] (-> {:url url} get-post generate-response))
            (GET "/posts" [] (generate-response (get-posts)))
-           (GET "/topic/:id" [id] (-> id get-topic generate-response))
+           (GET "/topic/:id" [id] (-> {:_id id} get-topic generate-response))
            (GET "/topic/:id/refs" [id] (-> id get-topic-references generate-response))
            (GET "/topics" [] (generate-response (get-topics))))
   ;; Static resources

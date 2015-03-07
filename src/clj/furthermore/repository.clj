@@ -1,5 +1,6 @@
 (ns furthermore.repository
-  (:require [clj-time.local :as l]
+  (:require [clojure.string :as str]
+            [clj-time.local :as l]
             [environ.core :refer [env]]
             [monger.collection :as mc]
             [monger.core :refer [connect-via-uri]]
@@ -7,8 +8,8 @@
             [monger.operators :refer :all]
             [monger.query :as mq]))
 
-(def ^:private db (atom nil))
-(def ^:private db-queue (atom {}))
+(defonce ^:private db (atom nil))
+(defonce ^:private db-queue (atom {}))
 (def types
   {:post "posts"
    :topic "topics"})
@@ -23,7 +24,7 @@
 
 (defn get-db-queue
   [id]
-  (val (mq/find @db-queue id)))
+  (mq/find @db-queue id))
 
 (defn list-db-queue
   []
@@ -33,13 +34,26 @@
   []
   (reset! db-queue {}))
 
+(defn create-url
+  [post]
+  (let [title (-> (or (:title post)
+                      "Untitled")
+                  (str/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
+                  (str/replace #" " "-")
+                  str/lower-case)
+        date (l/format-local-time (:created-on post) :date)]
+   (str date "-" title)))
+
 (defn parse-entity
   [entity]
   (let [entity (as-> entity e
-                   (update e :type keyword)
-                   (if-not (nil? (:parent e))
-                     (update-in e [:parent :type] keyword)
-                     e))
+                 (update e :type keyword)
+                 (if-not (nil? (:parent e))
+                   (update-in e [:parent :type] keyword)
+                   e)
+                 (if-not (nil? (:topic e))
+                   (update-in e [:topic :type] keyword)
+                   e))
         refs (:references entity)]
     (if-not (empty? refs)
       (reduce #(update-in %1 [:references (.indexOf refs %2) :type] keyword) entity refs)
@@ -47,32 +61,38 @@
 
 (defn read-entities
   ([type]
-   (map parse-entity (mc/find-maps @db type)))
+   (map parse-entity (mc/find-maps @db (type types))))
   ([type criteria limit-by]
-   (mq/with-collection @db type
+   (mq/with-collection @db (type types)
      (mq/find {})
      (mq/sort criteria)
      (mq/limit limit-by))))
 
 (defn read-entity
-  [type request]
-  (let [entity (mc/find-map-by-id @db (name type) (:_id request))]
+  [type criterion]
+  (let [entity (mc/find-one-as-map @db (type types) criterion)]
     (parse-entity entity)))
 
 (defn find-entities
-  [type field criterion]
-  (mc/find-maps @db (name type)
-                {(keyword field) {$regex (name criterion) $options "i"}}))
+  [type criterion]
+  (let [entities (mc/find-maps @db (type types)
+                               {(first (keys criterion))
+                                {$regex (first (vals criterion)) $options "i"}})]
+    (map parse-entity entities)))
 
 (defn save-entity
-  [type entity]
-  (let [entity (assoc entity :last-updated (l/local-now))]
-    (mc/upsert @db (type types) {:_id (:_id entity)} entity)))
+  [entity]
+  (let [type (:type entity)
+        entity (assoc entity :last-updated (l/local-now))
+        entity (if (= type :post)
+                 (assoc entity :url (create-url entity))
+                 entity)]
+        (mc/upsert @db (type types) {:_id (:_id entity)} entity)))
 
 (defn process-db-queue
   []
   (doseq [entity (vals @db-queue)]
-    (save-entity (:type entity) entity)))
+    (save-entity entity)))
 
 (defn initialize-db-connection
   []

@@ -31,10 +31,10 @@
                       (d/div
                        (when title
                          (d/div {:class "title"}
-                                (d/a {:href (str "/post/" (:_id post))
+                                (d/a {:href (str "/post/" (:url post))
                                       :onClick (fn [event]
                                                  (utils/navigate-to
-                                                  (str "/post/" (:_id post)))
+                                                  (str "/post/" (:url post)))
                                                  (.preventDefault event))}
                                      title)))
                        (comment

@@ -1,11 +1,12 @@
 (ns furthermore.posts
   (:require [ajax.core :as ajax]
+            [cljs-time.local :as l]
+            [furthermore.utils :as utils]
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary]
-            [typographer.core :as t]
-            [furthermore.utils :as utils]))
+            [typographer.core :as t]))
 
 (enable-console-print!)
 
@@ -54,13 +55,13 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET (str "/get/post/" (get-in app [:post :id]))
+      (ajax/GET (str "/get/post/url/" (get-in app [:post :url]))
                 {:handler #(om/update! app [:post :post] %)
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
       ;; This is a total hack but the page is loading twice: first returning
-      ;; nil, second returning the post. So we're skipping the nil. 
+      ;; nil, second returning the post. So we're skipping the nil.
       (when-let [post (get-in app [:post :post])]
         (d/div {:id "posts"
                 :class "container"}
