@@ -83,7 +83,9 @@
 (defn save-entity
   [entity]
   (let [type (:type entity)
-        entity (assoc entity :last-updated (l/local-now))
+        entity (if (= type :topic)
+                 (assoc entity :last-updated (l/local-now))
+                 entity)
         entity (if (= type :post)
                  (assoc entity :url (create-url entity))
                  entity)]

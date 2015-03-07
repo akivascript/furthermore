@@ -15,6 +15,9 @@
         parent (update parent :references conj (create-link-to post :post))]
     (add-db-queue post)
     (add-db-queue parent)
+    (when-not (= (:_id parent) (:_id topic))
+      (add-db-queue topic)
+      (:post post :parent parent :topic topic))
     {:post post :parent parent}))
 
 (defn prepare-post
