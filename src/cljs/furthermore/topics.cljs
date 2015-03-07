@@ -25,7 +25,7 @@
 
 (defn get-reference
   [ref]
-  (ajax/GET (str "/get/post/" (:_id ref))
+  (ajax/GET (str "/get/post/id/" (:_id ref))
             {:handler #(om/update! ref %)
              :error-handler #(.error js/console %)}))
 
@@ -34,10 +34,9 @@
   (reify
     om/IRender
     (render [_]
-      (let [id (:_id post)
-            url (str "/post/" id)]
+      (let [url (str "/post/" (:url post))]
         (d/div {:class "col-xs-12 post"}
-               (d/div {:class "title" :id id}
+               (d/div {:class "title" :id (:_id post)}
                       (make-outline-selector post)
                       (d/a {:href url
                             :onClick (fn [event]

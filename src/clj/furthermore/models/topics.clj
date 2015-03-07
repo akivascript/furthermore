@@ -22,10 +22,9 @@
       (update :last-updated convert-to-java-date)))
 
 (defn get-topic
-  [id & prepare]
-  (let [topic (read-entity "topics" {:_id id})]
-    (if-not (or prepare
-                (= prepare :false))
+  [criterion & {:keys [prepare] :or {prepare true}}]
+  (let [topic (read-entity :topic criterion)]
+    (if prepare
       (prepare-topic topic)
       topic)))
 
@@ -39,7 +38,7 @@
 
 (defn get-topics
   [& prepare]
-  (let [topics (read-entities "topics")]
+  (let [topics (read-entities :topic)]
     (if-not (or prepare
                 (= prepare :false))
       (->> topics

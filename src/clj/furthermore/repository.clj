@@ -61,16 +61,16 @@
 
 (defn read-entities
   ([type]
-   (map parse-entity (mc/find-maps @db type)))
+   (map parse-entity (mc/find-maps @db (type types))))
   ([type criteria limit-by]
-   (mq/with-collection @db type
+   (mq/with-collection @db (type types)
      (mq/find {})
      (mq/sort criteria)
      (mq/limit limit-by))))
 
 (defn read-entity
-  [type request]
-  (let [entity (mc/find-map-by-id @db (name type) (:_id request))]
+  [type criterion]
+  (let [entity (mc/find-one-as-map @db (type types) criterion)]
     (parse-entity entity)))
 
 (defn find-entities

@@ -25,16 +25,15 @@
       (assoc :opened false)))
 
 (defn get-post
-  [id & prepare]
-  (let [post (read-entity "posts" {:_id id})]
-    (if-not (or prepare
-                (= prepare :false))
+  [criterion & {:keys [prepare] :or {prepare true}}]
+  (let [post (read-entity :post criterion)]
+    (if prepare
       (prepare-post post)
       post)))
 
 (defn get-posts
   ([]
-   (let [posts (read-entities "posts"
+   (let [posts (read-entities :post
                               (array-map :last-updated -1)
                               10)]
       (->> posts
