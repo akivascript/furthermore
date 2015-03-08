@@ -29,7 +29,7 @@ code, kbd, pre, samp {
 }
 
 .navbar-header {
-    font-family: $title-font;
+    font-family: $site-title-font;
 }
 
 .page-header {
@@ -130,9 +130,27 @@ code, kbd, pre, samp {
     padding-bottom: 9.5px;
 }
 
+#static {
+    .body {
+        margin-top: -5px;
+        padding-top: 10px;
+        
+        border-top: 1px solid #ccc;
+    }
+    
+    .title {
+        font-family: $page-title-font;
+        font-size: 200%;
+
+        text-align: center;
+
+        color: #aa5555;
+    }
+}
+
 #topics {
     .topic {
-        font-family: 'Cinzel';
+        font-family: $page-title-font;
         font-size: 120%;
         text-decoration: underline;
     }
@@ -174,7 +192,7 @@ code, kbd, pre, samp {
             }
             
             .date {
-                padding: 0px 5px 0px 5px;
+                padding: 2px 5px 0px 5px;
 
                 font-size: 90%;
 
@@ -183,7 +201,7 @@ code, kbd, pre, samp {
             
             .status {
                 margin-left: -10px;
-                padding: 0px 5px 0px 5px;
+                padding: 2px 5px 0px 5px;
 
                 text-overflow: ellipsis;
                 
@@ -191,7 +209,8 @@ code, kbd, pre, samp {
             }
 
             .topic {
-                padding: 0px 0px 0px 5px;
+                padding: 2px 0px 0px 5px;
+
                 text-align: right;
 
                 font-size: 90%;

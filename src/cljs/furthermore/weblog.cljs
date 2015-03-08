@@ -13,6 +13,7 @@
   (let [kind (kind {:new "Added"
                     :update "Updated"})
         type (type {:post "post"
+                    :static "page"
                     :topic "topic"})]
     (str kind " " type)))
 
@@ -21,9 +22,10 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET (str "/get/topic/" (:topic entry))
-                {:handler #(om/transact! entry :topic (fn [_] %))
-                 :error-handler #(.error js/console %)}))
+      (when (:topic entry)
+        (ajax/GET (str "/get/topic/" (:topic entry))
+                  {:handler #(om/transact! entry :topic (fn [_] %))
+                   :error-handler #(.error js/console %)})))
     om/IRender
     (render [_]
       (let [{date :date time :time} (utils/format-timestamp (:date entry))]
@@ -34,16 +36,19 @@
                        :style {:textAlign "left"}}
                       (set-status (:kind entry) (:type entry)))
                (d/div {:class "col-xs-5 title"}
-                      (if-not (= :topic (:type entry))
-                        (d/a {:href (str "/post/" (:url entry))
-                              :onClick (fn [event]
-                                         (utils/navigate-to
-                                          (str "/post/" (:url entry)))
-                                         (.preventDefault event))}
-                             (:title entry))
-                        (:title entry)))
-                 (d/div {:class "col-xs-2 topic"}
-                        (get-in entry [:topic :title])))))))
+                      (let [url (case (:type entry)
+                                  :post (str "/post/" (:url entry))
+                                  :static (str "/" (:url entry))
+                                  "")]
+                        (if-not (= :topic (:type entry))
+                          (d/a {:href url
+                                :onClick (fn [event]
+                                           (utils/navigate-to url)
+                                           (.preventDefault event))}
+                               (:title entry))
+                          (:title entry))))
+               (d/div {:class "col-xs-2 topic"}
+                      (get-in entry [:topic :title])))))))
 
 (defn get-page
   [app owner]

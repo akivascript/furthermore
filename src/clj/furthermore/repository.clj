@@ -14,14 +14,12 @@
 (def types
   {:log "log"
    :post "posts"
+   :static "pages"
    :topic "topics"})
 
 (defn add-db-queue!
   [entity]
-  (letfn [(put! [e] (swap! db-queue assoc (:_id e) e))]
-    (if (coll? entity)
-      (doseq [e (vals entity)] (put! e))
-      (put! entity))))
+  (swap! db-queue assoc (:_id entity) entity))
 
 (defn update-db-queue!
   [entity]
@@ -55,7 +53,7 @@
 (defn loggable?
   [entity]
   (and (case (:type entity)
-         (:post :topic) true?
+         (:post :topic :static) true?
          false)
        (contains? entity :log)
        (:log entity)))
@@ -99,13 +97,16 @@
 (defn save-entity
   [entity]
   (let [type (:type entity)
-        entity (if (= type :topic)
+        entity (if (or (= type :topic)
+                       (= type :static))
                  (do
                    (assoc entity :last-updated (l/local-now))
                    (assoc entity :url (create-url-name entity)))
                  entity)
         entity (if (= type :post)
-                 (assoc entity :url (create-url-date entity))
+                 (do
+                   (assoc entity :last-updated (l/local-now))
+                   (assoc entity :url (create-url-date entity)))
                  entity)
         result (mc/upsert @db (type types) {:_id (:_id entity)} entity)]
     (when (loggable? entity)
