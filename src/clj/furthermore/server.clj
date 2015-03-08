@@ -5,10 +5,11 @@
             [compojure.response :refer [render]]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [furthermore.models.posts :refer :all]
-            [furthermore.models.topics :refer :all]
-            [furthermore.repository :refer :all]
-            [furthermore.logging :refer :all]))
+            [furthermore.newsfeed :refer [get-feed]]
+            [furthermore.models.posts :refer [get-post get-posts]]
+            [furthermore.models.topics :refer [get-topic get-topics get-topic-references]]
+            [furthermore.repository :refer [initialize-db-connection]]
+            [furthermore.logging :refer [get-weblog]]))
 
 (defn generate-response
   [data & [status]]
@@ -30,6 +31,7 @@
   (route/resources "/react" {:root "react"})
   (route/resources "/")
   ;; Site requests. This is placed last to serve as a pass-through to secretary
+  (GET "/rss.xml" [] (get-feed))
   (GET "*" [uri] (render (io/resource "assets/html/shell.html") uri)))
 
 

@@ -2,6 +2,17 @@
 
 ## Day 17: Sunday, March 8, 2015
 
+### RSS Time
+* Can't have a blog without an RSS feed, as far as I'm concerned. I'm sure my pal Dave Winer would agree with me. This is going to get me to more closely examine and commit to a site update workflow. All the pieces are there but there's no end-to-end path right now which is to be expected seeing as how there's no admin section yet; all updates are occurring through the REPL.
+* This is already percolating in the back of my mind: I have a task in Trello for doing some updates to create-post and create-topic where I want to remove the automatic addition to the db-queue. They should be added right before processing and not just because they were created. This prevents situations where, through a hypothetical admin tool, a new post is created and then cancelled. With an early call to add-db-queue!, I have to go dissoc that post and any other entities that got updated due to references or whatever. Without the early call, I can just forget the objects. No problem. Probably.
+* I just realized as I typed that that I'm going to have to add a drafts feature sooner or later which means that newly created entities should be added to the db-queue but tagged for draft, publication, etc. Should I combine published and draft posts in the same collection and then filter them out? Or should draft posts go into their own collection and then get moved over when they're published? This will require some thought. 
+
+### Further Changelog Updates
+* Eventually, I need to decide what I want to call it. It's referred to as 'weblog' in the CLJS namespace, logging in CLJ, 'changelog' here, and 'Web Log' in the navbar menu.
+* I added topic references to the changelog. This is becoming an increasingly painless process the more I get comfortable with how Om works with Ajax calls and the app-state atom. I also added a little more polish to the display. There's still more to go but it's all just UI stuff. The functionality is there.
+* Oh, except that I need to add a link to topics once I get the single topic page done.
+* Maybe I'll just call it Updates. I was just thinking that calling it a web log was cute seeing as how it's actually a web log and not a blog and oh who cares.
+
 ### The Return of Wakatime
 * After having announced giving up on using Wakatime, I was contacted again by the Wakatime guys yesterday evening claiming the bug had been found and fixed. Let's hope so because I miss getting an idea of the hours I'm putting in. Here goes nothing...
 

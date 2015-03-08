@@ -39,14 +39,6 @@
   []
   (reset! db-queue {}))
 
-(defn process-name
-  [entity]
-  (-> (or (:title entity)
-          "Untitled")
-      (str/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
-      (str/replace #" " "-")
-      str/lower-case))
-
 (defn create-log-entry
   [kind entity]
   (let [text (or (:title entity)
@@ -59,12 +51,6 @@
      :topic (get-in entity [:topic :_id])
      :url (or (:url entity)
               (:_id entity))}))
-
-(defn create-url
-  [post]
-  (let [title (process-name post)
-        date (l/format-local-time (:created-on post) :date)]
-   (str date "-" title)))
 
 (defn loggable?
   [entity]
@@ -116,10 +102,10 @@
         entity (if (= type :topic)
                  (do
                    (assoc entity :last-updated (l/local-now))
-                   (assoc entity :url (process-name entity)))
+                   (assoc entity :url (create-url-name entity)))
                  entity)
         entity (if (= type :post)
-                 (assoc entity :url (create-url entity))
+                 (assoc entity :url (create-url-date entity))
                  entity)
         result (mc/upsert @db (type types) {:_id (:_id entity)} entity)]
     (when (loggable? entity)
