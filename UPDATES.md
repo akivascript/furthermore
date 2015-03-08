@@ -2,12 +2,15 @@
 
 ## Day 16: Saturday, March 7, 2015
 
+### Changelog Added
+* A lot of work in but it was the good kind of work. No tooling issues, no struggling with or against libraries... just coding and more coding. But now the 'changelog' is in which lists updates to the site in a traditional reverse chronological order. It's an important feature seeing as how the site is otherwise presented in a non-linear fashion.
+* Meanwhile, outside of Furthermore, I've been getting more active in the Clojure community on Twitter and in Google Groups. Feeling pretty confident. Feeling pretty confident that feeling pretty confident won't last so I'm going to enjoy it and make use of it for as long as I'm able.
+
 ### Minorly Major (or Majorly Minor) Update
 * Realizing that passing around UUIDs was ugly and unintuitive for users, I've added a url key to posts so now we get links like http://www.domain.com/post/2015-03-05-smurf-violence. This required quite a bit of an update across the board but now the site is a little more flexible. The API now allows specifications based on criterion so I can grab a post by ID or by URL. With just a few updates, I'll be able to request regex searches too.
 * The create-post workflow hasn't changed since day 3, really, and it shows. A post in the act of being created required its parent and topic to already be saved to the db-queue (which is used to gather entities that need to be updated). This was dumb as every post has to have a topic but the topic doesn't need to know every entity that points to it so the topic doesn't need to be updated. And so on and so forth. This has all been changed so that references are taken directly from the database and then cross-referenced entities would get added to the queue so those updated references can be committed to the database. It's much better now.
 * Next I need to change when an entity's last-updated property gets updated. Currently, it's updated any time an entity is committed but this means that entities which are merely gaining a reference are getting their last-updated changed which bumps them to the top of the home page even though no user-facing content changes have been made.
 * After that, the changelog.
-
 
 ### Brief Note
 * One thing I've been trying to stop doing is 'while-I'm-here' coding. I'm taking are of a particular task in a branch I've created to reflect me doing that task and I see in some source code some cruft or other minor refactoring I could do. My instinct is to just go ahead and do it. But then I have a non-task-related work bundled up in a task. So I just make a note to do it later so at least I know it'll get done.
