@@ -97,13 +97,16 @@
 (defn save-entity
   [entity]
   (let [type (:type entity)
-        entity (if (= type :topic)
+        entity (if (or (= type :topic)
+                       (= type :static))
                  (do
                    (assoc entity :last-updated (l/local-now))
                    (assoc entity :url (create-url-name entity)))
                  entity)
         entity (if (= type :post)
-                 (assoc entity :url (create-url-date entity))
+                 (do
+                   (assoc entity :last-updated (l/local-now))
+                   (assoc entity :url (create-url-date entity)))
                  entity)
         result (mc/upsert @db (type types) {:_id (:_id entity)} entity)]
     (when (loggable? entity)

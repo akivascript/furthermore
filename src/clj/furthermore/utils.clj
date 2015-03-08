@@ -21,6 +21,7 @@
   [entity]
   (case (:type entity)
     :post "post/"
+    :static "/"
     :topic "topic/"
     ""))
 
