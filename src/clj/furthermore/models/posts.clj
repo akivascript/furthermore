@@ -3,7 +3,8 @@
             [clojure.string :as str]
             [furthermore.logging :refer :all]
             [furthermore.pages :refer :all]
-            [furthermore.repository :refer :all]))
+            [furthermore.repository :refer :all]
+            [furthermore.utils :refer :all]))
 
 (defn create-post
   [{:keys [parent topic title tags] :or {title "New Post"}}]

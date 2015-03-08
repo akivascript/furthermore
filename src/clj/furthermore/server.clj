@@ -7,7 +7,8 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [furthermore.models.posts :refer :all]
             [furthermore.models.topics :refer :all]
-            [furthermore.repository :refer :all]))
+            [furthermore.repository :refer :all]
+            [furthermore.logging :refer :all]))
 
 (defn generate-response
   [data & [status]]
@@ -23,7 +24,8 @@
            (GET "/posts" [] (generate-response (get-posts)))
            (GET "/topic/:id" [id] (-> {:_id id} get-topic generate-response))
            (GET "/topic/:id/refs" [id] (-> id get-topic-references generate-response))
-           (GET "/topics" [] (generate-response (get-topics))))
+           (GET "/topics" [] (generate-response (get-topics)))
+           (GET "/weblog" [] (generate-response (get-weblog))))
   ;; Static resources
   (route/resources "/react" {:root "react"})
   (route/resources "/")

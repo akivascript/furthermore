@@ -7,12 +7,13 @@
             [monger.joda-time :refer :all]
             [monger.operators :refer :all]
             [monger.query :as mq]
-            [furthermore.logging :refer :all]))
+            [furthermore.utils :refer :all]))
 
 (defonce ^:private db (atom nil))
 (defonce ^:private db-queue (atom {}))
 (def types
-  {:post "posts"
+  {:log "log"
+   :post "posts"
    :topic "topics"})
 
 (defn add-db-queue!
@@ -46,11 +47,31 @@
       (str/replace #" " "-")
       str/lower-case))
 
+(defn create-log-entry
+  [kind entity]
+  (let [text (or (:title entity)
+                 (get-excerpt (:body entity) 50))]
+    {:kind kind
+     :type (:type entity)
+     :date (:last-updated entity)
+     :title text
+     :ref (:_id entity)
+     :url (or (:url entity)
+              (:_id entity))}))
+
 (defn create-url
   [post]
   (let [title (process-name post)
         date (l/format-local-time (:created-on post) :date)]
    (str date "-" title)))
+
+(defn loggable?
+  [entity]
+  (and (case (:type entity)
+         (:post :topic) true?
+         false)
+       (contains? entity :log)
+       (:log entity)))
 
 (defn parse-entity
   [entity]
@@ -93,7 +114,7 @@
   (let [type (:type entity)
         entity (if (= type :topic)
                  (do
-                   (assoc entity :last-updated (l/local-now))
+                   (update-in entity [:last-updated] (l/local-now))
                    (assoc entity :url (process-name entity)))
                  entity)
         entity (if (= type :post)

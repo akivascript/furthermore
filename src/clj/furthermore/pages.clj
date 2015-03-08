@@ -32,10 +32,6 @@
   {:referrer (update referrer :references conj (create-link-to referee link-type))
    :referee (update referee :references conj (create-link-to referrer link-type))})
 
-(defn convert-to-java-date
-  [joda-date]
-  (c/to-date joda-date))
-
 (defn convert-to-html
   [text]
   (md-to-html-string text))

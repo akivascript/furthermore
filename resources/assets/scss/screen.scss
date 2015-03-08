@@ -125,8 +125,9 @@ code, kbd, pre, samp {
 }
 
 #page-content {
-    margin-top: 63px;
+    margin: 63px 0px 19px 0px;
     padding-top: 9.5px;
+    padding-bottom: 9.5px;
 }
 
 #topics {
@@ -154,6 +155,23 @@ code, kbd, pre, samp {
             display: inline-block;
 
             color: #aaa;
+        }
+    }
+}
+
+#weblog {
+
+    .entries {
+        border-bottom: 1px solid $light-gray;
+
+        .entry {
+            border-top: 1px solid $light-gray;
+
+            line-height: 200%;
+
+            .status {
+                text-align: right;
+            }
         }
     }
 }

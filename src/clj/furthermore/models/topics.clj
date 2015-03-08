@@ -2,7 +2,8 @@
   (:require [clj-time.local :as l]
             [furthermore.pages :refer :all]
             [furthermore.models.posts :refer :all]
-            [furthermore.repository :refer :all]))
+            [furthermore.repository :refer :all]
+            [furthermore.utils :refer :all]))
 
 (defn create-topic
   [title & tags]

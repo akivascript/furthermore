@@ -1,23 +1,21 @@
 (ns furthermore.logging
-  (:require [clj-time.local :as l]
-            [furthermore.utils :as utils]))
+  (require [furthermore.repository :refer :all]
+           [furthermore.utils :refer :all]))
 
-(defn create-log-entry
-  [kind entity]
-  (let [text (or (:title entity)
-                 (utils/get-excerpt (:body entity) 50))]
-    {:kind kind
-     :type (:type entity)
-     :date (:last-updated entity)
-     :title text
-     :ref (:_id entity)
-     :url (or (:url entity)
-              (:_id entity))}))
+(defn prepare-entry
+  [entry]
+  (-> entry
+      (update :date convert-to-java-date)
+      (update :kind keyword)
+      (dissoc :_id)))
 
-(defn loggable?
-  [entity]
-  (and (case (:type entity)
-         (:post :topic) true?
-         false)
-       (contains? entity :log)
-       (:log entity)))
+(defn get-weblog
+  [& prepare]
+  (let [entries (read-entities :log)]
+    (if-not (or prepare
+                (= prepare :false))
+      (->> entries
+           (map prepare-entry)
+           (sort-by #(:date %))
+           reverse
+           vec))))

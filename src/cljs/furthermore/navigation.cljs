@@ -30,4 +30,10 @@
                               :onClick (fn [event]
                                          (utils/navigate-to "/contents")
                                          (.preventDefault event))}
-                             "Table of Contents")))))))
+                             "Table of Contents")
+                        (d/li
+                         (d/a {:href "/weblog"
+                               :onClick (fn [event]
+                                          (utils/navigate-to "/weblog")
+                                          (.preventDefault event))}
+                              "Web Log"))))))))
