@@ -1,5 +1,11 @@
 # The Furthermore Protoblog
 
+## Day 17: Sunday, March 8, 2015
+
+### The Return of Wakatime
+* After having announced giving up on using Wakatime, I was contacted again by the Wakatime guys yesterday evening claiming the bug had been found and fixed. Let's hope so because I miss getting an idea of the hours I'm putting in. Here goes nothing...
+
+
 ## Day 16: Saturday, March 7, 2015
 
 ### Changelog Added
