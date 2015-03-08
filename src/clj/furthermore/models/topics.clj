@@ -10,8 +10,9 @@
                       (create-page tags)
                       (create-page)) t
                 (assoc t :type :topic)
-                (assoc t :title title))]
-    (add-db-queue topic)
+                (assoc t :title title)
+                (assoc t :log true))]
+    (add-db-queue! topic)
     topic))
 
 (defn prepare-topic

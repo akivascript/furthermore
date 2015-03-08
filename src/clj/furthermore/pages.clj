@@ -15,6 +15,7 @@
               :authors ["John Doe"]
               :created-on (l/local-now)
               :last-updated (l/local-now)
+              :log true
               :tags #{}
               :references #{}}]
     (if-not (nil? tags)

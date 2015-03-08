@@ -1,6 +1,7 @@
 (ns furthermore.models.posts
   (:require [clj-time.local :as l]
             [clojure.string :as str]
+            [furthermore.logging :refer :all]
             [furthermore.pages :refer :all]
             [furthermore.repository :refer :all]))
 
@@ -13,12 +14,12 @@
                  (assoc :parent (create-link-to parent (:type parent)))
                  (assoc :topic (create-link-to topic (:type topic))))
         parent (update parent :references conj (create-link-to post :post))]
-    (add-db-queue post)
-    (add-db-queue parent)
-    (when-not (= (:_id parent) (:_id topic))
-      (add-db-queue topic)
-      (:post post :parent parent :topic topic))
-    {:post post :parent parent}))
+    (add-db-queue! post)
+    (add-db-queue! parent)
+    (if-not (= (:_id parent) (:_id topic))
+      (do (add-db-queue! topic)
+          {:post post :parent parent :topic topic})
+      {:post post :parent parent})))
 
 (defn prepare-post
   [post]
