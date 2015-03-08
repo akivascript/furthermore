@@ -1,4 +1,4 @@
-(ns ^:figwheel-always furthermore.core
+(ns furthermore.core
     (:require [goog.events :as events]
               [goog.history.EventType :as EventType]
               [om.core :as om :include-macros true]
@@ -8,7 +8,8 @@
               [furthermore.navigation :as nav]
               [furthermore.posts :as posts]
               [furthermore.topics :as topics]
-              [furthermore.utils :as utils])
+              [furthermore.utils :as utils]
+              [furthermore.weblog :as weblog])
     (:import goog.History))
 
 (enable-console-print!)
@@ -17,7 +18,8 @@
                           :post {:id nil
                                  :post nil
                                  :topic nil}
-                          :page nil}))
+                          :page nil
+                          :weblog []}))
 
 (def application {:target (. js/document (getElementById "page-content"))})
 (def nav-bar {:target (. js/document (getElementById "nav-bar"))})
@@ -44,6 +46,9 @@
 (defroute "/contents" []
   (route-to :contents "/contents"))
 
+(defroute "/weblog" []
+  (route-to :weblog "/weblog"))
+
 (defroute "/post/:url" [url]
   (let [cursor (route-to :post (str "/post/" url))]
     (set-post cursor url)))
@@ -57,6 +62,7 @@
                            :home home/get-page
                            :contents topics/get-page
                            :post posts/get-page
+                           :weblog weblog/get-page
                            error/get-page)]
          (om/build target-page app)))))
  app-state

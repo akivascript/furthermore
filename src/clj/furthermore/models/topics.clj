@@ -2,7 +2,8 @@
   (:require [clj-time.local :as l]
             [furthermore.pages :refer :all]
             [furthermore.models.posts :refer :all]
-            [furthermore.repository :refer :all]))
+            [furthermore.repository :refer :all]
+            [furthermore.utils :refer :all]))
 
 (defn create-topic
   [title & tags]
@@ -10,8 +11,9 @@
                       (create-page tags)
                       (create-page)) t
                 (assoc t :type :topic)
-                (assoc t :title title))]
-    (add-db-queue topic)
+                (assoc t :title title)
+                (assoc t :log true))]
+    (add-db-queue! topic)
     topic))
 
 (defn prepare-topic

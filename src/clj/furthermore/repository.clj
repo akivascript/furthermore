@@ -6,43 +6,72 @@
             [monger.core :refer [connect-via-uri]]
             [monger.joda-time :refer :all]
             [monger.operators :refer :all]
-            [monger.query :as mq]))
+            [monger.query :as mq]
+            [furthermore.utils :refer :all]))
 
 (defonce ^:private db (atom nil))
 (defonce ^:private db-queue (atom {}))
 (def types
-  {:post "posts"
+  {:log "log"
+   :post "posts"
    :topic "topics"})
 
-(defn add-db-queue
+(defn add-db-queue!
   [entity]
-  (swap! db-queue assoc (:_id entity) entity))
+  (letfn [(put [e] (swap! db-queue assoc (:_id e) e))]
+    (if (coll? entity)
+      (doseq [e (vals entity)] (put e))
+      (put entity))))
 
-(defn update-db-queue
+(defn update-db-queue!
   [entity]
-  (swap! db-queue update (:_id entity) entity))
+  (add-db-queue! entity))
 
 (defn get-db-queue
   [id]
-  (mq/find @db-queue id))
+  (find @db-queue id))
 
 (defn list-db-queue
   []
   @db-queue)
 
-(defn clear-db-queue
+(defn clear-db-queue!
   []
   (reset! db-queue {}))
 
+(defn process-name
+  [entity]
+  (-> (or (:title entity)
+          "Untitled")
+      (str/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
+      (str/replace #" " "-")
+      str/lower-case))
+
+(defn create-log-entry
+  [kind entity]
+  (let [text (or (:title entity)
+                 (get-excerpt (:body entity) 50))]
+    {:kind kind
+     :type (:type entity)
+     :date (:last-updated entity)
+     :title text
+     :ref (:_id entity)
+     :url (or (:url entity)
+              (:_id entity))}))
+
 (defn create-url
   [post]
-  (let [title (-> (or (:title post)
-                      "Untitled")
-                  (str/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
-                  (str/replace #" " "-")
-                  str/lower-case)
+  (let [title (process-name post)
         date (l/format-local-time (:created-on post) :date)]
    (str date "-" title)))
+
+(defn loggable?
+  [entity]
+  (and (case (:type entity)
+         (:post :topic) true?
+         false)
+       (contains? entity :log)
+       (:log entity)))
 
 (defn parse-entity
   [entity]
@@ -84,12 +113,19 @@
   [entity]
   (let [type (:type entity)
         entity (if (= type :topic)
-                 (assoc entity :last-updated (l/local-now))
+                 (do
+                   (update-in entity [:last-updated] (l/local-now))
+                   (assoc entity :url (process-name entity)))
                  entity)
         entity (if (= type :post)
                  (assoc entity :url (create-url entity))
-                 entity)]
-        (mc/upsert @db (type types) {:_id (:_id entity)} entity)))
+                 entity)
+        result (mc/upsert @db (type types) {:_id (:_id entity)} entity)]
+    (when (loggable? entity)
+      (let [kind (if (monger.result/updated-existing? result)
+                   :update
+                   :new)]
+        (mc/insert @db "log" (create-log-entry kind entity))))))
 
 (defn process-db-queue
   []

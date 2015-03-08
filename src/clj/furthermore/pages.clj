@@ -15,6 +15,7 @@
               :authors ["John Doe"]
               :created-on (l/local-now)
               :last-updated (l/local-now)
+              :log true
               :tags #{}
               :references #{}}]
     (if-not (nil? tags)
@@ -30,10 +31,6 @@
   [referrer referee link-type]
   {:referrer (update referrer :references conj (create-link-to referee link-type))
    :referee (update referee :references conj (create-link-to referrer link-type))})
-
-(defn convert-to-java-date
-  [joda-date]
-  (c/to-date joda-date))
 
 (defn convert-to-html
   [text]

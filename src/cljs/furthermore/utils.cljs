@@ -8,14 +8,14 @@
     {:date (timef/unparse (timef/formatter "MMMM d, yyyy") ts)
      :time (timef/unparse (timef/formatter "HH:MM") ts)}))
 
+(defn change-page
+  [dest]
+  (secretary/dispatch! dest))
+
 (defn set-url
   [dest]
   (let [url window.location.pathname]
     (.pushState js/history url dest dest)))
-
-(defn change-page
-  [dest]
-  (secretary/dispatch! dest))
 
 (defn navigate-to
   [dest]
