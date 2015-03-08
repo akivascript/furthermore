@@ -7,6 +7,7 @@
               [furthermore.home :as home]
               [furthermore.navigation :as nav]
               [furthermore.posts :as posts]
+              [furthermore.static :as static]
               [furthermore.topics :as topics]
               [furthermore.utils :as utils]
               [furthermore.weblog :as weblog])
@@ -23,7 +24,6 @@
 
 (def application {:target (. js/document (getElementById "page-content"))})
 (def nav-bar {:target (. js/document (getElementById "nav-bar"))})
-
 
 (defn- set-post
   [cursor url]
@@ -43,11 +43,12 @@
 (defroute "/" []
   (route-to :home "/"))
 
-(defroute "/contents" []
-  (route-to :contents "/contents"))
-
-(defroute "/weblog" []
-  (route-to :weblog "/weblog"))
+(defroute "/:url" [url]
+  (let [url (str "/" url)]
+    (case url
+      "/contents" (route-to :contents url)
+      "/weblog" (route-to :weblog url)
+      (route-to :static url))))
 
 (defroute "/post/:url" [url]
   (let [cursor (route-to :post (str "/post/" url))]
@@ -59,9 +60,10 @@
      om/IRender
      (render [_]
        (let [target-page (case (:page app)
-                           :home home/get-page
                            :contents topics/get-page
+                           :home home/get-page
                            :post posts/get-page
+                           :static static/get-page
                            :weblog weblog/get-page
                            error/get-page)]
          (om/build target-page app)))))

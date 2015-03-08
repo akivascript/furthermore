@@ -5,11 +5,12 @@
             [compojure.response :refer [render]]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [furthermore.newsfeed :refer [get-feed]]
+            [furthermore.logging :refer [get-weblog]]
             [furthermore.models.posts :refer [get-post get-posts]]
+            [furthermore.models.static-pages :refer [get-static-page]]
             [furthermore.models.topics :refer [get-topic get-topics get-topic-references]]
-            [furthermore.repository :refer [initialize-db-connection]]
-            [furthermore.logging :refer [get-weblog]]))
+            [furthermore.newsfeed :refer [get-feed]]
+            [furthermore.repository :refer [initialize-db-connection]]))
 
 (defn generate-response
   [data & [status]]
@@ -23,6 +24,7 @@
            (GET "/post/id/:id" [id] (-> {:_id id} get-post generate-response))
            (GET "/post/url/:url" [url] (-> {:url url} get-post generate-response))
            (GET "/posts" [] (generate-response (get-posts)))
+           (GET "/static/:url" [url] (-> {:url url} get-static-page generate-response))
            (GET "/topic/:id" [id] (-> {:_id id} get-topic generate-response))
            (GET "/topic/:id/refs" [id] (-> id get-topic-references generate-response))
            (GET "/topics" [] (generate-response (get-topics)))
@@ -33,7 +35,6 @@
   ;; Site requests. This is placed last to serve as a pass-through to secretary
   (GET "/rss.xml" [] (get-feed))
   (GET "*" [uri] (render (io/resource "assets/html/shell.html") uri)))
-
 
 (def app
   (do (initialize-db-connection)
