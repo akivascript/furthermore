@@ -2,6 +2,13 @@
 
 ## Day 17: Sunday, March 8, 2015
 
+### Static Pages
+* It's getting easier and easier which is both a sign of my growing mastery of Om and of the increasing reliability of the code itself. Yep, totally patting my own back over here.
+* Static pages are in. I'd like for their inclusion in the site to be somehow automated but it's definitely a kind of v2 feature where you can design the navbar through some kind of drag-and-drop UI or at least through some kind of configuration file. Some things I want as top-level items in the navbar, some stuff I might want in a dropdown. For now, I'm just going to edit the HTML by hand.
+* So, basically, aside from the buggy-as-hell HTML5 navigation code, there's enough to soft launch the site. I just need to write some content: an About page and probably a Projects page. I can steal most of the text and whatnot from what I had up at the previous blog. And then, you know, start blogging.
+* When I do think about using Furthermore as my primary blogging software, the thing that I'm itching for the most as a user is Twitter integration. I want to be able to import tweets and comment on them. I want to be able to flag a post to also be a tweet. So I might bump that up to the next primary feature.
+* But, before that, I should probably fix up some leaky issues with the create-* work flow. For instance, it's saving to the database some keys that are only relevant to a particular user's viewing experience.
+
 ### RSS Time
 * Can't have a blog without an RSS feed, as far as I'm concerned. I'm sure my pal Dave Winer would agree with me. This is going to get me to more closely examine and commit to a site update workflow. All the pieces are there but there's no end-to-end path right now which is to be expected seeing as how there's no admin section yet; all updates are occurring through the REPL.
 * This is already percolating in the back of my mind: I have a task in Trello for doing some updates to create-post and create-topic where I want to remove the automatic addition to the db-queue. They should be added right before processing and not just because they were created. This prevents situations where, through a hypothetical admin tool, a new post is created and then cancelled. With an early call to add-db-queue!, I have to go dissoc that post and any other entities that got updated due to references or whatever. Without the early call, I can just forget the objects. No problem. Probably.
