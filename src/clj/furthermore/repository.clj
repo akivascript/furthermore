@@ -18,10 +18,10 @@
 
 (defn add-db-queue!
   [entity]
-  (letfn [(put [e] (swap! db-queue assoc (:_id e) e))]
+  (letfn [(put! [e] (swap! db-queue assoc (:_id e) e))]
     (if (coll? entity)
-      (doseq [e (vals entity)] (put e))
-      (put entity))))
+      (doseq [e (vals entity)] (put! e))
+      (put! entity))))
 
 (defn update-db-queue!
   [entity]
@@ -56,6 +56,7 @@
      :date (:last-updated entity)
      :title text
      :ref (:_id entity)
+     :topic (get-in entity [:topic :_id])
      :url (or (:url entity)
               (:_id entity))}))
 
@@ -77,10 +78,10 @@
   [entity]
   (let [entity (as-> entity e
                  (update e :type keyword)
-                 (if-not (nil? (:parent e))
+                 (if-not (nil? (get-in e [:parent :type]))
                    (update-in e [:parent :type] keyword)
                    e)
-                 (if-not (nil? (:topic e))
+                 (if-not (nil? (get-in e [:topic :type]))
                    (update-in e [:topic :type] keyword)
                    e))
         refs (:references entity)]
@@ -114,7 +115,7 @@
   (let [type (:type entity)
         entity (if (= type :topic)
                  (do
-                   (update-in entity [:last-updated] (l/local-now))
+                   (assoc entity :last-updated (l/local-now))
                    (assoc entity :url (process-name entity)))
                  entity)
         entity (if (= type :post)
