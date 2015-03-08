@@ -6,7 +6,7 @@ a {
     &:hover {
         text-decoration: none;
 
-        color: $faded-blue;
+        color: $blue-faded;
     }
 }
 
@@ -19,7 +19,7 @@ code, kbd, pre, samp {
 }
 
 .navbar-default {
-    background-color: $faded-blue;
+    background-color: $blue-faded;
 
     .navbar-nav > li {
         a:hover {
@@ -84,7 +84,7 @@ code, kbd, pre, samp {
             color: #955;
 
             &:hover {
-                color: $faded-blue;
+                color: $blue-faded;
             }
         }
     }
@@ -116,7 +116,7 @@ code, kbd, pre, samp {
     .footer {
         font-size: 90%;
 
-        color: $light-gray;
+        color: $gray-light;
 
         .topic {
             font-weight: bold;
@@ -160,17 +160,43 @@ code, kbd, pre, samp {
 }
 
 #weblog {
-
+    font-size: 90%;
+    
     .entries {
-        border-bottom: 1px solid $light-gray;
+        border-bottom: 1px solid $gray-light;
 
         .entry {
-            border-top: 1px solid $light-gray;
+            border-top: 1px solid $gray-light;
+            padding: 5px 0px 5px 0px;
 
-            line-height: 200%;
+            a:hover {
+                color: #000;
+            }
+            
+            .date {
+                padding: 0px 5px 0px 5px;
 
+                font-size: 90%;
+
+                color: $gray;
+            }
+            
             .status {
+                margin-left: -10px;
+                padding: 0px 5px 0px 5px;
+
+                text-overflow: ellipsis;
+                
+                font-size: 90%;
+            }
+
+            .topic {
+                padding: 0px 0px 0px 5px;
                 text-align: right;
+
+                font-size: 90%;
+                
+                color: $gray-light;
             }
         }
     }
