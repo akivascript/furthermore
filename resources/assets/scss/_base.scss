@@ -7,10 +7,11 @@ $gray-dark: #555;
 $background-color: #fcfbf6;
 $link-color: #496EA1;
 
-$title-font: 'Cinzel Decorative';
-$header-font: 'Crimson Text';
 $body-font: 'Open Sans';
 $code-font: 'VT323';
+$header-font: 'Crimson Text';
+$page-title-font: 'Cinzel';
+$site-title-font: 'Cinzel Decorative';
 
 @mixin borders ($radius) {
 	-webkit-border-radius: $radius;

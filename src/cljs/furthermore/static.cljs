@@ -23,7 +23,7 @@
       (when-let [page (get app :static)]
         (d/div {:id "static"
                 :class "container"}
-               (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
+               (d/div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
                       (d/div {:class "title"}
                              (t/smarten (:title page)))
                       (d/div {:class "body"
