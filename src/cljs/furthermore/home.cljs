@@ -5,7 +5,6 @@
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary]
             [typographer.core :as t]
-            [furthermore.posts :as posts]
             [furthermore.utils :as utils]))
 
 (enable-console-print!)

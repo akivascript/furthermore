@@ -1,17 +1,22 @@
 (ns furthermore.core
-  (:require [goog.events :as events]
+  (:require-macros [cljs.core.async.macros :refer [go go-loop]])
+  (:require [cljs.core.async :refer [put! chan <! pub sub]]
+            [goog.events :as events]
             [goog.history.EventType :as EventType]
             [om.core :as om :include-macros true]
             [om-tools.core :refer-macros [defcomponent]]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
-            [furthermore.home :refer [home-view]])
+            [furthermore.topics :refer [contents-view]]
+            [furthermore.home :refer [home-view]]
+            [furthermore.weblog :refer [updates-view]])
   (:import goog.History))
 
+;;
+;; General set-up
+;;
 (enable-console-print!)
-
-(def application {:target (. js/document (getElementById "page-content"))})
-(def nav-bar {:target (. js/document (getElementById "nav-bar"))})
+(secretary/set-config! :prefix "#")
 
 (defonce app-state (atom {:topics []
                           :post {:id nil
@@ -20,15 +25,41 @@
                           :page nil
                           :weblog []}))
 
-(secretary/set-config! :prefix "#")
+(def application {:target (. js/document (getElementById "page-content"))})
+(def nav-bar {:target (. js/document (getElementById "nav-bar"))})
 
-(defroute home-path "/" [] (println "/"))
-(defroute contents-path "/contents" [] (println "/contents"))
-(defroute updates-path "/updates" [] (println "/updates"))
+;;
+;; Routing stuff
+;;
+(def pub-chan (chan))
+(def sub-chan (pub pub-chan :topic))
 
 (let [h (History.)]
   (goog.events/listen h EventType/NAVIGATE #(secretary/dispatch! (.-token %)))
   (doto h (.setEnabled true)))
+
+(defn consume-events
+  [owner topic fn]
+  (let [sub-chan (om/get-shared owner :sub-chan)]
+    (let [event-chan (sub sub-chan topic (chan))]
+      (go-loop [event (<! event-chan)]
+        (fn event)
+        (recur (<! event-chan))))))
+
+(defn change-view
+  ([view view-name]
+   (put! pub-chan {:topic :change-view
+                   :view view
+                   :view-name view-name}))
+   ([view view-name init-state]
+    (put! pub-chan {:topic :change-view
+                    :view view
+                    :view-name view-name
+                    :view-init-state init-state})))
+
+(defroute home-path "/" [] (change-view home-view :home-view))
+(defroute contents-path "/contents" [] (change-view contents-view :contents-view))
+(defroute updates-path "/updates" [] (change-view updates-view :updates-view))
 
 (defn nav-view
   [app owner]
@@ -72,11 +103,23 @@
 (om/root
  (fn [app owner]
    (reify
-     om/IRender
-     (render [_]
-       (om/build home-view app))))
+     om/IInitState
+     (init-state [_]
+       {:view home-view})
+     om/IDidMount
+     (did-mount [_]
+       (consume-events owner :change-view
+                       (fn [{:keys [view view-init-state view-name]}]
+                         (om/set-state! owner :view view)
+                         (om/set-state! owner :view-init-state view-init-state)
+                         (om/set-state! owner :react-key view-name))))
+     om/IRenderState
+     (render-state [_ {:keys [view view-init-state react-key]}]
+       (om/build view app {:init-state view-init-state :react-key react-key}))))
  app-state
- application)
+ (assoc application :shared
+        {:sub-chan sub-chan
+         :pub-chan pub-chan}))
 
 (om/root
  (fn [app owner]
