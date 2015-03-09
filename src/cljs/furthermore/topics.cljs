@@ -65,7 +65,7 @@
              (apply d/div {:class "row"}
                     (om/build-all posts (:references topic)))))))
 
-(defn get-page
+(defn contents-view
   [app owner]
   (reify
     om/IWillMount
