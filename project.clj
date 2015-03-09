@@ -10,7 +10,7 @@
 
   :dependencies
   [[org.clojure/clojure "1.7.0-alpha5"]
-   [org.clojure/clojurescript "0.0-2985" :scope "provided"]
+   [org.clojure/clojurescript "0.0-3058"]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.10"]
