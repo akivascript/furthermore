@@ -50,7 +50,7 @@
                (d/div {:class "col-xs-2 topic"}
                       (get-in entry [:topic :title])))))))
 
-(defn get-page
+(defn updates-view
   [app owner]
   (reify
     om/IWillMount
