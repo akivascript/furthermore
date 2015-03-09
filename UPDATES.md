@@ -1,5 +1,13 @@
 # The Furthermore Protoblog
 
+## Day 18: Monday, March 9, 2015
+
+### Routing and History
+* I couldn't let it go, the fact that routing wasn't perfect and history was pretty much broken, so I went back to ye olde drawing board and began again by figuring out why the little snippet presented on the Secretary Github page for using Google Closure's history event listener wasn't working for me.
+* I never quite figured it out but ripping the code out and starting again seemed to do the trick. I took it a step further by implementing/borrowing/stealing some code from [Ayron Wohletz](http://ayronwohletz.com/single-page-web-apps-with-a-full-clojure-stack/) which, although probably overkill for what I'm doing, is a great and stable solution. It also served as an introduction to core.async for me.
+* There are still some issues but they're sporadic. I'm sure they have to do with the browser rendering before the Ajax call is complete. I wonder if I need to write a wrapper around the app-state atom so the site defaults to that before hitting the database. If that's the idiomatic way to handle it, I wonder why something like that isn't already baked in. I must be missing something.
+
+
 ## Day 17: Sunday, March 8, 2015
 
 ### Static Pages
