@@ -5,7 +5,7 @@
             [secretary.core :as secretary :refer-macros [defroute]]
             [typographer.core :as t]
             [furthermore.posts :refer [post-path]]
-            [furthermore.static :refer [static-path]]
+            ;[furthermore.static :refer [static-path]]
             [furthermore.routing :as route]
             [furthermore.utils :as utils]))
 
@@ -41,9 +41,10 @@
                (d/div {:class "col-xs-5 title"}
                       (let [path-fn (case (:type entry)
                                       :post (post-path {:url (:url entry)})
-                                      :static (static-path {:url (:url entry)}))]
+                                      :static (post-path {:url (:url entry)})
+                                      "")]
                         (if-not (= :topic (:type entry))
-                          (d/a {:href (path-fn)} (:title entry))
+                          (d/a {:href path-fn} (:title entry))
                           (:title entry))))
                (d/div {:class "col-xs-2 topic"}
                       (get-in entry [:topic :title])))))))
@@ -54,14 +55,14 @@
     om/IWillMount
     (will-mount [_]
       (ajax/GET "/get/weblog"
-                {:handler #(om/set-state! owner :opts {:content %})
+                {:handler #(om/transact! app :updates (fn [_] %))
                  :error-handler #(.error js/console %)}))
-    om/IRenderState
-    (render-state [_ {:keys [content]}]
+    om/IRender
+    (render [_]
       (d/div {:id "weblog"
-                :class "container"}
+              :class "container"}
              (d/div {:class "row"}
                     (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
-                           (om/build-all entries (:weblog app))))))))
+                           (om/build-all entries (:updates app))))))))
 
 (defroute updates-path "/updates" [] (route/change-view updates-view :updates-view))
