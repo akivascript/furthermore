@@ -3,8 +3,10 @@
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
-            [secretary.core :as secretary]
+            [secretary.core :as secretary :refer-macros [defroute]]
             [typographer.core :as t]
+            [furthermore.posts :refer [post-path]]
+            [furthermore.routing :as route]
             [furthermore.utils :as utils]))
 
 (enable-console-print!)
@@ -38,11 +40,7 @@
         (d/div {:class "col-xs-12 post"}
                (d/div {:class "title" :id (:_id post)}
                       (make-outline-selector post)
-                      (d/a {:href url
-                            :onClick (fn [event]
-                                       (utils/navigate-to url)
-                                       (.preventDefault event))}
-                           (:title post)))
+                      (d/a {:href (post-path {:url (:url post)})} (:title post)))
                (d/div {:class "small date"}
                       (:date (utils/format-timestamp (:created-on post))))
                (when (:opened post)
@@ -71,11 +69,13 @@
     om/IWillMount
     (will-mount [_]
       (ajax/GET "/get/topics"
-                {:handler #(om/transact! app :topics (fn [_] %))
+                {:handler #(om/transact! app :contents (fn [_] %))
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
       (d/div {:id "topics"
                 :class "container"}
                (apply d/div {:class "row"}
-                      (om/build-all topics (:topics app)))))))
+                      (om/build-all topics (:contents app)))))))
+
+(defroute contents-path "/contents" [] (route/change-view contents-view :contents-view))

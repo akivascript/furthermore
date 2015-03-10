@@ -2,8 +2,11 @@
   (:require [ajax.core :as ajax]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
-            [secretary.core :as seretary]
+            [secretary.core :as secretary :refer-macros [defroute]]
             [typographer.core :as t]
+            [furthermore.posts :refer [post-path]]
+            [furthermore.static :refer [static-path]]
+            [furthermore.routing :as route]
             [furthermore.utils :as utils]))
 
 (enable-console-print!)
@@ -36,16 +39,11 @@
                        :style {:textAlign "left"}}
                       (set-status (:kind entry) (:type entry)))
                (d/div {:class "col-xs-5 title"}
-                      (let [url (case (:type entry)
-                                  :post (str "/post/" (:url entry))
-                                  :static (str "/" (:url entry))
-                                  "")]
+                      (let [path-fn (case (:type entry)
+                                      :post (post-path {:url (:url entry)})
+                                      :static (static-path {:url (:url entry)}))]
                         (if-not (= :topic (:type entry))
-                          (d/a {:href url
-                                :onClick (fn [event]
-                                           (utils/navigate-to url)
-                                           (.preventDefault event))}
-                               (:title entry))
+                          (d/a {:href (path-fn)} (:title entry))
                           (:title entry))))
                (d/div {:class "col-xs-2 topic"}
                       (get-in entry [:topic :title])))))))
@@ -56,12 +54,14 @@
     om/IWillMount
     (will-mount [_]
       (ajax/GET "/get/weblog"
-                {:handler #(om/transact! app :weblog (fn [_] %))
+                {:handler #(om/set-state! owner :opts {:content %})
                  :error-handler #(.error js/console %)}))
-    om/IRender
-    (render [_]
+    om/IRenderState
+    (render-state [_ {:keys [content]}]
       (d/div {:id "weblog"
                 :class "container"}
              (d/div {:class "row"}
                     (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
                            (om/build-all entries (:weblog app))))))))
+
+(defroute updates-path "/updates" [] (route/change-view updates-view :updates-view))
