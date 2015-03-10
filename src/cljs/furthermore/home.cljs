@@ -3,8 +3,10 @@
             [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
-            [secretary.core :as secretary]
+            [secretary.core :as secretary :refer-macros [defroute]]
             [typographer.core :as t]
+            [furthermore.routing :as route]
+            [furthermore.posts :refer [post-path]]
             [furthermore.utils :as utils]))
 
 (enable-console-print!)
@@ -30,12 +32,7 @@
                       (d/div
                        (when title
                          (d/div {:class "title"}
-                                (d/a {:href (str "/post/" (:url post))
-                                      :onClick (fn [event]
-                                                 (utils/navigate-to
-                                                  (str "/post/" (:url post)))
-                                                 (.preventDefault event))}
-                                     title)))
+                                (d/a {:href (post-path {:url (:url post)})} title))))
                        (comment
                          (when (:tags post)
                            (d/div {:class "tags text-right"}
@@ -53,7 +50,7 @@
                                                    (d/span {:class "topic"}
                                                            topic-title)
                                                    (d/br)
-                                                   (str date " @ " time))))))))))))
+                                                   (str date " @ " time)))))))))))
 
 (defn home-view
   [app owner]
@@ -76,3 +73,5 @@
                                           :alt "Notes"}))))
              (apply d/div {:class "row"}
                     (om/build-all post-view (:posts app)))))))
+
+(defroute home-path "/" [] (route/change-view home-view :home-view))
