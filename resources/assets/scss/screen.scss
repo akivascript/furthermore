@@ -160,11 +160,13 @@ code, kbd, pre, samp {
 #topics {
     .topic {
         font-family: $page-title-font;
-        font-size: 120%;
+        font-size: 140%;
+
         text-decoration: underline;
     }
     
     .post {
+        margin-top: -2.5px;
         margin-bottom: 0px;
 
         border-top: 0px;
