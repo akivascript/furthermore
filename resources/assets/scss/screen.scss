@@ -12,10 +12,16 @@ a {
 
 body {
     background-color: $background-color;
+
+    font-family: 'Lato';
 }
 
 code, kbd, pre, samp {
     font-family: $code-font;
+}
+
+.nav {
+    font-weight: 300;
 }
 
 .navbar-default {
@@ -63,6 +69,9 @@ code, kbd, pre, samp {
     margin-top: 11.5px;
     padding: 15px;
     border-top: 1px solid #ddd;
+
+    font-size: 12pt;
+    font-weight: 400;
 }
 
 .post {
@@ -75,7 +84,7 @@ code, kbd, pre, samp {
     }
 
     .title {
-        font-size: 150%;
+        font-size: 250%;
         font-family: $header-font;
 
         color: #955;
@@ -108,7 +117,7 @@ code, kbd, pre, samp {
         padding: 0px 0px 30px 1px; 
 
         font-family: $body-font;
-        font-size: 90%;
+        font-size: 16px;
 
         color: #555;
     }
