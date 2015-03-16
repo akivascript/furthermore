@@ -1,6 +1,16 @@
 # The Furthermore Protoblog
 
-## Day 18: Monday, March 9, 2015
+## Monday, March 16, 2015
+
+### Back from the Break
+* Not really a break; I just haven't pushed to Github in awhile and then a new, super-secret project got suddenly underway last week and ate up a bit of time as it will continue to do over the next few days or so. Once the project's done, I'll push it to Clojars and everyone will wonder, 'Why was *this* "super-secret"?' Well, hopefully I'll be able to tell you next week...
+* The updates this past week were small. A bug fix and some layout changes.
+* I'm going to spend some time with Furthermore today, add some things, and *hopefully* start blogging with it this afternoon. Yeah, I know, I've typed that before.
+* On the docket: adding subtitles to posts, descriptions to topics, and static pages (the bulk of which is already complete).
+* Although I should start work immediately on an admin UI, I'm going to do Twitter integration as the first major update after alpha deploy. I'm fine with creating and editing posts in the REPL for now even though it takes about seven steps each time...
+
+
+## Monday, March 9, 2015
 
 ### Routing and History
 * I couldn't let it go, the fact that routing wasn't perfect and history was pretty much broken, so I went back to ye olde drawing board and began again by figuring out why the little snippet presented on the Secretary Github page for using Google Closure's history event listener wasn't working for me.
@@ -8,7 +18,7 @@
 * There are still some issues but they're sporadic. I'm sure they have to do with the browser rendering before the Ajax call is complete. I wonder if I need to write a wrapper around the app-state atom so the site defaults to that before hitting the database. If that's the idiomatic way to handle it, I wonder why something like that isn't already baked in. I must be missing something.
 
 
-## Day 17: Sunday, March 8, 2015
+## March 8, 2015
 
 ### Static Pages
 * It's getting easier and easier which is both a sign of my growing mastery of Om and of the increasing reliability of the code itself. Yep, totally patting my own back over here.
@@ -33,7 +43,7 @@
 * After having announced giving up on using Wakatime, I was contacted again by the Wakatime guys yesterday evening claiming the bug had been found and fixed. Let's hope so because I miss getting an idea of the hours I'm putting in. Here goes nothing...
 
 
-## Day 16: Saturday, March 7, 2015
+## Saturday, March 7, 2015
 
 ### Changelog Added
 * A lot of work in but it was the good kind of work. No tooling issues, no struggling with or against libraries... just coding and more coding. But now the 'changelog' is in which lists updates to the site in a traditional reverse chronological order. It's an important feature seeing as how the site is otherwise presented in a non-linear fashion.
@@ -49,14 +59,14 @@
 * One thing I've been trying to stop doing is 'while-I'm-here' coding. I'm taking are of a particular task in a branch I've created to reflect me doing that task and I see in some source code some cruft or other minor refactoring I could do. My instinct is to just go ahead and do it. But then I have a non-task-related work bundled up in a task. So I just make a note to do it later so at least I know it'll get done.
 
 
-## Day 15: Friday, March 6, 2015
+## Friday, March 6, 2015
 
 ### Navigation Hades
 * Something that seems like it should be easy—enabling history navigation for an SPA—turns out to be a bit fussy. I have it implemented but it's buggy. However, I really want to get a version of the site up so I can start blogging there so I'm willing to look past it for now.
 * With that in place, I can move on to the site log and tagging as I had planned yesterday. I'm shooting for a Monday soft launch. No guarantees.
 
 
-## Day 14: Thursday, March 5, 2015
+## March 5, 2015
 
 ### Focusing On the UI
 * I've been borrowing in its near entirety the layout and colors from my previous and failed blog Backed Up Somewhere. I've known it wasn't what I wanted to do but it gave me a nice layout to look at as I was coding. This morning, I began the work to transition the blog to a new layout. It's still fairly similar but it's getting increasingly different from its predecessor.
@@ -65,7 +75,7 @@
 * Oh, and I need to settle on the name for the blog. I'm definitely moving it off of backedupsomewhere.com so it can return to its job as a file repository. I have some ideas but none them really get me excited.
 
 
-## Day 13: Wednesday, March 4, 2015
+## March 4, 2015
 
 ### Minor Bug Hunt
 * Git has suddenly forgotten the dev branch's remote tracking because why not. Sorted with a quick 'git push -u'.
@@ -81,7 +91,7 @@
 * This [post](http://stackoverflow.com/questions/22883759/what-is-the-difference-between-application-state-and-component-local-state-in-cl#22914077) was especially useful in helping me understand the different use cases for Om's states.
 
 
-## Day 12: Tuesday, March 3, 2015
+## March 3, 2015
 
 ### Research and Learning
 * Spending the evening reading up more on React fundamentals and Flux as well.
@@ -93,7 +103,7 @@
 * I briefly entertained the idea of just taking the opportunity and jumping to Luminus but decided to just rip out all the Compojure guts that had been put there by whichever lein template I had used to get started and replacing them with the barest minimum from the compojure lein template. And now everything works again.
 
 
-## Day 11: Monday, March 2, 2015
+## March 2, 2015
 
 ### More Reactification
 * Spent some time converting the static navbar to dynamic and React-driven. The user can now switch between pages without a browser refresh. This includes adding to the history so the back button works. Well, mostly. There are some bugs to iron out but I'm pretty happy with how everything's working.
@@ -115,7 +125,7 @@
 * I also need to make a CLJS version of Typography so I can get fancy quotes back in there. They were being mangled when translated to EDN and transferred to the UI.
 
 
-## Day 10: Sunday, March 1, 2015
+## March 1, 2015
 
 ### Never Mind All That
 * I went down the rabbit hole a little bit but after about an hour, I decided it wasn't worth the effort just to have syntactical sugar for working with Bootstrap. I'll keep checking for updates to the libraries and come back to it later.
@@ -158,7 +168,7 @@ I've seen this before with another component (sablono, I think) and just decided
 * Clearly I've never built an SPA before.
 
 
-## Day 9: Saturday, February 28, 2015
+## February 28, 2015
 
 ### The Figwheel/Om/Sass Carnival of Glory
 * I didn't get too much done yesterday but that's no excuse for me slacking on updating this blog. I spent a lot of my day further messing with tooling and learning about Om and React.
@@ -170,7 +180,7 @@ I've seen this before with another component (sablono, I think) and just decided
 * Today was a great day of coding and learning. I've been doing software development for 15 years now and the fact that I still get wide eyed and giddy over it is very pleasing. I owe a lot of that to my general nature but I'd say the bulk of it is owed to Clojure itself. Never in my life has a language and community instilled such a joy and passion in me. And this deep in my career? Outstanding.
 
 
-## Day 7: Thursday, February 26, 2015
+## February 26, 2015
 
 ### The Figwheel/Weasel Rabbit Hole
 * Getting ClojureScript up and running wasn't as easy as I would have expected it to be. In fact, I'm convinced now that going directly for a one-size-fits-all solution like [Chestnut](https://github.com/plexus/chestnut) isn't always the best way to go especially if you're just learning all of this. However, I wanted to get rolling with Om and React as quickly as possible so it seemed a good idea at the time.
@@ -182,7 +192,7 @@ I've seen this before with another component (sablono, I think) and just decided
 * One last thing, after a Spacemacs update or two and a emacs-mac brew update, everything has been mostly stable. Wakatime is still broken but none of the issues I was experiencing days ago have cropped up again. Knock wood.
 
 
-## Day 6: Wednesday, February 25, 2015
+## February 25, 2015
 
 ### Enter: ClojureScript
 * Of course, no introduction is too terribly easy. I've read about ClojureScript but never actually included it into a project and, unfortunately, the documentation that's out there doesn't explain much and in some places is contradictory. So it took some trial and error just to get all the pieces in the right place and loading properly. Burned about an hour on it.
@@ -195,7 +205,7 @@ I've seen this before with another component (sablono, I think) and just decided
 * Also, I really need to come up with and buy a domain name for the blog. I know the one I want but I really can't justify spending $35 on a domain name because of the TLD. But it's a good one.
 
 
-## Day 5: Tuesday, February 24, 2015
+## February 24, 2015
 
 ### Rendering the Home Page
 * The base site layout is complete.
@@ -217,7 +227,7 @@ I've seen this before with another component (sablono, I think) and just decided
 * I'd rather be coding.
 
 
-## Day 4: Monday, February 23, 2015
+## February 23, 2015
 
 ### A Little Light Planning
 * Spent a little time this morning adding a bunch of stuff to Trello. I have now a pretty decent plan in mind on what I need to do and the order in which I need to do it to reach alpha status.
@@ -225,7 +235,7 @@ I've seen this before with another component (sablono, I think) and just decided
 * Now on to getting up at least a mildly tolerable UI.
 
 
-## Day 3: Sunday, February 22, 2015
+## February 22, 2015
 
 ### Just a Little Bit More...
 * Just realized that doing the database by reference rather than embeds was a good idea (along with two-way references) because it will make deleting posts a snap since I can touch every referenced post and remove the soon-to-be-deleted post's :_id. Boom.
@@ -265,7 +275,7 @@ which is completely interruptive. It points to fringe-mode and ac-ispell. If it'
 * Clojure is in some ways like JavaScript in that it has a few eccentricities. Unlike JavaScript, however, Clojure's eccentricities are grounded in a reasonable and logical foundation. What we really need is basically a Clojure equivalent of JavaScript: The Good Parts. For instance, new Clojurists get fouled up by conj behaving differently based on the collection or how assoc and related functions will take a PersistentArrayMap but return a PersistentHashMap which destroys any order the original map might have had. Stuff like that.
 
 
-## Day 2: Saturday, February 21, 2015
+## February 21, 2015
 
 ### The Hardest Part About Coding...
 * ...is when your tools get in the way.
@@ -281,7 +291,7 @@ which is completely interruptive. It points to fringe-mode and ac-ispell. If it'
 * The saving part is made easy by Monger, by the way. How I structure the data in Mongo? Therein lies yon challenge. I figure my first draft will fail so I might as well, as Kevin Rose put it, fail *fast* and often... fast being emphasized by me.
 
 
-## Day 1: Friday, February 20, 2015
+## February 20, 2015
 
 ### Last Minute Productivity
 * Adding a handshake between Furthermore and MongoDB was easy as I already had Mongo installed. I was using it for xyzzwhy development months ago. All I needed to do, really, was to add shell aliases to easily start and stop the server.
