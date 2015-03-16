@@ -6,7 +6,7 @@
             [secretary.core :as secretary :refer-macros [defroute]]
             [typographer.core :as t]
             [furthermore.routing :as route]
-            [furthermore.posts :refer [post-path]]
+            [furthermore.posts :as posts]
             [furthermore.utils :as utils]))
 
 (enable-console-print!)
@@ -23,17 +23,18 @@
     (render [_]
       (let [{:keys [date time]} (utils/format-timestamp (:last-updated post))
             body (-> (:body post) md->html t/smarten)
-            title (when (:title post)
-                    (t/smarten (:title post)))
-            topic-title (when-let [topic-title (get-in post [:topic :title])]
-                          (t/smarten (get-in post [:topic :title])))]
+            topic-title (when-let [t (get-in post [:topic :title])]
+                          (t/smarten t))]
         (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
                (d/div {:class "post"}
                       (d/div
-                       (when title
-                         (d/div {:class "title"}
-                                (d/a {:href (post-path {:url (:url post)})} title))))
-                       (comment
+                       (d/div {:class "title"}
+                              (d/a {:href (posts/post-path {:url (:url post)})}
+                                   (t/smarten (:title post)))))
+                      (d/div
+                       (d/div {:class "subtitle"}
+                              (t/smarten (:subtitle post))))
+                      (comment
                          (when (:tags post)
                            (d/div {:class "tags text-right"}
                                   (om/build-all tags (:tags post)))))

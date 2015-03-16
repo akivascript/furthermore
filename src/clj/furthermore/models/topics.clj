@@ -6,12 +6,13 @@
             [furthermore.utils :refer :all]))
 
 (defn create-topic
-  [title & tags]
+  [{:keys [title description tags]}]
   (let [topic (as-> (if-not (nil? tags)
                       (create-page tags)
                       (create-page)) t
                 (assoc t :type :topic)
                 (assoc t :title title)
+                (assoc t :description description)
                 (assoc t :log true))]
     (add-db-queue! topic)
     topic))
