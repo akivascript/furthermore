@@ -7,10 +7,11 @@
             [furthermore.utils :refer :all]))
 
 (defn create-post
-  [{:keys [parent topic title tags] :or {title "New Post"}}]
+  [{:keys [parent topic title subtitle tags] :or {title "New Post"}}]
   (let [post (-> (create-page tags)
                  (assoc :type :post)
                  (assoc :title title)
+                 (assoc :subtitle subtitle)
                  (assoc :body "What's up?")
                  (assoc :parent (create-link-to parent (:type parent)))
                  (assoc :topic (create-link-to topic (:type topic))))

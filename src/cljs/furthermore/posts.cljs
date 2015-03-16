@@ -23,33 +23,34 @@
     (render-state [_ {:keys [opts]}]
       (let [{:keys [date time]} (utils/format-timestamp (:last-updated content))
             body (-> (:body content) t/smarten md->html)
-            title (when (:title content)
-                    (t/smarten (:title content)))
-            topic-title (get-in opts [:topic :title])]
+            topic-title (when-let [t (get-in opts [:topic :title])]
+                          (t/smarten t))]
         (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
-               (d/div {:class "content post"}
-                      (d/div
-                       (when title
-                         (d/div {:class "title"}
-                                title))
-                       (comment
-                         (when (:tags content)
-                           (d/div {:class "tags text-right"}
-                                  (om/build-all tags (:tags content)))))
-                       (d/div {:class "body"
-                               :dangerouslySetInnerHTML
-                               {:__html body}})
-                       (d/div {:class "footer"}
-                              (d/div {:class "row"}
-                                     (d/div {:class "col-xs-12 col-sm-6"}
-                                            (d/div {:class "small text-left stuff"}))
-                                     (d/div {:class "col-xs-12 col-sm-6"}
-                                            (d/div {:class "small text-right date"}
-                                                   "Filed under "
-                                                   (d/span {:class "topic"}
-                                                           topic-title)
-                                                   (d/br)
-                                                   (str date " @ " time))))))))))))
+               (d/div {:class "content"}
+                      (d/div {:class "post-topic"}
+                             topic-title)
+                      (d/div {:class "post"}
+                             (d/div
+                              (d/div {:class "title"}
+                                     (t/smarten (:title content))))
+                             (d/div
+                              (d/div {:class "subtitle"}
+                                     (t/smarten (:subtitle content))))
+                             (comment
+                               (when (:tags content)
+                                 (d/div
+                                  (d/div {:class "tags text-right"}
+                                         (om/build-all tags (:tags content))))))
+                             (d/div {:class "body"
+                                     :dangerouslySetInnerHTML
+                                     {:__html body}})
+                             (d/div {:class "footer"}
+                                    (d/div {:class "row"}
+                                           (d/div {:class "col-xs-12 col-sm-6"}
+                                                  (d/div {:class "small text-left stuff"}))
+                                           (d/div {:class "col-xs-12 col-sm-6"}
+                                                  (d/div {:class "small text-right date"}
+                                                         (str date " @ " time))))))))))))
 
 (defn post-view
   [app owner {:keys [url] :as opts}]
