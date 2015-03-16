@@ -25,7 +25,6 @@
             body (-> (:body post) md->html t/smarten)
             topic-title (when-let [t (get-in post [:topic :title])]
                           (t/smarten t))]
-        (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
                (d/div {:class "post"}
                       (d/div
                        (d/div {:class "title"}
@@ -51,7 +50,7 @@
                                                    (d/span {:class "topic"}
                                                            topic-title)
                                                    (d/br)
-                                                   (str date " @ " time)))))))))))
+                                                   (str date " @ " time))))))))))
 
 (defn home-view
   [app owner]
@@ -65,14 +64,14 @@
     (render [_]
       (d/div {:id "index"
               :class "container"}
-             (d/div {:id "banner"
-                     :class "page-header"}
-                    (d/div {:class "row"}
-                           (d/div {:class "col-xs-12 banner"}
-                                  (d/img {:src "img/notes.png"
+             (d/div {:class "row"}
+                    (d/div {:class "col-xs-12 col-sm-3 col-sm-offset-1 banner"}
+                           (d/div {:id "banner"
+                                   :class "page-header"}
+                                  (d/img {:src "img/notes-narrow.png"
                                           :class "img-responsive"
-                                          :alt "Notes"}))))
-             (apply d/div {:class "row"}
-                    (om/build-all post-view (:posts app)))))))
+                                          :alt "Notes"})))
+                    (apply d/div {:class "col-xs-12 col-sm-7"}
+                           (om/build-all post-view (:posts app))))))))
 
 (defroute home-path "/" [] (route/change-view home-view :home-view))
