@@ -82,12 +82,34 @@ code, kbd, pre, samp {
     color: $gray-light; 
 }
 
-.post {
+.follow-up {
+    margin-bottom: 50px;
     border-top: 1px solid #aaa;
 
-    p {
-        margin: 0px;
+    .body {
+        padding: 10px 0px 5px 1px; 
+
+        font-family: $body-font;
+        font-size: 12pt;
+
+        color: #555;
+
+        p {
+            padding-top: 10px;
+        }
     }
+
+    .footer {
+        padding-top: 10px;
+        
+        font-size: 90%;
+
+        color: $gray-light;
+    }
+}
+    
+.post {
+    border-top: 1px solid #aaa;
 
     .title {
         font-size: 250%;
@@ -130,7 +152,7 @@ code, kbd, pre, samp {
     }
 
     .body {
-        padding: 0px 0px 5px 1px; 
+        padding: 10px 0px 5px 1px; 
 
         font-family: $body-font;
         font-size: 12pt;
@@ -138,7 +160,7 @@ code, kbd, pre, samp {
         color: #555;
 
         p {
-            padding-top: 20px;
+            padding-top: 10px;
         }
     }
 
