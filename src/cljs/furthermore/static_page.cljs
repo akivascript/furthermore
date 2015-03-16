@@ -1,11 +1,12 @@
 (ns furthermore.static-page
   (:require [ajax.core :as ajax]
-            [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
             [typographer.core :as t]
             [furthermore.routing :as route]))
+
+(.setOptions js/marked (clj->js {:smartypants true}))
 
 (defn static-view
   [app owner {:keys [url] :as opts}]
@@ -26,6 +27,6 @@
                                (t/smarten (:title content)))
                         (d/div {:class "body"
                                 :dangerouslySetInnerHTML
-                                {:__html (-> (:body content) t/smarten md->html)}}))))))))
+                                {:__html (js/marked (:body content))}}))))))))
 
 (defroute static-path "/page/:url" [url] (route/change-view static-view :static-view :data {:url url}))

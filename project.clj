@@ -48,6 +48,7 @@
                   :compiler {:output-to "resources/public/js/furthermore.js"
                              :output-dir "resources/public/js/out"
                              :asset-path "/js/out"
+                             :externs ["resources/assets/js/marked.min.js"]
                              :main furthermore.dev
                              :source-map true
                              :source-map-timestamp true
