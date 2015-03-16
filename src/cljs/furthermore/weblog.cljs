@@ -5,7 +5,7 @@
             [secretary.core :as secretary :refer-macros [defroute]]
             [typographer.core :as t]
             [furthermore.posts :refer [post-path]]
-            ;[furthermore.static :refer [static-path]]
+            [furthermore.static-page :refer [static-path]]
             [furthermore.routing :as route]
             [furthermore.utils :as utils]))
 
@@ -41,7 +41,7 @@
                (d/div {:class "col-xs-5 title"}
                       (let [path-fn (case (:type entry)
                                       :post (post-path {:url (:url entry)})
-                                      :static (post-path {:url (:url entry)})
+                                      :static (static-path {:url (:url entry)})
                                       "")]
                         (if-not (= :topic (:type entry))
                           (d/a {:href path-fn} (:title entry))
