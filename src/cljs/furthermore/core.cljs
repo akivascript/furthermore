@@ -9,6 +9,7 @@
             [furthermore.topics :as contents]
             [furthermore.posts :as posts]
             [furthermore.routing :as route]
+            [furthermore.static-page :as page]
             [furthermore.weblog :as updates])
   (:import goog.History))
 
@@ -59,7 +60,9 @@
                        (d/li
                         (d/a {:href (contents/contents-path)} "Table of Contents"))
                        (d/li
-                        (d/a {:href (updates/updates-path)} "Updates")))))))
+                        (d/a {:href (updates/updates-path)} "Updates"))
+                       (d/li
+                        (d/a {:href (page/static-path {:url "about"})} "About")))))))
 
 (om/root
  (fn [app owner]
