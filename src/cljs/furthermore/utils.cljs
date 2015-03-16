@@ -6,7 +6,7 @@
   [timestamp]
   (let [ts (-> timestamp js/Date. goog.date.DateTime.)]
     {:date (timef/unparse (timef/formatter "MMMM d, yyyy") ts)
-     :time (timef/unparse (timef/formatter "HH:MM") ts)}))
+     :time (timef/unparse (timef/formatter "hh:mm a") ts)}))
 
 (defn change-page
   [dest]
