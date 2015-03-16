@@ -52,7 +52,7 @@
                            (d/span {:class "icon-bar"})
                            (d/span {:class "icon-bar"}))
                  (d/a {:href (home/home-path)
-                       :class "navbar-brand"} "WhateveR"))
+                       :class "navbar-brand"} "WhaTEveR"))
           (d/div {:id "navbar-main"
                   :class "navbar-collapse collapse"}
                  (d/ul {:class "nav navbar-nav"}
