@@ -1,5 +1,16 @@
 # The Furthermore Protoblog
 
+## Tuesday, March 17, 2015
+
+### Time to Do the Thing with the Thing
+* Today's the day. Soft alpha launch. I keep adding things, changing things, doing things. I think it's me stalling, honestly. For instance, I just added responsive CSS so the two footer columns will combine and center themselves for xs display. Totally not necessary but I went ahead and did it anyway.
+* To do the remote deployment to a test server at Heroku, I'm going to look over how I'm doing things with [xyzzwhy](https://www.github.com/akivaschoen/xyzzwhy) since that's already a successfully launched Heroku Clojure (but not ClojureScript--not that it should matter) app.
+* Suffered a moment of 'OF COURSE, YOU IDIOT' when I set up a production profile and then ran a REPL from it and it started complaining about all manner of things. You generally don't run REPLs against your production code. However, I need to be able to so I can create entries against the production database. It's just a matter of running `lein with-profile base,dev,prod repl` which sets everything up as normal and then swaps out the database URI for a local server and a remote one.
+* Now that I type all of this out, it'd be a heck of a lot easier to just have the `(initialize-db-connection)` function take an optional database URI argument. Oy vey.
+* Next issue was the sudden shouting in anguish of a class, cheshire.generate, not being found. 'What the? I'm not using that.' A little sleuthing later demonstrated that it's sometimes called from Monger. When I'm running FM locally, no problem. When I try to run it through Heroku, Monger wants Cheshire. Added it to the production profile's dependencies. Problem solved.
+* I went ahead and implemented the more flexible `(initialize-db-connection)`. Now switching between dev and prod DBs is a snap. This will make future development and deployment really easy.
+
+
 ## Monday, March 16, 2015
 
 ### Making Up for Lost Time
