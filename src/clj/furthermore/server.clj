@@ -33,11 +33,10 @@
            (GET "/topics" [] (generate-response (get-topics)))
            (GET "/weblog" [] (generate-response (get-weblog))))
   ;; Static resources
-  (route/resources "/react" {:root "react"})
   (route/resources "/")
   ;; Site requests. This is placed last to serve as a pass-through to secretary
-  (GET "/rss.xml" [] (get-feed))
-  (GET "*" [uri] (render (io/resource "assets/html/shell.html") uri)))
+  (GET "/rss.xml" [] (get-feed)))
+  ;(GET "*" [uri] (render (io/resource "assets/html/shell.html") uri)))
 
 (def app
   (do (initialize-db-connection)
