@@ -8,8 +8,6 @@
   (let [ts (-> timestamp js/Date. goog.date.DateTime.)]
     {:date (timef/unparse (timef/formatter "MMMM d, yyyy") ts)
      :time (timef/unparse (timef/formatter "hh:mm a") ts)}))
-<<<<<<< HEAD
-=======
 
 (defn get-text-excerpt
   [text ct]
@@ -19,4 +17,3 @@
           text (subs text 0 ct)
           text (str/replace text #"\W+$" "")]
       (str text "..."))))
->>>>>>> follow-up-contents-display

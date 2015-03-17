@@ -1,7 +1,6 @@
 (ns furthermore.posts
   (:require [ajax.core :as ajax]
             [cljs-time.local :as l]
-            [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
@@ -10,12 +9,13 @@
             [furthermore.utils :as utils]))
 
 (enable-console-print!)
+(.setOptions js/marked (clj->js {:smartypants true}))
 
 (defn follow-up
   [content owner]
   (om/component
    (let [{:keys [date time]} (utils/format-timestamp (:last-updated content))
-         body (-> (:body content) t/smarten md->html)]
+         body (js/marked (:body content))]
      (d/div {:class "follow-up"}
             (comment
               (when (:tags post)
@@ -60,7 +60,7 @@
     om/IRenderState
     (render-state [_ {:keys [opts]}]
       (let [{:keys [date time]} (utils/format-timestamp (:last-updated content))
-            body (-> (:body content) t/smarten md->html)
+            body (js/marked (:body content))
             topic-title (when-let [t (get-in opts [:topic :title])]
                           (t/smarten t))]
         (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
