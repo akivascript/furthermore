@@ -36,13 +36,20 @@
   (reify
     om/IRender
     (render [_]
-      (let [url (str "/post/" (:url post))]
+      (let [url (str "/post/" (:url post))
+            {:keys [date time]} (utils/format-timestamp (:created-on post))]
         (d/div {:class "col-xs-12 post"}
-               (d/div {:class "title" :id (:_id post)}
-                      (make-outline-selector post)
-                      (d/a {:href (post-path {:url (:url post)})} (:title post)))
-               (d/div {:class "small date"}
-                      (:date (utils/format-timestamp (:created-on post))))
+               (if (= :post (:type post))
+                 (d/div
+                  (d/div {:class "title" :id (:_id post)}
+                         (make-outline-selector post)
+                         (d/a {:href (post-path {:url (:url post)})} (:title post)))
+                  (d/div {:class "small date"} date))
+                 (d/div
+                  (d/div {:class "follow-up-title" :id (:_id post)}
+                         (make-outline-selector post)
+                         (utils/get-text-excerpt (:body post) 50))
+                  (d/div {:class "small date"} (str date " @ " time))))
                (when (:opened post)
                  (doseq [ref (:references post)] (get-reference ref))
                  (apply d/div
