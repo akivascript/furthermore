@@ -1,5 +1,6 @@
 (ns furthermore.utils
-  (:require [cljs-time.format :as timef]
+  (:require [clojure.string :as str]
+            [cljs-time.format :as timef]
             [secretary.core :as secretary]))
 
 (defn format-timestamp
@@ -8,17 +9,11 @@
     {:date (timef/unparse (timef/formatter "MMMM d, yyyy") ts)
      :time (timef/unparse (timef/formatter "hh:mm a") ts)}))
 
-(defn change-page
-  [dest]
-  (secretary/dispatch! dest))
-
-(defn set-url
-  [dest]
-  (let [url window.location.pathname]
-    (.pushState js/history url dest dest)))
-
-(defn navigate-to
-  [dest]
-  (do
-    (set-url dest)
-    (change-page dest)))
+(defn get-text-excerpt
+  [text ct]
+  (if (< (count text) ct)
+    text
+    (let [ct (dec (or ct 140))
+          text (subs text 0 ct)
+          text (str/replace text #"\W+$" "")]
+      (str text "..."))))
