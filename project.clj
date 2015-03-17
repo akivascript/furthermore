@@ -17,7 +17,6 @@
    [com.andrewmcveigh/cljs-time "0.3.2"]
    [compojure "1.3.2"]
    [environ "1.0.0"]
-   [markdown-clj "0.9.63"]
    [com.novemberain/monger "2.1.0"]
    [org.omcljs/om "0.8.8"]
    [prismatic/om-tools "0.3.10"]
@@ -31,7 +30,7 @@
    [lein-ring "0.8.13"]]
 
   :source-paths
-  ["src/clj"]
+  ["src/clj" "src/cljs"]
 
   :resource-paths
   ["resources"]
@@ -39,7 +38,7 @@
   :uberjar-name
   "furthermore-test.jar"
 
-  :main furthermore.core
+  :main furthermore.server
 
   :ring {:handler furthermore.server/app}
 
@@ -62,10 +61,9 @@
              :env {:production true}
              :omit-source true
              :aot :all
-             :cljsbuild {:app {:furthermore
-                               {:source-paths ["env/prod/cljs"]
-                                :compiler {:optimizations :advanced
-                                           :pretty-print false}}}}}
+             :cljsbuild {:builds {:app
+                                  {:compiler {:optimizations :advanced
+                                              :pretty-print false}}}}}
 
    :dev [:private
          {:dependencies
@@ -80,7 +78,10 @@
                      :port 3449
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
-          :source-paths ["env/dev/clj"]
-          :repl-options {:init-ns furthermore.server}
-          :cljsbuild {:builds {:app
-                               {:source-paths ["env/dev/cljs"]}}}}]})
+          :repl-options {:init-ns furthermore.server}}]
+
+   :prod [:private-p
+          {:env {:production true}
+           :cljsbuild {:builds {:app
+                                {:compiler {:optimizations :advanced
+                                            :pretty-print false}}}}}]})
