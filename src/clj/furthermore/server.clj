@@ -2,8 +2,10 @@
   (:require [environ.core :refer [env]]
             [clojure.java.io :as io]
             [compojure.core :refer [GET defroutes context]]
+            [compojure.handler :refer [site]]
             [compojure.response :refer [render]]
             [compojure.route :as route]
+            [ring.adapter.jetty :as jetty]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [furthermore.logging :refer [get-weblog]]
             [furthermore.models.posts :refer [get-post get-posts get-post-references]]
@@ -40,3 +42,8 @@
 (def app
   (do (initialize-db-connection)
       (wrap-defaults app-routes site-defaults)))
+
+(defn -main
+  [& port]
+  (let [port (Integer. (or port (env :port) 5000))]
+    (jetty/run-jetty (site #'app) {:port port :join? false})))
