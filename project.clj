@@ -81,6 +81,8 @@
 
    :prod [:private-p
           {:env {:production true}
+           :aot :all
            :cljsbuild {:builds {:app
                                 {:compiler {:optimizations :advanced
-                                            :pretty-print false}}}}}]})
+                                            :pretty-print false
+                                            }}}}}]})
