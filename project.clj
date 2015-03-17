@@ -86,4 +86,5 @@
            :cljsbuild {:builds {:app
                                 {:compiler {:optimizations :advanced
                                             :pretty-print false
-                                            :source-map false}}}}}]})
+                                            :source-map "furthermore.js.map"
+                                            :source-map-path "js/out"}}}}}]})
