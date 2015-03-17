@@ -85,4 +85,5 @@
           {:env {:production true}
            :cljsbuild {:builds {:app
                                 {:compiler {:optimizations :advanced
-                                            :pretty-print false}}}}}]})
+                                            :pretty-print false
+                                            :source-map false}}}}}]})
