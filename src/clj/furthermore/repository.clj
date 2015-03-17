@@ -120,5 +120,5 @@
     (save-entity entity)))
 
 (defn initialize-db-connection
-  []
-  (reset! db (:db (connect-via-uri (env :database-uri)))))
+  [& {:keys [uri]}]
+  (reset! db (:db (connect-via-uri (or uri (env :database-uri))))))
