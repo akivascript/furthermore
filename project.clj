@@ -49,7 +49,7 @@
                              :output-dir "resources/public/js/out"
                              :asset-path "/js/out"
                              :externs ["resources/assets/js/marked.min.js"]
-                             :main furthermore.dev
+                             :main furthermore.core
                              :cache-analysis true
                              :optimizations :none
                              :pretty-print true}}}}
@@ -61,7 +61,7 @@
              :omit-source true
              :aot :all
              :cljsbuild {:builds {:app
-                                  {:compiler {:optimizations :advanced
+                                  {:compiler {:optimizations :whitespace
                                               :pretty-print false}}}}}
 
    :dev [:private
@@ -83,6 +83,5 @@
           {:env {:production true}
            :aot :all
            :cljsbuild {:builds {:app
-                                {:compiler {:optimizations :advanced
-                                            :pretty-print false
-                                            }}}}}]})
+                                {:compiler {:optimizations :whitespace
+                                            :pretty-print false}}}}}]})
