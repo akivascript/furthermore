@@ -11,6 +11,27 @@
 
 (enable-console-print!)
 
+(defn follow-up-view
+  [post]
+  (om/component
+   (let [{:keys [date time]} (utils/format-timestamp (:created-on post))
+         body (-> (:body post) md->html t/smarten)]
+     (d/div {:class "follow-up"}
+            (comment
+              (when (:tags post)
+                (d/div {:class "tags text-right"}
+                       (om/build-all tags (:tags post)))))
+            (d/div {:class "body"
+                    :dangerouslySetInnerHTML
+                    {:__html body}})
+            (d/div {:class "footer"}
+                   (d/div {:class "row"}
+                          (d/div {:class "col-xs-12 col-sm-6"}
+                                 (d/div {:class "small text-left stuff"}
+                                        (str date " @ " time)))
+                          (d/div {:class "col-xs-12 col-sm-6"}
+                                 (d/div {:class "small text-right date"}))))))))
+
 (defn post
   [post owner {:keys [content] :as opts}]
   (reify
@@ -18,6 +39,9 @@
     (will-mount [_]
       (ajax/GET (str "/get/topic/" (get-in content [:topic :_id]))
                 {:handler #(om/set-state! owner :opts {:topic %})
+                 :error-handler #(.error js/console %)})
+      (ajax/GET (str "/get/post/" (:_id content) "/refs")
+                {:handler #(om/set-state! owner :opts {:refs %})
                  :error-handler #(.error js/console %)}))
     om/IRenderState
     (render-state [_ {:keys [opts]}]
@@ -50,7 +74,13 @@
                                                   (d/div {:class "small text-left stuff"}))
                                            (d/div {:class "col-xs-12 col-sm-6"}
                                                   (d/div {:class "small text-right date"}
-                                                         (str date " @ " time))))))))))))
+                                                         (str date " @ " time))))))
+                      (when (:refs opts)
+                        (d/div
+                         (d/div {:class "glyphicon glyphicon-triangle-bottom arrow"})
+                         (let [follow-ups (filter #(= :follow-up (:type %))
+                                                  (:refs opts))]
+                           (om/build-all follow-up-view follow-ups))))))))))
 
 (defn post-view
   [app owner {:keys [url] :as opts}]

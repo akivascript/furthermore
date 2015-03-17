@@ -13,6 +13,7 @@
 (defonce ^:private db-queue (atom {}))
 (def types
   {:log "log"
+   :follow-up "posts"
    :post "posts"
    :static "pages"
    :topic "topics"})
@@ -97,16 +98,14 @@
 (defn save-entity
   [entity]
   (let [type (:type entity)
+        entity (assoc entity :last-updated (l/local-now))
         entity (if (or (= type :topic)
                        (= type :static))
-                 (do
-                   (assoc entity :last-updated (l/local-now))
-                   (assoc entity :url (create-url-name entity)))
+                 (assoc entity :url (create-url-name entity))
                  entity)
-        entity (if (= type :post)
-                 (do
-                   (assoc entity :last-updated (l/local-now))
-                   (assoc entity :url (create-url-date entity)))
+        entity (if (or (= type :post)
+                       (= type :follow-up))
+                 (assoc entity :url (create-url-date entity))
                  entity)
         result (mc/upsert @db (type types) {:_id (:_id entity)} entity)]
     (when (loggable? entity)

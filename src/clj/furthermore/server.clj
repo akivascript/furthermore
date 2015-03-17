@@ -6,7 +6,7 @@
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [furthermore.logging :refer [get-weblog]]
-            [furthermore.models.posts :refer [get-post get-posts]]
+            [furthermore.models.posts :refer [get-post get-posts get-post-references]]
             [furthermore.models.static-pages :refer [get-static-page]]
             [furthermore.models.topics :refer [get-topic get-topics get-topic-references]]
             [furthermore.newsfeed :refer [get-feed]]
@@ -23,6 +23,7 @@
   (context "/get" []
            (GET "/page/:url" [url] (-> {:url url} get-static-page generate-response))
            (GET "/post/id/:id" [id] (-> {:_id id} get-post generate-response))
+           (GET "/post/:id/refs" [id] (-> id get-post-references generate-response))
            (GET "/post/url/:url" [url] (-> {:url url} get-post generate-response))
            (GET "/posts" [] (generate-response (get-posts)))
            (GET "/topic/:id" [id] (-> {:_id id} get-topic generate-response))
