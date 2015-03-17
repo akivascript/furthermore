@@ -11,6 +11,7 @@
   :dependencies
   [[org.clojure/clojure "1.7.0-alpha5"]
    [org.clojure/clojurescript "0.0-3119"]
+   [cheshire "5.4.0"]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.10"]
@@ -83,9 +84,7 @@
           :repl-options {:init-ns furthermore.server}}]
 
    :prod [:private-p
-          {:dependencies
-           [[cheshire "5.4.0"]]
-           :env {:production true}
+          {:env {:production true}
            :cljsbuild {:builds {:app
                                 {:compiler {:optimizations :advanced
                                             :pretty-print false}}}}}]})
