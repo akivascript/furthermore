@@ -51,6 +51,7 @@
                              :externs ["resources/assets/js/marked.min.js"]
                              :main furthermore.dev
                              :source-map true
+                             :source-map-path "resources/public/js/out"
                              :source-map-timestamp true
                              :cache-analysis true
                              :optimizations :none
@@ -85,5 +86,4 @@
           {:env {:production true}
            :cljsbuild {:builds {:app
                                 {:compiler {:optimizations :advanced
-                                            :pretty-print false
-                                            :source-map "resources/public/js/furthermore.js.map"}}}}}]})
+                                            :pretty-print false}}}}}]})
