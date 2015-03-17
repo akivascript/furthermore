@@ -50,9 +50,6 @@
                              :asset-path "/js/out"
                              :externs ["resources/assets/js/marked.min.js"]
                              :main furthermore.dev
-                             :source-map true
-                             :source-map-path "/js/out"
-                             :source-map-timestamp true
                              :cache-analysis true
                              :optimizations :none
                              :pretty-print true}}}}
@@ -86,6 +83,4 @@
           {:env {:production true}
            :cljsbuild {:builds {:app
                                 {:compiler {:optimizations :advanced
-                                            :pretty-print false
-                                            :source-map "furthermore.js.map"
-                                            :source-map-path "/js/out"}}}}}]})
+                                            :pretty-print false}}}}}]})
