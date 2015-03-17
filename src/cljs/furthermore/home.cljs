@@ -1,6 +1,5 @@
 (ns furthermore.home
   (:require [ajax.core :as ajax]
-            [markdown.core :refer [md->html]]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
@@ -10,6 +9,7 @@
             [furthermore.utils :as utils]))
 
 (enable-console-print!)
+(.setOptions js/marked (clj->js {:smartypants true}))
 
 (defn post-view
   [post owner]
@@ -22,7 +22,7 @@
     om/IRender
     (render [_]
       (let [{:keys [date time]} (utils/format-timestamp (:created-on post))
-            body (-> (:body post) md->html t/smarten)
+            body (js/marked (:body post))
             topic-title (when-let [t (get-in post [:topic :title])]
                           (t/smarten t))]
         (d/div {:class "post"}
@@ -62,7 +62,7 @@
     om/IRender
     (render [_]
       (let [{:keys [date time]} (utils/format-timestamp (:created-on post))
-            body (-> (:body post) md->html t/smarten)
+            body (js/marked (:body post))
             parent-title (when-let [t (get-in post [:parent :title])]
                            (t/smarten t))
             parent-url (get-in post [:parent :url])]

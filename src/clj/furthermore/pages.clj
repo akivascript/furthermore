@@ -2,7 +2,6 @@
   (:require [clojure.string :as str]
             [clj-time.coerce :as c]
             [clj-time.local :as l]
-            [markdown.core :refer :all]
             [monger.util :refer [random-uuid]]
             [typographer.core :as t]
             [furthermore.repository :refer :all]))
@@ -31,10 +30,6 @@
   [referrer referee link-type]
   {:referrer (update referrer :references conj (create-link-to referee link-type))
    :referee (update referee :references conj (create-link-to referrer link-type))})
-
-(defn convert-to-html
-  [text]
-  (md-to-html-string text))
 
 (defn get-references
   [page]
