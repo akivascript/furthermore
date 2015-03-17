@@ -2,6 +2,17 @@
 
 ## Tuesday, March 17, 2015
 
+### And There We Have It
+* The site's up at Heroku. I just need to, y'know, write an opening post or two. When I do that, then I'll announce. Maybe I'll have something to say about tonight's episode of Hell's Kitchen. WE SHALL SEE.
+
+### Best Intentions
+* In spite of everything, deployment to Heroku ended up being irritating. What worked in `foreman start` failed when actually deploying. I kind of figured there'd be some hiccups involved but piddly stuff like the issue with Cheshire only being required *sometimes* is the kind of stuff that drives people crazy. 
+* Apparently, even with the Procfile set properly, Heroku doesn't pay attention to whatever profile is being called because adding a dependency to cheshire there didn't help the deployment situation. I had to go ahead and include it in the base dependency list.
+* Now it's complaining of no :main namespace being specified in project.clj even though there clearly is one.
+* Getting closer. I just removed the :main key from project.clj and that seemed to please Heroku a bit but now there's a failure in the ClojureScript compilation which is most likely just a user issue. I probably need to have it compiled locally first before handing it over to Heroku.
+* Then the issue centered around :source-map which nothing I did seemed to fix except to take :source-map completely out.
+* marked also ended up being a problem as it doesn't want to play nice with advanced optimizations. Or even whitespace optimizations. For now, doing it with no optimizations is fine but eventually I'm going to have to figure out how to get it to work under advanced for any sort of proper release.
+
 ### markdown-clj to js/marked
 * One thing that [marked](https://www.npmjs.com/package/marked) does that [markdown-clj](https://github.com/yogthos/markdown-clj) doesn't do is swap everything out with smart quotes, etc. I call this typogrifying. marked does this while ignoring all HTML mark-up. markdown-clj in tandem with my own Typographer library does not so I was ending up with quotes related to HTML being swapped to smart quotes, etc. It was a mess.
 * To sort this out, I just included the marked JavaScript library in the environment by including it in my shell.html and referencing it from within my ClojureScript. The details on how to do this can be found [here](http://lukevanderhart.com/2011/09/30/using-javascript-and-clojurescript.html). Pretty simple regardless of which method you choose.
