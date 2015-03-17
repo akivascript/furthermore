@@ -2,12 +2,9 @@
 /classes
 /checkouts
 dev/
-public/
 tmp/
 .hg/
-resources/inbox/
-resources/drafts/
-resources/img/
+resources/public/js/out
 pom.xml
 pom.xml.asc
 *.jar

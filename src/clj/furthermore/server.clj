@@ -33,7 +33,7 @@
            (GET "/topics" [] (generate-response (get-topics)))
            (GET "/weblog" [] (generate-response (get-weblog))))
   (GET "/rss.xml" [] (get-feed))
-  (GET "/" [uri] (render (io/resource "assets/html/shell.html") uri))
+  (GET "/" [uri] (render (io/resource "public/shell.html") uri))
   (route/resources "/"))
 
 (def app
