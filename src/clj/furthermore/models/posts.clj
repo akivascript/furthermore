@@ -57,12 +57,18 @@
       (->> posts
            (map prepare-post)
            vec)))
-  ([posts & prepare]
-   (let [posts (map #(get-post (:_id %)) posts)]
-     (if-not (or prepare
-                 (= prepare :false))
+  ([posts & {:keys [prepare] :or {prepare true}}]
+   (let [posts (map #(get-post {:_id (:_id %)}) posts)]
+     (if prepare
        (->> posts
             (sort-by #(:last-updated %))
             reverse
             vec)
        posts))))
+
+(defn get-post-references
+  [id]
+  (let [post (get-post {:_id id})]
+    (->> (get-posts (:references post))
+         (sort-by #(:created-on %))
+         vec)))
