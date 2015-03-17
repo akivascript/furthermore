@@ -2,6 +2,11 @@
 
 ## Tuesday, March 17, 2015
 
+### markdown-clj to js/marked
+* One thing that [marked](https://www.npmjs.com/package/marked) does that [markdown-clj](https://github.com/yogthos/markdown-clj) doesn't do is swap everything out with smart quotes, etc. I call this typogrifying. marked does this while ignoring all HTML mark-up. markdown-clj in tandem with my own Typographer library does not so I was ending up with quotes related to HTML being swapped to smart quotes, etc. It was a mess.
+* To sort this out, I just included the marked JavaScript library in the environment by including it in my shell.html and referencing it from within my ClojureScript. The details on how to do this can be found [here](http://lukevanderhart.com/2011/09/30/using-javascript-and-clojurescript.html). Pretty simple regardless of which method you choose.
+* This was bundled up in yesterday's commit storm but I forgot to mention it.
+
 ### Time to Do the Thing with the Thing
 * Today's the day. Soft alpha launch. I keep adding things, changing things, doing things. I think it's me stalling, honestly. For instance, I just added responsive CSS so the two footer columns will combine and center themselves for xs display. Totally not necessary but I went ahead and did it anyway.
 * To do the remote deployment to a test server at Heroku, I'm going to look over how I'm doing things with [xyzzwhy](https://www.github.com/akivaschoen/xyzzwhy) since that's already a successfully launched Heroku Clojure (but not ClojureScript--not that it should matter) app.
