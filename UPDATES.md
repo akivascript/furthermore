@@ -2,6 +2,12 @@
 
 ## Monday, March 16, 2015
 
+### Making Up for Lost Time
+* Possibly the biggest day of work I've put in on this thing since I've started. I'm counting 22 commits not including this one and almost all of it was very positive work. Very little wheel-spinning, very little frustration, very little research downtime. Just good, solid, steady coding.
+* I got taken care of everything I had set out to do today plus a lot more: subtitles, topic descriptions (no UI representation yet, though), and static pages (of which there is currently just one) plus post follow-ups (basically, posts without titles directly linked to parent posts), a new layout for the home page, font changes, and more.
+* It was a great day. But I do need to get back into the habit of blogging about this more as I go along. That's part of the point, right?
+* Well, I'll start blogging it with Furthermore itself starting tomorrow. I just need to set up a production environment, get it rolled out to Heroku, and then this'll end and future posts will go there.
+
 ### Back from the Break
 * Not really a break; I just haven't pushed to Github in awhile and then a new, super-secret project got suddenly underway last week and ate up a bit of time as it will continue to do over the next few days or so. Once the project's done, I'll push it to Clojars and everyone will wonder, 'Why was *this* "super-secret"?' Well, hopefully I'll be able to tell you next week...
 * The updates this past week were small. A bug fix and some layout changes.
