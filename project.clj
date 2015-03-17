@@ -41,8 +41,6 @@
   :uberjar-name
   "furthermore-test.jar"
 
-  :main furthermore.server
-
   :ring {:handler furthermore.server/app}
 
   :cljsbuild
