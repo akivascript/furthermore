@@ -1,14 +1,11 @@
 /target
 /classes
-/checkouts
 dev/
 tmp/
-.hg/
-pom.xml
-pom.xml.asc
 *.jar
 *.class
 /.lein-*
 /.nrepl-port
-.hgignore
 *sass*
+out/
+furthermore.js
