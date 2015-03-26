@@ -33,7 +33,7 @@
    [lein-ring "0.8.13"]]
 
   :source-paths
-  ["src/clj" "src/cljs"]
+  ["src/clj"]
 
   :resource-paths
   ["resources"]
@@ -41,47 +41,52 @@
   :uberjar-name
   "furthermore-test.jar"
 
+  :main furthermore.server
+
   :ring {:handler furthermore.server/app}
 
+  :clean-targets ^{:protect false} ["resources/public/js/compiled"]
+
   :cljsbuild
-  {:builds {:app {:source-paths ["src/cljs"]
-                  :compiler {:output-to "resources/public/js/furthermore.js"
-                             :output-dir "resources/public/js/out"
-                             :asset-path "/js/out"
-                             :externs ["resources/assets/js/marked.min.js"]
-                             :main furthermore.core
-                             :cache-analysis true
-                             :optimizations :none
-                             :pretty-print true}}}}
+  {:builds [{:id "dev"
+             :source-paths ["src/cljs" "env/dev/cljs"]
+             :compiler {:output-to "resources/public/js/compiled/furthermore.js"
+                        :output-dir "resources/public/js/compiled/out"
+                        :asset-path "js/compiled/out"
+                        :externs ["resources/assets/js/marked.min.js"]
+                        :main furthermore.dev
+                        :cache-analysis true
+                        :optimizations :none
+                        :source-map true
+                        :source-map-timestamp true
+                        :pretty-print true}}
+            {:id "prod"
+             :source-paths ["src/cljs" "env/prod/cljs"]
+             :compiler {:output-to "resources/public/js/compiled/furthermore.js"
+                        :main furthermore.core}}]}
 
   :profiles
   {:uberjar {:source-paths ["env/prod/clj"]
              :hooks [leiningen.cljsbuild]
              :env {:production true}
              :omit-source true
-             :aot :all
-             :cljsbuild {:builds {:app
-                                  {:compiler {:optimizations :whitespace
-                                              :pretty-print false}}}}}
+             :aot :all}
 
    :dev [:private
          {:dependencies
           [[expectations "2.0.16"]
-           [figwheel "0.2.5-SNAPSHOT"]
+           [figwheel "0.2.5"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
-          :plugins [[lein-figwheel "0.2.5-SNAPSHOT"]]
-          :env {:is-dev true}
+          :plugins [[lein-figwheel "0.2.5"]]
+          :env {:dev true}
           :figwheel {:http-server-root "public"
-                     :port 3449
+                     :server-port 3449
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
           :repl-options {:init-ns furthermore.server}}]
 
    :prod [:private-p
           {:env {:production true}
-           :aot :all
-           :cljsbuild {:builds {:app
-                                {:compiler {:optimizations :whitespace
-                                            :pretty-print false}}}}}]})
+           :aot :all}]})
