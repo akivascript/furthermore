@@ -10,7 +10,7 @@
 
   :dependencies
   [[org.clojure/clojure "1.7.0-alpha5"]
-   [org.clojure/clojurescript "0.0-3126"]
+   [org.clojure/clojurescript "0.0-3153"]
    [cheshire "5.4.0"]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
@@ -21,7 +21,7 @@
    [markdown-clj "0.9.65"]
    [com.novemberain/monger "2.1.0"]
    [org.omcljs/om "0.8.8"]
-   [prismatic/om-tools "0.3.10"]
+   [prismatic/om-tools "0.3.11"]
    [ring/ring-defaults "0.1.4"]
    [ring/ring-jetty-adapter "1.3.2"]
    [secretary "1.2.1"]
