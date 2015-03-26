@@ -1,11 +1,10 @@
 /target
 /classes
-dev/
 tmp/
+/dev/
 *.jar
 *.class
 /.lein-*
 /.nrepl-port
 *sass*
-out/
-furthermore.js
+compiled/
