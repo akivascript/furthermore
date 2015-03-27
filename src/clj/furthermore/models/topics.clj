@@ -6,15 +6,15 @@
             [furthermore.utils :refer :all]))
 
 (defn create-topic
-  [{:keys [title description tags]}]
+  [title & {:keys [description authors tags]}]
   (let [topic (as-> (if-not (nil? tags)
                       (create-page tags)
                       (create-page)) t
                 (assoc t :type :topic)
                 (assoc t :title title)
                 (assoc t :description description)
+                (assoc t :authors (or authors ["John Doe"]))
                 (assoc t :log true))]
-    (add-db-queue! topic)
     topic))
 
 (defn prepare-topic
