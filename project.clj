@@ -48,26 +48,33 @@
   :clean-targets ^{:protect false} ["resources/public/js/compiled"]
 
   :cljsbuild
-  {:builds [{:id "dev"
-             :source-paths ["src/cljs" "env/dev/cljs"]
+  {:builds [{:id "main"
+             :source-paths ["src/cljs" "env/prod/cljs"]
              :compiler {:output-to "resources/public/js/compiled/furthermore.js"
                         :output-dir "resources/public/js/compiled/out"
                         :asset-path "js/compiled/out"
-                        :externs ["resources/assets/js/marked.min.js"]
+                        :externs ["resources/public/js/marked.min.js"]
+                        :main furthermore.core
+                        :cache-analysis true
+                        :optimizations :none
+                        :source-map true
+                        :source-map-timestamp true
+                        :pretty-print false}}
+            {:id "dev"
+             :source-paths ["src/cljs" "env/dev/cljs"]
+             :compiler {:output-to "resources/public/js/compiled/furthermore.js"
+                        :output-dir "resources/public/js/compiled/dev"
+                        :asset-path "js/compiled/dev"
+                        :externs ["resources/public/js/marked.min.js"]
                         :main furthermore.dev
                         :cache-analysis true
                         :optimizations :none
                         :source-map true
                         :source-map-timestamp true
-                        :pretty-print true}}
-            {:id "prod"
-             :source-paths ["src/cljs" "env/prod/cljs"]
-             :compiler {:output-to "resources/public/js/compiled/furthermore.js"
-                        :main furthermore.core}}]}
+                        :pretty-print true}}]}
 
   :profiles
-  {:uberjar {:source-paths ["env/prod/clj"]
-             :hooks [leiningen.cljsbuild]
+  {:uberjar {:hooks [leiningen.cljsbuild]
              :env {:production true}
              :omit-source true
              :aot :all}
@@ -75,11 +82,12 @@
    :dev [:private
          {:dependencies
           [[expectations "2.0.16"]
-           [figwheel "0.2.5"]
+           [figwheel "0.2.5-SNAPSHOT"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
-          :plugins [[lein-figwheel "0.2.5"]]
+          :plugins [[lein-figwheel "0.2.5-SNAPSHOT"]]
+          :hooks [leiningen.cljsbuild]
           :env {:dev true}
           :figwheel {:http-server-root "public"
                      :server-port 3449
@@ -88,5 +96,6 @@
           :repl-options {:init-ns furthermore.server}}]
 
    :prod [:private-p
-          {:env {:production true}
+          {:hooks [leiningen.cljsbuild]
+           :env {:production true}
            :aot :all}]})
