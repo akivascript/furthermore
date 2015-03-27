@@ -28,7 +28,7 @@
    [typographer "1.1.0"]]
 
   :plugins
-  [[lein-cljsbuild "1.0.6-SNAPSHOT"]
+  [[lein-cljsbuild "1.0.5"]
    [lein-environ "1.0.0"]
    [lein-ring "0.8.13"]]
 
