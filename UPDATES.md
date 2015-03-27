@@ -1,5 +1,18 @@
 # The Furthermore Protoblog
 
+## Friday, March 27, 2015
+
+### And We're Off!
+* After some time off, focusing on another project or so which may or may not ever see the light of day, I'm back and, well, there was a bit more work to be done before properly launching the alpha. That work has been completed and the alpha is up [here](http://furthermore-alpha.herokuapp.com).
+* It's buggy but it's a start and it's certainly in position to be viable for me to use it as the primary which is what I've been after since day one. I could have gotten there much sooner but I delayed and I'm glad I did. The code I have in 'production' is pretty solid.
+* That means this will be the last blog post here.
+
+### Loose Ends
+* There is a bit of stuff I haven't bothered to document. In the interim, I've upgraded some libraries, had to re-write my project.clj to match the latest cljsbuild expectations; I had to re-examine how I was dividing my profiles between what Heroku expected and what I needed to do in a dev sort of way. In fact, most of the work today was me writing and re-writing project.clj to get everything to just behave like I wanted it to and also in a reasonable manner.
+* I'm going to blog about all of this in greater detail on, y'knowm the actual blog.
+* Thanks for following. This is a pretty decent milestone!
+
+
 ## Tuesday, March 17, 2015
 
 ### And There We Have It
