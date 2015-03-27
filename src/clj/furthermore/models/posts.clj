@@ -7,11 +7,13 @@
             [furthermore.utils :refer :all]))
 
 (defn create-post
-  [{:keys [parent topic title subtitle tags]}]
+  [& {:keys [authors body parent subtitle tags title topic]}]
   (let [post (-> (create-page tags)
                  (assoc :type :post)
+                 (assoc :title title)
                  (assoc :subtitle subtitle)
-                 (assoc :body "What's up?")
+                 (assoc :body (or body "Somebody forgot to actually write the post."))
+                 (assoc :authors (or authors ["John Doe"]))
                  (assoc :parent (create-link-to parent (:type parent)))
                  (assoc :topic (create-link-to topic (:type topic))))
         parent (update parent :references conj (create-link-to post :post))]
@@ -23,10 +25,11 @@
       {:post post :parent parent})))
 
 (defn create-follow-up
-  [parent & {:keys [tags]}]
+  [parent & {:keys [authors body tags]}]
   (let [follow-up (-> (create-page tags)
                       (assoc :type :follow-up)
-                      (assoc :body "What's up?")
+                      (assoc :authors (or authors ["John Doe"]))
+                      (assoc :body (or body "Somebody forgot to actually write the follow-up."))
                       (assoc :parent (create-link-to parent (:type parent)))
                       (assoc :topic (:topic parent)))
         parent (update parent :references conj (create-link-to follow-up :follow-up))]
@@ -52,7 +55,7 @@
 (defn get-posts
   ([]
    (let [posts (read-entities :post
-                              (array-map :last-updated -1)
+                              (array-map :created-on -1)
                               10)]
       (->> posts
            (map prepare-post)
