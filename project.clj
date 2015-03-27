@@ -39,7 +39,7 @@
   ["resources"]
 
   :uberjar-name
-  "furthermore-test.jar"
+  "furthermore.jar"
 
   :main furthermore.server
 

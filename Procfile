@@ -1,1 +1,1 @@
-web: lein with-profile prod trampoline run -m furthermore.server
+web: java $JVM_OPTS -cp target/furthermore.jar clojure.main -m furthermore.server
