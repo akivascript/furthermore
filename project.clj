@@ -56,8 +56,8 @@
                         :externs ["resources/public/js/marked.min.js"]
                         :main furthermore.core
                         :cache-analysis true
-                        :optimizations :none
-                        :source-map true
+                        :optimizations :advanced
+                        :source-map "resources/public/js/compiled/furthermore.js.map"
                         :source-map-timestamp true
                         :pretty-print false}}
             {:id "dev"
@@ -87,7 +87,6 @@
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
           :plugins [[lein-figwheel "0.2.5-SNAPSHOT"]]
-          :hooks [leiningen.cljsbuild]
           :env {:dev true}
           :figwheel {:http-server-root "public"
                      :server-port 3449
