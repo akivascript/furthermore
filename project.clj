@@ -74,10 +74,10 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar {:hooks [leiningen.cljsbuild]
-             :env {:production true}
-             :omit-source true
-             :aot :all}
+  {:uberjar [:private-p {:hooks [leiningen.cljsbuild]
+                         :env {:production true}
+                         :omit-source true
+                         :aot :all}]
 
    :dev [:private
          {:dependencies
@@ -95,7 +95,7 @@
                      :server-logfile "tmp/logs/figwheel-server.log"}
           :repl-options {:init-ns furthermore.server}}]
 
-   :prod [:private-p
-          {:hooks [leiningen.cljsbuild]
-           :env {:production true}
-           :aot :all}]})
+   :prod [:private-p {:hooks [leiningen.cljsbuild]
+                      :env {:production true}
+                      :omit-source true
+                      :aot :all}]})
