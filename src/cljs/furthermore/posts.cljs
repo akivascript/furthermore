@@ -71,9 +71,10 @@
                              (d/div
                               (d/div {:class "title"}
                                      (t/smarten (:title content))))
-                             (d/div
-                              (d/div {:class "subtitle"}
-                                     (t/smarten (:subtitle content))))
+                             (when-not (nil? (:subtitle content))
+                               (d/div
+                                (d/div {:class "subtitle"}
+                                       (t/smarten (:subtitle content)))))
                              (comment
                                (when (:tags content)
                                  (d/div
