@@ -23,6 +23,7 @@
     (render [_]
       (let [{:keys [date time]} (utils/format-timestamp (:created-on post))
             body (js/marked (:body post))
+            excerpt (when-let [e (:excerpt post)] (js/marked e))
             topic-title (when-let [t (get-in post [:topic :title])]
                           (t/smarten t))]
         (d/div {:class "post"}
@@ -35,13 +36,21 @@
                  (when (:tags post)
                    (d/div {:class "tags text-right"}
                           (om/build-all tags (:tags post)))))
-               (d/div {:class "body"
-                       :dangerouslySetInnerHTML
-                       {:__html body}})
+               (if (nil? (:excerpt post))
+                 (d/div {:class "body"
+                         :dangerouslySetInnerHTML
+                         {:__html body}})
+                 (d/div {:class "body"
+                         :dangerouslySetInnerHTML
+                         {:__html excerpt}}))
                (d/div {:class "footer"}
                       (d/div {:class "row"}
                              (d/div {:class "col-xs-12 col-sm-6"}
-                                    (d/div {:class "small text-left stuff"}))
+                                    (when-not (nil? (:excerpt post))
+                                      (d/div {:class "continue"}
+                                             (d/a {:href (posts/post-path {:url (:url post)})
+                                                   :dangerouslySetInnerHTML
+                                                   {:__html "Continue &raquo;"}}))))
                              (d/div {:class "col-xs-12 col-sm-6"}
                                     (d/div {:class "small text-right date"}
                                            "Filed under "
