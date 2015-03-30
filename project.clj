@@ -25,6 +25,7 @@
    [ring/ring-defaults "0.1.4"]
    [ring/ring-jetty-adapter "1.3.2"]
    [secretary "1.2.1"]
+   [twitter-api "0.7.8"]
    [typographer "1.1.0"]]
 
   :plugins
@@ -80,6 +81,7 @@
                          :aot :all}]
 
    :dev [:private
+         :twitter-api
          {:dependencies
           [[expectations "2.0.16"]
            [figwheel "0.2.5-SNAPSHOT"]
@@ -94,7 +96,9 @@
                      :server-logfile "tmp/logs/figwheel-server.log"}
           :repl-options {:init-ns furthermore.server}}]
 
-   :prod [:private-p {:hooks [leiningen.cljsbuild]
-                      :env {:production true}
-                      :omit-source true
-                      :aot :all}]})
+   :prod [:private-p
+          :twitter-api
+          {:hooks [leiningen.cljsbuild]
+           :env {:production true}
+           :omit-source true
+           :aot :all}]})
