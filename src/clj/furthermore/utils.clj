@@ -1,9 +1,12 @@
 (ns furthermore.utils
   (require [clojure.string :as str]
            [clj-time.coerce :as c]
-           [clj-time.local :as l]))
+           [clj-time.local :as l]
+           [environ.core :refer [env]]))
 
-(def site-url "http://localhost:3000/")
+(def site-url (if (env :dev)
+                "http://localhost:3000/"
+                "http://furthermore-alpha.herokuapp.com/"))
 
 (defn convert-to-java-date
   [joda-date]
