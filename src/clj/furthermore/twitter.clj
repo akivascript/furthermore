@@ -22,4 +22,5 @@
 
 (defn update-twitter-status
   [status-text]
-  (statuses-update :oauth-creds credentials :params {:status status-text}))
+  (let [{:keys [body status]} (statuses-update :oauth-creds credentials :params {:status status-text})]
+    {:id (:id body) :status status}))
