@@ -20,7 +20,11 @@
       (str text " • " url)
       (str (subs (str/replace text #"\W+$" "") 0 114) "… • " url))))
 
+(defn create-tweet-url
+  [resp-map]
+  (str "https://twitter.com/" (get-in resp-map [:user :screen_name]) "/status/" (:id resp-map)))
+
 (defn update-twitter-status
   [status-text]
   (let [{:keys [body status]} (statuses-update :oauth-creds credentials :params {:status status-text})]
-    {:id (:id body) :status status}))
+    [status {:twitter {:id (:id body) :url (create-tweet-url body)}}]))
