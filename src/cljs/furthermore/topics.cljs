@@ -54,7 +54,8 @@
                  (doseq [ref (:references post)] (get-reference ref))
                  (apply d/div
                         {:style {:marginLeft 15}}
-                        (om/build-all posts (:references post)))))))))
+                        (om/build-all posts (sort-by #(:created-on %)
+                                                     (:references post))))))))))
 
 (defn topics
   [topic owner]

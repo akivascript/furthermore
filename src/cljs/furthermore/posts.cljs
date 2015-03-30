@@ -107,4 +107,6 @@
                (d/div {:class "row"}
                       (om/build post app {:opts opts})))))))
 
-(defroute post-path "/post/:url" [url] (route/change-view post-view :post-view :data {:url url}))
+(defroute post-path "/post/:url"
+  [url]
+  (route/change-view post-view :post-view :data {:url url}))
