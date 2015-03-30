@@ -177,13 +177,18 @@ code, kbd, pre, samp {
             padding-top: 10px;
         }
     }
-
+    
     .footer {
         padding-top: 10px;
         
         font-size: 90%;
 
         color: $gray-light;
+
+
+        .continue {
+            font-size: 90%;
+        }
 
         .topic {
             font-weight: bold;

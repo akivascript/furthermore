@@ -7,12 +7,13 @@
             [furthermore.utils :refer :all]))
 
 (defn create-post
-  [& {:keys [authors body parent subtitle tags title topic]}]
+  [& {:keys [authors body excerpt parent subtitle tags title topic]}]
   (let [post (-> (create-page tags)
                  (assoc :type :post)
                  (assoc :title title)
                  (assoc :subtitle subtitle)
                  (assoc :body (or body "Somebody forgot to actually write the post."))
+                 (assoc :excerpt excerpt)
                  (assoc :authors (or authors ["John Doe"]))
                  (assoc :parent (create-link-to parent (:type parent)))
                  (assoc :topic (create-link-to topic (:type topic))))
