@@ -89,7 +89,9 @@
                                (om/set-state! owner :opts data))))
      om/IRenderState
      (render-state [_ {:keys [view view-init-state react-key opts]}]
-       (om/build view app {:init-state view-init-state :react-key react-key :opts opts}))))
+       (om/build view app {:init-state view-init-state
+                           :react-key react-key
+                           :opts opts}))))
  app-state
  (assoc application :shared
         {:sub-chan route/sub-chan
