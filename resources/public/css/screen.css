@@ -65,14 +65,13 @@ code, kbd, pre, samp {
 
 /* line 67, ../../assets/scss/screen.scss */
 .page-footer {
-  margin-top: 11.5px;
   padding: 15px;
   border-top: 1px solid #ddd;
   font-size: 12pt;
   font-weight: 400;
 }
 
-/* line 76, ../../assets/scss/screen.scss */
+/* line 75, ../../assets/scss/screen.scss */
 .post-topic {
   font-size: 80%;
   text-align: center;
@@ -80,13 +79,13 @@ code, kbd, pre, samp {
   color: #aaa;
 }
 
-/* line 85, ../../assets/scss/screen.scss */
+/* line 84, ../../assets/scss/screen.scss */
 .follow-up {
   margin-bottom: 50px;
   border-top: 1px solid #aaa;
   font-size: 16pt;
 }
-/* line 91, ../../assets/scss/screen.scss */
+/* line 90, ../../assets/scss/screen.scss */
 .follow-up .body {
   padding: 10px 0px 5px 1px;
   font-family: "Puritan";
@@ -94,18 +93,18 @@ code, kbd, pre, samp {
   text-align: left;
   color: #555;
 }
-/* line 101, ../../assets/scss/screen.scss */
+/* line 100, ../../assets/scss/screen.scss */
 .follow-up .body p {
   padding-top: 10px;
 }
-/* line 106, ../../assets/scss/screen.scss */
+/* line 105, ../../assets/scss/screen.scss */
 .follow-up .footer {
   padding-top: 10px;
   font-size: 10pt;
   color: #aaa;
 }
 
-/* line 115, ../../assets/scss/screen.scss */
+/* line 114, ../../assets/scss/screen.scss */
 .arrow {
   width: 100%;
   font-size: 400%;
@@ -113,9 +112,10 @@ code, kbd, pre, samp {
   color: #eee;
 }
 
-/* line 125, ../../assets/scss/screen.scss */
+/* line 124, ../../assets/scss/screen.scss */
 .post {
   border-top: 1px solid #aaa;
+  margin-bottom: 50px;
 }
 /* line 128, ../../assets/scss/screen.scss */
 .post .title {

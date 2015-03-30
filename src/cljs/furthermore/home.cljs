@@ -30,8 +30,9 @@
                (d/div {:class "title"}
                       (d/a {:href (posts/post-path {:url (:url post)})}
                            (t/smarten (:title post))))
-               (d/div {:class "subtitle"}
-                      (t/smarten (:subtitle post)))
+               (when-not (nil? (:subtitle post))
+                 (d/div {:class "subtitle"}
+                        (t/smarten (:subtitle post))))
                (comment
                  (when (:tags post)
                    (d/div {:class "tags text-right"}
@@ -58,7 +59,10 @@
                                                     :href (posts/post-path {:url (:url post)})}
                                                    topic-title)
                                            (d/br)
-                                           (str date " @ " time))))))))))
+                                           (str date " @ " time)
+                                           (d/br)
+                                           (when-let [url (get-in post [:twitter :url])]
+                                             (d/a {:href url} "Tweeted!")))))))))))
 
 (defn follow-up-view
   [post owner]
