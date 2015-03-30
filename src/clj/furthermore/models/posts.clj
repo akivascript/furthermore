@@ -18,11 +18,8 @@
                  (assoc :parent (create-link-to parent (:type parent)))
                  (assoc :topic (create-link-to topic (:type topic))))
         parent (update parent :references conj (create-link-to post :post))]
-    (add-db-queue! post)
-    (add-db-queue! parent)
     (if-not (= (:_id parent) (:_id topic))
-      (do (add-db-queue! topic)
-          {:post post :parent parent :topic topic})
+      {:post post :parent parent :topic topic}
       {:post post :parent parent})))
 
 (defn create-follow-up
@@ -34,8 +31,6 @@
                       (assoc :parent (create-link-to parent (:type parent)))
                       (assoc :topic (:topic parent)))
         parent (update parent :references conj (create-link-to follow-up :follow-up))]
-    (add-db-queue! follow-up)
-    (add-db-queue! parent)
     {:post follow-up :parent parent}))
 
 (defn prepare-post
