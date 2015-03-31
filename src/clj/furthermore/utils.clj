@@ -5,8 +5,8 @@
            [environ.core :refer [env]]))
 
 (def site-url (if (env :dev)
-                "http://localhost:3000/"
-                "http://furthermore-alpha.herokuapp.com/"))
+                "http://localhost:3000/#/"
+                "http://furthermore-alpha.herokuapp.com/#/"))
 
 (defn convert-to-java-date
   [joda-date]
