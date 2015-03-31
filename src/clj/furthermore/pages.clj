@@ -35,21 +35,8 @@
   [page]
   (mapv #(read-entity {:type (:type %) :_id (:_id %)}) (:references page)))
 
-(defn get-template
-  [page]
-  (str (name (:type page)) ".html"))
-
 (defn smarten-text
   "Returns a string in which is replaced all relevant punctuation with
   typographic punction (i.e., curly quotes, proper ellipses, et al.)."
   [text]
   (t/smarten text))
-
-(comment
-  (defn render-page
-    ([page] (let [data {:page page
-                        :site site-config}]
-              (slr/render-file (get-template page) data)))
-    ([page template] (let [data {:page page
-                                 :site site-config}]
-                       (slr/render-file (str template ".html") data)))))

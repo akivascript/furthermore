@@ -17,7 +17,7 @@
   [resp-map]
   (str "https://twitter.com/" (get-in resp-map [:user :screen_name]) "/status/" (:id resp-map)))
 
-(defn create-twitter-text
+(defn create-tweet-text
   [text url]
   (let [text (str/replace text #"\s+$" "")]
     (if (< (count text) 115)

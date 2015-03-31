@@ -75,14 +75,17 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar [:private-p {:hooks [leiningen.cljsbuild]
-                         :env {:production true}
-                         :omit-source true
-                         :aot :all}]
+  {:uberjar [:private-p
+             :twitter-api
+             {:hooks [leiningen.cljsbuild]
+              :env {:production true}
+              :omit-source true
+              :aot :all}]
 
    :dev [:private
          :twitter-api
-         {:dependencies
+         {:source-paths ["src/clj" "env/dev/clj"]
+          :dependencies
           [[expectations "2.0.16"]
            [figwheel "0.2.5-SNAPSHOT"]
            [leiningen "2.5.1"]
@@ -94,7 +97,7 @@
                      :server-port 3449
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
-          :repl-options {:init-ns furthermore.server}}]
+          :repl-options {:init-ns furthermore.dev}}]
 
    :prod [:private-p
           :twitter-api
