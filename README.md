@@ -24,31 +24,13 @@ I'll be tracking my time using [Wakatime](http://www.wakatime.com).
 
 ### The Road Ahead
 
-My plan is to 'live code' this thing from the initial commit to v1.0 and beyond. I'll be posting conversational updates on my [Twitter account](https://www.twitter.com/akiva). Lengthier status reports will be posted [here](https://github.com/akivaschoen/furthermore/blob/dev/UPDATES.md); it'll also serve as a kinda-sorta blog, too. All of my triumphs, mistakes, rabbit holes, and brilliant ideas will play out along with constant code commits so people who are curious can see how an app like this can be developed.
+I'm 'live-coding' this thing from the initial commit to v1.0 and beyond. I'm posting conversational updates on my [Twitter account](https://www.twitter.com/akiva). Lengthier status reports are [here](http://furthermore-alpha.herokuapp.com). All of my triumphs, mistakes, rabbit holes, and brilliant ideas will play out along with the usual bloggery. 
 
-My first milestone will be when I'm able to deploy Furthermore to Heroku and start blogging there regardless of how ugly it looks. A dynamic UI will come later.
+~~My plan is to 'live code' this thing from the initial commit to v1.0 and beyond. I'll be posting conversational updates on my [Twitter account](https://www.twitter.com/akiva). Lengthier status reports will be posted [here](https://github.com/akivaschoen/furthermore/blob/dev/UPDATES.md); it'll also serve as a kinda-sorta blog, too. All of my triumphs, mistakes, rabbit holes, and brilliant ideas will play out along with constant code commits so people who are curious can see how an app like this can be developed.~~
 
 Finally, I'm very interested in code reviews and feedback throughout this process. If some people find this useful and helpful, that's great; if someone can show me a better way of doing things, that's even better.
 
 I can be reached at Twitter or via e-mail: furthermore akivamail com (with, y'know, the required RFC 822 punctuation).
-
-## Prerequisites
-
-You will need [Leiningen][1] 1.7.0 or above installed.
-
-[1]: https://github.com/technomancy/leiningen
-
-## Running
-
-My current development setup is to have two REPLs running: one with Ring and one with Figwheel:
-
-	lein repl
-	(run)
-
-And
-
-	lein figwheel
-	(use 'furthermore.core)
 
 ## License
 
