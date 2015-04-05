@@ -1,10 +1,7 @@
-(ns furthermore.models.posts
-  (:require [clj-time.local :as l]
-            [clojure.string :as str]
-            [furthermore.logging :refer :all]
-            [furthermore.pages :refer :all]
-            [furthermore.repository :refer :all]
-            [furthermore.utils :refer :all]))
+(ns furthermore.posts
+  (:require [furthermore.pages :refer [create-link-to create-page]]
+            [furthermore.repository :refer [read-entities read-entity]]
+            [furthermore.utils :refer [convert-to-java-date]]))
 
 (defn create-post
   [& {:keys [authors body excerpt parent subtitle tags title topic]}]
@@ -29,7 +26,8 @@
                       (assoc :authors (or authors ["John Doe"]))
                       (assoc :body (or body "Somebody forgot to actually write the follow-up."))
                       (assoc :parent (create-link-to parent (:type parent)))
-                      (assoc :topic (:topic parent)))
+                      (assoc :topic (:topic parent))
+                      (dissoc :title))
         parent (update parent :references conj (create-link-to follow-up :follow-up))]
     {:post follow-up :parent parent}))
 
@@ -60,7 +58,7 @@
    (let [posts (map #(get-post {:_id (:_id %)}) posts)]
      (if prepare
        (->> posts
-            (sort-by #(:last-updated %))
+            (sort-by :last-updated)
             reverse
             vec)
        posts))))
@@ -69,5 +67,5 @@
   [id]
   (let [post (get-post {:_id id})]
     (->> (get-posts (:references post))
-         (sort-by #(:created-on %))
+         (sort-by :created-on)
          vec)))

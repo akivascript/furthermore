@@ -25,7 +25,7 @@
    [ring/ring-defaults "0.1.4"]
    [ring/ring-jetty-adapter "1.3.2"]
    [secretary "1.2.3"]
-   [twitter-api "1.0.0"]
+   [twitter-api "0.7.8"]
    [typographer "1.1.0"]]
 
   :plugins
@@ -91,7 +91,8 @@
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
-          :plugins [[lein-figwheel "0.2.5-SNAPSHOT"]]
+          :plugins [[lein-figwheel "0.2.5-SNAPSHOT"]
+                    [lein-autoexpect "1.4.2"]]
           :env {:dev true}
           :figwheel {:http-server-root "public"
                      :server-port 3449

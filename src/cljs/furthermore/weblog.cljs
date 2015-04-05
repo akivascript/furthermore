@@ -3,11 +3,11 @@
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
-            [typographer.core :as t]
+
             [furthermore.posts :refer [post-path]]
             [furthermore.static-page :refer [static-path]]
-            [furthermore.routing :as route]
-            [furthermore.utils :as utils]))
+            [furthermore.routing :refer [change-view]]
+            [furthermore.utils :refer [format-timestamp]]))
 
 (enable-console-print!)
 
@@ -31,7 +31,7 @@
                    :error-handler #(.error js/console %)})))
     om/IRender
     (render [_]
-      (let [{date :date time :time} (utils/format-timestamp (:date entry))]
+      (let [{date :date time :time} (format-timestamp (:date entry))]
         (d/div {:class "row entry"}
                (d/div {:class "col-xs-3 date"}
                       (str date " @ " time))
@@ -65,4 +65,4 @@
                     (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
                            (om/build-all entries (:updates app))))))))
 
-(defroute updates-path "/updates" [] (route/change-view updates-view :updates-view))
+(defroute updates-path "/updates" [] (change-view updates-view :updates-view))

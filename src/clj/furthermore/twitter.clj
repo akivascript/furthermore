@@ -1,5 +1,6 @@
 (ns furthermore.twitter
   (:require [clojure.string :as str]
+
             [environ.core :refer [env]]
             [twitter.api.restful :refer [statuses-update]]
             [twitter.oauth :refer [make-oauth-creds]])
@@ -15,9 +16,10 @@
 
 (defn- create-tweet-url
   [resp-map]
-  (str "https://twitter.com/" (get-in resp-map [:user :screen_name]) "/status/" (:id resp-map)))
+  (str "https://twitter.com/"
+       (get-in resp-map [:user :screen_name]) "/status/" (:id resp-map)))
 
-(defn create-tweet-text
+(defn- create-tweet-text
   [text url]
   (let [text (str/replace text #"\s+$" "")]
     (if (< (count text) 115)
@@ -27,6 +29,6 @@
 (defn update-twitter-status
   [text]
   (let [{:keys [body status]} (statuses-update :oauth-creds credentials
-                                               :params {:status text})]
+                                               :params {:status (create-tweet-text text)})]
     [status {:twitter {:id (:id body)
                        :url (create-tweet-url body)}}]))

@@ -1,12 +1,12 @@
 (ns furthermore.posts
   (:require [ajax.core :as ajax]
-            [cljs-time.local :as l]
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
-            [typographer.core :as t]
-            [furthermore.routing :as route]
-            [furthermore.utils :as utils]))
+            [typographer.core :refer [smarten]]
+
+            [furthermore.routing :refer [change-view]]
+            [furthermore.utils :refer [format-timestamp]]))
 
 (enable-console-print!)
 (.setOptions js/marked (clj->js {:smartypants true}))
@@ -14,7 +14,7 @@
 (defn follow-up
   [content owner]
   (om/component
-   (let [{:keys [date time]} (utils/format-timestamp (:last-updated content))
+   (let [{:keys [date time]} (format-timestamp (:last-updated content))
          body (js/marked (:body content))]
      (d/div {:class "follow-up"}
             (comment
@@ -59,10 +59,10 @@
                    :error-handler #(.error js/console %)}))
     om/IRenderState
     (render-state [_ {:keys [opts]}]
-      (let [{:keys [date time]} (utils/format-timestamp (:last-updated content))
+      (let [{:keys [date time]} (format-timestamp (:last-updated content))
             body (js/marked (:body content))
             topic-title (when-let [t (get-in opts [:topic :title])]
-                          (t/smarten t))]
+                          (smarten t))]
         (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
                (d/div {:class "content"}
                       (d/div {:class "post-topic"}
@@ -70,11 +70,11 @@
                       (d/div {:class "post"}
                              (d/div
                               (d/div {:class "title"}
-                                     (t/smarten (:title content))))
+                                     (smarten (:title content))))
                              (when-not (nil? (:subtitle content))
                                (d/div
                                 (d/div {:class "subtitle"}
-                                       (t/smarten (:subtitle content)))))
+                                       (smarten (:subtitle content)))))
                              (comment
                                (when (:tags content)
                                  (d/div
@@ -110,4 +110,4 @@
 
 (defroute post-path "/post/:url"
   [url]
-  (route/change-view post-view :post-view :data {:url url}))
+  (change-view post-view :post-view :data {:url url}))
