@@ -3,10 +3,11 @@
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
-            [typographer.core :as t]
-            [furthermore.routing :as route]
-            [furthermore.posts :as posts]
-            [furthermore.utils :as utils]))
+            [typographer.core :refer [smarten]]
+
+            [furthermore.routing :refer [change-view]]
+            [furthermore.posts :refer [post-path]]
+            [furthermore.utils :refer [format-timestamp]]))
 
 (enable-console-print!)
 (.setOptions js/marked (clj->js {:smartypants true}))
@@ -21,18 +22,18 @@
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
-      (let [{:keys [date time]} (utils/format-timestamp (:created-on post))
+      (let [{:keys [date time]} (format-timestamp (:created-on post))
             body (js/marked (:body post))
             excerpt (when-let [e (:excerpt post)] (js/marked e))
             topic-title (when-let [t (get-in post [:topic :title])]
-                          (t/smarten t))]
+                          (smarten t))]
         (d/div {:class "post"}
                (d/div {:class "title"}
-                      (d/a {:href (posts/post-path {:url (:url post)})}
-                           (t/smarten (:title post))))
+                      (d/a {:href (post-path {:url (:url post)})}
+                           (smarten (:title post))))
                (when-not (nil? (:subtitle post))
                  (d/div {:class "subtitle"}
-                        (t/smarten (:subtitle post))))
+                        (smarten (:subtitle post))))
                (comment
                  (when (:tags post)
                    (d/div {:class "tags text-right"}
@@ -49,14 +50,14 @@
                              (d/div {:class "col-xs-12 col-sm-6"}
                                     (when-not (nil? (:excerpt post))
                                       (d/div {:class "continue"}
-                                             (d/a {:href (posts/post-path {:url (:url post)})
+                                             (d/a {:href (post-path {:url (:url post)})
                                                    :dangerouslySetInnerHTML
                                                    {:__html "Continue &raquo;"}}))))
                              (d/div {:class "col-xs-12 col-sm-6"}
                                     (d/div {:class "small text-right date"}
                                            "Filed under "
                                            (d/span {:class "topic"
-                                                    :href (posts/post-path {:url (:url post)})}
+                                                    :href (post-path {:url (:url post)})}
                                                    topic-title)
                                            (d/br)
                                            (str date " @ " time)
@@ -74,10 +75,10 @@
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
-      (let [{:keys [date time]} (utils/format-timestamp (:created-on post))
+      (let [{:keys [date time]} (format-timestamp (:created-on post))
             body (js/marked (:body post))
             parent-title (when-let [t (get-in post [:parent :title])]
-                           (t/smarten t))
+                           (smarten t))
             parent-url (get-in post [:parent :url])]
         (d/div {:class "follow-up"}
                (comment
@@ -95,7 +96,7 @@
                                     (d/div {:class "small text-right date"}
                                            "A follow-up to "
                                            (d/a {:class "parent"
-                                                 :href (posts/post-path
+                                                 :href (post-path
                                                         {:url parent-url})}
                                                    parent-title)
                                            (d/br)
@@ -129,4 +130,4 @@
                     (apply d/div {:class "col-xs-12 col-sm-7"}
                            (om/build-all post-dispatch (:posts app))))))))
 
-(defroute home-path "/" [] (route/change-view home-view :home-view))
+(defroute home-path "/" [] (change-view home-view :home-view))

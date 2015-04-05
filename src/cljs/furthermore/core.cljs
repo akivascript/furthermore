@@ -5,12 +5,13 @@
             [om-tools.core :refer-macros [defcomponent]]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
-            [furthermore.home :as home]
-            [furthermore.topics :as contents]
-            [furthermore.posts :as posts]
-            [furthermore.routing :as route]
-            [furthermore.static-page :as page]
-            [furthermore.weblog :as updates])
+
+            [furthermore.home :refer [home-path home-view]]
+            [furthermore.topics :refer [contents-path]]
+            [furthermore.posts :refer [post-path]]
+            [furthermore.routing :refer [consume-events pub-chan sub-chan]]
+            [furthermore.static-page :refer [static-path]]
+            [furthermore.weblog :refer [updates-path]])
   (:import goog.History))
 
 ;;
@@ -52,17 +53,17 @@
                            (d/span {:class "icon-bar"})
                            (d/span {:class "icon-bar"})
                            (d/span {:class "icon-bar"}))
-                 (d/a {:href (home/home-path)
+                 (d/a {:href (home-path)
                        :class "navbar-brand"} "WhaTEveR"))
           (d/div {:id "navbar-main"
                   :class "navbar-collapse collapse"}
                  (d/ul {:class "nav navbar-nav"}
                        (d/li
-                        (d/a {:href (contents/contents-path)} "Table of Contents"))
+                        (d/a {:href (contents-path)} "Table of Contents"))
                        (d/li
-                        (d/a {:href (updates/updates-path)} "Updates"))
+                        (d/a {:href (updates-path)} "Updates"))
                        (d/li
-                        (d/a {:href (page/static-path {:url "about"})} "About")))))))
+                        (d/a {:href (static-path {:url "about"})} "About")))))))
 
 (om/root
  (fn [app owner]
@@ -78,15 +79,15 @@
    (reify
      om/IInitState
      (init-state [_]
-       {:view home/home-view})
+       {:view home-view})
      om/IDidMount
      (did-mount [_]
-       (route/consume-events owner :change-view
-                             (fn [{:keys [view view-init-state view-name data]}]
-                               (om/set-state! owner :view view)
-                               (om/set-state! owner :view-init-state view-init-state)
-                               (om/set-state! owner :react-key view-name)
-                               (om/set-state! owner :opts data))))
+       (consume-events owner :change-view
+                       (fn [{:keys [view view-init-state view-name data]}]
+                         (om/set-state! owner :view view)
+                         (om/set-state! owner :view-init-state view-init-state)
+                         (om/set-state! owner :react-key view-name)
+                         (om/set-state! owner :opts data))))
      om/IRenderState
      (render-state [_ {:keys [view view-init-state react-key opts]}]
        (om/build view app {:init-state view-init-state
@@ -94,5 +95,5 @@
                            :opts opts}))))
  app-state
  (assoc application :shared
-        {:sub-chan route/sub-chan
-         :pub-chan route/pub-chan}))
+        {:sub-chan sub-chan
+         :pub-chan pub-chan}))

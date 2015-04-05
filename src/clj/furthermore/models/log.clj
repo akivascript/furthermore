@@ -1,2 +1,0 @@
-(ns furthermore.models.log)
-

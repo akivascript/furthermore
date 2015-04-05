@@ -1,16 +1,18 @@
 (ns furthermore.server
-  (:require [environ.core :refer [env]]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
+
             [compojure.core :refer [GET defroutes context]]
             [compojure.handler :refer [site]]
             [compojure.response :refer [render]]
-            [compojure.route :as route]
-            [ring.adapter.jetty :as jetty]
+            [compojure.route :refer [resources]]
+            [environ.core :refer [env]]
+            [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+
             [furthermore.logging :refer [get-weblog]]
-            [furthermore.models.posts :refer [get-post get-posts get-post-references]]
-            [furthermore.models.static-pages :refer [get-static-page]]
-            [furthermore.models.topics :refer [get-topic get-topics get-topic-references]]
+            [furthermore.posts :refer [get-post get-posts get-post-references]]
+            [furthermore.static-pages :refer [get-static-page]]
+            [furthermore.topics :refer [get-topic get-topics get-topic-references]]
             [furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]]))
 
@@ -34,7 +36,7 @@
            (GET "/weblog" [] (generate-response (get-weblog))))
   ;;(GET "/rss.xml" [] (get-feed))
   (GET "/" [uri] (render (io/resource "public/shell.html") uri))
-  (route/resources "/"))
+  (resources "/"))
 
 (def app
   (do (initialize-db-connection)
@@ -43,4 +45,4 @@
 (defn -main
   [& port]
   (let [port (Integer. (or port (env :port) 5000))]
-    (jetty/run-jetty (site #'app) {:port port :join? false})))
+    (run-jetty (site #'app) {:port port :join? false})))
