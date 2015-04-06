@@ -37,7 +37,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET (str "/get/post/" (:_id content) "/refs")
+      (ajax/GET (str "/api/post/" (:_id content) "/refs")
                 {:handler #(om/set-state! owner :opts {:refs %})
                  :error-handler #(.error js/console %)}))
     om/IRenderState
@@ -54,7 +54,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-        (ajax/GET (str "/get/topic/" (get-in content [:topic :_id]))
+        (ajax/GET (str "/api/topic/" (get-in content [:topic :_id]))
                   {:handler #(om/set-state! owner :opts {:topic %})
                    :error-handler #(.error js/console %)}))
     om/IRenderState
@@ -97,7 +97,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET (str "/get/post/url/" url)
+      (ajax/GET (str "/api/post/url/" url)
                 {:handler #(om/set-state! owner :opts {:content %})
                  :error-handler #(.error js/console %)}))
     om/IRenderState

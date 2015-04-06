@@ -17,7 +17,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET (str "/get/topic/" (get-in post [:topic :_id]))
+      (ajax/GET (str "/api/topic/" (get-in post [:topic :_id]))
                 {:handler #(om/transact! post :topic (fn [_] %))
                  :error-handler #(.error js/console %)}))
     om/IRender
@@ -70,7 +70,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET (str "/get/post/id/" (get-in post [:parent :_id]))
+      (ajax/GET (str "/api/post/id/" (get-in post [:parent :_id]))
                 {:handler #(om/transact! post :parent (fn [_] %))
                  :error-handler #(.error js/console %)}))
     om/IRender
@@ -113,7 +113,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET "/get/posts"
+      (ajax/GET "/api/posts"
                 {:handler #(om/transact! app :posts (fn [_] %))
                  :error-handler #(.error js/console %)}))
     om/IRender

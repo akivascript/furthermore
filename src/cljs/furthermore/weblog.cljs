@@ -26,7 +26,7 @@
     om/IWillMount
     (will-mount [_]
       (when (:topic entry)
-        (ajax/GET (str "/get/topic/" (:topic entry))
+        (ajax/GET (str "/api/topic/" (:topic entry))
                   {:handler #(om/transact! entry :topic (fn [_] %))
                    :error-handler #(.error js/console %)})))
     om/IRender
@@ -54,7 +54,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET "/get/weblog"
+      (ajax/GET "/api/weblog"
                 {:handler #(om/transact! app :updates (fn [_] %))
                  :error-handler #(.error js/console %)}))
     om/IRender

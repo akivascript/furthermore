@@ -33,7 +33,7 @@
 
 (defroutes routes
   ;; API calls
-  (context "/get" []
+  (context "/api" []
            (ANY "/page/:url" [url] (return-result (get-static-page {:url url})))
            (ANY "/post/id/:id" [id] (return-result (get-post {:_id id})))
            (ANY "/post/:id/refs" [id] (return-result (get-post-references id)))
@@ -42,9 +42,10 @@
            (ANY "/topic/:id" [id] (return-result (get-topic {:_id id})))
            (ANY "/topic/:id/refs" [id] (return-result (get-topic-references id)))
            (ANY "/topics" [] (return-result (get-topics)))
+           (ANY "/update" [] update-site)
            (ANY "/weblog" [] (return-result (get-weblog))))
-  (ANY "/update" [] update-site)
-  ;;(ANY "/rss.xml" [] (get-feed))
+  ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
+  ;; UI Calls
   (ANY "/" [uri] (render (io/resource "public/shell.html") uri))
   (resources "/"))
 
