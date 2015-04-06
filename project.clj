@@ -75,12 +75,10 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar [:private-p
-             :twitter-api
-             {:hooks [leiningen.cljsbuild]
+  {:uberjar {:hooks [leiningen.cljsbuild]
               :env {:production true}
               :omit-source true
-              :aot :all}]
+              :aot :all}
 
    :dev [:private
          :twitter-api
