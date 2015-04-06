@@ -1,9 +1,8 @@
-(ns furthermore.models.topics
-  (:require [clj-time.local :as l]
-            [furthermore.pages :refer :all]
-            [furthermore.models.posts :refer :all]
-            [furthermore.repository :refer :all]
-            [furthermore.utils :refer :all]))
+(ns furthermore.topics
+  (:require [furthermore.pages :refer [create-page]]
+            [furthermore.posts :refer [get-posts]]
+            [furthermore.repository :refer [read-entities read-entity]]
+            [furthermore.utils :refer [convert-to-java-date]]))
 
 (defn create-topic
   [title & {:keys [description authors tags]}]
@@ -20,7 +19,6 @@
 (defn prepare-topic
   [topic]
   (-> topic
-      (update :title smarten-text)
       (update :created-on convert-to-java-date)
       (update :last-updated convert-to-java-date)))
 
@@ -35,17 +33,16 @@
   [id]
   (let [topic (get-topic id)]
     (->> (get-posts (:references topic))
-         (sort-by #(:title %))
+         (sort-by :title)
          vec
          (assoc topic :references))))
 
 (defn get-topics
-  [& prepare]
+  [& {:keys [prepare] :or {prepare true}}]
   (let [topics (read-entities :topic)]
-    (if-not (or prepare
-                (= prepare :false))
+    (if prepare
       (->> topics
            (map prepare-topic)
-           (sort-by #(:title %))
+           (sort-by :title)
            vec)
       topics)))

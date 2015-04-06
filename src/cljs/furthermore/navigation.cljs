@@ -1,10 +1,10 @@
 (ns furthermore.navigation
   (:require [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
+
             [furthermore.home :refer [home-path]]
             [furthermore.topics :refer [contents-path]]
-            [furthermore.weblog :refer [updates-path]]
-            [furthermore.utils :as utils]))
+            [furthermore.weblog :refer [updates-path]]))
 
 (defn render
   [app owner]

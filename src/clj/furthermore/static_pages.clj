@@ -1,7 +1,7 @@
-(ns furthermore.models.static-pages
-  (:require [furthermore.pages :refer :all]
-            [furthermore.repository :refer :all]
-            [furthermore.utils :refer :all]))
+(ns furthermore.static-pages
+  (:require [furthermore.pages :refer [create-page]]
+            [furthermore.repository :refer [read-entity]]
+            [furthermore.utils :refer [convert-to-java-date]]))
 
 (defn create-static-page
   [{:keys [title tags] :or {title "New Static Page"}}]

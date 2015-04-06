@@ -4,10 +4,10 @@
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
-            [typographer.core :as t]
+
             [furthermore.posts :refer [post-path]]
-            [furthermore.routing :as route]
-            [furthermore.utils :as utils]))
+            [furthermore.routing :refer [change-view]]
+            [furthermore.utils :refer [get-text-excerpt format-timestamp]]))
 
 (enable-console-print!)
 
@@ -37,7 +37,7 @@
     om/IRender
     (render [_]
       (let [url (str "/post/" (:url post))
-            {:keys [date time]} (utils/format-timestamp (:created-on post))]
+            {:keys [date time]} (format-timestamp (:created-on post))]
         (d/div {:class "col-xs-12 post"}
                (if (= :post (:type post))
                  (d/div
@@ -48,7 +48,7 @@
                  (d/div
                   (d/div {:class "follow-up-title" :id (:_id post)}
                          (make-outline-selector post)
-                         (utils/get-text-excerpt (:body post) 50))
+                         (get-text-excerpt (:body post) 50))
                   (d/div {:class "small date"} (str date " @ " time))))
                (when (:opened post)
                  (doseq [ref (:references post)] (get-reference ref))
@@ -86,4 +86,4 @@
                (apply d/div {:class "row"}
                       (om/build-all topics (:contents app)))))))
 
-(defroute contents-path "/contents" [] (route/change-view contents-view :contents-view))
+(defroute contents-path "/contents" [] (change-view contents-view :contents-view))

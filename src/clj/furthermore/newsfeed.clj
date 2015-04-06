@@ -1,10 +1,11 @@
 (ns furthermore.newsfeed
-  (:require [clj-rss.core :as rss]
+  (:require [clj-rss.core :refer [channel-xml]]
             [markdown.core :refer [md-to-html-string]]
-            [typographer.core :as t]
-            [furthermore.logging :refer :all]
-            [furthermore.models.posts :refer :all]
-            [furthermore.utils :as utils]))
+            [typographer.core :refer [smarten]]
+
+            [furthermore.logging :refer [get-weblog]]
+            [furthermore.models.posts :refer [get-post]]
+            [furthermore.utils :refer [site-url create-url-path convert-to-java-date]]))
 
 (def ^:private site-channel
   {:title "Whatever"
@@ -16,15 +17,15 @@
 (defn- convert-to-rss-item
   [entry]
   (let [post (get-post {:_id (:ref entry)})
-        url (str utils/site-url (utils/create-url-path entry) (:url entry))
-        item {:title (t/smarten (:title entry))
+        url (str site-url (create-url-path entry) (:url entry))
+        item {:title (smarten (:title entry))
               :link url
               :guid url
               :description (-> (str "<![CDATA[ " (:body post) " ]]>")
-                               t/smarten
+                               smarten
                                md-to-html-string)
               :author (:authors post)
-              :pubDate (utils/convert-to-java-date (:date entry))}
+              :pubDate (convert-to-java-date (:date entry))}
         item (if (seq? (:tags post))
                (assoc item :category (:tags post))
                item)]
@@ -32,11 +33,11 @@
 
 (defn- generate-feed
   [items]
-  (rss/channel-xml site-channel items))
+  (channel-xml site-channel items))
 
 (defn get-feed
   []
-  (->> (get-weblog)
+  (->> get-weblog
        (filter #(not= :topic (:type %)))
        (take 30)
        (map convert-to-rss-item)

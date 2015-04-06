@@ -3,8 +3,9 @@
             [om.core :as om :include-macros true]
             [om-tools.dom :as d :include-macros true]
             [secretary.core :as secretary :refer-macros [defroute]]
-            [typographer.core :as t]
-            [furthermore.routing :as route]))
+            [typographer.core :refer [smarten]]
+
+            [furthermore.routing :refer [change-view]]))
 
 (.setOptions js/marked (clj->js {:smartypants true}))
 
@@ -24,9 +25,10 @@
                   :class "container"}
                  (d/div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
                         (d/div {:class "title"}
-                               (t/smarten (:title content)))
+                               (smarten (:title content)))
                         (d/div {:class "body"
                                 :dangerouslySetInnerHTML
                                 {:__html (js/marked (:body content))}}))))))))
 
-(defroute static-path "/page/:url" [url] (route/change-view static-view :static-view :data {:url url}))
+(defroute static-path "/page/:url" [url]
+  (change-view static-view :static-view :data {:url url}))

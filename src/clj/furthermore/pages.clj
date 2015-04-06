@@ -1,10 +1,10 @@
 (ns furthermore.pages
   (:require [clojure.string :as str]
-            [clj-time.coerce :as c]
-            [clj-time.local :as l]
+
+            [clj-time.local :refer [local-now]]
             [monger.util :refer [random-uuid]]
-            [typographer.core :as t]
-            [furthermore.repository :refer :all]))
+
+            [furthermore.repository :refer [read-entity]]))
 
 (defn create-page
   "Returns an empty default page."
@@ -12,8 +12,8 @@
   (let [page {:_id (random-uuid)
               :title "New Page"
               :authors ["John Doe"]
-              :created-on (l/local-now)
-              :last-updated (l/local-now)
+              :created-on (local-now)
+              :last-updated (local-now)
               :log true
               :tags #{}
               :references #{}}]
@@ -34,9 +34,3 @@
 (defn get-references
   [page]
   (mapv #(read-entity {:type (:type %) :_id (:_id %)}) (:references page)))
-
-(defn smarten-text
-  "Returns a string in which is replaced all relevant punctuation with
-  typographic punction (i.e., curly quotes, proper ellipses, et al.)."
-  [text]
-  (t/smarten text))

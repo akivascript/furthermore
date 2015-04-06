@@ -1,13 +1,13 @@
 (ns furthermore.repository
-  (:require [clojure.string :as str]
-            [clj-time.local :as l]
+  (:require [clj-time.local :refer [local-now]]
             [environ.core :refer [env]]
-            [monger.collection :as mc]
+            [monger.collection :refer [find-maps find-one-as-map insert upsert]]
             [monger.core :refer [connect-via-uri]]
-            [monger.joda-time :refer :all]
-            [monger.operators :refer :all]
-            [monger.query :as mq]
-            [furthermore.utils :refer :all]))
+            [monger.operators :refer [$options $regex]]
+            [monger.query :refer [find limit sort with-collection]]
+            [monger.result :refer [updated-existing?]]
+
+            [furthermore.utils :refer [create-url-date create-url-name get-excerpt]]))
 
 (defonce ^:private db (atom nil))
 (defonce ^:private db-queue (atom {}))
@@ -76,21 +76,21 @@
 
 (defn read-entities
   ([type]
-   (map parse-entity (mc/find-maps @db (type types))))
+   (map parse-entity (find-maps @db (type types))))
   ([type criteria limit-by]
-   (mq/with-collection @db (type types)
-     (mq/find {})
-     (mq/sort criteria)
-     (mq/limit limit-by))))
+   (with-collection @db (type types)
+     (find {})
+     (sort criteria)
+     (limit limit-by))))
 
 (defn read-entity
   [type criterion]
-  (let [entity (mc/find-one-as-map @db (type types) criterion)]
+  (let [entity (find-one-as-map @db (type types) criterion)]
     (parse-entity entity)))
 
 (defn find-entities
   [type criterion]
-  (let [entities (mc/find-maps @db (type types)
+  (let [entities (find-maps @db (type types)
                                {(first (keys criterion))
                                 {$regex (first (vals criterion)) $options "i"}})]
     (map parse-entity entities)))
@@ -98,7 +98,7 @@
 (defn save-entity
   [entity]
   (let [type (:type entity)
-        entity (assoc entity :last-updated (l/local-now))
+        entity (assoc entity :last-updated (local-now))
         entity (if (or (= type :topic)
                        (= type :static))
                  (assoc entity :url (create-url-name entity))
@@ -107,12 +107,12 @@
                        (= type :follow-up))
                  (assoc entity :url (create-url-date entity))
                  entity)
-        result (mc/upsert @db (type types) {:_id (:_id entity)} entity)]
+        result (upsert @db (type types) {:_id (:_id entity)} entity)]
     (when (loggable? entity)
-      (let [kind (if (monger.result/updated-existing? result)
+      (let [kind (if (updated-existing? result)
                    :update
                    :new)]
-        (mc/insert @db "log" (create-log-entry kind entity))))))
+        (insert @db "log" (create-log-entry kind entity))))))
 
 (defn process-db-queue
   []

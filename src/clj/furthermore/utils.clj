@@ -1,7 +1,8 @@
 (ns furthermore.utils
-  (require [clojure.string :as str]
-           [clj-time.coerce :as c]
-           [clj-time.local :as l]
+  (:require [clojure.string :as str]
+
+           [clj-time.coerce :refer [to-date]]
+           [clj-time.local :refer [format-local-time]]
            [environ.core :refer [env]]))
 
 (def site-url (if (env :dev)
@@ -10,7 +11,7 @@
 
 (defn convert-to-java-date
   [joda-date]
-  (c/to-date joda-date))
+  (to-date joda-date))
 
 (defn create-url-name
   [entity]
@@ -31,7 +32,7 @@
 (defn create-url-date
   [entity]
   (let [title (create-url-name entity)
-        date (l/format-local-time (:created-on entity) :date)]
+        date (format-local-time (:created-on entity) :date)]
    (str date "-" title)))
 
 (defn get-excerpt

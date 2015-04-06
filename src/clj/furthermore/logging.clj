@@ -1,6 +1,6 @@
 (ns furthermore.logging
-  (require [furthermore.repository :refer :all]
-           [furthermore.utils :refer :all]))
+  (require [furthermore.repository :refer [read-entities]]
+           [furthermore.utils :refer [convert-to-java-date]]))
 
 (defn prepare-entry
   [entry]
@@ -10,12 +10,12 @@
       (dissoc :_id)))
 
 (defn get-weblog
-  [& prepare]
+  [& {:keys [prepare] :or {prepare true}}]
   (let [entries (read-entities :log)]
-    (if-not (or prepare
-                (= prepare :false))
+    (if prepare
       (->> entries
            (map prepare-entry)
-           (sort-by #(:date %))
+           (sort-by :date)
            reverse
-           vec))))
+           vec)
+      entries)))
