@@ -14,7 +14,8 @@
             [furthermore.static-pages :refer [get-static-page]]
             [furthermore.topics :refer [get-topic get-topics get-topic-references]]
             [furthermore.newsfeed :refer [get-feed]]
-            [furthermore.repository :refer [initialize-db-connection]]))
+            [furthermore.repository :refer [initialize-db-connection]])
+  (:gen-class))
 
 (defn generate-response
   [data & [status]]
