@@ -109,12 +109,12 @@
     :follow-up (follow-up-view post owner)))
 
 (defn home-view
-  [app owner]
+  [data owner]
   (reify
     om/IWillMount
     (will-mount [_]
       (ajax/GET "/api/posts"
-                {:handler #(om/transact! app :posts (fn [_] %))
+                {:handler #(om/transact! data :posts (fn [_] %))
                  :error-handler #(.error js/console %)}))
     om/IRender
     (render [_]
@@ -128,6 +128,6 @@
                                           :class "img-responsive"
                                           :alt "Notes"})))
                     (apply d/div {:class "col-xs-12 col-sm-7"}
-                           (om/build-all post-dispatch (:posts app))))))))
+                           (om/build-all post-dispatch (:posts data))))))))
 
 (defroute home-path "/" [] (change-view home-view :home-view))

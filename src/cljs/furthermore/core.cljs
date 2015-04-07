@@ -7,11 +7,12 @@
             [secretary.core :as secretary :refer-macros [defroute]]
 
             [furthermore.home :refer [home-path home-view]]
-            [furthermore.topics :refer [contents-path]]
             [furthermore.posts :refer [post-path]]
             [furthermore.routing :refer [consume-events pub-chan sub-chan]]
             [furthermore.static-page :refer [static-path]]
-            [furthermore.weblog :refer [updates-path]])
+            [furthermore.topics :refer [contents-path]]
+            [furthermore.weblog :refer [updates-path]]
+            [furthermore.update :refer [update-path]])
   (:import goog.History))
 
 ;;
@@ -42,7 +43,7 @@
 ;; Layout
 ;;
 (defn nav-view
-  [app owner]
+  [data owner]
   (om/component
    (d/div {:class "container"}
           (d/div {:class "navbar-header"}
@@ -66,16 +67,16 @@
                         (d/a {:href (static-path {:url "about"})} "About")))))))
 
 (om/root
- (fn [app owner]
+ (fn [data owner]
    (reify
      om/IRender
      (render [_]
-       (om/build nav-view app))))
+       (om/build nav-view data))))
  app-state
  nav-bar)
 
 (om/root
- (fn [app owner]
+ (fn [data owner]
    (reify
      om/IInitState
      (init-state [_]
@@ -90,9 +91,9 @@
                          (om/set-state! owner :opts data))))
      om/IRenderState
      (render-state [_ {:keys [view view-init-state react-key opts]}]
-       (om/build view app {:init-state view-init-state
-                           :react-key react-key
-                           :opts opts}))))
+       (om/build view data {:init-state view-init-state
+                            :react-key react-key
+                            :opts opts}))))
  app-state
  (assoc application :shared
         {:sub-chan sub-chan
