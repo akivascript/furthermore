@@ -12,78 +12,64 @@
 (enable-console-print!)
 
 (defn make-outline-selector
-  [item]
-  (let [refcount (count (:references item))
-        class (if (:opened item)
+  [post owner {:keys [opened]}]
+  (let [refcount (count (:references post))
+        class (if opened
                 "glyphicon glyphicon-triangle-bottom small outline-widget"
                 "glyphicon glyphicon-triangle-right small outline-widget")]
     (if (pos? refcount)
       (d/span {:class class
-               :ariaHidden "true"
-               :onClick #(om/transact! item :opened not)})
+               :onClick #(do (om/update-state! owner :opened not)
+                             (om/transact! post :opened not))
+               :ariaHidden "true"})
       (d/span {:class class
                :style {:visibility "hidden"}
                :ariaHidden "true"}))))
 
-(defn get-reference
-  [ref]
-  (ajax/GET (str "/api/post/id/" (:_id ref))
-            {:handler #(om/update! ref %)
-             :error-handler #(.error js/console %)}))
-
 (defn posts
-  [post owner]
+  [post owner data]
   (reify
-    om/IRender
-    (render [_]
+    om/IInitState
+    (init-state [_]
+      {:opened (:opened post)})
+    om/IRenderState
+    (render-state [_ state]
       (let [url (str "/post/" (:url post))
             {:keys [date time]} (format-timestamp (:created-on post))]
         (d/div {:class "col-xs-12 post"}
                (if (= :post (:type post))
                  (d/div
                   (d/div {:class "title" :id (:_id post)}
-                         (make-outline-selector post)
+                         (make-outline-selector post owner state)
                          (d/a {:href (post-path {:url (:url post)})} (:title post)))
                   (d/div {:class "small date"} date))
                  (d/div
                   (d/div {:class "follow-up-title" :id (:_id post)}
-                         (make-outline-selector post)
+                         (make-outline-selector post owner state)
                          (get-text-excerpt (:body post) 50))
                   (d/div {:class "small date"} (str date " @ " time))))
-               (when (:opened post)
-                 (doseq [ref (:references post)] (get-reference ref))
-                 (apply d/div
-                        {:style {:marginLeft 15}}
-                        (om/build-all posts (sort-by #(:created-on %)
-                                                     (:references post))))))))))
+               (when (:opened state)
+                 (when-let [refs (:references post)]
+                   (let [refs (vals (map #(find (:posts data) (:_id %)) refs))]
+                     (d/div {:style {:marginLeft 15}}
+                            (om/build-all posts (sort-by :created-on refs)))))))))))
 
 (defn topics
-  [topic owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (doseq [ref (:references topic)] (get-reference ref)))
-    om/IRender
-    (render [_]
-      (d/div {:class "col-xs-12"}
-             (d/span {:class "topic"}
-                     (:title topic))
-             (apply d/div {:class "row"}
-                    (om/build-all posts (:references topic)))))))
+  [topic owner data]
+  (om/component
+   (d/div {:class "row"}
+          (d/div {:class "col-xs-12"}
+                 (d/span {:class "topic"}
+                         (:title topic))
+                 (when-let [refs (:references topic)]
+                   (let [refs (vals (map #(find (:posts data) (:_id %)) refs))]
+                     (om/build-all posts refs {:opts data})))))))
 
 (defn contents-view
-  [app owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (ajax/GET "/api/topics"
-                {:handler #(om/transact! app :contents (fn [_] %))
-                 :error-handler #(.error js/console %)}))
-    om/IRender
-    (render [_]
-      (d/div {:id "topics"
-                :class "container"}
-               (apply d/div {:class "row"}
-                      (om/build-all topics (:contents app)))))))
+  [data owner]
+  (om/component
+   (d/div {:id "topics"
+           :class "container"}
+          (om/build-all topics (vals (:topics data)) {:opts {:posts (:posts data)}}))))
 
 (defroute contents-path "/contents" [] (change-view contents-view :contents-view))
