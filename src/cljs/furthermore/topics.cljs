@@ -70,6 +70,9 @@
   (om/component
    (d/div {:id "topics"
            :class "container"}
-          (om/build-all topics (vals (:topics data)) {:opts {:posts (:posts data)}}))))
+          (om/build-all topics (->> (:topics data)
+                                    vals
+                                    (sort-by :title))
+                         {:opts {:posts (:posts data)}}))))
 
 (defroute contents-path "/contents" [] (change-view contents-view :contents-view))
