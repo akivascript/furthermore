@@ -56,4 +56,5 @@
 (defn -main
   [& port]
   (let [port (Integer. (or port (env :port) 5000))]
-    (run-jetty (site #'app) {:port port :join? false})))
+    (run-jetty (site #'app) {:port port :join? false})
+    (println "Furthermore up and running on port" port ".")))
