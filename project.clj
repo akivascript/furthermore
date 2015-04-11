@@ -9,15 +9,15 @@
   :min-lein-version "2.5.0"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0-alpha6"]
-   [org.clojure/clojurescript "0.0-3169"]
-   [cheshire "5.4.0"]
+  [[org.clojure/clojure "1.7.0-beta1"]
+   [org.clojure/clojurescript "0.0-3196"]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.10"]
    [com.andrewmcveigh/cljs-time "0.3.3"]
    [compojure "1.3.3"]
    [environ "1.0.0"]
+   [liberator "0.12.2"]
    [markdown-clj "0.9.65"]
    [com.novemberain/monger "2.1.0"]
    [org.omcljs/om "0.8.8"]
@@ -75,23 +75,21 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar [:private-p
-             :twitter-api
-             {:hooks [leiningen.cljsbuild]
+  {:uberjar {:hooks [leiningen.cljsbuild]
               :env {:production true}
               :omit-source true
-              :aot :all}]
+              :aot :all}
 
    :dev [:private
          :twitter-api
          {:source-paths ["src/clj" "env/dev/clj"]
           :dependencies
           [[expectations "2.0.16"]
-           [figwheel "0.2.5-SNAPSHOT"]
+           [figwheel "0.2.5"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
-          :plugins [[lein-figwheel "0.2.5-SNAPSHOT"]
+          :plugins [[lein-figwheel "0.2.5"]
                     [lein-autoexpect "1.4.2"]]
           :env {:dev true}
           :figwheel {:http-server-root "public"

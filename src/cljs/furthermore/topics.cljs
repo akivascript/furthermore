@@ -27,7 +27,7 @@
 
 (defn get-reference
   [ref]
-  (ajax/GET (str "/get/post/id/" (:_id ref))
+  (ajax/GET (str "/api/post/id/" (:_id ref))
             {:handler #(om/update! ref %)
              :error-handler #(.error js/console %)}))
 
@@ -76,7 +76,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET "/get/topics"
+      (ajax/GET "/api/topics"
                 {:handler #(om/transact! app :contents (fn [_] %))
                  :error-handler #(.error js/console %)}))
     om/IRender

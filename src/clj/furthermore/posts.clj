@@ -1,11 +1,11 @@
 (ns furthermore.posts
-  (:require [furthermore.pages :refer [create-link-to create-page]]
+  (:require [furthermore.entities :refer [create-link-to create-entity]]
             [furthermore.repository :refer [read-entities read-entity]]
             [furthermore.utils :refer [convert-to-java-date]]))
 
 (defn create-post
   [& {:keys [authors body excerpt parent subtitle tags title topic]}]
-  (let [post (-> (create-page tags)
+  (let [post (-> (create-entity tags)
                  (assoc :type :post)
                  (assoc :title title)
                  (assoc :subtitle subtitle)
@@ -21,7 +21,7 @@
 
 (defn create-follow-up
   [parent & {:keys [authors body tags]}]
-  (let [follow-up (-> (create-page tags)
+  (let [follow-up (-> (create-entity tags)
                       (assoc :type :follow-up)
                       (assoc :authors (or authors ["John Doe"]))
                       (assoc :body (or body "Somebody forgot to actually write the follow-up."))

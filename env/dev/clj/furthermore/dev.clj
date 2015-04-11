@@ -2,12 +2,12 @@
   (:require [clojure.string :as str]
             [environ.core :refer [env]]
 
+            [furthermore.entities :refer :all]
             [furthermore.logging :refer :all]
             [furthermore.posts :refer :all]
             [furthermore.static-pages :refer :all]
             [furthermore.topics :refer :all]
             [furthermore.newsfeed :refer :all]
-            [furthermore.pages :refer :all]
             [furthermore.repository :refer :all]
             [furthermore.server :refer :all]
             [furthermore.twitter :refer :all]
@@ -15,7 +15,7 @@
 
 (def is-dev? (env :dev))
 
-(defn rl-pages [] (require '[furthermore.pages :refer :all] :reload))
+(defn rl-entities [] (require '[furthermore.entities :refer :all] :reload))
 (defn rl-posts [] (require '[furthermore.posts :refer :all] :reload))
 (defn rl-repo [] (require '[furthermore.repository :refer :all] :reload))
 (defn rl-server [] (require '[furthermore.server :refer :all] :reload))

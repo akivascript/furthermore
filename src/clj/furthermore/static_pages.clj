@@ -1,11 +1,11 @@
 (ns furthermore.static-pages
-  (:require [furthermore.pages :refer [create-page]]
+  (:require [furthermore.entities :refer [create-entity]]
             [furthermore.repository :refer [read-entity]]
             [furthermore.utils :refer [convert-to-java-date]]))
 
 (defn create-static-page
   [{:keys [title tags] :or {title "New Static Page"}}]
-  (-> (create-page tags)
+  (-> (create-entity tags)
       (assoc :type :static)
       (assoc :title title)
       (assoc :body "What's all this then?")
