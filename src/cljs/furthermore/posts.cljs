@@ -6,24 +6,29 @@
             [typographer.core :refer [smarten]]
 
             [furthermore.routing :refer [change-view]]
+            [furthermore.state :refer [initialize-state]]
             [furthermore.utils :refer [format-timestamp]]))
 
-(enable-console-print!)
 (.setOptions js/marked (clj->js {:smartypants true}))
 
-(defn follow-up
-  [content owner]
+(defn follow-up-arrow
+  [data]
   (om/component
-   (let [{:keys [date time]} (format-timestamp (:last-updated content))
-         body (js/marked (:body content))]
+  (println "Hello")
+   (d/div {:class "glyphicon glyphicon-triangle-bottom arrow"})))
+
+(defn follow-up-view
+  [follow-up owner]
+  (om/component
+   (let [{:keys [date time]} (format-timestamp (:last-updated follow-up))]
      (d/div {:class "follow-up"}
             (comment
-              (when (:tags post)
+              (when (:tags follow-up)
                 (d/div {:class "tags text-right"}
-                       (om/build-all tags (:tags f)))))
+                       (om/build-all tags (:tags follow-up)))))
             (d/div {:class "body"
                     :dangerouslySetInnerHTML
-                    {:__html body}})
+                    {:__html (js/marked (:body follow-up))}})
             (d/div {:class "footer"}
                    (d/div {:class "row"}
                           (d/div {:class "col-xs-12 col-sm-6"}
@@ -32,82 +37,53 @@
                           (d/div {:class "col-xs-12 col-sm-6"}
                                  (d/div {:class "small text-right date"}))))))))
 
-(defn follow-up-view
-  [content owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (ajax/GET (str "/api/post/" (:_id content) "/refs")
-                {:handler #(om/set-state! owner :opts {:refs %})
-                 :error-handler #(.error js/console %)}))
-    om/IRenderState
-    (render-state [_ {:keys [opts]}]
-      (when (:refs opts)
-        (let [follow-ups (filter #(= :follow-up (:type %))
-                                 (:refs opts))]
-          (d/div
-           (d/div {:class "glyphicon glyphicon-triangle-bottom arrow"})
-           (om/build-all follow-up follow-ups)))))))
-
-(defn post
-  [post owner {:keys [content] :as opts}]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-        (ajax/GET (str "/api/topic/" (get-in content [:topic :_id]))
-                  {:handler #(om/set-state! owner :opts {:topic %})
-                   :error-handler #(.error js/console %)}))
-    om/IRenderState
-    (render-state [_ {:keys [opts]}]
-      (let [{:keys [date time]} (format-timestamp (:last-updated content))
-            body (js/marked (:body content))
-            topic-title (when-let [t (get-in opts [:topic :title])]
-                          (smarten t))]
-        (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
-               (d/div {:class "content"}
-                      (d/div {:class "post-topic"}
-                             topic-title)
-                      (d/div {:class "post"}
-                             (d/div
-                              (d/div {:class "title"}
-                                     (smarten (:title content))))
-                             (when-not (nil? (:subtitle content))
-                               (d/div
-                                (d/div {:class "subtitle"}
-                                       (smarten (:subtitle content)))))
-                             (comment
-                               (when (:tags content)
-                                 (d/div
-                                  (d/div {:class "tags text-right"}
-                                         (om/build-all tags (:tags content))))))
-                             (d/div {:class "body"
-                                     :dangerouslySetInnerHTML
-                                     {:__html body}})
-                             (d/div {:class "footer"}
-                                    (d/div {:class "row"}
-                                           (d/div {:class "col-xs-12 col-sm-6"}
-                                                  (d/div {:class "small text-left stuff"}))
-                                           (d/div {:class "col-xs-12 col-sm-6"}
-                                                  (d/div {:class "small text-right date"}
-                                                         (str date " @ " time))))))
-                      (om/build follow-up-view content)))))))
+(defn reference-dispatch
+  [ref owner data]
+  (case (:type ref)
+    :follow-up (follow-up-view ref owner)))
 
 (defn post-view
-  [app owner {:keys [url] :as opts}]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (ajax/GET (str "/api/post/url/" url)
-                {:handler #(om/set-state! owner :opts {:content %})
-                 :error-handler #(.error js/console %)}))
-    om/IRenderState
-    (render-state [_ {:keys [opts]}]
-      (when-not (nil? opts)
-        (d/div {:id "post"
-                :class "container"}
-               (d/div {:class "row"}
-                      (om/build post app {:opts opts})))))))
+  [data owner {:keys [url]}]
+  (om/component
+   (when-let [posts (apply merge (map #(hash-map (:url (val %)) (val %)) (:posts data)))]
+     (let [post (val (find posts url))
+           topic (val (find (:topics data) (get-in post [:topic :_id])))
+           {:keys [date time]} (format-timestamp (:last-updated post))]
+       (d/div {:id "post"
+               :class "container"}
+              (d/div {:class "row"}
+                     (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
+                            (d/div {:class "content"}
+                                   (d/div {:class "post-topic"}
+                                          (smarten (:title topic)))
+                                   (d/div {:class "post"}
+                                          (d/div
+                                             (d/div {:class "title"} (smarten (:title post))))
+                                            (when-not (nil? (:subtitle post))
+                                              (d/div
+                                               (d/div {:class "subtitle"}
+                                                      (smarten (:subtitle post)))))
+                                            (comment
+                                              (when (:tags post)
+                                                (d/div
+                                                 (d/div {:class "tags text-right"}
+                                                        (om/build-all tags (:tags post))))))
+                                            (d/div {:class "body"
+                                                    :dangerouslySetInnerHTML
+                                                    {:__html (js/marked (:body post))}})
+                                            (d/div {:class "footer"}
+                                                   (d/div {:class "row"}
+                                                          (d/div {:class "col-xs-12 col-sm-6"}
+                                                                 (d/div {:class "small text-left stuff"}))
+                                                          (d/div {:class "col-xs-12 col-sm-6"}
+                                                                 (d/div {:class "small text-right date"}
+                                                                        (str date " @ " time))))))
+                                     (d/div {:class "glyphicon glyphicon-triangle-bottom arrow"})
+                                     (when-let [refs (:references post)]
+                                       (let [refs (vals (map #(find (:posts data) (:_id %)) refs))]
+                                         (om/build-all reference-dispatch refs
+                                                       {:opts {:posts (:posts data)
+                                                               :topics (:topics data)}})))))))))))
 
-(defroute post-path "/post/:url"
-  [url]
+(defroute post-path "/post/:url" [url]
   (change-view post-view :post-view :data {:url url}))
