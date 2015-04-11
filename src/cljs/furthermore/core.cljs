@@ -11,6 +11,7 @@
             [furthermore.topics :refer [contents-path]]
             [furthermore.posts :refer [post-path]]
             [furthermore.routing :refer [consume-events pub-chan sub-chan]]
+            [furthermore.state :refer [app-state initialize-state]]
             [furthermore.static-page :refer [static-path]]
             [furthermore.weblog :refer [updates-path]])
   (:import goog.History))
@@ -19,12 +20,6 @@
 ;; General set-up
 ;;
 (enable-console-print!)
-
-(defonce app-state (atom {:topics []
-                          :posts []
-                          :updates []
-                          :pages {}}))
-
 
 (secretary/set-config! :prefix "#")
 
@@ -67,14 +62,7 @@
 
 (defn start-site
   []
-  (letfn [(get-data [path url]
-        (let [root (om/root-cursor app-state)]
-            (ajax/GET url
-                        {:handler #(om/update! root path %)
-                        :error-handler #(.error js/console %)})))]
-    (get-data :posts "/api/posts")
-    (get-data :topics "/api/topics")
-    (get-data :updates "/api/weblog"))
+  (initialize-state)
 
   (om/root
    (fn [app owner]
