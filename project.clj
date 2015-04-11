@@ -9,8 +9,8 @@
   :min-lein-version "2.5.0"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0-alpha6"]
-   [org.clojure/clojurescript "0.0-3169"]
+  [[org.clojure/clojure "1.7.0-beta1"]
+   [org.clojure/clojurescript "0.0-3196"]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.10"]
@@ -85,11 +85,11 @@
          {:source-paths ["src/clj" "env/dev/clj"]
           :dependencies
           [[expectations "2.0.16"]
-           [figwheel "0.2.5-SNAPSHOT"]
+           [figwheel "0.2.5"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
-          :plugins [[lein-figwheel "0.2.5-SNAPSHOT"]
+          :plugins [[lein-figwheel "0.2.5"]
                     [lein-autoexpect "1.4.2"]]
           :env {:dev true}
           :figwheel {:http-server-root "public"
