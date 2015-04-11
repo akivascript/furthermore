@@ -85,26 +85,29 @@
 
 (defn post-dispatch
   [data owner opts]
-  (let [data (val data)]
-    (case (:type data)
-      :post (post-view data owner opts)
-      :follow-up (follow-up-view data owner opts))))
+  (case (:type data)
+    :post (post-view data owner opts)
+    :follow-up (follow-up-view data owner opts)))
 
 (defn home-view
   [data owner]
   (om/component
-   (d/div {:id "index"
-           :class "container"}
-          (d/div {:class "row"}
-                 (d/div {:class "col-xs-12 col-sm-3 col-sm-offset-1 banner"}
-                        (d/div {:id "banner"
-                                :class "page-header"}
-                               (d/img {:src "img/notes-narrow.png"
-                                       :class "img-responsive"
-                                       :alt "Notes"})))
-                 (apply d/div {:class "col-xs-12 col-sm-7"}
-                        (om/build-all post-dispatch (:posts data) {:opts {:posts (:posts data)
-                                                                          :topics (:topics data)}}))))))
+   (let [posts (->> (:posts data)
+                    vals
+                    (sort-by :created-on)
+                    reverse)]
+     (d/div {:id "index"
+             :class "container"}
+            (d/div {:class "row"}
+                   (d/div {:class "col-xs-12 col-sm-3 col-sm-offset-1 banner"}
+                          (d/div {:id "banner"
+                                  :class "page-header"}
+                                 (d/img {:src "img/notes-narrow.png"
+                                         :class "img-responsive"
+                                         :alt "Notes"})))
+                   (apply d/div {:class "col-xs-12 col-sm-7"}
+                          (om/build-all post-dispatch posts {:opts {:posts (:posts data)
+                                                                    :topics (:topics data)}})))))))
 
 (defroute home-path "/"
   []

@@ -16,8 +16,7 @@
                  :updates #(om/update! root path (identity %))
                  #(om/update! root
                               path
-                              (apply merge (map (fn [x]
-                                                  (hash-map (:_id x) x)) %))))
+                              (apply merge (map (fn [x] (hash-map (:_id x) x)) %))))
                :error-handler #(.error js/console %)}))
 
   (defn initialize-state
