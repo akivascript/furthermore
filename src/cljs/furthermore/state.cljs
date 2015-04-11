@@ -7,18 +7,22 @@
                           :updates {}
                           :pages {}
                           :initialized false}))
+(let [root (om/root-cursor app-state)]
+  (defn get-data
+    [path url]
+    (ajax/GET url
+              {:handler
+               (condp = path
+                 :updates #(om/update! root path (identity %))
+                 #(om/update! root
+                              path
+                              (apply merge (map (fn [x]
+                                                  (hash-map (:_id x) x)) %))))
+               :error-handler #(.error js/console %)}))
 
-(defn initialize-state
-  []
-  (let [root (om/root-cursor app-state)]
+  (defn initialize-state
+    []
     (when-not (:initialized root)
-      (letfn [(get-data [path url]
-                (ajax/GET url
-                          {:handler #(om/update! root
-                                                 path
-                                                 (apply merge (map (fn [x]
-                                                                     (hash-map (:_id x) x)) %)))
-                           :error-handler #(.error js/console %)}))]
-        (get-data :posts "/api/posts")
-        (get-data :topics "/api/topics")
-        (get-data :updates "/api/weblog")))))
+      (get-data :posts "/api/posts")
+      (get-data :topics "/api/topics")
+      (get-data :updates "/api/weblog"))))

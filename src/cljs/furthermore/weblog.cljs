@@ -21,48 +21,37 @@
     (str kind " " type)))
 
 (defn entries
-  [entry owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (when (:topic entry)
-        (ajax/GET (str "/api/topic/" (:topic entry))
-                  {:handler #(om/transact! entry :topic (fn [_] %))
-                   :error-handler #(.error js/console %)})))
-    om/IRender
-    (render [_]
-      (let [{date :date time :time} (format-timestamp (:date entry))]
-        (d/div {:class "row entry"}
-               (d/div {:class "col-xs-3 date"}
-                      (str date " @ " time))
-               (d/div {:class "col-xs-2 status"
-                       :style {:textAlign "left"}}
-                      (set-status (:kind entry) (:type entry)))
-               (d/div {:class "col-xs-5 title"}
-                      (let [path-fn (case (:type entry)
-                                      :post (post-path {:url (:url entry)})
-                                      :static (static-path {:url (:url entry)})
-                                      "")]
-                        (if-not (= :topic (:type entry))
-                          (d/a {:href path-fn} (:title entry))
-                          (:title entry))))
-               (d/div {:class "col-xs-2 topic"}
-                      (get-in entry [:topic :title])))))))
+  [entry owner data]
+  (om/component
+   (let [topic (when-let [topic-id (:topic entry)]
+                 (val (find (:topics data) topic-id)))
+         {date :date time :time} (format-timestamp (:date entry))]
+     (d/div {:class "row entry"}
+            (d/div {:class "col-xs-3 date"}
+                   (str date " @ " time))
+            (d/div {:class "col-xs-2 status"
+                    :style {:textAlign "left"}}
+                   (set-status (:kind entry) (:type entry)))
+            (d/div {:class "col-xs-5 title"}
+                   (let [path-fn (case (:type entry)
+                                   :post (post-path {:url (:url entry)})
+                                   :static (static-path {:url (:url entry)})
+                                   "")]
+                     (if-not (= :topic (:type entry))
+                       (d/a {:href path-fn} (:title entry))
+                       (:title entry))))
+            (when topic
+              (d/div {:class "col-xs-2 topic"}
+                     (:title topic)))))))
 
 (defn updates-view
-  [app owner]
-  (reify
-    om/IWillMount
-    (will-mount [_]
-      (ajax/GET "/api/weblog"
-                {:handler #(om/transact! app :updates (fn [_] %))
-                 :error-handler #(.error js/console %)}))
-    om/IRender
-    (render [_]
-      (d/div {:id "weblog"
-              :class "container"}
-             (d/div {:class "row"}
-                    (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
-                           (om/build-all entries (:updates app))))))))
+  [data owner]
+  (om/component
+   (d/div {:id "weblog"
+           :class "container"}
+          (d/div {:class "row"}
+                 (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
+                        (om/build-all entries (:updates data) {:opts {:posts (:posts data)
+                                                                      :topics (:topics data)}}))))))
 
 (defroute updates-path "/updates" [] (change-view updates-view :updates-view))
