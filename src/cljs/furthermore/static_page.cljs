@@ -14,7 +14,7 @@
   (reify
     om/IWillMount
     (will-mount [_]
-      (ajax/GET (str "/get/page/" url)
+      (ajax/GET (str "/api/page/" url)
                 {:handler #(om/set-state! owner :opts {:content %})
                  :error-handler #(.error js/console %)}))
     om/IRenderState

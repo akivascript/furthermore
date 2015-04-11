@@ -1,5 +1,5 @@
 (ns furthermore.topics
-  (:require [furthermore.pages :refer [create-page]]
+  (:require [furthermore.entities :refer [create-entity]]
             [furthermore.posts :refer [get-posts]]
             [furthermore.repository :refer [read-entities read-entity]]
             [furthermore.utils :refer [convert-to-java-date]]))
@@ -7,8 +7,8 @@
 (defn create-topic
   [title & {:keys [description authors tags]}]
   (let [topic (as-> (if-not (nil? tags)
-                      (create-page tags)
-                      (create-page)) t
+                      (create-entity tags)
+                      (create-entity)) t
                 (assoc t :type :topic)
                 (assoc t :title title)
                 (assoc t :description description)

@@ -1,47 +1,57 @@
 (ns furthermore.server
   (:require [clojure.java.io :as io]
 
-            [compojure.core :refer [GET defroutes context]]
+            [compojure.core :refer [ANY context defroutes]]
             [compojure.handler :refer [site]]
             [compojure.response :refer [render]]
             [compojure.route :refer [resources]]
             [environ.core :refer [env]]
+            [liberator.core :refer [defresource resource]]
             [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.middleware.params :refer [wrap-params]]
 
+            [furthermore.entities :refer [add-entities]]
             [furthermore.logging :refer [get-weblog]]
             [furthermore.posts :refer [get-post get-posts get-post-references]]
             [furthermore.static-pages :refer [get-static-page]]
             [furthermore.topics :refer [get-topic get-topics get-topic-references]]
-            [furthermore.newsfeed :refer [get-feed]]
+            ;[furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]])
   (:gen-class))
 
-(defn generate-response
-  [data & [status]]
-  {:status (or status 200)
-   :headers {"Content-Type" "application/edn"}
-   :body (pr-str data)})
+(defresource update-site
+  [update]
+  :allowed-methods [:post]
+  :available-media-types ["application/edn"]
+  :post! (fn [ctx] (add-entities (get-in ctx [:request :body]))))
 
-(defroutes app-routes
+(defresource return-result
+  [task]
+  :allowed-methods [:get]
+  :available-media-types ["application/edn"]
+  :handle-ok (-> task pr-str))
+
+(defroutes routes
   ;; API calls
-  (context "/get" []
-           (GET "/page/:url" [url] (-> {:url url} get-static-page generate-response))
-           (GET "/post/id/:id" [id] (-> {:_id id} get-post generate-response))
-           (GET "/post/:id/refs" [id] (-> id get-post-references generate-response))
-           (GET "/post/url/:url" [url] (-> {:url url} get-post generate-response))
-           (GET "/posts" [] (generate-response (get-posts)))
-           (GET "/topic/:id" [id] (-> {:_id id} get-topic generate-response))
-           (GET "/topic/:id/refs" [id] (-> id get-topic-references generate-response))
-           (GET "/topics" [] (generate-response (get-topics)))
-           (GET "/weblog" [] (generate-response (get-weblog))))
-  ;;(GET "/rss.xml" [] (get-feed))
-  (GET "/" [uri] (render (io/resource "public/shell.html") uri))
+  (context "/api" []
+           (ANY "/page/:url" [url] (return-result (get-static-page {:url url})))
+           (ANY "/post/id/:id" [id] (return-result (get-post {:_id id})))
+           (ANY "/post/:id/refs" [id] (return-result (get-post-references id)))
+           (ANY "/post/url/:url" [url] (return-result (get-post {:url url})))
+           (ANY "/posts" [] (return-result (get-posts)))
+           (ANY "/topic/:id" [id] (return-result (get-topic {:_id id})))
+           (ANY "/topic/:id/refs" [id] (return-result (get-topic-references id)))
+           (ANY "/topics" [] (return-result (get-topics)))
+           (ANY "/update" [] update-site)
+           (ANY "/weblog" [] (return-result (get-weblog))))
+  ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
+  ;; UI Calls
+  (ANY "/" [uri] (render (io/resource "public/shell.html") uri))
   (resources "/"))
 
 (def app
   (do (initialize-db-connection)
-      (wrap-defaults app-routes site-defaults)))
+      (-> routes wrap-params)))
 
 (defn -main
   [& port]
