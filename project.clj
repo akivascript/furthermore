@@ -14,6 +14,7 @@
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.10"]
+   [cljs-uuid "0.0.4"]
    [com.andrewmcveigh/cljs-time "0.3.3"]
    [compojure "1.3.3"]
    [environ "1.0.0"]

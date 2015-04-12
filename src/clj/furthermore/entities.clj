@@ -1,10 +1,18 @@
 (ns furthermore.entities
   (:require [clojure.tools.reader.edn :refer [read-string]]
 
+            [clj-time.coerce :refer [from-date]]
+            [clj-time.core :refer [hours
+                                   plus]]
             [clj-time.local :refer [local-now]]
             [monger.util :refer [random-uuid]]
 
-            [furthermore.repository :refer [add-db-queue! clear-db-queue! list-db-queue read-entities read-entity]]
+            [furthermore.repository :refer [add-db-queue!
+                                            clear-db-queue!
+                                            list-db-queue
+                                            process-db-queue
+                                            read-entities
+                                            read-entity]]
             [furthermore.utils :refer [convert-to-java-date]]))
 
 ;;
@@ -14,13 +22,13 @@
   "Returns an empty default entity."
   [& tags]
   (let [entity {:_id (random-uuid)
-              :title "New Entity"
-              :authors ["John Doe"]
-              :created-on (local-now)
-              :last-updated (local-now)
-              :log true
-              :tags #{}
-              :references #{}}]
+                :title "New Entity"
+                :authors ["John Doe"]
+                :created-on (local-now)
+                :last-updated (local-now)
+                :log true
+                :tags #{}
+                :references #{}}]
     (if-not (nil? tags)
       (apply (fn [x] (reduce #(update %1 :tags conj %2) entity x)) tags)
       entity)))
@@ -83,22 +91,24 @@
 (defn get-post
   [criterion & {:keys [prepare] :or {prepare true}}]
   (let [post (read-entity :post criterion)]
-    (if prepare
-      (prepare-post post)
-      post)))
+    (if (nil? post)
+      nil
+      (if prepare
+        (prepare-post post)
+        post))))
 
 (defn add-post
-  [entity]
-  (let [entity (assoc (read-string entity) :_id (random-uuid))
-        topic (get-topic {:_id (get-in entity [:topic :_id])} :prepare false)
-        parent (or (get-post {:_id (get-in entity [:parent :_id])} :prepare false) topic)
-        entity (-> entity
-                   (assoc :parent (create-link-to parent (:type parent)))
-                   (assoc :topic (create-link-to topic (:type topic))))
+  [entity type]
+  (let [entity (read-string entity)
+        parent (let [parent (:parent entity)]
+                 (case (:type parent)
+                   :topic (get-topic {:_id (:_id parent)} :prepare false)
+                   :post (get-post {:_id (:_id parent)} :prepare false)))
         parent (update parent :references conj (create-link-to entity :post))]
+    (clear-db-queue!)
     (add-db-queue! entity)
     (add-db-queue! parent)
-    (spit "output.log" (list-db-queue))
+    (process-db-queue)
     (clear-db-queue!)))
 
 (defn get-posts

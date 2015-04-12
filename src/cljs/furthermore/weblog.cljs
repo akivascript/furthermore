@@ -46,12 +46,22 @@
 
 (defn updates-view
   [data owner]
-  (om/component
-   (d/div {:id "weblog"
-           :class "container"}
-          (d/div {:class "row"}
-                 (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
-                        (om/build-all entries (:updates data) {:opts {:posts (:posts data)
-                                                                      :topics (:topics data)}}))))))
+  (reify
+    om/IWillMount
+    (will-mount [_]
+      (ajax/GET "/api/weblog"
+                {:handler #(om/update! data :updates (identity %))
+                 :error-handler #(.error js/console %)}))
+    om/IRender
+    (render [_]
+      (d/div {:id "weblog"
+              :class "container"}
+             (d/div {:class "row"}
+                    (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
+                           (if (empty? (:updates data))
+                             "No updates yet!"
+                             (om/build-all entries (:updates data)
+                                           {:opts {:posts (:posts data)
+                                                   :topics (:topics data)}}))))))))
 
 (defroute updates-path "/updates" [] (change-view updates-view :updates-view))

@@ -8,7 +8,12 @@
             [monger.query :refer [find limit sort with-collection]]
             [monger.result :refer [updated-existing?]]
 
-            [furthermore.utils :refer [create-url-date create-url-name get-excerpt]]))
+            [furthermore.utils :refer [create-url-date
+                                       create-url-name
+                                       create-url-path
+                                       get-excerpt
+                                       site-url]]
+            [furthermore.twitter :refer [update-twitter-status]]))
 
 (defonce ^:private db (atom nil))
 (defonce ^:private db-queue (atom {}))
@@ -55,7 +60,7 @@
 (defn loggable?
   [entity]
   (and (case (:type entity)
-         (:post :topic :static) true?
+         (:post :static) true?
          false)
        (contains? entity :log)
        (:log entity)))
@@ -87,7 +92,9 @@
 (defn read-entity
   [type criterion]
   (let [entity (find-one-as-map @db (type types) criterion)]
-    (parse-entity entity)))
+    (if (nil? entity)
+      nil
+      (parse-entity entity))))
 
 (defn find-entities
   [type criterion]
@@ -100,20 +107,17 @@
   [entity]
   (let [type (:type entity)
         entity (assoc entity :last-updated (local-now))
-        entity (if (or (= type :topic)
-                       (= type :static))
-                 (assoc entity :url (create-url-name entity))
-                 entity)
-        entity (if (or (= type :post)
-                       (= type :follow-up))
-                 (assoc entity :url (create-url-date entity))
-                 entity)
-        result (upsert @db (type types) {:_id (:_id entity)} entity)]
-    (when (loggable? entity)
-      (let [kind (if (updated-existing? result)
-                   :update
-                   :new)]
-        (insert @db "log" (create-log-entry kind entity))))))
+        entity (if (true? (:tweet entity))
+                 (let [url (str site-url (create-url-path entity) (create-url-date entity))
+                       resp (update-twitter-status (:body entity) url)]
+                   (conj entity (second resp)))
+                 entity)]
+    (let [result (upsert @db (type types) {:_id (:_id entity)} entity)]
+      (when (loggable? entity)
+        (let [kind (if (updated-existing? result)
+                     :update
+                     :new)]
+          (insert @db "log" (create-log-entry kind entity)))))))
 
 (defn process-db-queue
   []
