@@ -20,7 +20,7 @@
 (defn follow-up-view
   [follow-up owner]
   (om/component
-   (let [{:keys [date time]} (format-timestamp (:last-updated follow-up))]
+   (let [{:keys [date time]} (format-timestamp (:created-on follow-up))]
      (d/div {:class "follow-up"}
             (comment
               (when (:tags follow-up)
@@ -48,7 +48,7 @@
    (when-let [posts (apply merge (map #(hash-map (:url (val %)) (val %)) (:posts data)))]
      (let [post (val (find posts url))
            topic (val (find (:topics data) (get-in post [:topic :_id])))
-           {:keys [date time]} (format-timestamp (:last-updated post))]
+           {:keys [date time]} (format-timestamp (:created-on post))]
        (d/div {:id "post"
                :class "container"}
               (d/div {:class "row"}

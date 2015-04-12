@@ -28,7 +28,8 @@
               (when (:tags post)
                 (d/div {:class "tags text-right"}
                        (om/build-all tags (:tags post)))))
-            (if (nil? (:excerpt post))
+            (if (or (nil? (:excerpt post))
+                    (empty? (:except post)))
               (d/div {:class "body"
                       :dangerouslySetInnerHTML
                       {:__html (js/marked (:body post))}})
@@ -38,7 +39,8 @@
             (d/div {:class "footer"}
                    (d/div {:class "row"}
                           (d/div {:class "col-xs-12 col-sm-6"}
-                                 (when-not (nil? (:excerpt post))
+                                 (when-not (or (nil? (:excerpt post))
+                                               (empty? (:excerpt post)))
                                    (d/div {:class "continue"}
                                           (d/a {:href (post-path {:url (:url post)})
                                                 :dangerouslySetInnerHTML

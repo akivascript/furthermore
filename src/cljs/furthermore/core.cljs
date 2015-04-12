@@ -5,7 +5,7 @@
             [om.core :as om :include-macros true]
             [om-tools.core :refer-macros [defcomponent]]
             [om-tools.dom :as d :include-macros true]
-            [secretary.core :as secretary :refer-macros [defroute]]
+            [secretary.core :refer [dispatch! set-config!]:refer-macros [defroute]]
 
             [furthermore.home :refer [home-path home-view]]
             [furthermore.topics :refer [contents-path]]
@@ -13,6 +13,7 @@
             [furthermore.routing :refer [consume-events pub-chan sub-chan]]
             [furthermore.state :refer [app-state initialize-state]]
             [furthermore.static-page :refer [static-path]]
+            [furthermore.update :refer [update-path]]
             [furthermore.weblog :refer [updates-path]])
   (:import goog.History))
 
@@ -21,7 +22,7 @@
 ;;
 (enable-console-print!)
 
-(secretary/set-config! :prefix "#")
+(set-config! :prefix "#")
 
 (def application {:target (. js/document (getElementById "page-content"))})
 (def nav-bar {:target (. js/document (getElementById "nav-bar"))})
@@ -30,7 +31,7 @@
 ;; Routing stuff
 ;;
 (let [h (History.)]
-  (goog.events/listen h EventType/NAVIGATE #(secretary/dispatch! (.-token %)))
+  (goog.events/listen h EventType/NAVIGATE #(dispatch! (.-token %)))
   (doto h (.setEnabled true)))
 
 ;;

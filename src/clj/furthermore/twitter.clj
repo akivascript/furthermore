@@ -27,8 +27,8 @@
       (str (subs (str/replace text #"\W+$" "") 0 114) "… • " url))))
 
 (defn update-twitter-status
-  [text]
+  [text url]
   (let [{:keys [body status]} (statuses-update :oauth-creds credentials
-                                               :params {:status (create-tweet-text text)})]
+                                               :params {:status (create-tweet-text text url)})]
     [status {:twitter {:id (:id body)
                        :url (create-tweet-url body)}}]))

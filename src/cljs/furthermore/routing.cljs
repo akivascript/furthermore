@@ -1,8 +1,7 @@
 (ns furthermore.routing
   (:require-macros [cljs.core.async.macros :refer [go go-loop]])
   (:require [cljs.core.async :refer [put! chan <! pub sub]]
-            [om.core :as om :include-macros true]
-            [secretary.core :as secretary :refer-macros [defroute]]))
+            [om.core :as om :include-macros true]))
 
 (def pub-chan (chan))
 (def sub-chan (pub pub-chan :topic))

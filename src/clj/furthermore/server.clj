@@ -10,20 +10,21 @@
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
 
-            [furthermore.entities :refer [add-entities]]
             [furthermore.logging :refer [get-weblog]]
-            [furthermore.posts :refer [get-post get-posts get-post-references]]
+            [furthermore.entities :refer [add-post get-post get-posts get-post-references
+                                          get-topic get-topics get-topic-references]]
             [furthermore.static-pages :refer [get-static-page]]
-            [furthermore.topics :refer [get-topic get-topics get-topic-references]]
             ;[furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]])
   (:gen-class))
 
 (defresource update-site
-  [update]
+  [type]
   :allowed-methods [:post]
   :available-media-types ["application/edn"]
-  :post! (fn [ctx] (add-entities (get-in ctx [:request :body]))))
+  :post! (fn [ctx]
+           (condp = type
+             "post" (add-post (slurp (get-in ctx [:request :body])) (keyword type)))))
 
 (defresource return-result
   [task]
@@ -42,7 +43,7 @@
            (ANY "/topic/:id" [id] (return-result (get-topic {:_id id})))
            (ANY "/topic/:id/refs" [id] (return-result (get-topic-references id)))
            (ANY "/topics" [] (return-result (get-topics)))
-           (ANY "/update" [] update-site)
+           (ANY "/update/:type" [type] (update-site type))
            (ANY "/weblog" [] (return-result (get-weblog))))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls
