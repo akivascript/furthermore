@@ -109,7 +109,7 @@
         entity (assoc entity :last-updated (local-now))
         entity (if (true? (:tweet entity))
                  (let [url (str site-url (create-url-path entity) (create-url-date entity))
-                       resp (update-twitter-status (:body entity) url)]
+                       resp (update-twitter-status (or (:title entity) (:body entity)) url)]
                    (conj entity (second resp)))
                  entity)]
     (let [result (upsert @db (type types) {:_id (:_id entity)} entity)]
