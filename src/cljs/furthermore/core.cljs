@@ -7,6 +7,7 @@
             [om-tools.dom :as d :include-macros true]
             [secretary.core :refer [dispatch! set-config!]:refer-macros [defroute]]
 
+            [furthermore.follow-up :refer [follow-up-path]]
             [furthermore.home :refer [home-path home-view]]
             [furthermore.topics :refer [contents-path]]
             [furthermore.posts :refer [post-path]]

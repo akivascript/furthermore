@@ -1,6 +1,6 @@
-(ns furthermore.update
+(ns furthermore.follow-up
   (:require [ajax.core :as ajax]
-            [clojure.string :refer [lower-case replace split]]
+            [clojure.string :refer [join lower-case replace split]]
             [cljs-time.local :refer [format-local-time local-now]]
             [cljs-time.coerce :refer [to-date]]
             [cljs-time.core :refer [plus hours]]
@@ -16,16 +16,17 @@
 
 (enable-console-print!)
 
-(def ^:private *parent-path* [:pages :update :parent])
-(def ^:private *post-parts* [:title :subtitle :author :topic :parent :tweet :body :excerpt])
+(def ^:private *parent-path* [:pages :follow-up :parent])
 
 (defn create-url-name
   [entity]
-  (-> (or (:title entity)
-          "Untitled")
-      (replace #"[\.,\-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
-      (replace #" " "-")
-      lower-case))
+  (let [text (case (:type entity)
+               :follow-up (join " " (take 8 (split (:body entity) #"\s")))
+               (-> (or (:title entity)
+                       "Untitled")))]
+    (-> text (replace #"[\.,\-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
+        (replace #" " "-")
+        lower-case)))
 
 (defn create-url-date
   [entity]
@@ -55,20 +56,25 @@
                                                      (hash-map % {:_id id
                                                                   :type (keyword type)}))
                                   (hash-map % value))))
-                           *post-parts*))
+                           [:topic
+                            :parent
+                            :tweet
+                            :body
+                            :excerpt]))
         post (assoc post :_id (uuid-string (make-random-uuid)))
-        post (assoc post :type :post)
-        post (assoc post :log true)
+        post (assoc post :type :follow-up)
+        ;post (assoc post :log true)
         post (assoc post :created-on (to-date (plus (local-now) (hours 5))))
         post (assoc post :url (create-url-date post))]
-    (om/transact! data :posts #(conj % {(:_id post) post}))
-    (om/transact! data [:topics (get-in post [:parent :_id])]
-                  #(update % :references conj (create-link-to post :post)))
-    (ajax/POST "/api/update/post"
-               {:params post
-                :handler #(.log js/console (str %))
-                :format :edn
-                :error-handler #(.error js/console %)})))
+      (om/transact! data :posts #(conj % {(:_id post) post}))
+      (om/transact! data [:post (get-in post [:parent :_id])]
+                    #(update % :references conj (create-link-to post :follow-up)))
+    (comment
+      (ajax/POST "/api/update/post"
+                 {:params post
+                  :handler #(.log js/console (str %))
+                  :format :edn
+                  :error-handler #(.error js/console %)}))))
 
 (defn render-options
   [data owner]
@@ -78,21 +84,21 @@
       (str (:title data) " (" date " @ " time ")")))))
 
 (defn filter-parent
-  [data owner]
+  [data owner type]
   (let [id (-> (get-value "topic" owner)
                (split "|")
                first)]
     (if (= id "")
       (om/update! data *parent-path* (:posts data))
-      (do
-        (om/update! data *parent-path*
-                    (filter #(= id (get-in % [:topic :_id])) (vals (:posts data))))
+      (om/update! data *parent-path*
+                  (filter #(= id (get-in % [:topic :_id])) (vals (:posts data))))
+      (when (= type :post)
         (om/transact! data *parent-path*
-                      (fn [m] (conj m (first (filter #(= id (:_id %)) (vals (:topics data)))))))
-        (om/transact! data *parent-path*
-                      #(reverse (sort-by :last-updated %)))))))
+                      (fn [m] (conj m (first (filter #(= id (:_id %)) (vals (:topics data))))))))
+      (om/transact! data *parent-path*
+                    #(reverse (sort-by :last-updated %))))))
 
-(defn update-view
+(defn follow-up-view
   [data owner]
   (om/component
      (d/div {:id "update"
@@ -100,20 +106,9 @@
             (d/div {:class "row"}
                    (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
                           (d/div {:class "content"}
-                                 (d/h2 "New Post")
+                                 (d/h2 "New Follow-Up")
                                  (d/div {:class "panel panel-default"}
                                         (d/div {:class "panel-body"}
-                                               (d/div
-                                                (d/label {:for "title"}
-                                                         "Title")
-                                                (d/input {:class "form-control"
-                                                          :type "text"
-                                                          :ref "title"}))
-                                               (d/div
-                                                (d/label {:for "subtitle"}
-                                                         "Subtitle")
-                                                (d/input {:class "form-control"
-                                                          :ref "subtitle"}))
                                                (d/div
                                                 (d/label {:for "author"}
                                                          "Author")
@@ -124,7 +119,7 @@
                                                 (d/label {:for "topic"} "Topic")
                                                 (d/select {:ref "topic"
                                                            :class "form-control"
-                                                           :onChange #(filter-parent data owner)}
+                                                           :onChange #(filter-parent data owner :follow-up)}
                                                           (d/option "Select topic...")
                                                           (om/build-all render-options
                                                                         (vals (:topics data)))))
@@ -160,4 +155,4 @@
                                                    :onClick #(process-post data owner)}
                                                   "Post"))))))))
 
-(defroute update-path "/update" [] (change-view update-view :update-view))
+(defroute follow-up-path "/follow-up" [] (change-view follow-up-view :follow-up-view))
