@@ -85,7 +85,7 @@
 
    :dev [:private
          :twitter-api
-         {:source-paths ["src/clj" "env/dev/clj"]
+         {:source-paths ["env/dev/clj"]
           :dependencies
           [[expectations "2.0.16"]
            [figwheel "0.2.5"]
