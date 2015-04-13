@@ -48,7 +48,9 @@
   [data owner]
   (let [post (apply merge (map
                            #(when-let [value (get-value % owner)]
-                              (when-not (empty? value)
+                              (when (or (true? value)
+                                        (not (empty? value)))
+
                                 (case %
                                   (:parent :topic) (let [[id type] (split value "|")]
                                                      (hash-map % {:_id id
