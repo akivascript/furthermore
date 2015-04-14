@@ -67,9 +67,8 @@
         post (assoc post :created-on (to-date (plus (local-now) (hours 5))))
         post (assoc post :url (create-url-date post))]
     (om/transact! data :posts #(conj % {(:_id post) post}))
-    (om/transact! data [:post (get-in post [:parent :_id])]
+    (om/transact! data [:posts (get-in post [:parent :_id])]
                   #(update % :references conj (create-link-to post :follow-up)))
-    (println post)
     (ajax/POST "/api/update/follow-up"
                {:params post
                 :handler #(.log js/console (str %))
