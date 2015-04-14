@@ -15,34 +15,48 @@
   [kind type]
   (let [kind (kind {:new "Added"
                     :update "Updated"})
-        type (type {:post "post"
+        type (type {:follow-up "follow-up"
+                    :post "post"
                     :static "page"
                     :topic "topic"})]
     (str kind " " type)))
 
+(def types
+  {:topic :topics
+   :post :posts})
+
 (defn entries
   [entry owner data]
   (om/component
-   (let [topic (when-let [topic-id (:topic entry)]
-                 (val (find (:topics data) topic-id)))
-         {date :date time :time} (format-timestamp (:date entry))]
-     (d/div {:class "row entry"}
-            (d/div {:class "col-xs-3 date"}
-                   (str date " @ " time))
-            (d/div {:class "col-xs-2 status"
-                    :style {:textAlign "left"}}
-                   (set-status (:kind entry) (:type entry)))
-            (d/div {:class "col-xs-5 title"}
-                   (let [path-fn (case (:type entry)
-                                   :post (post-path {:url (:url entry)})
-                                   :static (static-path {:url (:url entry)})
-                                   "")]
-                     (if-not (= :topic (:type entry))
-                       (d/a {:href path-fn} (:title entry))
-                       (:title entry))))
-            (when topic
-              (d/div {:class "col-xs-2 topic"}
-                     (:title topic)))))))
+   (letfn [(get-title [key]
+             (when-not (nil? key)
+               (if-let [ref (find (get data ((:type key) types)) (:_id key))]
+                 (:title (val ref))
+                 "")))]
+     (let [type (:type entry)
+           topic-title (get-title (:topic entry))
+           parent-title (get-title (:parent entry))
+           {date :date time :time} (format-timestamp (:date entry))]
+       (d/div {:class "row entry"}
+              (d/div {:class "col-xs-3 date"}
+                     (str date " @ " time))
+              (d/div {:class "col-xs-2 status"
+                      :style {:textAlign "left"}}
+                     (set-status (:kind entry) type))
+              (d/div {:class "col-xs-5 title"}
+                     (let [path-fn (case type
+                                     (:follow-up :post) (post-path {:url (:url entry)})
+                                     :static (static-path {:url (:url entry)})
+                                     "")]
+                       (if (= type :topic)
+                         (:title entry)
+                         (let [title (if (= type :follow-up)
+                                       (str parent-title ": " (:title entry))
+                                       (:title entry))]
+                           (d/a {:href path-fn} title)))))
+              (when topic-title
+                (d/div {:class "col-xs-2 topic"}
+                       topic-title)))))))
 
 (defn updates-view
   [data owner]

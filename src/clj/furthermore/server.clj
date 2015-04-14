@@ -23,8 +23,7 @@
   :allowed-methods [:post]
   :available-media-types ["application/edn"]
   :post! (fn [ctx]
-           (condp = type
-             "post" (add-post (slurp (get-in ctx [:request :body])) (keyword type)))))
+           (add-post (slurp (get-in ctx [:request :body])) (keyword type))))
 
 (defresource return-result
   [task]
