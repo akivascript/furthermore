@@ -55,7 +55,8 @@
                                         (str date " @ " time)
                                         (d/br)
                                         (when-let [url (get-in post [:twitter :url])]
-                                          (d/a {:href url} "Tweeted!"))))))))))
+                                          (d/a {:href url
+                                                :target "_blank"} "Tweeted!"))))))))))
 
 (defn follow-up-view
   [data owner opts]
