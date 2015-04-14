@@ -28,14 +28,13 @@
 (defn entries
   [entry owner data]
   (om/component
-   (letfn [(get-title [key]
+   (letfn [(get-ref [key]
              (when-not (nil? key)
-               (if-let [ref (find (get data ((:type key) types)) (:_id key))]
-                 (:title (val ref))
-                 "")))]
+               (when-let [ref (find (get data ((:type key) types)) (:_id key))]
+                 (val ref))))]
      (let [type (:type entry)
-           topic-title (get-title (:topic entry))
-           parent-title (get-title (:parent entry))
+           topic (get-ref (:topic entry))
+           parent (get-ref (:parent entry))
            {date :date time :time} (format-timestamp (:date entry))]
        (d/div {:class "row entry"}
               (d/div {:class "col-xs-3 date"}
@@ -45,16 +44,19 @@
                      (set-status (:kind entry) type))
               (d/div {:class "col-xs-5 title"}
                      (let [path-fn (case type
-                                     (:follow-up :post) (post-path {:url (:url entry)})
+                                     :follow-up (post-path {:url (:url parent)})
+                                     :post (post-path {:url (:url entry)})
                                      :static (static-path {:url (:url entry)})
                                      "")]
                        (if (= type :topic)
                          (:title entry)
-                         (let [title (if (= type :follow-up)
-                                       (str parent-title ": " (:title entry))
-                                       (:title entry))]
-                           (d/a {:href path-fn} title)))))
-              (when topic-title
+                         (if (= type :follow-up)
+                           (d/span (d/a {:href path-fn}
+                                        (:title parent))
+                                        (d/br)
+                                        (:title entry))
+                           (d/a {:href path-fn} (:title entry))))))
+              (when-let [topic-title (:title topic)]
                 (d/div {:class "col-xs-2 topic"}
                        topic-title)))))))
 
