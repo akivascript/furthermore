@@ -52,7 +52,7 @@
        (d/div {:id "post"
                :class "container"}
               (d/div {:class "row"}
-                     (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"}
+                     (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
                             (d/div {:class "content"}
                                    (d/div {:class "post-topic"}
                                           (smarten (:title topic)))
