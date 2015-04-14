@@ -1,5 +1,6 @@
 (ns furthermore.repository
-  (:require [clj-time.local :refer [local-now]]
+  (:require [clojure.pprint :refer [pprint]]
+            [clj-time.local :refer [local-now]]
             [environ.core :refer [env]]
             [monger.collection :refer [find-maps find-one-as-map insert upsert]]
             [monger.core :refer [connect-via-uri]]
@@ -53,17 +54,10 @@
      :date (:last-updated entity)
      :title text
      :ref (:_id entity)
-     :topic (get-in entity [:topic :_id])
+     :topic (:topic entity)
+     :parent (:parent entity)
      :url (or (:url entity)
               (:_id entity))}))
-
-(defn loggable?
-  [entity]
-  (and (case (:type entity)
-         (:post :static) true?
-         false)
-       (contains? entity :log)
-       (:log entity)))
 
 (defn parse-entity
   [entity]
@@ -105,15 +99,20 @@
 
 (defn save-entity
   [entity]
+  ;(spit "tmp/logs/output.log" (with-out-str (pprint entity)) :append true)
   (let [type (:type entity)
+        log? (:log entity)
         entity (assoc entity :last-updated (local-now))
+        entity (dissoc entity :log)
         entity (if (true? (:tweet entity))
                  (let [url (str site-url (create-url-path entity) (create-url-date entity))
                        resp (update-twitter-status (or (:title entity) (:body entity)) url)]
                    (conj entity (second resp)))
-                 entity)]
+                 (dissoc entity :tweet))]
     (let [result (upsert @db (type types) {:_id (:_id entity)} entity)]
-      (when (loggable? entity)
+      (when log?
+        (when (= :follow-up type)
+          (spit "tmp/logs/follow-up.log" (with-out-str (pprint entity))))
         (let [kind (if (updated-existing? result)
                      :update
                      :new)]
@@ -122,6 +121,7 @@
 (defn process-db-queue
   []
   (doseq [entity (vals @db-queue)]
+    ()
     (save-entity entity)))
 
 (defn initialize-db-connection

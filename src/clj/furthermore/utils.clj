@@ -36,5 +36,8 @@
    (str date "-" title)))
 
 (defn get-excerpt
-  [text]
-  (str (subs text 0 49) "…"))
+  [text length]
+  (let [length (dec length)]
+    (if (< (count text) length)
+      text
+      (str (subs text 0 length) "…"))))

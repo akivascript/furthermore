@@ -103,7 +103,7 @@
         parent (let [parent (:parent entity)]
                  (case (:type parent)
                    :topic (get-topic {:_id (:_id parent)} :prepare false)
-                   :post (get-post {:_id (:_id parent)} :prepare false)))
+                   (get-post {:_id (:_id parent)} :prepare false)))
         parent (update parent :references conj (create-link-to entity :post))]
     (clear-db-queue!)
     (add-db-queue! entity)
