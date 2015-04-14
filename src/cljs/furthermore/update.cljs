@@ -71,26 +71,32 @@
                 :error-handler #(.error js/console %)})))
 
 (defn render-options
-  [data owner]
+  [data owner opts]
   (om/component
-   (let [{:keys [date time]} (format-timestamp (:created-on data))]
-     (d/option {:value (str (:_id data) "|" (name (:type data)))}
-      (str (:title data) " (" date " @ " time ")")))))
+   (when-not (nil? data)
+     (let [{:keys [date time]} (format-timestamp (:created-on data))]
+       (d/option {:value (str (:_id data) "|" (name (:type data)))}
+                 (str (:title data) " (" date " @ " time ")"
+                      (when (and (= (:type data) :topic)
+                                 (= (:refs opts) "parent")) " — Ⓣ")))))))
 
 (defn filter-parent
   [data owner]
+  (println (get data *parent-path*))
   (let [id (-> (get-value "topic" owner)
                (split "|")
                first)]
     (if (= id "")
-      (om/update! data *parent-path* (:posts data))
+      (om/update! data *parent-path* {})
       (do
         (om/update! data *parent-path*
                     (filter #(= id (get-in % [:topic :_id])) (vals (:posts data))))
         (om/transact! data *parent-path*
-                      (fn [m] (conj m (first (filter #(= id (:_id %)) (vals (:topics data)))))))
+                      #(filter (fn [x] (= :post (:type x))) %))
         (om/transact! data *parent-path*
-                      #(reverse (sort-by :last-updated %)))))))
+                      #(reverse (sort-by :last-updated %)))
+        (om/transact! data *parent-path*
+                      (fn [m] (conj m (first (filter #(= id (:_id %)) (vals (:topics data)))))))))))
 
 (defn update-view
   [data owner]
@@ -125,16 +131,19 @@
                                                 (d/select {:ref "topic"
                                                            :class "form-control"
                                                            :onChange #(filter-parent data owner)}
-                                                          (d/option "Select topic...")
+                                                          (d/option {:value ""}
+                                                                    "Select topic...")
                                                           (om/build-all render-options
-                                                                        (vals (:topics data)))))
+                                                                        (vals (:topics data))
+                                                                        {:opts {:ref "topic"}})))
                                                (d/div
                                                 (d/label {:for "parent"} "Parent")
                                                 (d/select {:ref "parent"
                                                            :class "form-control"}
                                                           (d/option "Select parent...")
                                                           (om/build-all render-options
-                                                                        (get-in data *parent-path*))))
+                                                                        (get-in data *parent-path*)
+                                                                        {:opts {:refs "parent"}})))
                                                (d/div
                                                 (d/div {:ref "tweet"
                                                         :class "checkbox float-left"}
