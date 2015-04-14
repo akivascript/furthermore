@@ -102,13 +102,7 @@
      (d/div {:id "index"
              :class "container"}
             (d/div {:class "row"}
-                   (d/div {:class "col-xs-12 col-sm-3 col-sm-offset-1 banner"}
-                          (d/div {:id "banner"
-                                  :class "page-header"}
-                                 (d/img {:src "img/notes-narrow.png"
-                                         :class "img-responsive"
-                                         :alt "Notes"})))
-                   (apply d/div {:class "col-xs-12 col-sm-7"}
+                   (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
                           (om/build-all post-dispatch posts {:opts {:posts (:posts data)
                                                                     :topics (:topics data)}})))))))
 
