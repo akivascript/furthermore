@@ -13,40 +13,42 @@ a:hover {
 /* line 13, ../../assets/scss/screen.scss */
 body {
   background-color: #efebe1;
+  background-image: url("/img/background.png");
   font-family: 'Lato';
 }
 
-/* line 19, ../../assets/scss/screen.scss */
+/* line 20, ../../assets/scss/screen.scss */
 code, kbd, pre, samp {
   font-family: "VT323";
 }
 
-/* line 23, ../../assets/scss/screen.scss */
+/* line 24, ../../assets/scss/screen.scss */
 .nav {
   font-weight: 300;
 }
 
-/* line 27, ../../assets/scss/screen.scss */
+/* line 28, ../../assets/scss/screen.scss */
 .navbar-default {
   background-color: #465871;
+  background-image: url("/img/background.png");
 }
-/* line 31, ../../assets/scss/screen.scss */
+/* line 33, ../../assets/scss/screen.scss */
 .navbar-default .navbar-nav > li a:hover {
   background-color: #3D4B60;
 }
 
-/* line 37, ../../assets/scss/screen.scss */
+/* line 39, ../../assets/scss/screen.scss */
 .navbar-header {
   font-family: "Cinzel Decorative";
 }
 
-/* line 41, ../../assets/scss/screen.scss */
+/* line 43, ../../assets/scss/screen.scss */
 .page-header {
   margin-top: 0px;
   border-bottom: none;
 }
 
-/* line 48, ../../assets/scss/screen.scss */
+/* line 50, ../../assets/scss/screen.scss */
 .banner img {
   display: block;
   margin: 0px auto;
@@ -57,14 +59,14 @@ code, kbd, pre, samp {
   border: 1px solid #aaa;
 }
 
-/* line 59, ../../assets/scss/screen.scss */
+/* line 61, ../../assets/scss/screen.scss */
 .outline-widget {
   margin-right: 3px;
   cursor: pointer;
   color: #aaa;
 }
 
-/* line 67, ../../assets/scss/screen.scss */
+/* line 69, ../../assets/scss/screen.scss */
 .page-footer {
   padding: 15px;
   border-top: 1px solid #dbdbdb;
@@ -72,7 +74,7 @@ code, kbd, pre, samp {
   font-weight: 400;
 }
 
-/* line 75, ../../assets/scss/screen.scss */
+/* line 77, ../../assets/scss/screen.scss */
 .post-topic {
   font-size: 80%;
   text-align: center;
@@ -80,13 +82,13 @@ code, kbd, pre, samp {
   color: #aaa;
 }
 
-/* line 84, ../../assets/scss/screen.scss */
+/* line 86, ../../assets/scss/screen.scss */
 .follow-up {
   margin-bottom: 50px;
   border-top: 1px solid #aaa;
   font-size: 16pt;
 }
-/* line 90, ../../assets/scss/screen.scss */
+/* line 92, ../../assets/scss/screen.scss */
 .follow-up .body {
   padding: 10px 0px 5px 1px;
   font-family: "Puritan";
@@ -94,23 +96,23 @@ code, kbd, pre, samp {
   text-align: left;
   color: #555;
 }
-/* line 100, ../../assets/scss/screen.scss */
+/* line 102, ../../assets/scss/screen.scss */
 .follow-up .body p {
   padding-top: 10px;
 }
-/* line 105, ../../assets/scss/screen.scss */
+/* line 107, ../../assets/scss/screen.scss */
 .follow-up .footer {
   padding-top: 10px;
   font-size: 10pt;
   color: #aaa;
 }
 
-/* line 114, ../../assets/scss/screen.scss */
+/* line 116, ../../assets/scss/screen.scss */
 .form-control {
   background-color: #fcfcfc;
 }
 
-/* line 118, ../../assets/scss/screen.scss */
+/* line 120, ../../assets/scss/screen.scss */
 .arrow {
   width: 100%;
   font-size: 400%;
@@ -118,31 +120,31 @@ code, kbd, pre, samp {
   color: #dbdbdb;
 }
 
-/* line 128, ../../assets/scss/screen.scss */
+/* line 130, ../../assets/scss/screen.scss */
 .panel {
   background-color: #f7f5ef;
 }
 
-/* line 132, ../../assets/scss/screen.scss */
+/* line 134, ../../assets/scss/screen.scss */
 .post {
   border-top: 1px solid #aaa;
   margin-bottom: 50px;
 }
-/* line 136, ../../assets/scss/screen.scss */
+/* line 138, ../../assets/scss/screen.scss */
 .post .title {
   font-size: 250%;
   font-family: "Crimson Text";
   color: #955;
 }
-/* line 142, ../../assets/scss/screen.scss */
+/* line 144, ../../assets/scss/screen.scss */
 .post .title a {
   color: #955;
 }
-/* line 145, ../../assets/scss/screen.scss */
+/* line 147, ../../assets/scss/screen.scss */
 .post .title a:hover {
   color: #465871;
 }
-/* line 151, ../../assets/scss/screen.scss */
+/* line 153, ../../assets/scss/screen.scss */
 .post .subtitle {
   margin-top: -5px;
   font-size: 120%;
@@ -150,7 +152,7 @@ code, kbd, pre, samp {
   text-transform: uppercase;
   color: #aaa;
 }
-/* line 161, ../../assets/scss/screen.scss */
+/* line 163, ../../assets/scss/screen.scss */
 .post .btn-tag {
   padding: 2px 6px;
   -webkit-border-radius: 5px;
@@ -160,60 +162,60 @@ code, kbd, pre, samp {
   border-color: #8798a7;
   font-size: 80%;
 }
-/* line 170, ../../assets/scss/screen.scss */
+/* line 172, ../../assets/scss/screen.scss */
 .post .btn-tag a:hover {
   background-color: #6f7d8a;
   border-color: #6f7d8a;
 }
-/* line 176, ../../assets/scss/screen.scss */
+/* line 178, ../../assets/scss/screen.scss */
 .post .body {
   padding: 10px 0px 5px 1px;
   font-family: "Puritan";
   font-size: 12pt;
   color: #555;
 }
-/* line 184, ../../assets/scss/screen.scss */
+/* line 186, ../../assets/scss/screen.scss */
 .post .body p {
   padding-top: 10px;
 }
-/* line 189, ../../assets/scss/screen.scss */
+/* line 191, ../../assets/scss/screen.scss */
 .post .footer {
   padding-top: 10px;
   font-size: 90%;
   color: #aaa;
 }
-/* line 197, ../../assets/scss/screen.scss */
+/* line 199, ../../assets/scss/screen.scss */
 .post .footer .continue {
   font-size: 90%;
 }
-/* line 201, ../../assets/scss/screen.scss */
+/* line 203, ../../assets/scss/screen.scss */
 .post .footer .topic {
   font-weight: bold;
 }
 
-/* line 208, ../../assets/scss/screen.scss */
+/* line 210, ../../assets/scss/screen.scss */
 #post .follow-up {
   padding: 10px;
   border-top: 0px;
   /* background-color: #f5f5f5; */
 }
-/* line 215, ../../assets/scss/screen.scss */
+/* line 217, ../../assets/scss/screen.scss */
 #post .follow-up .body {
   padding: 0px 0px 0px 1px;
 }
-/* line 219, ../../assets/scss/screen.scss */
+/* line 221, ../../assets/scss/screen.scss */
 #post .follow-up .footer {
   padding: 0px;
 }
 
-/* line 225, ../../assets/scss/screen.scss */
+/* line 227, ../../assets/scss/screen.scss */
 #page-content {
   margin: 63px 0px 19px 0px;
   padding-top: 9.5px;
   padding-bottom: 9.5px;
 }
 
-/* line 232, ../../assets/scss/screen.scss */
+/* line 234, ../../assets/scss/screen.scss */
 #static h3 {
   margin-bottom: 2px;
   font-family: 'Lato';
@@ -221,7 +223,7 @@ code, kbd, pre, samp {
   font-size: 140%;
   color: #555;
 }
-/* line 242, ../../assets/scss/screen.scss */
+/* line 244, ../../assets/scss/screen.scss */
 #static img {
   margin: 4px 10px 0px 0px;
   -webkit-border-radius: 10px;
@@ -229,7 +231,7 @@ code, kbd, pre, samp {
   border-radius: 10px;
   border: 1px solid #aaa;
 }
-/* line 249, ../../assets/scss/screen.scss */
+/* line 251, ../../assets/scss/screen.scss */
 #static .body {
   margin-top: -5px;
   padding-top: 10px;
@@ -238,7 +240,7 @@ code, kbd, pre, samp {
   font-size: 12pt;
   color: #555;
 }
-/* line 261, ../../assets/scss/screen.scss */
+/* line 263, ../../assets/scss/screen.scss */
 #static .title {
   font-family: "Crimson Text";
   font-size: 250%;
@@ -247,68 +249,68 @@ code, kbd, pre, samp {
   color: #aa5555;
 }
 
-/* line 273, ../../assets/scss/screen.scss */
+/* line 275, ../../assets/scss/screen.scss */
 #topics .topic {
   font-family: "Cinzel";
   font-size: 140%;
   text-decoration: underline;
 }
-/* line 280, ../../assets/scss/screen.scss */
+/* line 282, ../../assets/scss/screen.scss */
 #topics .post {
   margin-top: -2.5px;
   margin-bottom: 0px;
   border-top: 0px;
 }
-/* line 286, ../../assets/scss/screen.scss */
+/* line 288, ../../assets/scss/screen.scss */
 #topics .post .title {
   display: inline-block;
   padding-right: 10px;
   font-family: "Crimson Text";
   font-size: 125%;
 }
-/* line 295, ../../assets/scss/screen.scss */
+/* line 297, ../../assets/scss/screen.scss */
 #topics .post .follow-up-title {
   display: inline-block;
   padding: 2px 10px 0px 0px;
   color: #777;
 }
-/* line 303, ../../assets/scss/screen.scss */
+/* line 305, ../../assets/scss/screen.scss */
 #topics .post .date {
   display: inline-block;
   color: #aaa;
 }
 
-/* line 311, ../../assets/scss/screen.scss */
+/* line 313, ../../assets/scss/screen.scss */
 #weblog {
   font-size: 90%;
 }
-/* line 314, ../../assets/scss/screen.scss */
+/* line 316, ../../assets/scss/screen.scss */
 #weblog .entries {
   border-bottom: 1px solid #aaa;
 }
-/* line 317, ../../assets/scss/screen.scss */
+/* line 319, ../../assets/scss/screen.scss */
 #weblog .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
-/* line 321, ../../assets/scss/screen.scss */
+/* line 323, ../../assets/scss/screen.scss */
 #weblog .entries .entry a:hover {
   color: #000;
 }
-/* line 325, ../../assets/scss/screen.scss */
+/* line 327, ../../assets/scss/screen.scss */
 #weblog .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 333, ../../assets/scss/screen.scss */
+/* line 335, ../../assets/scss/screen.scss */
 #weblog .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 342, ../../assets/scss/screen.scss */
+/* line 344, ../../assets/scss/screen.scss */
 #weblog .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;

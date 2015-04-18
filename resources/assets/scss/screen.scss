@@ -12,6 +12,7 @@ a {
 
 body {
     background-color: $background-color;
+    background-image: url('/img/background.png');
 
     font-family: 'Lato';
 }
@@ -26,6 +27,7 @@ code, kbd, pre, samp {
 
 .navbar-default {
     background-color: $blue-faded;
+    background-image: url('/img/background.png');
 
     .navbar-nav > li {
         a:hover {
