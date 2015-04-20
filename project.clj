@@ -10,14 +10,15 @@
 
   :dependencies
   [[org.clojure/clojure "1.7.0-beta1"]
-   [org.clojure/clojurescript "0.0-3196"]
+   [org.clojure/clojurescript "0.0-3208"]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
-   [cljs-ajax "0.3.10"]
+   [cljs-ajax "0.3.11"]
    [com.andrewmcveigh/cljs-time "0.3.3"]
    [com.lucasbradstreet/cljs-uuid-utils "1.0.1"]
    [compojure "1.3.3"]
    [environ "1.0.0"]
+   [com.cemerick/friend "0.2.2-SNAPSHOT"]
    [liberator "0.12.2"]
    [markdown-clj "0.9.65"]
    [com.novemberain/monger "2.1.0"]
@@ -25,14 +26,13 @@
    [prismatic/om-tools "0.3.11"]
    [ring/ring-defaults "0.1.4"]
    [ring/ring-jetty-adapter "1.3.2"]
-   [secretary "1.2.3"]
    [twitter-api "0.7.8"]
    [typographer "1.1.0"]]
 
   :plugins
   [[lein-cljsbuild "1.0.5"]
    [lein-environ "1.0.0"]
-   [lein-ring "0.8.13"]]
+   [lein-ring "0.9.3"]]
 
   :source-paths
   ["src/clj"]
@@ -91,7 +91,8 @@
            [figwheel "0.2.5"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
-           [ring-mock "0.1.5"]]
+           [ring-mock "0.1.5"]
+           [secretary "1.2.3"]]
           :plugins [[lein-figwheel "0.2.5"]
                     [lein-autoexpect "1.4.2"]]
           :env {:dev true}
