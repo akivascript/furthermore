@@ -43,9 +43,10 @@
   {:referrer (update referrer :references conj (create-link-to referee link-type))
    :referee (update referee :references conj (create-link-to referrer link-type))})
 
-(defn get-references
-  [entity]
-  (mapv #(read-entity {:type (:type %) :_id (:_id %)}) (:references entity)))
+(comment
+  (defn get-references
+    [entity]
+    (mapv #(read-entity {:type (:type %) :_id (:_id %)}) (:references entity))))
 
 ;;
 ;; Post-Specific Stuff
@@ -91,9 +92,8 @@
 (defn get-post
   [criterion & {:keys [prepare] :or {prepare true}}]
   (let [post (read-entity :post criterion)]
-    (if (nil? post)
-      nil
-      (if prepare
+    (when-not (nil? post)
+      (if (true? prepare)
         (prepare-post post)
         post))))
 

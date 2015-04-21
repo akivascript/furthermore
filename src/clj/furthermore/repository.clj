@@ -86,8 +86,7 @@
 (defn read-entity
   [type criterion]
   (let [entity (find-one-as-map @db (type types) criterion)]
-    (if (nil? entity)
-      nil
+    (when-not (nil? entity)
       (parse-entity entity))))
 
 (defn find-entities
@@ -121,7 +120,6 @@
 (defn process-db-queue
   []
   (doseq [entity (vals @db-queue)]
-    ()
     (save-entity entity)))
 
 (defn initialize-db-connection

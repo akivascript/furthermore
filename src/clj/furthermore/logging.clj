@@ -1,6 +1,6 @@
 (ns furthermore.logging
-  (require [furthermore.repository :refer [read-entities]]
-           [furthermore.utils :refer [convert-to-java-date]]))
+  (:require [furthermore.repository :refer [read-entities]]
+            [furthermore.utils :refer [convert-to-java-date]]))
 
 (defn prepare-entry
   [entry]

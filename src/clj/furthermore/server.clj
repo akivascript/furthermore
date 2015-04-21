@@ -29,7 +29,7 @@
   [task]
   :allowed-methods [:get]
   :available-media-types ["application/edn"]
-  :handle-ok (-> task pr-str))
+  :handle-ok (pr-str task))
 
 (defroutes routes
   ;; API calls
@@ -51,7 +51,7 @@
 
 (def app
   (do (initialize-db-connection)
-      (-> routes wrap-params)))
+      (wrap-params routes)))
 
 (defn -main
   [& port]
