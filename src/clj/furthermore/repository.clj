@@ -1,5 +1,6 @@
 (ns furthermore.repository
   (:require [clojure.pprint :refer [pprint]]
+
             [clj-time.local :refer [local-now]]
             [environ.core :refer [env]]
             [monger.collection :refer [find-maps find-one-as-map insert upsert]]
@@ -16,8 +17,6 @@
                                        site-url]]
             [furthermore.twitter :refer [update-twitter-status]]))
 
-(defonce ^:private db (atom nil))
-(defonce ^:private db-queue (atom {}))
 (def types
   {:log "log"
    :follow-up "posts"
@@ -25,27 +24,8 @@
    :static "pages"
    :topic "topics"})
 
-(defn add-db-queue!
-  [entity]
-  (swap! db-queue assoc (:_id entity) entity))
-
-(defn update-db-queue!
-  [entity]
-  (add-db-queue! entity))
-
-(defn get-db-queue
-  [id]
-  (find @db-queue id))
-
-(defn list-db-queue
-  []
-  @db-queue)
-
-(defn clear-db-queue!
-  []
-  (reset! db-queue {}))
-
 (defn create-log-entry
+  "Creates a weblog entry for a newly added or updated entity."
   [kind entity]
   (let [text (or (:title entity)
                  (get-excerpt (:body entity) 50))]
@@ -60,6 +40,7 @@
               (:_id entity))}))
 
 (defn parse-entity
+  "Keywordizes values in an entity loaded from the database."
   [entity]
   (let [entity (as-> entity e
                  (update e :type keyword)
@@ -75,6 +56,7 @@
       entity)))
 
 (defn read-entities
+  "Returns entities from the database."
   ([type]
    (map parse-entity (find-maps @db (type types))))
   ([type criteria limit-by]
@@ -84,12 +66,16 @@
      (limit limit-by))))
 
 (defn read-entity
+  "Returns a single entity from the database. criterion is expected
+  to be a map (e.g., {:_id 0de661a...})."
   [type criterion]
   (let [entity (find-one-as-map @db (type types) criterion)]
     (when-not (nil? entity)
       (parse-entity entity))))
 
 (defn find-entities
+  "Returns one or more entities from the database. criterion is
+  expected to be a map (e.g., {:_id 0de661a...})."
   [type criterion]
   (let [entities (find-maps @db (type types)
                                {(first (keys criterion))
@@ -97,8 +83,8 @@
     (map parse-entity entities)))
 
 (defn save-entity
+  "Saves an entity to the database and returns the result."
   [entity]
-  ;(spit "tmp/logs/output.log" (with-out-str (pprint entity)) :append true)
   (let [type (:type entity)
         log? (:log entity)
         entity (assoc entity :last-updated (local-now))
@@ -110,18 +96,54 @@
                  (dissoc entity :tweet))]
     (let [result (upsert @db (type types) {:_id (:_id entity)} entity)]
       (when log?
-        (when (= :follow-up type)
-          (spit "tmp/logs/follow-up.log" (with-out-str (pprint entity))))
         (let [kind (if (updated-existing? result)
                      :update
                      :new)]
-          (insert @db "log" (create-log-entry kind entity)))))))
+          (insert @db "log" (create-log-entry kind entity))))
+      result)))
+
+;;
+;; Database queue stuff
+;;
+(defonce ^:private db-queue (atom {}))
 
 (defn process-db-queue
+  "Adds or updates each entity currently in the database queue."
   []
   (doseq [entity (vals @db-queue)]
     (save-entity entity)))
 
+(defn add-db-queue!
+  "Adds an entity to the database queue."
+  [entity]
+  (swap! db-queue assoc (:_id entity) entity))
+
+(defn update-db-queue!
+  "Adds an entity to the database queue."
+  [entity]
+  (add-db-queue! entity))
+
+(defn get-db-queue
+  "Returns an entity from the database queue."
+  [id]
+  (find @db-queue id))
+
+(defn list-db-queue
+  "Returns a map of database queue."
+  []
+  @db-queue)
+
+(defn clear-db-queue!
+  "Removes all entities from the database queue."
+  []
+ (reset! db-queue {}))
+
+;;
+;; Database stuff
+;;
+(defonce ^:private db (atom nil))
+
 (defn initialize-db-connection
+  "Establishes a connection to the database."
   [& {:keys [uri]}]
   (reset! db (:db (connect-via-uri (or uri (env :database-uri))))))

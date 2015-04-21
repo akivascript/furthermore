@@ -3,6 +3,8 @@
             [furthermore.utils :refer [convert-to-java-date]]))
 
 (defn prepare-entry
+  "Ensures an entry is ready to be converted to a EDN object
+  for being included in a web response."
   [entry]
   (-> entry
       (update :date convert-to-java-date)
@@ -10,6 +12,7 @@
       (dissoc :_id)))
 
 (defn get-weblog
+  "Grabs the weblog entries from the database."
   [& {:keys [prepare] :or {prepare true}}]
   (let [entries (read-entities :log)]
     (if prepare

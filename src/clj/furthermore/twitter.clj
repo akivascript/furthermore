@@ -15,11 +15,18 @@
     (env :twitter-access-token-secret)))
 
 (defn- create-tweet-url
-  [resp-map]
+  "Constructs a link to a successfully posted tweet from that
+  tweet's response map returned from Twitter."
+  [tweet]
   (str "https://twitter.com/"
-       (get-in resp-map [:user :screen_name]) "/status/" (:id resp-map)))
+       (get-in tweet [:user :screen_name])
+       "/status/"
+       (:id tweet)))
 
 (defn- create-tweet-text
+  "Returns a string concatencating some text that, if necessary, is
+  shortened (to keep the total character count 140 or less); some dividing
+  material; and a URL which will be shortened upon submission to Twitter's API."
   [text url]
   (let [text (str/replace text #"\s+$" "")]
     (if (< (count text) 115)
@@ -27,6 +34,8 @@
       (str (subs (str/replace text #"\W+$" "") 0 114) "… • " url))))
 
 (defn update-twitter-status
+  "Submits a tweet to Twitter for posting returning Twitter's
+  response map."
   [text url]
   (let [{:keys [body status]} (statuses-update :oauth-creds credentials
                                                :params {:status (create-tweet-text text url)})]

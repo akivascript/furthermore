@@ -11,8 +11,13 @@
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.logging :refer [get-weblog]]
-            [furthermore.entities :refer [add-post get-post get-posts get-post-references
-                                          get-topic get-topics get-topic-references]]
+            [furthermore.entities :refer [add-post
+                                          get-post
+                                          get-posts
+                                          get-post-references
+                                          get-topic
+                                          get-topics
+                                          get-topic-references]]
             [furthermore.static-pages :refer [get-static-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]])
@@ -54,6 +59,7 @@
       (wrap-params routes)))
 
 (defn -main
+  "Launches Furthermore."
   [& port]
   (let [port (Integer. (or port (env :port) 5000))]
     (run-jetty (site #'app) {:port port :join? false})
