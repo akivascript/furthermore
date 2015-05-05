@@ -1,4 +1,4 @@
-(defproject furthermore "0.1.0"
+(defproject furthermore "0.1.0-SNAPSHOT"
   :description
   "A topical liveblogging platform written in Clojure/ClojureScript."
   :url
@@ -9,7 +9,7 @@
   :min-lein-version "2.5.0"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0-beta1"]
+  [[org.clojure/clojure "1.7.0-beta2"]
    [org.clojure/clojurescript "0.0-3208"]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
@@ -41,7 +41,7 @@
   ["resources"]
 
   :uberjar-name
-  "furthermore.jar"
+  "furthermore-0.1.0-SNAPSHOT.jar"
 
   :main furthermore.server
 
@@ -86,6 +86,7 @@
    :dev [:private
          :twitter-api
          {:source-paths ["env/dev/clj"]
+
           :dependencies
           [[expectations "2.0.16"]
            [figwheel "0.2.5"]
@@ -93,14 +94,19 @@
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]
            [secretary "1.2.3"]]
+
           :plugins [[lein-figwheel "0.2.5"]
                     [lein-autoexpect "1.4.2"]]
+
           :env {:dev true}
+
           :figwheel {:http-server-root "public"
                      :server-port 3449
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
-          :repl-options {:init-ns furthermore.dev}}]
+
+          :repl-options {:init-ns furthermore.dev}
+          :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"]}]
 
    :prod [:private-p
           :twitter-api
