@@ -13,9 +13,22 @@
 
 (def is-dev? (env :dev))
 
-(defn rl-entities [] (require '[furthermore.entities :refer :all] :reload))
-(defn rl-repo [] (require '[furthermore.repository :refer :all] :reload))
-(defn rl-server [] (require '[furthermore.server :refer :all] :reload))
-(defn rl-static [] (require '[furthermore.static :refer :all] :reload))
-(defn rl-twitter [] (require '[furthermore.twitter :refer :all] :reload))
-(defn rl-utils [] (require '[furthermore.utils :refer :all] :reload))
+(defn- defreload*
+  ([namespace] (defreload* namespace nil))
+  ([namespace nickname]
+   `(defn ~(symbol (str "rl-" (or nickname namespace)))
+      []
+      (require (quote ~(vector
+                        (symbol
+                         (str "video-store." namespace)) :refer :all)) :reload))))
+
+(defmacro defreload [& args] (apply defreload* args))
+
+(defreload "entities")
+(defreload "logging" "log")
+(defreload "static-pages" "static")
+(defreload "newsfeed" "news")
+(defreload "repository" "repo")
+(defreload "server" "server")
+(defreload "twitter" "twitter")
+(defreload "utils" "utils")
