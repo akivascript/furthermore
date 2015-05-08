@@ -105,9 +105,9 @@
           :repl-options {:init-ns furthermore.dev}
           :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"]}]
 
-   :prod [:private-p
-          :twitter-api
-          {:hooks [leiningen.cljsbuild]
-           :env {:production true}
-           :omit-source true
-           :aot :all}]})
+   :production [:private-p
+                :twitter-api
+                {:hooks [leiningen.cljsbuild]
+                 :env {:production true}
+                 :omit-source true
+                 :aot :all}]})
