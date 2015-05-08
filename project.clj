@@ -43,6 +43,9 @@
 
   :main furthermore.server
 
+  :uberjar-name
+  "furthermore-0.1.0-SNAPSHOT-standalone.jar"
+
   :ring {:handler furthermore.server/app}
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled"]
