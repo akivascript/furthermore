@@ -41,8 +41,6 @@
   :resource-paths
   ["resources"]
 
-  :target-path "target/%s"
-
   :main furthermore.server
 
   :ring {:handler furthermore.server/app}
