@@ -9,10 +9,10 @@
 
 (def ^:private credentials
   (make-oauth-creds
-    (env :twitter-consumer-key)
-    (env :twitter-consumer-secret)
-    (env :twitter-access-token)
-    (env :twitter-access-token-secret)))
+    (env :blog-twitter-consumer-key)
+    (env :blog-twitter-consumer-secret)
+    (env :blog-twitter-access-token)
+    (env :blog-twitter-access-token-secret)))
 
 (defn- create-tweet-url
   "Constructs a link to a successfully posted tweet from that

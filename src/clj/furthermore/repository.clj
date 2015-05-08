@@ -24,6 +24,19 @@
    :static "pages"
    :topic "topics"})
 
+;;
+;; Database stuff
+;;
+(defonce ^:private db (atom nil))
+
+(defn initialize-db-connection
+  "Establishes a connection to the database."
+  [& {:keys [uri]}]
+  (reset! db (:db (connect-via-uri (or uri (env :blog-database-uri))))))
+
+;;
+;; Entites stuff
+;;
 (defn create-log-entry
   "Creates a weblog entry for a newly added or updated entity."
   [kind entity]
@@ -87,8 +100,9 @@
   [entity]
   (let [type (:type entity)
         log? (:log entity)
-        entity (assoc entity :last-updated (local-now))
-        entity (dissoc entity :log)
+        entity (-> entity
+                   (assoc entity :last-updated (local-now))
+                   (dissoc entity :log))
         entity (if (true? (:tweet entity))
                  (let [url (str site-url (create-url-path entity) (create-url-date entity))
                        resp (update-twitter-status (or (:title entity) (:body entity)) url)]
@@ -137,13 +151,3 @@
   "Removes all entities from the database queue."
   []
  (reset! db-queue {}))
-
-;;
-;; Database stuff
-;;
-(defonce ^:private db (atom nil))
-
-(defn initialize-db-connection
-  "Establishes a connection to the database."
-  [& {:keys [uri]}]
-  (reset! db (:db (connect-via-uri (or uri (env :database-uri))))))
