@@ -20,7 +20,7 @@
       []
       (require (quote ~(vector
                         (symbol
-                         (str "video-store." namespace)) :refer :all)) :reload))))
+                         (str "furthermore." namespace)) :refer :all)) :reload))))
 
 (defmacro defreload [& args] (apply defreload* args))
 
