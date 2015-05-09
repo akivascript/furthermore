@@ -10,13 +10,14 @@
 
   :dependencies
   [[org.clojure/clojure "1.7.0-beta2"]
-   [org.clojure/clojurescript "0.0-3255"]
+   [org.clojure/clojurescript "0.0-3255" :classifier "aot" :exclusions [org.clojure/tools.reader org.clojure/data.json]]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.11"]
    [com.andrewmcveigh/cljs-time "0.3.3"]
    [com.lucasbradstreet/cljs-uuid-utils "1.0.1"]
    [compojure "1.3.3"]
+   [org.clojure/data.json "0.2.6" :classifier "aot"]
    [environ "1.0.0"]
    [com.cemerick/friend "0.2.2-SNAPSHOT"]
    [liberator "0.12.2"]
@@ -27,6 +28,7 @@
    [ring/ring-defaults "0.1.5"]
    [ring/ring-jetty-adapter "1.3.2"]
    [secretary "1.2.3"]
+   [org.clojure/tools.reader "0.9.2" :classifier "aot"]
    [twitter-api "0.7.8"]
    [typographer "1.1.0"]]
 
