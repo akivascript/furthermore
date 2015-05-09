@@ -101,8 +101,8 @@
   (let [type (:type entity)
         log? (:log entity)
         entity (-> entity
-                   (assoc entity :last-updated (local-now))
-                   (dissoc entity :log))
+                   (assoc :last-updated (local-now))
+                   (dissoc :log))
         entity (if (true? (:tweet entity))
                  (let [url (str site-url (create-url-path entity) (create-url-date entity))
                        resp (update-twitter-status (or (:title entity) (:body entity)) url)]
