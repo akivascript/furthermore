@@ -2,10 +2,11 @@
 /classes
 tmp/
 /dev/
-*.jar
-*.class
-*.md
 /.lein-*
 /.nrepl-port
-*sass*
 compiled/
+*.jar
+*.class
+*.org
+*.md
+*sass*

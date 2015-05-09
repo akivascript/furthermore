@@ -15,43 +15,69 @@
   [kind type]
   (let [kind (kind {:new "Added"
                     :update "Updated"})
-        type (type {:post "post"
+        type (type {:follow-up "follow-up"
+                    :post "post"
                     :static "page"
                     :topic "topic"})]
     (str kind " " type)))
 
+(def types
+  {:topic :topics
+   :post :posts})
+
 (defn entries
   [entry owner data]
   (om/component
-   (let [topic (when-let [topic-id (:topic entry)]
-                 (val (find (:topics data) topic-id)))
-         {date :date time :time} (format-timestamp (:date entry))]
-     (d/div {:class "row entry"}
-            (d/div {:class "col-xs-3 date"}
-                   (str date " @ " time))
-            (d/div {:class "col-xs-2 status"
-                    :style {:textAlign "left"}}
-                   (set-status (:kind entry) (:type entry)))
-            (d/div {:class "col-xs-5 title"}
-                   (let [path-fn (case (:type entry)
-                                   :post (post-path {:url (:url entry)})
-                                   :static (static-path {:url (:url entry)})
-                                   "")]
-                     (if-not (= :topic (:type entry))
-                       (d/a {:href path-fn} (:title entry))
-                       (:title entry))))
-            (when topic
-              (d/div {:class "col-xs-2 topic"}
-                     (:title topic)))))))
+   (letfn [(get-ref [key]
+             (when-not (nil? key)
+               (when-let [ref (find (get data ((:type key) types)) (:_id key))]
+                 (val ref))))]
+     (let [type (:type entry)
+           topic (get-ref (:topic entry))
+           parent (get-ref (:parent entry))
+           {date :date time :time} (format-timestamp (:date entry))]
+       (d/div {:class "row entry"}
+              (d/div {:class "col-xs-3 date"}
+                     (str date " @ " time))
+              (d/div {:class "col-xs-2 status"
+                      :style {:textAlign "left"}}
+                     (set-status (:kind entry) type))
+              (d/div {:class "col-xs-5 title"}
+                     (let [path-fn (case type
+                                     :follow-up (post-path {:url (:url parent)})
+                                     :post (post-path {:url (:url entry)})
+                                     :static (static-path {:url (:url entry)})
+                                     "")]
+                       (if (= type :topic)
+                         (:title entry)
+                         (if (= type :follow-up)
+                           (d/span (d/a {:href path-fn}
+                                        (:title parent))
+                                        (d/br)
+                                        (:title entry))
+                           (d/a {:href path-fn} (:title entry))))))
+              (when-let [topic-title (:title topic)]
+                (d/div {:class "col-xs-2 topic"}
+                       topic-title)))))))
 
 (defn updates-view
   [data owner]
-  (om/component
-   (d/div {:id "weblog"
-           :class "container"}
-          (d/div {:class "row"}
-                 (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
-                        (om/build-all entries (:updates data) {:opts {:posts (:posts data)
-                                                                      :topics (:topics data)}}))))))
+  (reify
+    om/IWillMount
+    (will-mount [_]
+      (ajax/GET "/api/weblog"
+                {:handler #(om/update! data :updates (identity %))
+                 :error-handler #(.error js/console %)}))
+    om/IRender
+    (render [_]
+      (d/div {:id "weblog"
+              :class "container"}
+             (d/div {:class "row"}
+                    (apply d/div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
+                           (if (empty? (:updates data))
+                             "No updates yet!"
+                             (om/build-all entries (:updates data)
+                                           {:opts {:posts (:posts data)
+                                                   :topics (:topics data)}}))))))))
 
 (defroute updates-path "/updates" [] (change-view updates-view :updates-view))

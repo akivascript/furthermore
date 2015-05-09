@@ -58,7 +58,7 @@
   [topic owner data]
   (om/component
    (d/div {:class "row"}
-          (d/div {:class "col-xs-12"}
+          (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
                  (d/span {:class "topic"}
                          (:title topic))
                  (when-let [refs (:references topic)]

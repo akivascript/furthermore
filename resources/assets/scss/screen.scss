@@ -12,6 +12,7 @@ a {
 
 body {
     background-color: $background-color;
+    background-image: url('/img/background.png');
 
     font-family: 'Lato';
 }
@@ -26,6 +27,7 @@ code, kbd, pre, samp {
 
 .navbar-default {
     background-color: $blue-faded;
+    background-image: url('/img/background.png');
 
     .navbar-nav > li {
         a:hover {
@@ -66,7 +68,7 @@ code, kbd, pre, samp {
 
 .page-footer {
     padding: 15px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #dbdbdb;
 
     font-size: 12pt;
     font-weight: 400;
@@ -111,6 +113,10 @@ code, kbd, pre, samp {
     }
 }
     
+.form-control {
+    background-color: #fcfcfc;
+}
+
 .arrow {
     width: 100%;
     
@@ -118,7 +124,11 @@ code, kbd, pre, samp {
 
     text-align: center;
 
-    color: #eee;
+    color: #dbdbdb;
+}
+
+.panel {
+    background-color: #f7f5ef;
 }
 
 .post {

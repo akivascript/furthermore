@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -cp target/furthermore.jar clojure.main -m furthermore.server
+web: java -jar target/furthermore-0.1.0-SNAPSHOT-standalone.jar

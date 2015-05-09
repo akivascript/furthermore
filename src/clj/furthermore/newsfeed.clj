@@ -4,7 +4,7 @@
             [typographer.core :refer [smarten]]
 
             [furthermore.logging :refer [get-weblog]]
-            [furthermore.posts :refer [get-post]]
+            [furthermore.entities :refer [get-post]]
             [furthermore.utils :refer [site-url create-url-path convert-to-java-date]]))
 
 (def ^:private site-channel

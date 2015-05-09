@@ -28,7 +28,8 @@
               (when (:tags post)
                 (d/div {:class "tags text-right"}
                        (om/build-all tags (:tags post)))))
-            (if (nil? (:excerpt post))
+            (if (or (nil? (:excerpt post))
+                    (empty? (:except post)))
               (d/div {:class "body"
                       :dangerouslySetInnerHTML
                       {:__html (js/marked (:body post))}})
@@ -38,7 +39,8 @@
             (d/div {:class "footer"}
                    (d/div {:class "row"}
                           (d/div {:class "col-xs-12 col-sm-6"}
-                                 (when-not (nil? (:excerpt post))
+                                 (when-not (or (nil? (:excerpt post))
+                                               (empty? (:excerpt post)))
                                    (d/div {:class "continue"}
                                           (d/a {:href (post-path {:url (:url post)})
                                                 :dangerouslySetInnerHTML
@@ -53,7 +55,8 @@
                                         (str date " @ " time)
                                         (d/br)
                                         (when-let [url (get-in post [:twitter :url])]
-                                          (d/a {:href url} "Tweeted!"))))))))))
+                                          (d/a {:href url
+                                                :target "_blank"} "Tweeted!"))))))))))
 
 (defn follow-up-view
   [data owner opts]
@@ -99,13 +102,7 @@
      (d/div {:id "index"
              :class "container"}
             (d/div {:class "row"}
-                   (d/div {:class "col-xs-12 col-sm-3 col-sm-offset-1 banner"}
-                          (d/div {:id "banner"
-                                  :class "page-header"}
-                                 (d/img {:src "img/notes-narrow.png"
-                                         :class "img-responsive"
-                                         :alt "Notes"})))
-                   (apply d/div {:class "col-xs-12 col-sm-7"}
+                   (d/div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
                           (om/build-all post-dispatch posts {:opts {:posts (:posts data)
                                                                     :topics (:topics data)}})))))))
 
