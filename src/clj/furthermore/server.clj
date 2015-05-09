@@ -11,8 +11,13 @@
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.logging :refer [get-weblog]]
-            [furthermore.entities :refer [add-post get-post get-posts get-post-references
-                                          get-topic get-topics get-topic-references]]
+            [furthermore.entities :refer [add-post
+                                          get-post
+                                          get-posts
+                                          get-post-references
+                                          get-topic
+                                          get-topics
+                                          get-topic-references]]
             [furthermore.static-pages :refer [get-static-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]])
@@ -29,7 +34,7 @@
   [task]
   :allowed-methods [:get]
   :available-media-types ["application/edn"]
-  :handle-ok (-> task pr-str))
+  :handle-ok (pr-str task))
 
 (defroutes routes
   ;; API calls
@@ -51,9 +56,10 @@
 
 (def app
   (do (initialize-db-connection)
-      (-> routes wrap-params)))
+      (wrap-params routes)))
 
 (defn -main
+  "Launches Furthermore."
   [& port]
   (let [port (Integer. (or port (env :port) 5000))]
     (run-jetty (site #'app) {:port port :join? false})
