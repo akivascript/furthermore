@@ -10,6 +10,7 @@
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
 
+            [furthermore.contents :refer [display-contents-page]]
             [furthermore.home :refer [display-home-page]]
             [furthermore.post :refer [display-post-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
@@ -19,6 +20,7 @@
 (defroutes routes
   ;; API calls
   (GET "/" [] (display-home-page))
+  (GET "/contents" [] (display-contents-page))
   (GET "/post/:title" [title] (display-post-page title))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls

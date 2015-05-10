@@ -49,7 +49,9 @@
 (defn get-excerpt
   "Returns an excerpt of a given text with an ellipses added."
   [text length]
-  (let [length (dec length)]
-    (if (< (count text) length)
-      text
-      (str (subs text 0 length) "…"))))
+  (if (< (count text) length)
+    text
+    (let [length (dec (or length 140))
+          text (subs text 0 length)
+          text (replace text #"\W+$" "")]
+      (str text "..."))))
