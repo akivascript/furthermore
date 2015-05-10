@@ -5,7 +5,7 @@
 
             [furthermore.entities :refer [get-posts
                                           get-topic]]
-            [furthermore.page :refer [display-page]]
+            [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
 (defn display-post

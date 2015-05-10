@@ -6,7 +6,7 @@
             [furthermore.entities :refer [get-post
                                           get-topic]]
             [furthermore.logging :refer [get-updates]]
-            [furthermore.page :refer [display-page]]
+            [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
 
 (defn- set-status

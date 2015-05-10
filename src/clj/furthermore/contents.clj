@@ -5,7 +5,7 @@
 
             [furthermore.entities :refer [get-post
                                           get-topics]]
-            [furthermore.page :refer [display-page]]
+            [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
 
 (defn- make-outline-selector
