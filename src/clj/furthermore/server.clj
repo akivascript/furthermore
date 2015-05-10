@@ -12,9 +12,11 @@
 
             [furthermore.contents :refer [display-contents-page]]
             [furthermore.home :refer [display-home-page]]
+            [furthermore.page :refer [display-static-page]]
             [furthermore.post :refer [display-post-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]]
+            [furthermore.update :refer [display-update-page]]
             [furthermore.updates :refer [display-updates-page]])
   (:gen-class))
 
@@ -24,6 +26,9 @@
   (GET "/contents" [] (display-contents-page))
   (GET "/updates" [] (display-updates-page))
   (GET "/post/:title" [title] (display-post-page title))
+  (GET "/:page" [page] (display-static-page page))
+  (context "/admin" []
+           (GET "/update" [] (display-update-page)))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls
   (resources "/"))
