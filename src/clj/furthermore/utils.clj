@@ -1,7 +1,8 @@
 (ns furthermore.utils
   (:require [clojure.string :as str]
 
-           [clj-time.coerce :refer [to-date]]
+           [clj-time.coerce :refer [from-date to-date]]
+           [clj-time.format :refer [formatter unparse]]
            [clj-time.local :refer [format-local-time]]
            [environ.core :refer [env]]))
 
@@ -38,6 +39,12 @@
   (let [title (create-url-name entity)
         date (format-local-time (:created-on entity) :date)]
    (str date "-" title)))
+
+(defn format-timestamp
+  [timestamp]
+  (let [ts (from-date timestamp)]
+    {:date (unparse (formatter "MMMM d, yyyy") ts)
+     :time (unparse (formatter "hh:mm a") ts)}))
 
 (defn get-excerpt
   "Returns an excerpt of a given text with an ellipses added."
