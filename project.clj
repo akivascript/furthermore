@@ -79,12 +79,10 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar [:private-p
-             :twitter-api
-             {:hooks [leiningen.cljsbuild]
-              :env {:production true}
-              :omit-source true
-              :aot :all}]
+  {:uberjar {:hooks [leiningen.cljsbuild]
+             :env {:production true}
+             :omit-source true
+             :aot :all}
 
    :dev [:private
          :twitter-api
@@ -108,11 +106,4 @@
                      :server-logfile "tmp/logs/figwheel-server.log"}
 
           :repl-options {:init-ns furthermore.dev}
-          :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"]}]
-
-   :production [:private-p
-                :twitter-api
-                {:hooks [leiningen.cljsbuild]
-                 :env {:production true}
-                 :omit-source true
-                 :aot :all}]})
+          :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"]}]})
