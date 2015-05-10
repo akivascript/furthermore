@@ -20,6 +20,7 @@
    [org.clojure/data.json "0.2.6" :classifier "aot"]
    [environ "1.0.0"]
    [com.cemerick/friend "0.2.2-SNAPSHOT"]
+   [hiccup "1.0.5"]
    [liberator "0.12.2"]
    [markdown-clj "0.9.65"]
    [com.novemberain/monger "2.1.0"]
