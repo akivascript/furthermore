@@ -28,7 +28,8 @@
   (GET "/post/:title" [title] (display-post-page title))
   (GET "/:page" [page] (display-static-page page))
   (context "/admin" []
-           (GET "/update" [] (display-update-page)))
+           (GET "/add-post" [] (display-update-page :post))
+           (GET "/add-follow-up" [] (display-update-page :follow-up)))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls
   (resources "/"))
