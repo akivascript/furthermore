@@ -14,13 +14,15 @@
             [furthermore.home :refer [display-home-page]]
             [furthermore.post :refer [display-post-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
-            [furthermore.repository :refer [initialize-db-connection]])
+            [furthermore.repository :refer [initialize-db-connection]]
+            [furthermore.updates :refer [display-updates-page]])
   (:gen-class))
 
 (defroutes routes
   ;; API calls
   (GET "/" [] (display-home-page))
   (GET "/contents" [] (display-contents-page))
+  (GET "/updates" [] (display-updates-page))
   (GET "/post/:title" [title] (display-post-page title))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls
