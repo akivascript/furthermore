@@ -1,102 +1,53 @@
 (ns furthermore.core
   (:require [ajax.core :as ajax]
+            [cljs.reader :refer [read-string]]
+            [clojure.string :refer [split]]
+            [dommy.core :as dommy :refer-macros [sel sel1]]
             [goog.events :as events]
-            [goog.history.EventType :as EventType]
-            [om.core :as om :include-macros true]
-            [om-tools.core :refer-macros [defcomponent]]
-            [om-tools.dom :as d :include-macros true]
-            [secretary.core :refer [dispatch! set-config!]:refer-macros [defroute]]
+            [goog.dom :as dom]
+            [goog.dom.classlist :as classlist]
+            [goog.dom.forms :as forms]
+            [furthermore.utils :refer [format-timestamp]]))
 
-            [furthermore.follow-up :refer [follow-up-path]]
-            [furthermore.home :refer [home-path home-view]]
-            [furthermore.topics :refer [contents-path]]
-            [furthermore.posts :refer [post-path]]
-            [furthermore.routing :refer [consume-events pub-chan sub-chan]]
-            [furthermore.state :refer [app-state initialize-state]]
-            [furthermore.static-page :refer [static-path]]
-            [furthermore.update :refer [update-path]]
-            [furthermore.weblog :refer [updates-path]])
-  (:import goog.History))
-
-;;
-;; General set-up
-;;
 (enable-console-print!)
 
-(set-config! :prefix "#")
+(defonce posts (atom {}))
 
-(def application {:target (. js/document (getElementById "page-content"))})
-(def nav-bar {:target (. js/document (getElementById "nav-bar"))})
-
-;;
-;; Routing stuff
-;;
-(let [h (History.)]
-  (goog.events/listen h EventType/NAVIGATE #(dispatch! (.-token %)))
-  (doto h (.setEnabled true)))
-
-;;
-;; Layout
-;;
-(defn nav-view
-  [app owner]
-  (om/component
-   (d/div {:class "container"}
-          (d/div {:class "navbar-header"}
-                 (d/button {:class "navbar-toggle"
-                            :type "button"
-                            :data-toggle "collapse"
-                            :data-target "#navbar-main"}
-                           (d/span {:class "icon-bar"})
-                           (d/span {:class "icon-bar"})
-                           (d/span {:class "icon-bar"}))
-                 (d/a {:href (home-path)
-                       :class "navbar-brand"} "WhaTEveR"))
-          (d/div {:id "navbar-main"
-                  :class "navbar-collapse collapse"}
-                 (d/ul {:class "nav navbar-nav"}
-                       (d/li
-                        (d/a {:href (contents-path)} "Table of Contents"))
-                       (d/li
-                        (d/a {:href (updates-path)} "Updates"))
-                       (d/li
-                        (d/a {:href (static-path {:url "about"})} "About")))))))
-
-(defn start-site
+(defn contents-script
   []
-  (initialize-state)
+  (doseq [entry (sel :.glyphicon)]
+    (let [target (dom/getNextElementSibling (dommy/parent (dommy/parent entry)))]
+      (dommy/listen! entry :click
+                     (fn [_]
+                       (dommy/toggle-class! entry "glyphicon-triangle-right")
+                       (dommy/toggle-class! entry "glyphicon-triangle-bottom")
+                       (dommy/toggle! target))))))
 
-  (om/root
-   (fn [app owner]
-     (reify
-       om/IRender
-       (render [_]
-         (om/build nav-view app))))
-   app-state
-   nav-bar)
+(defn- create-option
+  [item]
+  (let [{:keys [date time]} (format-timestamp (:created-on item))]
+    (-> (dommy/create-element "option")
+        (dommy/set-text! (str (:title item) " (" date " @ " time ")"))
+        (dommy/set-value! (str (:_id item) "|" (:type item))))))
 
-  (om/root
-   (fn [app owner]
-     (reify
-       om/IInitState
-       (init-state [_]
-         {:view home-view})
-       om/IDidMount
-       (did-mount [_]
-         (consume-events owner :change-view
-                         (fn [{:keys [view view-init-state view-name data]}]
-                           (om/set-state! owner :view view)
-                           (om/set-state! owner :view-init-state view-init-state)
-                           (om/set-state! owner :react-key view-name)
-                           (om/set-state! owner :opts data))))
-       om/IRenderState
-       (render-state [_ {:keys [view view-init-state react-key opts]}]
-         (om/build view app {:init-state view-init-state
-                             :react-key react-key
-                             :opts opts}))))
-   app-state
-   (assoc application :shared
-          {:sub-chan sub-chan
-           :pub-chan pub-chan})))
+(defn- filter-options
+  [topic target]
+  (let [ps (map create-option (filter #(= topic (get-in % [:topic :_id])) @posts))
+        optgroup (sel1 :#posts)]
+    (dommy/clear! optgroup)
+    (if-not (nil? topic)
+      (.appendChild optgroup (first ps)))))
 
-(start-site)
+(defn update-init
+  []
+  (let [topic (sel1 :#topics)
+        parents (sel1 :#parents)]
+    (ajax/GET "/api/posts" {:handler (fn [xs] (reset! posts
+                                                    (filter #(= :post (:type %)) xs)))})
+
+    (dommy/listen! topic :change
+                   (fn [_]
+                     (let [id (-> (dommy/value topic)
+                                  (split "|")
+                                  first)]
+                       (filter-options id parents))))))

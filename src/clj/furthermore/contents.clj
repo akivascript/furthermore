@@ -13,10 +13,12 @@
   (let [refcount (count (:references post))]
     (if (pos? refcount)
       (html
-       [:span {:class "glyphicon glyphicon-triangle-bottom small outline-widget"
+       [:span {:id (:_id post)
+               :class "glyphicon glyphicon-triangle-right small outline-widget"
                :ariaHidden "true"}])
       (html
-       [:span {:class "glyphicon glyphicon-triangle-right small outline-widget"
+       [:span {:id (:_id post)
+               :class "glyphicon glyphicon-triangle-right small outline-widget"
                :style "visibility: hidden"
                :ariaHidden "true"}]))))
 
@@ -27,20 +29,21 @@
         {:keys [date time]} (format-timestamp (:created-on post))]
     (html
      [:div {:class "col-xs-12 post"}
-      (if (= :post (:type post))
-        [:div
-         [:div {:class "title" :id (:_id post)}
-          (make-outline-selector post)
-          [:a {:href url} (:title post)]]
-         [:div {:class "small date"} date]]
-        [:div
-         [:div {:class "follow-up-title" :id (:_id post)}
-          (make-outline-selector post)
-          (get-excerpt (:body post) 50)]
-         [:div {:class "small date"} (str date " @ " time)]])
-      (when-let [refs (:references post)]
-        [:div {:style "margin-left: 15"}
-         (map display-posts (sort-by :created-on refs))])])))
+       (if (= :post (:type post))
+         [:div
+           [:div {:class "title"}
+            (make-outline-selector post)
+            [:a {:href url} (:title post)]]
+           [:div {:class "small date"} date]]
+         [:div
+           [:div {:class "follow-up-title"}
+            (make-outline-selector post)
+            (get-excerpt (:body post) 50)]
+           [:div {:class "small date"} (str date " @ " time)]])
+       (when-let [refs (:references post)]
+         [:div {:id (subs (:_id post) 0 6)
+                :style "display: none; margin-left: 15"}
+          (map display-posts (sort-by :created-on refs))])])))
 
 (defn- display-topic
   [topic]
@@ -53,7 +56,8 @@
 (defn display-contents-page
   []
   (display-page
+   :contents
    (html
     [:div {:id "topics"
            :class "container"}
-       (map display-topic (sort-by :title (get-topics)))])))
+     (map display-topic (sort-by :title (get-topics)))])))
