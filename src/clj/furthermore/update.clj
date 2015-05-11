@@ -12,18 +12,15 @@
   (let [{:keys [date time]} (format-timestamp (:created-on option))]
     (html
      [:option {:value (str (:_id option) "|" (name (:type option)))}
-      (str (:title option) " (" date " @ " time ")"
-           (when (and (= :topic (:type option))
-                      (= "parent" type))
-             " - Ⓣ"))])))
+      (str (:title option) " (" date " @ " time ")")])))
 
 (defmulti display-update-page identity)
 
 (defmethod display-update-page :post
   [type]
-  (let [topics (get-topics)
-        posts (get-posts)]
+  (let [topics (get-topics)]
     (display-page
+     :update
      (html
       [:div {:id "update"
              :class "container"}
@@ -51,16 +48,21 @@
                       :value "Akiva"}]]
             [:div
              [:label {:for "topic"} "Topic"]
-             [:select {:class "form-control"
+             [:select {:id "topics"
+                       :class "form-control"
                        :ref "topic"}
               [:option {:value ""} "Select topic..."]
               (map #(create-option % "topic") topics)]]
             [:div
              [:label {:for "parent"} "Parent"]
-             [:select {:class "form-control"
+             [:select {:id "parents"
+                       :class "form-control"
                        :ref "parent"}
               [:option {:value ""} "Select parent..."]
-              (map #(create-option % "parent") posts)]]
+              [:optgroup {:label "Topics"}
+               (map #(create-option % "topic") topics)]
+              [:optgroup {:id "posts"
+                          :label "Posts"}]]]
             [:div
              [:div {:class "checkbox float-left"}
               [:label {:for "tweet"}
@@ -86,6 +88,7 @@
   (let [topics (get-topics)
         posts (get-posts)]
     (display-page
+     :update
      (html
       [:div {:id "update"
              :class "container"}
@@ -103,13 +106,15 @@
                       :value "Akiva"}]]
             [:div
              [:label {:for "topic"} "Topic"]
-             [:select {:class "form-control"
+             [:select {:id "topics"
+                       :class "form-control"
                        :ref "topic"}
               [:option {:value ""} "Select topic..."]
               (map #(create-option % "topic") topics)]]
             [:div
              [:label {:for "parent"} "Parent"]
-             [:select {:class "form-control"
+             [:select {:id "parents"
+                       :class "form-control"
                        :ref "parent"}
               [:option {:value ""} "Select parent..."]
               (map #(create-option % "parent") posts)]]
