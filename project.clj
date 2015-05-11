@@ -18,6 +18,7 @@
    [com.lucasbradstreet/cljs-uuid-utils "1.0.1"]
    [compojure "1.3.3"]
    [org.clojure/data.json "0.2.6" :classifier "aot"]
+   [prismatic/dommy "1.1.0"]
    [environ "1.0.0"]
    [com.cemerick/friend "0.2.2-SNAPSHOT"]
    [hiccup "1.0.5"]
