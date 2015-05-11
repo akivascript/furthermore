@@ -10,7 +10,9 @@
 
   :dependencies
   [[org.clojure/clojure "1.7.0-beta2"]
-   [org.clojure/clojurescript "0.0-3255" :classifier "aot" :exclusions [org.clojure/tools.reader org.clojure/data.json]]
+   [org.clojure/clojurescript "0.0-3269"
+    :classifier "aot"
+    :exclusions [org.clojure/tools.reader org.clojure/data.json]]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.11"]
