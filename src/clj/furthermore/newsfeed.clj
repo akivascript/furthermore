@@ -3,7 +3,7 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.logging :refer [get-weblog]]
+            [furthermore.logging :refer [get-updates]]
             [furthermore.entities :refer [get-post]]
             [furthermore.utils :refer [site-url create-url-path convert-to-java-date]]))
 
@@ -37,7 +37,7 @@
 
 (defn get-feed
   []
-  (->> get-weblog
+  (->> get-updates
        (filter #(not= :topic (:type %)))
        (take 30)
        (map convert-to-rss-item)

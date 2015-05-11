@@ -16,4 +16,4 @@
     (let [ct (dec (or ct 140))
           text (subs text 0 ct)
           text (replace text #"\W+$" "")]
-      (str text "..."))))
+      (str text "…"))))
