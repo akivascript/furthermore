@@ -50,6 +50,7 @@
 (defn display-home-page
   []
   (display-page
+   :home
    (html
     [:div {:id "index"
            :class "container"}

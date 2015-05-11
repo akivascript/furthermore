@@ -51,6 +51,7 @@
 (defn display-updates-page
   []
   (display-page
+   :updates
    (html
     [:div {:id "updates"
            :class "container"}

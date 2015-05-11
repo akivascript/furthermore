@@ -10,6 +10,7 @@
   [page]
   (let [page (get-static-page {:url page})]
     (display-page
+     :static
      (html
       [:div {:id "static"
              :class "container"}

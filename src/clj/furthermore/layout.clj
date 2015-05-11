@@ -1,6 +1,6 @@
 (ns furthermore.layout
   (:require [hiccup.core :refer :all]
-            [hiccup.page :refer [html5 include-css]]))
+            [hiccup.page :refer [html5 include-css include-js]]))
 
 (def about-path "/about")
 (def contents-path "/contents")
@@ -31,7 +31,7 @@
        [:a {:href about-path} "About"]]]]]))
 
 (defn display-page
-  [content]
+  [page content]
   (html5
    [:head
     [:title "Whatever"]
@@ -68,4 +68,19 @@
       [:div {:class "visible-xs-block hidden-sm hidden-lg text-center small"}
        "RSS feed hidden until it works!"[:br]
        "Only slightly more colorful!"[:br]
-       "Toast goes in the toaster!"]]]]))
+       "Toast goes in the toaster!"]]]
+
+    (include-js
+        "http://code.jquery.com/jquery-2.1.3.min.js"
+        "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"
+        "/js/marked.min.js"
+        "/js/highlight.pack.js"
+        "/js/compiled/furthermore.js")
+
+    [:script "hljs.initHighlightingOnLoad ()"]
+
+    (case page
+      :contents [:script "furthermore.core.contents_init ()"]
+      :update [:script "furthermore.core.update_init ()"]
+      "")
+    ]))
