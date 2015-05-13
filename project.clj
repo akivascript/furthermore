@@ -9,7 +9,7 @@
   :min-lein-version "2.5.0"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0-beta2"]
+  [[org.clojure/clojure "1.7.0-beta3"]
    [org.clojure/clojurescript "0.0-3269"
     :classifier "aot"
     :exclusions [org.clojure/tools.reader org.clojure/data.json]]
