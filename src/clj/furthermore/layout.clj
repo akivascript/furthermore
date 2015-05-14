@@ -80,7 +80,7 @@
     [:script "hljs.initHighlightingOnLoad ()"]
 
     (case page
-      :contents [:script "furthermore.core.contents_init ()"]
-      :update [:script "furthermore.core.update_init ()"]
+      :contents [:script "furthermore.core.init_contents ()"]
+      :update [:script "furthermore.core.init_update ()"]
       "")
     ]))
