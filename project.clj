@@ -16,6 +16,7 @@
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.11"]
+   [com.andrewmcveigh/cljs-time "0.3.5"]
    [compojure "1.3.4"]
    [org.clojure/data.json "0.2.6" :classifier "aot"]
    [prismatic/dommy "1.1.0"]
