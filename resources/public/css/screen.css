@@ -281,37 +281,37 @@ code, kbd, pre, samp {
 }
 
 /* line 313, ../../assets/scss/screen.scss */
-#weblog {
+#updates {
   font-size: 90%;
 }
 /* line 316, ../../assets/scss/screen.scss */
-#weblog .entries {
+#updates .entries {
   border-bottom: 1px solid #aaa;
 }
 /* line 319, ../../assets/scss/screen.scss */
-#weblog .entries .entry {
+#updates .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
 /* line 323, ../../assets/scss/screen.scss */
-#weblog .entries .entry a:hover {
+#updates .entries .entry a:hover {
   color: #000;
 }
 /* line 327, ../../assets/scss/screen.scss */
-#weblog .entries .entry .date {
+#updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
 /* line 335, ../../assets/scss/screen.scss */
-#weblog .entries .entry .status {
+#updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
 /* line 344, ../../assets/scss/screen.scss */
-#weblog .entries .entry .topic {
+#updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;
   font-size: 90%;

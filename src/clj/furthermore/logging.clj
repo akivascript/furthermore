@@ -11,10 +11,10 @@
       (update :kind keyword)
       (dissoc :_id)))
 
-(defn get-weblog
+(defn get-updates
   "Grabs the weblog entries from the database."
   [& {:keys [prepare] :or {prepare true}}]
-  (let [entries (read-entities :log)]
+  (let [entries (read-entities :update)]
     (if prepare
       (->> entries
            (map prepare-entry)

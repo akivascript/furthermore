@@ -9,31 +9,31 @@
   :min-lein-version "2.5.0"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0-beta2"]
-   [org.clojure/clojurescript "0.0-3255" :classifier "aot" :exclusions [org.clojure/tools.reader org.clojure/data.json]]
+  [[org.clojure/clojure "1.7.0-beta3"]
+   [org.clojure/clojurescript "0.0-3269"
+    :classifier "aot"
+    :exclusions [org.clojure/tools.reader org.clojure/data.json]]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
    [cljs-ajax "0.3.11"]
-   [com.andrewmcveigh/cljs-time "0.3.3"]
-   [com.lucasbradstreet/cljs-uuid-utils "1.0.1"]
-   [compojure "1.3.3"]
+   [compojure "1.3.4"]
    [org.clojure/data.json "0.2.6" :classifier "aot"]
+   [prismatic/dommy "1.1.0"]
    [environ "1.0.0"]
    [com.cemerick/friend "0.2.2-SNAPSHOT"]
+   [hiccup "1.0.5"]
    [liberator "0.12.2"]
-   [markdown-clj "0.9.65"]
+   [markdown-clj "0.9.66"]
+   [medley "0.6.0"]
    [com.novemberain/monger "2.1.0"]
-   [org.omcljs/om "0.8.8"]
-   [prismatic/om-tools "0.3.11"]
    [ring/ring-defaults "0.1.5"]
    [ring/ring-jetty-adapter "1.3.2"]
-   [secretary "1.2.3"]
    [org.clojure/tools.reader "0.9.2" :classifier "aot"]
    [twitter-api "0.7.8"]
    [typographer "1.1.0"]]
 
   :plugins
-  [[lein-cljsbuild "1.0.5"]
+  [[lein-cljsbuild "1.0.6"]
    [lein-environ "1.0.0"]
    [lein-ring "0.9.3"]]
 
@@ -79,12 +79,10 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar [:private-p
-             :twitter-api
-             {:hooks [leiningen.cljsbuild]
-              :env {:production true}
-              :omit-source true
-              :aot :all}]
+  {:uberjar {:hooks [leiningen.cljsbuild]
+             :env {:production true}
+             :omit-source true
+             :aot :all}
 
    :dev [:private
          :twitter-api
@@ -108,11 +106,4 @@
                      :server-logfile "tmp/logs/figwheel-server.log"}
 
           :repl-options {:init-ns furthermore.dev}
-          :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"]}]
-
-   :production [:private-p
-                :twitter-api
-                {:hooks [leiningen.cljsbuild]
-                 :env {:production true}
-                 :omit-source true
-                 :aot :all}]})
+          :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"]}]})

@@ -18,7 +18,7 @@
             [furthermore.twitter :refer [update-twitter-status]]))
 
 (def types
-  {:log "log"
+  {:update "updates"
    :follow-up "posts"
    :post "posts"
    :static "pages"
@@ -37,8 +37,8 @@
 ;;
 ;; Entites stuff
 ;;
-(defn create-log-entry
-  "Creates a weblog entry for a newly added or updated entity."
+(defn create-update
+  "Creates an update entry for a newly added or updated entity."
   [kind entity]
   (let [text (or (:title entity)
                  (get-excerpt (:body entity) 50))]
@@ -100,20 +100,21 @@
   [entity]
   (let [type (:type entity)
         log? (:log entity)
-        entity (-> entity
-                   (assoc :last-updated (local-now))
-                   (dissoc :log))
         entity (if (true? (:tweet entity))
                  (let [url (str site-url (create-url-path entity) (create-url-date entity))
                        resp (update-twitter-status (or (:title entity) (:body entity)) url)]
                    (conj entity (second resp)))
-                 (dissoc entity :tweet))]
+                 entity)
+        entity (-> entity
+                   (assoc :last-updated (local-now))
+                   (dissoc :log)
+                   (dissoc :tweet))]
     (let [result (upsert @db (type types) {:_id (:_id entity)} entity)]
       (when log?
         (let [kind (if (updated-existing? result)
                      :update
                      :new)]
-          (insert @db "log" (create-log-entry kind entity))))
+          (insert @db "updates" (create-update kind entity))))
       result)))
 
 ;;
