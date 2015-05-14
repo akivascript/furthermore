@@ -26,6 +26,7 @@
    [hiccup "1.0.5"]
    [liberator "0.12.2"]
    [markdown-clj "0.9.66"]
+   [medley "0.6.0"]
    [com.novemberain/monger "2.1.0"]
    [org.omcljs/om "0.8.8"]
    [prismatic/om-tools "0.3.11"]
