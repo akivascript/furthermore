@@ -72,7 +72,7 @@
   (GET "/api/posts" [] (return-result (get-posts)))
   (GET "/api/topics" [] (return-result (get-topics)))
   (POST "/api/update/:type" [type] (update-site type))
-  (GET "/:page" [page] (display-static-page page))
+  (GET "/page/:page" [page] (display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls
   (resources "/"))

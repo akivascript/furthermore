@@ -2,7 +2,7 @@
   (:require [hiccup.core :refer :all]
             [hiccup.page :refer [html5 include-css include-js]]))
 
-(def about-path "/about")
+(def about-path "/page/about")
 (def contents-path "/contents")
 (def home-path "/")
 (def updates-path "/updates")
