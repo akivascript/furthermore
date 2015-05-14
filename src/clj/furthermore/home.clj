@@ -3,12 +3,15 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-posts
+            [furthermore.entities :refer [get-post
+                                          get-posts
                                           get-topic]]
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
-(defn display-post
+(defmulti display-post #(:type %))
+
+(defmethod display-post :post
   [post]
   (let [topic (get-topic {:_id (get-in post [:topic :_id])})
         {:keys [date time]} (format-timestamp (:created-on post))
@@ -17,9 +20,10 @@
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
        [:div {:class "post"}
-        [:div {:class "title"}
-         [:a {:href (str "/post/" (:url post))}
-          (smarten (:title post))]]
+        (if-let [title (:title post)]
+          [:div {:class "title"}
+           [:a {:href (str "/post/" (:url post))}
+            (smarten title)]])
         (when (contains? post :subtitle)
           [:div {:class "subtitle"}
            (smarten (:subtitle post))])
@@ -47,6 +51,28 @@
               [:a {:href url
                    :target "_blank"} "Tweeted!"])]]]]]]])))
 
+(defmethod display-post :follow-up
+  [follow-up]
+  (let [topic (get-topic {:_id (get-in follow-up [:topic :_id])})
+        parent (get-post {:_id (get-in follow-up [:parent :_id])})
+        {:keys [date time]} (format-timestamp (:created-on follow-up))]
+    (html
+     [:div {:class "row"}
+      [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
+       [:div.follow-up
+        [:div.body (md-to-html-string (:body follow-up))]
+        [:div.footer
+         [:div.row
+          [:div.col-xs-12.col-sm-6
+           [:div.small.text-left.stuff]]
+          [:div.col-xs-12.col-sm-6
+           [:div.small.text-right.date
+            "A follow-up to "
+            [:a.parent {:href (str "/post/" (:url parent))}
+             (smarten (or (:title parent) "Untitled"))]
+            [:br]
+            (str date " @ " time)]]]]]]])))
+
 (defn display-home-page
   []
   (display-page
@@ -54,4 +80,4 @@
    (html
     [:div {:id "index"
            :class "container"}
-     (map display-post (filter #(= :post (:type %)) (get-posts)))])))
+     (map display-post (filter #(contains? #{:post :follow-up} (:type %)) (get-posts)))])))

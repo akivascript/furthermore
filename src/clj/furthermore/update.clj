@@ -95,5 +95,6 @@
                           :class "form-control"
                           :name "excerpt"
                           :rows 4}]]]]
+           (hidden-field {:value type} "type")
            [:div {:class "text-right"}
             (submit-button {:class "btn btn-default"} (type title))])]]]]))))

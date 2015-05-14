@@ -13,7 +13,8 @@
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.contents :refer [display-contents-page]]
-            [furthermore.entities :refer [create-post
+            [furthermore.entities :refer [create-follow-up
+                                          create-post
                                           add-post
                                           get-posts
                                           get-topics]]
@@ -33,13 +34,26 @@
       m
       (update m :authors vector))))
 
+(defn- dispatch-update*
+  [fn entity]
+  ((comp add-post fn) entity))
+
+(defmulti dispatch-update #(:type %))
+
+(defmethod dispatch-update "post"
+  [entity]
+  (dispatch-update* create-post entity))
+
+(defmethod dispatch-update "follow-up"
+  [entity]
+  (dispatch-update* create-follow-up entity))
+
 (defresource update-site
   [type]
-  :allowed-methods [:post :get]
+  :allowed-methods [:post]
   :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
-  :post! (fn [ctx]
-           ((comp (partial add-post (keyword type)) create-post params->map)
-            (get-in ctx [:request :form-params]))))
+  :post! (fn [ctx] (let [m (params->map (get-in ctx [:request :form-params]))]
+                    (dispatch-update m))))
 
 (defresource return-result
   [task]
@@ -53,7 +67,7 @@
   (GET "/contents" [] (display-contents-page))
   (GET "/updates" [] (display-updates-page))
   (GET "/post/:title" [title] (display-post-page title))
-  (GET "/add-post" [] (display-update-page))
+  (GET "/add-post" [] (display-update-page :post))
   (GET "/add-follow-up" [] (display-update-page :follow-up))
   (GET "/api/posts" [] (return-result (get-posts)))
   (GET "/api/topics" [] (return-result (get-topics)))
