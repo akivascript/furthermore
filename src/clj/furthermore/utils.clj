@@ -2,6 +2,9 @@
   (:require [clojure.string :as str]
 
            [clj-time.coerce :refer [from-date to-date]]
+           [clj-time.core :refer [from-time-zone
+                                  time-zone-for-offset
+                                  to-time-zone]]
            [clj-time.format :refer [formatter unparse]]
            [clj-time.local :refer [format-local-time]]
            [environ.core :refer [env]]))
@@ -44,7 +47,7 @@
 
 (defn format-timestamp
   [timestamp]
-  (let [ts (from-date timestamp)]
+  (let [ts (from-time-zone (from-date timestamp) (time-zone-for-offset +7))]
     {:date (unparse (formatter "MMMM d, yyyy") ts)
      :time (unparse (formatter "hh:mm a") ts)}))
 
