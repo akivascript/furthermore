@@ -11,9 +11,10 @@
 
 (enable-console-print!)
 
-(defonce posts (atom {}))
-
-(defn contents-script
+;;
+;; Contents page initialization
+;;
+(defn init-contents
   []
   (doseq [entry (sel :.glyphicon)]
     (let [target (dom/getNextElementSibling (dommy/parent (dommy/parent entry)))]
@@ -22,6 +23,11 @@
                        (dommy/toggle-class! entry "glyphicon-triangle-right")
                        (dommy/toggle-class! entry "glyphicon-triangle-bottom")
                        (dommy/toggle! target))))))
+
+;;
+;; Update page initialization
+;;
+(defonce posts (atom {}))
 
 (defn- create-option
   [item]
@@ -36,9 +42,10 @@
         optgroup (sel1 :#posts)]
     (dommy/clear! optgroup)
     (if-not (nil? topic)
-      (.appendChild optgroup (first ps)))))
+      (doseq [p ps]
+        (dom/appendChild optgroup p)))))
 
-(defn update-init
+(defn init-update
   []
   (let [topic (sel1 :#topics)
         parents (sel1 :#parents)]
