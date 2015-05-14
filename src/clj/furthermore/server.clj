@@ -53,7 +53,7 @@
   (GET "/contents" [] (display-contents-page))
   (GET "/updates" [] (display-updates-page))
   (GET "/post/:title" [title] (display-post-page title))
-  (GET "/add-post" [] (display-update-page :post))
+  (GET "/add-post" [] (display-update-page))
   (GET "/add-follow-up" [] (display-update-page :follow-up))
   (GET "/api/posts" [] (return-result (get-posts)))
   (GET "/api/topics" [] (return-result (get-topics)))

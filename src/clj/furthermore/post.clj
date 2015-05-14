@@ -64,6 +64,7 @@
 (defn display-post-page
   [url]
   (display-page
+   :post
    (html
     [:div {:id "post"
            :class "container"}
