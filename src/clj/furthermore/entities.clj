@@ -1,9 +1,6 @@
 (ns furthermore.entities
   (:require [clojure.string :as str :refer [split]]
 
-            [clj-time.coerce :refer [from-date]]
-            [clj-time.core :refer [hours
-                                   plus]]
             [clj-time.local :refer [local-now]]
             [monger.util :refer [random-uuid]]
 
@@ -23,13 +20,10 @@
   "Returns an empty default entity."
   [& tags]
   (let [entity {:_id (random-uuid)
-                :title "New Entity"
                 :authors ["John Doe"]
                 :created-on (local-now)
                 :last-updated (local-now)
-                :log true
-                :tags #{}
-                :references #{}}]
+                :log true}]
     (if-not (nil? tags)
       (apply (fn [x] (reduce #(update %1 :tags conj %2) entity x)) tags)
       entity)))
@@ -54,8 +48,7 @@
 (declare get-topic)
 
 (defn create-post
-  "Returns a post entity along with its parent (and topic, if different
-  from the parent)."
+  "Returns a post entity."
   [params]
   (let [{:keys [authors body excerpt parent subtitle tags title topic]} params
         post (-> (create-entity tags)
@@ -70,19 +63,14 @@
     (assoc post :url (create-entity-url post))))
 
 (defn create-follow-up
-  "Returns a follow-up entity along with its parent.
-
-  DEPRECATION WARNING."
-  [parent & {:keys [authors body tags]}]
-  (let [follow-up (-> (create-entity tags)
-                      (assoc :type :follow-up)
-                      (assoc :authors (or authors ["John Doe"]))
-                      (assoc :body (or body "Somebody forgot to actually write the follow-up."))
-                      (assoc :parent (create-link-to parent (:type parent)))
-                      (assoc :topic (:topic parent))
-                      (dissoc :title))
-        parent (update parent :references conj (create-link-to follow-up :follow-up))]
-    {:post follow-up :parent parent}))
+  "Returns a follow-up entity."
+  [params]
+  (let [{:keys [authors body excerpt parent tags]} params]
+    (-> (create-entity tags)
+        (assoc :type :follow-up)
+        (assoc :authors (or authors ["John Doe"]))
+        (assoc :body (or body "Somebody forgot to actually write the follow-up."))
+        (assoc :parent (create-link-to (link-id parent) (link-type parent))))))
 
 (defn prepare-post
   "Converts the required keys so that the post may be converted
@@ -106,12 +94,17 @@
 
 (defn add-post
   "Adds a post entity and its updated parent to the repository."
-  [type entity]
-  (let [parent (let [parent (:parent entity)]
-                 (case (:type parent)
-                   :topic (get-topic {:_id (:_id parent)} :prepare false)
-                   (get-post {:_id (:_id parent)} :prepare false)))
-        parent (update parent :references conj (create-link-to entity :post))]
+  [entity]
+  (let [parent (:parent entity)
+        parent (case (:type parent)
+                 :topic (get-topic {:_id (:_id parent)} :prepare false)
+                 (get-post {:_id (:_id parent)} :prepare false))
+        parent (update parent :references conj (create-link-to entity (:type entity)))
+        entity (if (= :follow-up (:type entity))
+                 (assoc entity :topic (create-link-to
+                                       (get-in parent [:topic :_id])
+                                       :topic))
+                 entity)]
     (clear-db-queue!)
     (add-db-queue! entity)
     (add-db-queue! parent)
