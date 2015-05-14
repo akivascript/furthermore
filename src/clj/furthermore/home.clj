@@ -12,7 +12,7 @@
   [post]
   (let [topic (get-topic {:_id (get-in post [:topic :_id])})
         {:keys [date time]} (format-timestamp (:created-on post))
-        excerpt? (contains? post :excerpt)]
+        excerpt? (not (empty? (:excerpt post)))]
     (html
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}

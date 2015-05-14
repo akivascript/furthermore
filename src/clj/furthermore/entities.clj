@@ -1,5 +1,5 @@
 (ns furthermore.entities
-  (:require [clojure.tools.reader.edn :refer [read-string]]
+  (:require [clojure.string :as str :refer [split]]
 
             [clj-time.coerce :refer [from-date]]
             [clj-time.core :refer [hours
@@ -13,15 +13,14 @@
                                             process-db-queue
                                             read-entities
                                             read-entity]]
-            [furthermore.utils :refer [convert-to-java-date]]))
+            [furthermore.utils :refer [convert-to-java-date
+                                       create-entity-url]]))
 
 ;;
 ;; General Entity Stuff
 ;;
 (defn create-entity
-  "Returns an empty default entity.
-
-  DEPRECATION WARNING."
+  "Returns an empty default entity."
   [& tags]
   (let [entity {:_id (random-uuid)
                 :title "New Entity"
@@ -41,6 +40,14 @@
   {:_id (or (:_id target) target)
    :type (keyword link-type)})
 
+(defn link-type
+  [link]
+  (second (str/split link #"\|")))
+
+(defn link-id
+  [link]
+  (first (str/split link #"\|")))
+
 ;;
 ;; Post-Specific Stuff
 ;;
@@ -48,23 +55,19 @@
 
 (defn create-post
   "Returns a post entity along with its parent (and topic, if different
-  from the parent).
-
-  DEPRECATION WARNING."
-  [& {:keys [authors body excerpt parent subtitle tags title topic]}]
-  (let [post (-> (create-entity tags)
+  from the parent)."
+  [params]
+  (let [{:keys [authors body excerpt parent subtitle tags title topic]} params
+        post (-> (create-entity tags)
                  (assoc :type :post)
                  (assoc :title title)
                  (assoc :subtitle subtitle)
                  (assoc :body (or body "Somebody forgot to actually write the post."))
                  (assoc :excerpt excerpt)
                  (assoc :authors (or authors ["John Doe"]))
-                 (assoc :parent (create-link-to parent (:type parent)))
-                 (assoc :topic (create-link-to topic (:type topic))))
-        parent (update parent :references conj (create-link-to post :post))]
-    (if-not (= (:_id parent) (:_id topic))
-      {:post post :parent parent :topic topic}
-      {:post post :parent parent})))
+                 (assoc :parent (create-link-to (link-id parent) (link-type parent)))
+                 (assoc :topic (create-link-to (link-id topic) (link-type topic))))]
+    (assoc post :url (create-entity-url post))))
 
 (defn create-follow-up
   "Returns a follow-up entity along with its parent.
@@ -103,9 +106,8 @@
 
 (defn add-post
   "Adds a post entity and its updated parent to the repository."
-  [entity type]
-  (let [entity (read-string entity)
-        parent (let [parent (:parent entity)]
+  [type entity]
+  (let [parent (let [parent (:parent entity)]
                  (case (:type parent)
                    :topic (get-topic {:_id (:_id parent)} :prepare false)
                    (get-post {:_id (:_id parent)} :prepare false)))

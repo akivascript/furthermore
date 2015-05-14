@@ -8,7 +8,7 @@
 
 (def site-url (if (env :dev)
                 "http://localhost:3000/#/"
-                "http://furthermore-alpha.herokuapp.com/#/"))
+                "http://furthermore-test.herokuapp.com/"))
 
 (defn convert-to-java-date
   "Returns a java.util.Date from a Joda-Time."
@@ -36,9 +36,11 @@
 (defn create-url-date
   "Returns a string representation of an entity's date."
   [entity]
-  (let [title (create-url-name entity)
-        date (format-local-time (:created-on entity) :date)]
-   (str date "-" title)))
+  (format-local-time (:created-on entity) :date))
+
+(defn create-entity-url
+  [entity]
+  (str (create-url-date entity) "-" (create-url-name entity)))
 
 (defn format-timestamp
   [timestamp]
@@ -54,4 +56,4 @@
     (let [length (dec (or length 140))
           text (subs text 0 length)
           text (replace text #"\W+$" "")]
-      (str text "..."))))
+      (str text "…"))))

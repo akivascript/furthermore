@@ -1,17 +1,21 @@
 (ns furthermore.server
-  (:require [clojure.java.io :as io]
+  (:require [clojure.edn :as edn :refer [read-string]]
+            [clojure.java.io :as io]
 
-            [compojure.core :refer [ANY GET context defroutes]]
+            [compojure.core :refer [GET POST context defroutes]]
             [compojure.handler :refer [site]]
             [compojure.response :refer [render]]
             [compojure.route :refer [resources]]
             [environ.core :refer [env]]
+            [medley.core :refer [map-keys]]
             [liberator.core :refer [defresource resource]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.contents :refer [display-contents-page]]
-            [furthermore.entities :refer [get-posts
+            [furthermore.entities :refer [create-post
+                                          add-post
+                                          get-posts
                                           get-topics]]
             [furthermore.home :refer [display-home-page]]
             [furthermore.page :refer [display-static-page]]
@@ -21,6 +25,21 @@
             [furthermore.update :refer [display-update-page]]
             [furthermore.updates :refer [display-updates-page]])
   (:gen-class))
+
+(defn- params->map
+  [params]
+  (let [m (map-keys keyword params)]
+    (if (= clojure.lang.PersistentVector (type (:authors m)))
+      m
+      (update m :authors vector))))
+
+(defresource update-site
+  [type]
+  :allowed-methods [:post :get]
+  :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
+  :post! (fn [ctx]
+           ((comp (partial add-post (keyword type)) create-post params->map)
+            (get-in ctx [:request :form-params]))))
 
 (defresource return-result
   [task]
@@ -36,9 +55,10 @@
   (GET "/post/:title" [title] (display-post-page title))
   (GET "/add-post" [] (display-update-page :post))
   (GET "/add-follow-up" [] (display-update-page :follow-up))
-  (GET "/:page" [page] (display-static-page page))
   (GET "/api/posts" [] (return-result (get-posts)))
   (GET "/api/topics" [] (return-result (get-topics)))
+  (POST "/api/update/:type" [type] (update-site type))
+  (GET "/:page" [page] (display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls
   (resources "/"))
