@@ -60,7 +60,6 @@
                         :output-dir "resources/public/js/compiled/out"
                         :asset-path "js/compiled/out"
                         :externs ["resources/public/js/marked.min.js"]
-                        :main furthermore.core
                         :cache-analysis true
                         :optimizations :advanced
                         :source-map "resources/public/js/compiled/furthermore.js.map"
