@@ -2,7 +2,7 @@
   (:require [hiccup.core :refer :all]
             [hiccup.page :refer [html5 include-css include-js]]))
 
-(def about-path "/about")
+(def about-path "/page/about")
 (def contents-path "/contents")
 (def home-path "/")
 (def updates-path "/updates")
@@ -80,7 +80,7 @@
     [:script "hljs.initHighlightingOnLoad ()"]
 
     (case page
-      :contents [:script "furthermore.core.init_contents ()"]
-      :update [:script "furthermore.core.init_update ()"]
+      :contents [:script "furthermore.core.initialize_contents ()"]
+      :update [:script "furthermore.core.initialize_update ()"]
       "")
     ]))

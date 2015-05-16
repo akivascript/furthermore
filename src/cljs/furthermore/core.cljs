@@ -1,20 +1,15 @@
 (ns furthermore.core
-  (:require [ajax.core :as ajax]
-            [cljs.reader :refer [read-string]]
-            [clojure.string :refer [split]]
+  (:require [clojure.string :refer [split]]
+            [ajax.core :as ajax]
             [dommy.core :as dommy :refer-macros [sel sel1]]
-            [goog.events :as events]
             [goog.dom :as dom]
-            [goog.dom.classlist :as classlist]
-            [goog.dom.forms :as forms]
+
             [furthermore.utils :refer [format-timestamp]]))
 
-(enable-console-print!)
-
 ;;
-;; Contents page initialization
+;; Contents page
 ;;
-(defn init-contents
+(defn ^:export initialize-contents
   []
   (doseq [entry (sel :.glyphicon)]
     (let [target (dom/getNextElementSibling (dommy/parent (dommy/parent entry)))]
@@ -25,7 +20,7 @@
                        (dommy/toggle! target))))))
 
 ;;
-;; Update page initialization
+;; Updates page
 ;;
 (defonce posts (atom {}))
 
@@ -45,13 +40,13 @@
       (doseq [p ps]
         (dom/appendChild optgroup p)))))
 
-(defn init-update
+(defn ^:export initialize-update
   []
   (let [topic (sel1 :#topics)
         parents (sel1 :#parents)]
-    (ajax/GET "/api/posts" {:handler (fn [xs] (reset! posts
-                                                    (filter #(= :post (:type %)) xs)))})
-
+    (ajax/GET "/api/posts" {:handler
+                            (fn [xs] (reset! posts
+                                             (filter #(= :post (:type %)) xs)))})
     (dommy/listen! topic :change
                    (fn [_]
                      (let [id (-> (dommy/value topic)
