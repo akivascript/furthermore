@@ -1,0 +1,22 @@
+/* $background-color: #fbf9f4; */
+$blue-faded: #465871;
+$gray: #7a7a7a;
+$gray-light: #aaa;
+$gray-dark: #555;
+$green: #46715F;
+
+/* $background-color: #fcfbf6; */
+$background-color: #efebe1;
+$link-color: #496ea1;
+
+$body-font: 'Puritan';
+$code-font: 'VT323';
+$header-font: 'Crimson Text';
+$page-title-font: 'Cinzel';
+$site-title-font: 'Cinzel Decorative';
+
+@mixin borders ($radius) {
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	border-radius: $radius;
+}

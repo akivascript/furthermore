@@ -1,16 +1,12 @@
 /target
 /classes
-/checkouts
-pom.xml
-pom.xml.asc
-*.jar
-*.class
+tmp/
+/dev/
 /.lein-*
 /.nrepl-port
-.hgignore
-.hg/
-dev/
-public/
-resources/inbox/
- resources/drafts/
- resources/img/
+compiled/
+*.jar
+*.class
+*.org
+*.md
+*sass*

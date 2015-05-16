@@ -1,0 +1,1 @@
+web: java -jar target/furthermore-0.1.0-SNAPSHOT-standalone.jar
