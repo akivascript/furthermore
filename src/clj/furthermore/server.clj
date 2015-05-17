@@ -15,7 +15,9 @@
             [furthermore.contents :refer [display-contents-page]]
             [furthermore.entities :refer [create-follow-up
                                           create-post
+                                          create-topic
                                           add-post
+                                          add-entity
                                           get-posts
                                           get-topics]]
             [furthermore.home :refer [display-home-page]]
@@ -38,7 +40,7 @@
   [fn entity]
   ((comp add-post fn) entity))
 
-(defmulti dispatch-update #(:type %))
+(defmulti dispatch-update :kind)
 
 (defmethod dispatch-update "post"
   [entity]
@@ -48,12 +50,17 @@
   [entity]
   (dispatch-update* create-follow-up entity))
 
+(defmethod dispatch-update "topic"
+  [entity]
+  ((comp add-entity create-topic) entity))
+
 (defresource update-site
   [type]
   :allowed-methods [:post]
   :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
   :post! (fn [ctx] (let [m (params->map (get-in ctx [:request :form-params]))]
-                    (dispatch-update m))))
+                     (println m)
+                     (dispatch-update m))))
 
 (defresource return-result
   [task]
@@ -67,11 +74,12 @@
   (GET "/contents" [] (display-contents-page))
   (GET "/updates" [] (display-updates-page))
   (GET "/post/:title" [title] (display-post-page title))
-  (GET "/add-post" [] (display-update-page :post))
-  (GET "/add-follow-up" [] (display-update-page :follow-up))
+  (GET "/admin/add-follow-up" [] (display-update-page :follow-up))
+  (GET "/admin/add-post" [] (display-update-page :post))
+  (GET "/admin/add-topic" [] (display-update-page :topic))
   (GET "/api/posts" [] (return-result (get-posts)))
   (GET "/api/topics" [] (return-result (get-topics)))
-  (POST "/api/update/:type" [type] (update-site type))
+  (POST "/api/update/:kind" [kind] (update-site kind))
   (GET "/page/:page" [page] (display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls

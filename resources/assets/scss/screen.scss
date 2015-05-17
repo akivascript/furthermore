@@ -11,7 +11,7 @@ a {
 }
 
 body {
-    background-color: $background-color;
+    background-color: #eee;
     background-image: url('/img/background.png');
 
     font-family: 'Lato';
@@ -26,12 +26,13 @@ code, kbd, pre, samp {
 }
 
 .navbar-default {
-    background-color: $blue-faded;
-    background-image: url('/img/background.png');
+    background-color: $green-faded;
+    background-image: url('/img/background-tan.png');
 
     .navbar-nav > li {
         a:hover {
-            background-color: #3D4B60;
+            background-color: $green-dark;
+            background-image: url('/img/background-tan.png');
         }
     }
 }

@@ -10,18 +10,18 @@
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
 
 (defn- set-status
-  [kind type]
-  (let [kind (kind {:new "Added"
+  [action kind]
+  (let [action (action {:new "Added"
                     :update "Updated"})
-        type (type {:follow-up "follow-up"
+        kind (kind {:follow-up "follow-up"
                     :post "post"
                     :static "page"
                     :topic "topic"})]
-    (str kind " " type)))
+    (str action " " kind)))
 
 (defn- display-update
   [update]
-  (let [type (:type update)
+  (let [kind (:kind update)
         topic (get-topic {:_id (get-in update [:topic :_id])})
         parent (get-post {:_id (get-in update [:parent :_id])})
         {:keys [date time]} (format-timestamp (:date update))]
@@ -30,16 +30,16 @@
       [:div {:class "col-xs-3 date"}
        (str date " @ " time)]
       [:div {:class "col-xs-2 text-left status"}
-       (set-status (:kind update) type)]
+       (set-status (:action update) kind)]
       [:div {:class "col-xs-5 title"}
-       (let [path-fn (case type
+       (let [path-fn (case kind
                        :follow-up (str "/post/" (:url parent))
                        :post (str "/post/" (:url update))
-                       :static (:url update)
+                       :static (str "/page/" (:url update))
                        "")]
-         (if (= :topic type)
+         (if (= :topic kind)
            (:title update)
-           (if (= :follow-up type)
+           (if (= :follow-up kind)
              [:span
               [:a {:href path-fn} (:title parent)]
               [:br]

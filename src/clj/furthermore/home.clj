@@ -9,13 +9,13 @@
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
-(defmulti display-post #(:type %))
+(defmulti display-post #(:kind %))
 
 (defmethod display-post :post
   [post]
   (let [topic (get-topic {:_id (get-in post [:topic :_id])})
         {:keys [date time]} (format-timestamp (:created-on post))
-        excerpt? (not (empty? (:excerpt post)))]
+        excerpt? (seq (:excerpt post))]
     (html
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
@@ -80,4 +80,4 @@
    (html
     [:div {:id "index"
            :class "container"}
-     (map display-post (filter #(contains? #{:post :follow-up} (:type %)) (get-posts)))])))
+     (map display-post (filter #(contains? #{:post :follow-up} (:kind %)) (get-posts)))])))

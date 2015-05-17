@@ -17,7 +17,7 @@
                                        site-url]]
             [furthermore.twitter :refer [update-twitter-status]]))
 
-(def types
+(def kinds
   {:update "updates"
    :follow-up "posts"
    :post "posts"
@@ -27,7 +27,7 @@
 ;;
 ;; Database stuff
 ;;
-(defonce ^:private db (atom nil))
+(defonce db (atom nil))
 
 (defn initialize-db-connection
   "Establishes a connection to the database."
@@ -39,11 +39,11 @@
 ;;
 (defn create-update
   "Creates an update entry for a newly added or updated entity."
-  [kind entity]
+  [action entity]
   (let [text (or (:title entity)
                  (get-excerpt (:body entity) 50))]
-    {:kind kind
-     :type (:type entity)
+    {:action action
+     :kind (:kind entity)
      :date (:last-updated entity)
      :title text
      :ref (:_id entity)
@@ -56,24 +56,24 @@
   "Keywordizes values in an entity loaded from the database."
   [entity]
   (let [entity (as-> entity e
-                 (update e :type keyword)
-                 (if-not (nil? (get-in e [:parent :type]))
-                   (update-in e [:parent :type] keyword)
+                 (update e :kind keyword)
+                 (if-not (nil? (get-in e [:parent :kind]))
+                   (update-in e [:parent :kind] keyword)
                    e)
-                 (if-not (nil? (get-in e [:topic :type]))
-                   (update-in e [:topic :type] keyword)
+                 (if-not (nil? (get-in e [:topic :kind]))
+                   (update-in e [:topic :kind] keyword)
                    e))
         refs (:references entity)]
     (if-not (empty? refs)
-      (reduce #(update-in %1 [:references (.indexOf refs %2) :type] keyword) entity refs)
+      (reduce #(update-in %1 [:references (.indexOf refs %2) :kind] keyword) entity refs)
       entity)))
 
 (defn read-entities
   "Returns entities from the database."
-  ([type]
-   (map parse-entity (find-maps @db (type types))))
-  ([type criteria limit-by]
-   (with-collection @db (type types)
+  ([kind]
+   (map parse-entity (find-maps @db (kind kinds))))
+  ([kind criteria limit-by]
+   (with-collection @db (kind kinds)
      (find {})
      (sort criteria)
      (limit limit-by))))
@@ -81,16 +81,16 @@
 (defn read-entity
   "Returns a single entity from the database. criterion is expected
   to be a map (e.g., {:_id 0de661a...})."
-  [type criterion]
-  (let [entity (find-one-as-map @db (type types) criterion)]
+  [kind criterion]
+  (let [entity (find-one-as-map @db (kind kinds) criterion)]
     (when-not (nil? entity)
       (parse-entity entity))))
 
 (defn find-entities
   "Returns one or more entities from the database. criterion is
   expected to be a map (e.g., {:_id 0de661a...})."
-  [type criterion]
-  (let [entities (find-maps @db (type types)
+  [kind criterion]
+  (let [entities (find-maps @db (kind kinds)
                                {(first (keys criterion))
                                 {$regex (first (vals criterion)) $options "i"}})]
     (map parse-entity entities)))
@@ -98,8 +98,8 @@
 (defn save-entity
   "Saves an entity to the database and returns the result."
   [entity]
-  (let [type (:type entity)
-        log? (:log entity)
+  (let [kind (:kind entity)
+        log? (:log? entity)
         entity (if (true? (:tweet entity))
                  (let [url (str site-url (create-url-path entity) (create-url-date entity))
                        resp (update-twitter-status (or (:title entity) (:body entity)) url)]
@@ -107,14 +107,14 @@
                  entity)
         entity (-> entity
                    (assoc :last-updated (local-now))
-                   (dissoc :log)
+                   (dissoc :log?)
                    (dissoc :tweet))]
-    (let [result (upsert @db (type types) {:_id (:_id entity)} entity)]
+    (let [result (upsert @db (kind kinds) {:_id (:_id entity)} entity)]
       (when log?
-        (let [kind (if (updated-existing? result)
+        (let [action (if (updated-existing? result)
                      :update
                      :new)]
-          (insert @db "updates" (create-update kind entity))))
+          (insert @db "updates" (create-update action entity))))
       result)))
 
 ;;
