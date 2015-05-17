@@ -1,5 +1,6 @@
 (ns furthermore.repository
   (:require [clojure.pprint :refer [pprint]]
+
             [clj-time.local :refer [local-now]]
             [environ.core :refer [env]]
             [monger.collection :refer [find-maps find-one-as-map insert upsert]]
@@ -16,41 +17,33 @@
                                        site-url]]
             [furthermore.twitter :refer [update-twitter-status]]))
 
-(defonce ^:private db (atom nil))
-(defonce ^:private db-queue (atom {}))
-(def types
-  {:log "log"
+(def kinds
+  {:update "updates"
    :follow-up "posts"
    :post "posts"
    :static "pages"
    :topic "topics"})
 
-(defn add-db-queue!
-  [entity]
-  (swap! db-queue assoc (:_id entity) entity))
+;;
+;; Database stuff
+;;
+(defonce db (atom nil))
 
-(defn update-db-queue!
-  [entity]
-  (add-db-queue! entity))
+(defn initialize-db-connection
+  "Establishes a connection to the database."
+  [& {:keys [uri]}]
+  (reset! db (:db (connect-via-uri (or uri (env :blog-database-uri))))))
 
-(defn get-db-queue
-  [id]
-  (find @db-queue id))
-
-(defn list-db-queue
-  []
-  @db-queue)
-
-(defn clear-db-queue!
-  []
-  (reset! db-queue {}))
-
-(defn create-log-entry
-  [kind entity]
+;;
+;; Entites stuff
+;;
+(defn create-update
+  "Creates an update entry for a newly added or updated entity."
+  [action entity]
   (let [text (or (:title entity)
                  (get-excerpt (:body entity) 50))]
-    {:kind kind
-     :type (:type entity)
+    {:action action
+     :kind (:kind entity)
      :date (:last-updated entity)
      :title text
      :ref (:_id entity)
@@ -60,70 +53,102 @@
               (:_id entity))}))
 
 (defn parse-entity
+  "Keywordizes values in an entity loaded from the database."
   [entity]
   (let [entity (as-> entity e
-                 (update e :type keyword)
-                 (if-not (nil? (get-in e [:parent :type]))
-                   (update-in e [:parent :type] keyword)
+                 (update e :kind keyword)
+                 (if-not (nil? (get-in e [:parent :kind]))
+                   (update-in e [:parent :kind] keyword)
                    e)
-                 (if-not (nil? (get-in e [:topic :type]))
-                   (update-in e [:topic :type] keyword)
+                 (if-not (nil? (get-in e [:topic :kind]))
+                   (update-in e [:topic :kind] keyword)
                    e))
         refs (:references entity)]
     (if-not (empty? refs)
-      (reduce #(update-in %1 [:references (.indexOf refs %2) :type] keyword) entity refs)
+      (reduce #(update-in %1 [:references (.indexOf refs %2) :kind] keyword) entity refs)
       entity)))
 
 (defn read-entities
-  ([type]
-   (map parse-entity (find-maps @db (type types))))
-  ([type criteria limit-by]
-   (with-collection @db (type types)
+  "Returns entities from the database."
+  ([kind]
+   (map parse-entity (find-maps @db (kind kinds))))
+  ([kind criteria limit-by]
+   (with-collection @db (kind kinds)
      (find {})
      (sort criteria)
      (limit limit-by))))
 
 (defn read-entity
-  [type criterion]
-  (let [entity (find-one-as-map @db (type types) criterion)]
-    (if (nil? entity)
-      nil
+  "Returns a single entity from the database. criterion is expected
+  to be a map (e.g., {:_id 0de661a...})."
+  [kind criterion]
+  (let [entity (find-one-as-map @db (kind kinds) criterion)]
+    (when-not (nil? entity)
       (parse-entity entity))))
 
 (defn find-entities
-  [type criterion]
-  (let [entities (find-maps @db (type types)
+  "Returns one or more entities from the database. criterion is
+  expected to be a map (e.g., {:_id 0de661a...})."
+  [kind criterion]
+  (let [entities (find-maps @db (kind kinds)
                                {(first (keys criterion))
                                 {$regex (first (vals criterion)) $options "i"}})]
     (map parse-entity entities)))
 
 (defn save-entity
+  "Saves an entity to the database and returns the result."
   [entity]
-  ;(spit "tmp/logs/output.log" (with-out-str (pprint entity)) :append true)
-  (let [type (:type entity)
-        log? (:log entity)
-        entity (assoc entity :last-updated (local-now))
-        entity (dissoc entity :log)
+  (let [kind (:kind entity)
+        log? (:log? entity)
         entity (if (true? (:tweet entity))
                  (let [url (str site-url (create-url-path entity) (create-url-date entity))
                        resp (update-twitter-status (or (:title entity) (:body entity)) url)]
                    (conj entity (second resp)))
-                 (dissoc entity :tweet))]
-    (let [result (upsert @db (type types) {:_id (:_id entity)} entity)]
+                 entity)
+        entity (-> entity
+                   (assoc :last-updated (local-now))
+                   (dissoc :log?)
+                   (dissoc :tweet))]
+    (let [result (upsert @db (kind kinds) {:_id (:_id entity)} entity)]
       (when log?
-        (when (= :follow-up type)
-          (spit "tmp/logs/follow-up.log" (with-out-str (pprint entity))))
-        (let [kind (if (updated-existing? result)
+        (let [action (if (updated-existing? result)
                      :update
                      :new)]
-          (insert @db "log" (create-log-entry kind entity)))))))
+          (insert @db "updates" (create-update action entity))))
+      result)))
+
+;;
+;; Database queue stuff
+;;
+(defonce ^:private db-queue (atom {}))
 
 (defn process-db-queue
+  "Adds or updates each entity currently in the database queue."
   []
   (doseq [entity (vals @db-queue)]
-    ()
     (save-entity entity)))
 
-(defn initialize-db-connection
-  [& {:keys [uri]}]
-  (reset! db (:db (connect-via-uri (or uri (env :database-uri))))))
+(defn add-db-queue!
+  "Adds an entity to the database queue."
+  [entity]
+  (swap! db-queue assoc (:_id entity) entity))
+
+(defn update-db-queue!
+  "Adds an entity to the database queue."
+  [entity]
+  (add-db-queue! entity))
+
+(defn get-db-queue
+  "Returns an entity from the database queue."
+  [id]
+  (find @db-queue id))
+
+(defn list-db-queue
+  "Returns a map of database queue."
+  []
+  @db-queue)
+
+(defn clear-db-queue!
+  "Removes all entities from the database queue."
+  []
+ (reset! db-queue {}))

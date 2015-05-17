@@ -1,59 +1,96 @@
 (ns furthermore.server
-  (:require [clojure.java.io :as io]
+  (:require [clojure.edn :as edn :refer [read-string]]
+            [clojure.java.io :as io]
 
-            [compojure.core :refer [ANY context defroutes]]
+            [compojure.core :refer [GET POST context defroutes]]
             [compojure.handler :refer [site]]
             [compojure.response :refer [render]]
             [compojure.route :refer [resources]]
             [environ.core :refer [env]]
+            [medley.core :refer [map-keys]]
             [liberator.core :refer [defresource resource]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
 
-            [furthermore.logging :refer [get-weblog]]
-            [furthermore.entities :refer [add-post get-post get-posts get-post-references
-                                          get-topic get-topics get-topic-references]]
-            [furthermore.static-pages :refer [get-static-page]]
+            [furthermore.contents :refer [display-contents-page]]
+            [furthermore.entities :refer [create-follow-up
+                                          create-post
+                                          create-topic
+                                          add-post
+                                          add-entity
+                                          get-posts
+                                          get-topics]]
+            [furthermore.home :refer [display-home-page]]
+            [furthermore.page :refer [display-static-page]]
+            [furthermore.post :refer [display-post-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
-            [furthermore.repository :refer [initialize-db-connection]])
+            [furthermore.repository :refer [initialize-db-connection]]
+            [furthermore.update :refer [display-update-page]]
+            [furthermore.updates :refer [display-updates-page]])
   (:gen-class))
+
+(defn- params->map
+  [params]
+  (let [m (map-keys keyword params)]
+    (if (= clojure.lang.PersistentVector (type (:authors m)))
+      m
+      (update m :authors vector))))
+
+(defn- dispatch-update*
+  [fn entity]
+  ((comp add-post fn) entity))
+
+(defmulti dispatch-update :kind)
+
+(defmethod dispatch-update "post"
+  [entity]
+  (dispatch-update* create-post entity))
+
+(defmethod dispatch-update "follow-up"
+  [entity]
+  (dispatch-update* create-follow-up entity))
+
+(defmethod dispatch-update "topic"
+  [entity]
+  ((comp add-entity create-topic) entity))
 
 (defresource update-site
   [type]
   :allowed-methods [:post]
-  :available-media-types ["application/edn"]
-  :post! (fn [ctx]
-           (add-post (slurp (get-in ctx [:request :body])) (keyword type))))
+  :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
+  :post! (fn [ctx] (let [m (params->map (get-in ctx [:request :form-params]))]
+                     (println m)
+                     (dispatch-update m))))
 
 (defresource return-result
   [task]
   :allowed-methods [:get]
   :available-media-types ["application/edn"]
-  :handle-ok (-> task pr-str))
+  :handle-ok (pr-str task))
 
 (defroutes routes
   ;; API calls
-  (context "/api" []
-           (ANY "/page/:url" [url] (return-result (get-static-page {:url url})))
-           (ANY "/post/id/:id" [id] (return-result (get-post {:_id id})))
-           (ANY "/post/:id/refs" [id] (return-result (get-post-references id)))
-           (ANY "/post/url/:url" [url] (return-result (get-post {:url url})))
-           (ANY "/posts" [] (return-result (get-posts)))
-           (ANY "/topic/:id" [id] (return-result (get-topic {:_id id})))
-           (ANY "/topic/:id/refs" [id] (return-result (get-topic-references id)))
-           (ANY "/topics" [] (return-result (get-topics)))
-           (ANY "/update/:type" [type] (update-site type))
-           (ANY "/weblog" [] (return-result (get-weblog))))
+  (GET "/" [] (display-home-page))
+  (GET "/contents" [] (display-contents-page))
+  (GET "/updates" [] (display-updates-page))
+  (GET "/post/:title" [title] (display-post-page title))
+  (GET "/admin/add-follow-up" [] (display-update-page :follow-up))
+  (GET "/admin/add-post" [] (display-update-page :post))
+  (GET "/admin/add-topic" [] (display-update-page :topic))
+  (GET "/api/posts" [] (return-result (get-posts)))
+  (GET "/api/topics" [] (return-result (get-topics)))
+  (POST "/api/update/:kind" [kind] (update-site kind))
+  (GET "/page/:page" [page] (display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   ;; UI Calls
-  (ANY "/" [uri] (render (io/resource "public/shell.html") uri))
   (resources "/"))
 
 (def app
   (do (initialize-db-connection)
-      (-> routes wrap-params)))
+      (wrap-params routes)))
 
 (defn -main
+  "Launches Furthermore."
   [& port]
   (let [port (Integer. (or port (env :port) 5000))]
     (run-jetty (site #'app) {:port port :join? false})

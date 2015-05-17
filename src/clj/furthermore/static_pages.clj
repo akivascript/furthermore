@@ -1,15 +1,20 @@
 (ns furthermore.static-pages
   (:require [furthermore.entities :refer [create-entity]]
             [furthermore.repository :refer [read-entity]]
-            [furthermore.utils :refer [convert-to-java-date]]))
+            [furthermore.utils :refer [convert-to-java-date
+                                       create-url-name]]))
 
 (defn create-static-page
-  [{:keys [title tags] :or {title "New Static Page"}}]
-  (-> (create-entity tags)
-      (assoc :type :static)
-      (assoc :title title)
-      (assoc :body "What's all this then?")
-      (dissoc :references)))
+  [{:keys [authors body tags title]}]
+  (let [page (-> (create-entity tags)
+                 (assoc :kind :static)
+                 (assoc :title (or title "New Static Page"))
+                 (assoc :body (or body "What's all this then?"))
+                 (assoc :authors (or authors ["John Doe"]))
+                 (dissoc :topic)
+                 (dissoc :parent)
+                 (dissoc :references))]
+    (assoc page :url (create-url-name page))))
 
 (defn prepare-page
   [page]

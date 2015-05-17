@@ -1,4 +1,4 @@
-(defproject furthermore "0.1.0"
+(defproject furthermore "0.5.0-SNAPSHOT"
   :description
   "A topical liveblogging platform written in Clojure/ClojureScript."
   :url
@@ -9,30 +9,34 @@
   :min-lein-version "2.5.0"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0-beta1"]
-   [org.clojure/clojurescript "0.0-3196"]
+  [[org.clojure/clojure "1.7.0-beta3"]
+   [org.clojure/clojurescript "0.0-3269"
+    :classifier "aot"
+    :exclusions [org.clojure/tools.reader org.clojure/data.json]]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
-   [cljs-ajax "0.3.10"]
-   [com.andrewmcveigh/cljs-time "0.3.3"]
-   [com.lucasbradstreet/cljs-uuid-utils "1.0.1"]
-   [compojure "1.3.3"]
+   [cljs-ajax "0.3.11"]
+   [com.andrewmcveigh/cljs-time "0.3.5"]
+   [compojure "1.3.4"]
+   [org.clojure/data.json "0.2.6" :classifier "aot"]
+   [prismatic/dommy "1.1.0"]
    [environ "1.0.0"]
+   [com.cemerick/friend "0.2.2-SNAPSHOT"]
+   [hiccup "1.0.5"]
    [liberator "0.12.2"]
-   [markdown-clj "0.9.65"]
+   [markdown-clj "0.9.66"]
+   [medley "0.6.0"]
    [com.novemberain/monger "2.1.0"]
-   [org.omcljs/om "0.8.8"]
-   [prismatic/om-tools "0.3.11"]
-   [ring/ring-defaults "0.1.4"]
+   [ring/ring-defaults "0.1.5"]
    [ring/ring-jetty-adapter "1.3.2"]
-   [secretary "1.2.3"]
+   [org.clojure/tools.reader "0.9.2" :classifier "aot"]
    [twitter-api "0.7.8"]
    [typographer "1.1.0"]]
 
   :plugins
-  [[lein-cljsbuild "1.0.5"]
+  [[lein-cljsbuild "1.0.6"]
    [lein-environ "1.0.0"]
-   [lein-ring "0.8.13"]]
+   [lein-ring "0.9.3"]]
 
   :source-paths
   ["src/clj"]
@@ -40,10 +44,10 @@
   :resource-paths
   ["resources"]
 
-  :uberjar-name
-  "furthermore.jar"
-
   :main furthermore.server
+
+  :uberjar-name
+  "furthermore-0.5.0-SNAPSHOT-standalone.jar"
 
   :ring {:handler furthermore.server/app}
 
@@ -56,7 +60,6 @@
                         :output-dir "resources/public/js/compiled/out"
                         :asset-path "js/compiled/out"
                         :externs ["resources/public/js/marked.min.js"]
-                        :main furthermore.core
                         :cache-analysis true
                         :optimizations :advanced
                         :source-map "resources/public/js/compiled/furthermore.js.map"
@@ -76,7 +79,7 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar [:private-p
+  {:uberjar [:private
              :twitter-api
              {:hooks [leiningen.cljsbuild]
               :env {:production true}
@@ -86,24 +89,23 @@
    :dev [:private
          :twitter-api
          {:source-paths ["env/dev/clj"]
+
           :dependencies
           [[expectations "2.0.16"]
            [figwheel "0.2.5"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
+
           :plugins [[lein-figwheel "0.2.5"]
                     [lein-autoexpect "1.4.2"]]
+
           :env {:dev true}
+
           :figwheel {:http-server-root "public"
                      :server-port 3449
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
-          :repl-options {:init-ns furthermore.dev}}]
 
-   :prod [:private-p
-          :twitter-api
-          {:hooks [leiningen.cljsbuild]
-           :env {:production true}
-           :omit-source true
-           :aot :all}]})
+          :repl-options {:init-ns furthermore.dev}
+          :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"]}]})
