@@ -16,7 +16,7 @@
   [option type]
   (let [{:keys [date time]} (format-timestamp (:created-on option))]
     (html
-     [:option {:value (str (:_id option) "|" (name (:type option)))}
+     [:option {:value (str (:_id option) "|" (name (:kind option)))}
       (str (:title option) " (" date " @ " time ")")])))
 
 (defn display-update-page
