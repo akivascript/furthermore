@@ -29,12 +29,12 @@ code, kbd, pre, samp {
 
 /* line 28, ../../assets/scss/screen.scss */
 .navbar-default {
-  background-color: #667977;
+  background-color: #7a7a7a;
   background-image: url("/img/background.png");
 }
 /* line 33, ../../assets/scss/screen.scss */
 .navbar-default .navbar-nav > li a:hover {
-  background-color: #556666;
+  background-color: #667977;
   background-image: url("/img/background.png");
 }
 

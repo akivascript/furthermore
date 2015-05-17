@@ -26,12 +26,12 @@ code, kbd, pre, samp {
 }
 
 .navbar-default {
-    background-color: $green-faded;
+    background-color: $gray;
     background-image: url('/img/background.png');
 
     .navbar-nav > li {
         a:hover {
-            background-color: $green-dark;
+            background-color: $green-faded;
             background-image: url('/img/background.png');
         }
     }
