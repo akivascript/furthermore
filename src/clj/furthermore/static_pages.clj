@@ -7,9 +7,10 @@
 (defn create-static-page
   [{:keys [authors body tags title]}]
   (let [page (-> (create-entity tags)
-                 (assoc :type :static)
+                 (assoc :kind :static)
                  (assoc :title (or title "New Static Page"))
                  (assoc :body (or body "What's all this then?"))
+                 (assoc :authors (or authors ["John Doe"]))
                  (dissoc :topic)
                  (dissoc :parent)
                  (dissoc :references))]
