@@ -9,7 +9,8 @@
 
 (def title
   {:post "Post"
-   :follow-up "Follow-Up"})
+   :follow-up "Follow-Up"
+   :topic "Topic"})
 
 (defn- create-option
   [option type]
@@ -35,7 +36,8 @@
            [:h2 (str "New " (kind title))]
            [:div {:class "panel panel-default"}
             [:div {:class "panel-body"}
-             (when (= :post kind)
+             (when (or (= :post kind)
+                       (= :topic kind))
                [:div
                 [:div
                  [:label {:for "title"} "Title"]
@@ -43,12 +45,13 @@
                           :kind "text"
                           :name "title"
                           :ref "title"}]]
-                [:div
-                 [:label {:for "subtitle"} "Subtitle"]
-                 [:input {:class "form-control"
-                          :kind "text"
-                          :name "subtitle"
-                          :ref "subtitle"}]]])
+                (when (= :post kind)
+                  [:div
+                   [:label {:for "subtitle"} "Subtitle"]
+                   [:input {:class "form-control"
+                            :kind "text"
+                            :name "subtitle"
+                            :ref "subtitle"}]])])
              [:div
               [:label {:for "authors"} "Author"]
               [:input {:class "form-control"
@@ -56,45 +59,47 @@
                        :name "authors"
                        :ref "authors"
                        :value "Akiva"}]]
-             [:div
-              [:label {:for "topic"} "Topic"]
-              [:select {:id "topics"
-                        :class "form-control"
-                        :name "topic"
-                        :ref "topic"}
-               [:option {:value ""} "Select topic..."]
-               (map #(create-option % "topic") topics)]]
-             [:div
-              [:label {:for "parent"} "Parent"]
-              [:select {:id "parents"
-                        :class "form-control"
-                        :name "parent"
-                        :ref "parent"}
-               [:option {:value ""} "Select parent..."]
-               (when (= :post kind)
-                 [:optgroup {:label "Topics"}
-                  (map #(create-option % "topic") topics)])
-                 [:optgroup {:id "posts"
-                             :label "Posts"}]]]
-             [:div
-              [:div {:class "checkbox float-left"}
-               [:label {:for "tweet"}
-                [:input {:kind "checkbox"
-                         :name "tweet"
-                         :ref "tweet"}]
-                "Tweet this?"]]]
-             [:div
-              [:label {:for "body"} "Body"]
-              [:textarea {:ref "body"
-                          :class "form-control"
-                          :name "body"
-                          :rows 16}]]
-             [:div
-              [:label {:for "excerpt"} "Excerpt"]
-              [:textarea {:ref "excerpt"
-                          :class "form-control"
-                          :name "excerpt"
-                          :rows 4}]]]]
+             (when-not (= :topic kind)
+               [:div
+                [:div
+                 [:label {:for "topic"} "Topic"]
+                 [:select {:id "topics"
+                           :class "form-control"
+                           :name "topic"
+                           :ref "topic"}
+                  [:option {:value ""} "Select topic..."]
+                  (map #(create-option % "topic") topics)]]
+                [:div
+                 [:label {:for "parent"} "Parent"]
+                 [:select {:id "parents"
+                           :class "form-control"
+                           :name "parent"
+                           :ref "parent"}
+                  [:option {:value ""} "Select parent..."]
+                  (when (= :post kind)
+                    [:optgroup {:label "Topics"}
+                     (map #(create-option % "topic") topics)])
+                  [:optgroup {:id "posts"
+                              :label "Posts"}]]]
+                [:div
+                 [:div {:class "checkbox float-left"}
+                  [:label {:for "tweet"}
+                   [:input {:type "checkbox"
+                            :name "tweet"
+                            :ref "tweet"}]
+                   "Tweet this?"]]]
+                [:div
+                 [:label {:for "body"} "Body"]
+                 [:textarea {:ref "body"
+                             :class "form-control"
+                             :name "body"
+                             :rows 16}]]
+                [:div
+                 [:label {:for "excerpt"} "Excerpt"]
+                 [:textarea {:ref "excerpt"
+                             :class "form-control"
+                             :name "excerpt"
+                             :rows 4}]]])]]
            (hidden-field {:value kind} "kind")
            [:div {:class "text-right"}
             (submit-button {:class "btn btn-default"} (kind title))])]]]]))))
