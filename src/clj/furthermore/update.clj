@@ -19,7 +19,7 @@
       (str (:title option) " (" date " @ " time ")")])))
 
 (defn display-update-page
-  [type]
+  [kind]
   (let [topics (get-topics)]
     (display-page
      :update
@@ -30,29 +30,29 @@
         [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
          [:div {:class "content"}
           (form-to
-           {:enctype "application/x-www-form-urlencoded"}
-           [:post (str "/api/update/" (name type))]
-           [:h2 (str "New " (type title))]
+           {:enckind "application/x-www-form-urlencoded"}
+           [:post (str "/api/update/" (name kind))]
+           [:h2 (str "New " (kind title))]
            [:div {:class "panel panel-default"}
             [:div {:class "panel-body"}
-             (when (= :post type)
+             (when (= :post kind)
                [:div
                 [:div
                  [:label {:for "title"} "Title"]
                  [:input {:class "form-control"
-                          :type "text"
+                          :kind "text"
                           :name "title"
                           :ref "title"}]]
                 [:div
                  [:label {:for "subtitle"} "Subtitle"]
                  [:input {:class "form-control"
-                          :type "text"
+                          :kind "text"
                           :name "subtitle"
                           :ref "subtitle"}]]])
              [:div
               [:label {:for "authors"} "Author"]
               [:input {:class "form-control"
-                       :type "text"
+                       :kind "text"
                        :name "authors"
                        :ref "authors"
                        :value "Akiva"}]]
@@ -71,7 +71,7 @@
                         :name "parent"
                         :ref "parent"}
                [:option {:value ""} "Select parent..."]
-               (when (= :post type)
+               (when (= :post kind)
                  [:optgroup {:label "Topics"}
                   (map #(create-option % "topic") topics)])
                  [:optgroup {:id "posts"
@@ -79,7 +79,7 @@
              [:div
               [:div {:class "checkbox float-left"}
                [:label {:for "tweet"}
-                [:input {:type "checkbox"
+                [:input {:kind "checkbox"
                          :name "tweet"
                          :ref "tweet"}]
                 "Tweet this?"]]]
@@ -95,6 +95,6 @@
                           :class "form-control"
                           :name "excerpt"
                           :rows 4}]]]]
-           (hidden-field {:value type} "type")
+           (hidden-field {:value kind} "kind")
            [:div {:class "text-right"}
-            (submit-button {:class "btn btn-default"} (type title))])]]]]))))
+            (submit-button {:class "btn btn-default"} (kind title))])]]]]))))

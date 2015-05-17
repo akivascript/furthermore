@@ -8,6 +8,7 @@
   [entry]
   (-> entry
       (update :date convert-to-java-date)
+      (update :action keyword)
       (update :kind keyword)
       (dissoc :_id)))
 
