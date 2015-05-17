@@ -103,11 +103,17 @@
                                        (get-in parent [:topic :_id])
                                        :topic))
                  entity)]
-    (clear-db-queue!)
     (add-db-queue! entity)
     (add-db-queue! parent)
     (process-db-queue)
     (clear-db-queue!)))
+
+(defn add-entity
+  "Adds an entity to the repository."
+  [entity]
+  (add-db-queue! entity)
+  (process-db-queue)
+  (clear-db-queue!))
 
 (defn get-posts
   "Returns posts from the database."
@@ -140,15 +146,12 @@
 ;;
 (defn create-topic
   "Returns a topic entity along with its parent."
-  [title & {:keys [description authors tags]}]
-  (let [topic (as-> (if-not (nil? tags)
-                      (create-entity tags)
-                      (create-entity)) t
-                (assoc t :kind :topic)
-                (assoc t :title title)
-                (assoc t :description description)
-                (assoc t :authors (or authors ["John Doe"])))]
-    topic))
+  [params]
+  (let [{:keys [authors tags title]} params]
+    (-> (create-entity tags)
+        (assoc :kind :topic)
+        (assoc :title title)
+        (assoc :authors (or authors ["John Doe"])))))
 
 (defn prepare-topic
   "Converts the keys necessary for the topic to be converted
