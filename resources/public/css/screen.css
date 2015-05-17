@@ -13,7 +13,7 @@ a:hover {
 /* line 13, ../../assets/scss/screen.scss */
 body {
   background-color: #eee;
-  background-image: url("/img/bkg-white.png");
+  background-image: url("/img/background.png");
   font-family: 'Lato';
 }
 
@@ -30,12 +30,12 @@ code, kbd, pre, samp {
 /* line 28, ../../assets/scss/screen.scss */
 .navbar-default {
   background-color: #667977;
-  background-image: url("/img/background.png");
+  background-image: url("/img/background-tan.png");
 }
 /* line 33, ../../assets/scss/screen.scss */
 .navbar-default .navbar-nav > li a:hover {
   background-color: #556666;
-  background-image: url("/img/background.png");
+  background-image: url("/img/background-tan.png");
 }
 
 /* line 40, ../../assets/scss/screen.scss */
