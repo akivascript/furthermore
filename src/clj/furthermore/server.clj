@@ -92,6 +92,6 @@
 (defn -main
   "Launches Furthermore."
   [& port]
-  (let [port (Integer. (or port (env :port) 5000))]
+  (let [port (Integer. (or (first port) (env :port) 5000))]
     (run-jetty (site #'app) {:port port :join? false})
     (println "Furthermore up and running on port" port)))
