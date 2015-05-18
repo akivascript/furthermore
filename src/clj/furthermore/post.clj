@@ -56,9 +56,9 @@
            (when-let [url (get-in post [:twitter :url])]
              [:a {:href url
                   :target "_blank"} "Tweeted!"])]]]]]
-      (when (:references post)
+      (when (:refs post)
         [:div {:class "glyphicon glyphicon-triangle-bottom arrow"}])
-      (when-let [refs (:references post)]
+      (when-let [refs (:refs post)]
         (map display-follow-up refs))])))
 
 (defn display-post-page
