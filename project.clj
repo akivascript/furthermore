@@ -58,7 +58,7 @@
              :source-paths ["src/cljs" "env/prod/cljs"]
              :compiler {:output-to "resources/public/js/compiled/furthermore.js"
                         :output-dir "resources/public/js/compiled/out"
-                        :asset-path "js/compiled/out"
+                        :asset-path "/js/compiled/out"
                         :externs ["resources/public/js/marked.min.js"]
                         :cache-analysis true
                         :optimizations :advanced
@@ -69,7 +69,7 @@
              :source-paths ["src/cljs" "env/dev/cljs"]
              :compiler {:output-to "resources/public/js/compiled/furthermore.js"
                         :output-dir "resources/public/js/compiled/dev"
-                        :asset-path "js/compiled/dev"
+                        :asset-path "/js/compiled/dev"
                         :externs ["resources/public/js/marked.min.js"]
                         :main furthermore.dev
                         :cache-analysis true

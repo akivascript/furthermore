@@ -82,7 +82,6 @@
   (POST "/api/update/:kind" [kind] (update-site kind))
   (GET "/page/:page" [page] (display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
-  ;; UI Calls
   (resources "/"))
 
 (def app
