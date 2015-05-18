@@ -78,20 +78,23 @@
               body "Somebody forgot to actually write the post."
               created-on date
               _id (random-uuid)
-              title "New Post"}} params]
+              parent (create-link-to (link-id parent) (link-kind parent))
+              title "New Post"
+              topic (create-link-to (link-id topic) (link-kind topic))
+              url (create-entity-url date title)}} params]
     (map->Post {:_id _id
                 :authors authors
                 :body body
                 :created-on created-on
                 :excerpt excerpt
                 :kind :post
-                :parent (create-link-to (link-id parent) (link-kind parent))
+                :parent parent
                 :refs refs
                 :subtitle subtitle
                 :tags (into #{} tags)
                 :title title
-                :topic (create-link-to (link-id topic) (link-kind topic))
-                :url (create-entity-url date title)})))
+                :topic topic
+                :url url})))
 
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
@@ -110,7 +113,8 @@
                      :last-updated last-updated
                      :parent (create-link-to (link-id parent) (link-kind parent))
                      :refs refs
-                     :tags (into #{} tags)})))
+                     :tags (into #{} tags)
+                     :url url})))
 
 (defn prepare-post
   "Converts the required keys so that the post may be converted
@@ -184,6 +188,40 @@
          vec)))
 
 ;;
+;; Static Pages
+;;
+(defrecord Page
+    [_id authors created-on kind last-updated tags title url])
+
+(defn create-page
+  [params]
+  (let [{:keys [_id authors created-on last-updated tags title url]
+         :or {authors [(create-author {})]
+              _id (random-uuid)
+              created-on (local-now)
+              title "New Page"}} params]
+    (map->Page {:_id _id
+                :authors authors
+                :created-on created-on
+                :last-updated last-updated
+                :tags (into #{} tags)
+                :title title
+                :url url})))
+
+(defn prepare-page
+  [page]
+  (-> page
+      (update :created-on convert-to-java-date)
+      (update :last-updated convert-to-java-date)))
+
+(defn get-static-page
+  [criterion & {:keys [prepare] :or {prepare true}}]
+  (let [page (read-entity :static criterion)]
+    (if prepare
+      (prepare-page page)
+      page)))
+
+;;
 ;; Topics Specific Stuff
 ;;
 (defrecord Topic
@@ -197,11 +235,12 @@
               _id (random-uuid)
               created-on (local-now)
               title "New Topic"}} params]
-    (map->Topic {:_id (random-uuid)
+    (map->Topic {:_id _id
                  :authors authors
                  :created-on created-on
                  :kind :topic
                  :last-updated last-updated
+                 :tags (into #{} tags)
                  :title title
                  :refs refs
                  :url url})))
