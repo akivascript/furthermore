@@ -18,27 +18,35 @@
 ;;
 (defn create-entity
   "Returns an empty default entity."
-  [& tags]
-  (let [entity {:_id (random-uuid)
-                :created-on (local-now)
-                :log? true}]
-    (if-not (nil? tags)
-      (apply (fn [x] (reduce #(update %1 :tags conj %2) entity x)) tags)
-      entity)))
+  []
+  {:_id (random-uuid)
+   :created-on (local-now)
+   :log? true})
 
 (defn create-link-to
   "Returns a 'link map' of a particular type to a target's ID."
-  [target link-type]
+  [target link-kind]
   {:_id (or (:_id target) target)
-   :kind (keyword link-type)})
+   :kind link-kind})
 
-(defn link-type
+(defn link-kind
   [link]
-  (second (str/split link #"\|")))
+  (if (map? link)
+    (:kind link)
+    (let [kind (second (str/split link #"\|"))]
+      (or (keyword? kind)
+          kind
+          (keyword kind)))))
 
 (defn link-id
   [link]
-  (first (str/split link #"\|")))
+  (if (map? link)
+    (:_id link)
+    (first (str/split link #"\|"))))
+
+(defn add-tags
+  [entity tags]
+  (update entity :tags #(apply conj % tags)))
 
 ;;
 ;; Author Stuff
@@ -59,30 +67,49 @@
 ;;
 (declare get-topic)
 
+(defrecord Post
+    [authors body created-on excerpt _id kind parent subtitle tags title topic url])
+
+(defrecord Follow-Up
+    [authors body created-on excerpt _id kind parent tags url])
+
 (defn create-post
-  "Returns a post entity."
+  "Takes a map as input and requires both parent and topic records. Produces
+  a Post record."
   [params]
-  (let [{:keys [authors body excerpt parent subtitle tags title topic]} params
-        post (-> (create-entity tags)
-                 (assoc :kind :post)
-                 (assoc :title (or title "New Post"))
-                 (assoc :subtitle subtitle)
-                 (assoc :body (or body "Somebody forgot to actually write the post."))
-                 (assoc :excerpt excerpt)
-                 (assoc :authors (or authors ["John Doe"]))
-                 (assoc :parent (create-link-to (link-id parent) (link-type parent)))
-                 (assoc :topic (create-link-to (link-id topic) (link-type topic))))]
-    (assoc post :url (create-entity-url post))))
+  (let [{:keys [authors body excerpt _id parent subtitle tags title topic]
+         :or {authors [(create-author {})]
+              body "Somebody forgot to actually write the post."
+              _id (random-uuid)
+              title "New Post"}} params
+              date (local-now)]
+    (map->Post {:authors authors
+                :body body
+                :created-on date
+                :excerpt excerpt
+                :_id _id
+                :kind :post
+                :parent (create-link-to (link-id parent) (link-kind parent))
+                :subtitle subtitle
+                :tags (into #{} tags)
+                :title title
+                :topic (create-link-to (link-id topic) (link-kind topic))
+                :url (create-entity-url date title)})))
 
 (defn create-follow-up
-  "Returns a follow-up entity."
+  "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [authors body excerpt parent tags]} params]
-    (-> (create-entity tags)
-        (assoc :kind :follow-up)
-        (assoc :authors (or authors ["John Doe"]))
-        (assoc :body (or body "Somebody forgot to actually write the follow-up."))
-        (assoc :parent (create-link-to (link-id parent) (link-type parent))))))
+  (let [{:keys [authors body excerpt parent tags]
+         :or {authors [(create-author {})]
+              body "Somebody forgot to actually write the follow-up."}} params]
+    (map->Follow-Up {:authors authors
+                     :body body
+                     :created-on (local-now)
+                     :excerpt excerpt
+                     :_id (random-uuid)
+                     :kind :follow-up
+                     :parent (create-link-to (link-id parent) (link-kind parent))
+                     :tags (into #{} tags)})))
 
 (defn prepare-post
   "Converts the required keys so that the post may be converted
