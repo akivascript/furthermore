@@ -47,7 +47,6 @@ code, kbd, pre, samp {
 }
 
 .banner {
-
     img {
         display: block;
 
@@ -180,7 +179,9 @@ code, kbd, pre, samp {
         padding: 10px 0px 5px 1px; 
 
         font-family: $body-font;
-        font-size: 12pt;
+        font-size: 1.2em;
+
+        line-height: 1.5em;
 
         color: #555;
 
@@ -191,11 +192,8 @@ code, kbd, pre, samp {
     
     .footer {
         padding-top: 10px;
-        
-        font-size: 90%;
 
         color: $gray-light;
-
 
         .continue {
             font-size: 90%;
@@ -256,7 +254,7 @@ code, kbd, pre, samp {
         border-top: 1px solid #ccc;
 
         font-family: $body-font;
-        font-size: 12pt;
+        font-size: 14pt;
 
         color: #555;
     }
