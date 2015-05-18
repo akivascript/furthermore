@@ -10,8 +10,9 @@
                                             process-db-queue
                                             read-entities
                                             read-entity]]
-            [furthermore.utils :refer [convert-to-java-date
-                                       create-entity-url]]))
+            [furthermore.utils :refer [joda-date->java-date
+                                       create-entity-url
+                                       create-url-name]]))
 
 ;;
 ;; References
@@ -21,13 +22,14 @@
 
 (defn create-reference
   "Returns a Reference which links entities to each other."
-  [params]
-  (let [{:keys [_id kind]
-         :or {_id (random-uuid)}} params]
-    (map->Reference {:_id _id
-                     :kind (if (keyword? kind)
-                             kind
-                             (keyword kind))})))
+  ([params]
+   (let [{:keys [_id kind]} params]
+     (create-reference _id kind)))
+  ([id kind]
+   (map->Reference {:_id id
+                    :kind (if (keyword? kind)
+                            kind
+                            (keyword kind))})))
 
 (defn link-kind
   [link]
@@ -42,7 +44,7 @@
     (first (str/split link #"\|"))))
 
 ;;
-;; Author Stuff
+;; Authors
 ;;
 (defrecord Author
     [name works])
@@ -56,7 +58,7 @@
                   :works works})))
 
 ;;
-;; Post-Specific Stuff
+;; Posts
 ;;
 (declare get-topic)
 
@@ -73,14 +75,12 @@
   [params]
   (let [date (local-now)
         {:keys [_id authors body created-on excerpt last-updated
-                parent subtitle refs tags title topic]
+                parent subtitle refs tags title topic url]
          :or {authors [(create-author {})]
               body "Somebody forgot to actually write the post."
               created-on date
               _id (random-uuid)
-              parent (create-link-to (link-id parent) (link-kind parent))
               title "New Post"
-              topic (create-link-to (link-id topic) (link-kind topic))
               url (create-entity-url date title)}} params]
     (map->Post {:_id _id
                 :authors authors
@@ -88,12 +88,14 @@
                 :created-on created-on
                 :excerpt excerpt
                 :kind :post
-                :parent parent
+                :parent (or parent
+                            (create-reference (link-id parent) (link-kind parent)))
                 :refs refs
                 :subtitle subtitle
                 :tags (into #{} tags)
                 :title title
-                :topic topic
+                :topic (or topic
+                           (create-reference (link-id topic) (link-kind topic)))
                 :url url})))
 
 (defn create-follow-up
@@ -111,30 +113,16 @@
                      :excerpt excerpt
                      :kind :follow-up
                      :last-updated last-updated
-                     :parent (create-link-to (link-id parent) (link-kind parent))
+                     :parent (create-reference (link-id parent) (link-kind parent))
                      :refs refs
                      :tags (into #{} tags)
                      :url url})))
 
-(defn prepare-post
-  "Converts the required keys so that the post may be converted
-  to an EDN to be set back to the browser."
-  [post]
-  (-> post
-      (update :created-on convert-to-java-date)
-      (update :last-updated convert-to-java-date)
-      (update :kind keyword)
-      (assoc :opened false)))
-
 (defn get-post
   "Returns a single post from the repository. criterion is expected
   to be a map (e.g., {:title 'This Is My Post'})."
-  [criterion & {:keys [prepare] :or {prepare true}}]
-  (let [post (read-entity :post criterion)]
-    (when-not (nil? post)
-      (if (true? prepare)
-        (prepare-post post)
-        post))))
+  [criterion]
+  (create-post (read-entity :post criterion)))
 
 (defn add-post
   "Adds a post entity and its updated parent to the repository."
@@ -143,9 +131,9 @@
         parent (case (:kind parent)
                  :topic (get-topic {:_id (:_id parent)} :prepare false)
                  (get-post {:_id (:_id parent)} :prepare false))
-        parent (update parent :refs conj (create-link-to entity (:kind entity)))
+        parent (update parent :refs conj (create-reference entity (:kind entity)))
         entity (if (= :follow-up (:kind entity))
-                 (assoc entity :topic (create-link-to
+                 (assoc entity :topic (create-reference
                                        (get-in parent [:topic :_id])
                                        :topic))
                  entity)]
@@ -168,7 +156,6 @@
                               (array-map :created-on -1)
                               10)]
       (->> posts
-           (map prepare-post)
            vec)))
   ([posts & {:keys [prepare] :or {prepare true}}]
    (let [posts (map #(get-post {:_id (:_id %)}) posts)]
@@ -191,35 +178,30 @@
 ;; Static Pages
 ;;
 (defrecord Page
-    [_id authors created-on kind last-updated tags title url])
+    [_id authors body created-on kind last-updated tags title url])
 
 (defn create-page
   [params]
-  (let [{:keys [_id authors created-on last-updated tags title url]
-         :or {authors [(create-author {})]
-              _id (random-uuid)
+  (let [{:keys [_id authors body created-on last-updated tags title url]
+         :or {_id (random-uuid)
+              authors [(create-author {})]
+              body "Somebody forgot to write the text for this page."
               created-on (local-now)
-              title "New Page"}} params]
+              title "New Page"
+              url (create-url-name title)}} params]
     (map->Page {:_id _id
                 :authors authors
+                :body body
                 :created-on created-on
+                :kind :static
                 :last-updated last-updated
                 :tags (into #{} tags)
                 :title title
                 :url url})))
 
-(defn prepare-page
-  [page]
-  (-> page
-      (update :created-on convert-to-java-date)
-      (update :last-updated convert-to-java-date)))
-
-(defn get-static-page
-  [criterion & {:keys [prepare] :or {prepare true}}]
-  (let [page (read-entity :static criterion)]
-    (if prepare
-      (prepare-page page)
-      page)))
+(defn get-page
+  [criterion]
+  (create-page (read-entity :static criterion)))
 
 ;;
 ;; Topics Specific Stuff
@@ -245,22 +227,11 @@
                  :refs refs
                  :url url})))
 
-(defn prepare-topic
-  "Converts the keys necessary for the topic to be converted
-  to an EDN to be returned to the browser."
-  [topic]
-  (-> topic
-      (update :created-on convert-to-java-date)
-      (update :last-updated convert-to-java-date)))
-
 (defn get-topic
   "Returns a topic from the repository. criterion is expected
   to be a map (e.g., {:title 'This Is My Topic'})."
-  [criterion & {:keys [prepare] :or {prepare true}}]
-  (let [topic (read-entity :topic criterion)]
-    (if prepare
-      (prepare-topic topic)
-      topic)))
+  [criterion]
+  (create-topic (read-entity :topic criterion)))
 
 (defn get-topic-refs
   "Returns a topic with its actual reference objects associated."
@@ -277,7 +248,32 @@
   (let [topics (read-entities :topic)]
     (if prepare
       (->> topics
-           (map prepare-topic)
            (sort-by :title)
            vec)
       topics)))
+
+;;
+;; General Entity Functions
+;;
+(defn- get-entity*
+  [fn criterion kind]
+  (fn (read-entity kind criterion)))
+
+(defmulti get-entity (fn [criterion kind] kind))
+
+(defmethod get-entity :follow-up
+  [criterion kind]
+  (get-entity* create-follow-up criterion kind))
+
+(defmethod get-entity :post
+  [criterion kind]
+  (println criterion kind)
+  (get-entity* create-post criterion kind))
+
+(defmethod get-entity :static
+  [criterion kind]
+  (get-entity* create-page criterion kind))
+
+(defmethod get-entity :topic
+  [criterion kind]
+  (get-entity* create-topic criterion kind))

@@ -13,7 +13,7 @@
                 "http://localhost:3000/#/"
                 "http://furthermore-test.herokuapp.com/"))
 
-(defn convert-to-java-date
+(defn joda-date->java-date
   "Returns a java.util.Date from a Joda-Time."
   [joda-date]
   (to-date joda-date))
@@ -49,7 +49,10 @@
 
 (defn format-timestamp
   [timestamp]
-  (let [ts (from-time-zone (from-date timestamp) (time-zone-for-offset +7))]
+  (let [timestamp (if-not (= java.util.Date (type timestamp))
+                    (joda-date->java-date timestamp)
+                    timestamp)
+        ts (from-time-zone (from-date timestamp) (time-zone-for-offset +7))]
     {:date (unparse (formatter "MMMM d, yyyy") ts)
      :time (unparse (formatter "hh:mm a") ts)}))
 

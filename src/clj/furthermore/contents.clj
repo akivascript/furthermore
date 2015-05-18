@@ -3,7 +3,8 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-post
+            [furthermore.entities :refer [get-entity
+                                          get-post
                                           get-topics]]
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
@@ -47,7 +48,7 @@
 
 (defn- display-posts
   [post]
-  (let [post (get-post {:_id (:_id post)})]
+  (let [post (get-entity {:_id (:_id post)} (keyword (:kind post)))]
     (html
      [:div {:class "col-xs-12 post"}
       (display-title post)
