@@ -29,7 +29,7 @@
   (let [{:keys [date time]} (format-timestamp (:created-on item))]
     (-> (dommy/create-element "option")
         (dommy/set-text! (str (:title item) " (" date " @ " time ")"))
-        (dommy/set-value! (str (:_id item) "|" (:kind item))))))
+        (dommy/set-value! (str (:_id item) "|" (name (:kind item)))))))
 
 (defn- filter-options
   [topic target]
