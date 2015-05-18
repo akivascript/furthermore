@@ -13,19 +13,10 @@
                 "http://localhost:3000/#/"
                 "http://furthermore-test.herokuapp.com/"))
 
-(defn convert-to-java-date
+(defn joda-date->java-date
   "Returns a java.util.Date from a Joda-Time."
   [joda-date]
   (to-date joda-date))
-
-(defn create-url-name
-  "Returns a web-friendly url from an entity's title (or 'Untitled')
-  if it does not."
-  [entity]
-  (-> (or (:title entity) "Untitled")
-      (string/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
-      (string/replace #" " "-")
-      string/lower-case))
 
 (defn create-url-path
   "Generates a URL path part based on an entity's type."
@@ -36,18 +27,32 @@
     :topic "topic/"
     ""))
 
+(defn create-url-name
+  "Returns a web-friendly url from an entity's title (or 'Untitled')
+  if it does not."
+  [title]
+  (-> (or title "Untitled")
+      (string/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
+      (string/replace #" " "-")
+      string/lower-case))
+
 (defn create-url-date
   "Returns a string representation of an entity's date."
-  [entity]
-  (format-local-time (:created-on entity) :date))
+  [date]
+  (format-local-time date :date))
 
 (defn create-entity-url
-  [entity]
-  (str (create-url-date entity) "-" (create-url-name entity)))
+  ([date title]
+   (str (create-url-date date) "-" (create-url-name title)))
+  ([entity]
+   (str (create-url-date (:created-on entity)) "-" (create-url-name (:title entity)))))
 
 (defn format-timestamp
   [timestamp]
-  (let [ts (from-time-zone (from-date timestamp) (time-zone-for-offset +7))]
+  (let [timestamp (if-not (= java.util.Date (type timestamp))
+                    (joda-date->java-date timestamp)
+                    timestamp)
+        ts (from-time-zone (from-date timestamp) (time-zone-for-offset +7))]
     {:date (unparse (formatter "MMMM d, yyyy") ts)
      :time (unparse (formatter "hh:mm a") ts)}))
 

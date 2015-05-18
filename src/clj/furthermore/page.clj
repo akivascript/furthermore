@@ -4,11 +4,11 @@
             [typographer.core :refer [smarten]]
 
             [furthermore.layout :refer [display-page]]
-            [furthermore.static-pages :refer [get-static-page]]))
+            [furthermore.entities :refer [get-page]]))
 
 (defn display-static-page
   [page]
-  (let [page (get-static-page {:url page})]
+  (let [page (get-page {:url page})]
     (display-page
      :static
      (html

@@ -3,17 +3,18 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-post
-                                          get-posts
-                                          get-topic]]
+            [furthermore.entities :refer [create-follow-up
+                                          create-post
+                                          get-entities
+                                          get-entity]]
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
-(defmulti display-post #(:kind %))
+(defmulti display-post :kind)
 
 (defmethod display-post :post
   [post]
-  (let [topic (get-topic {:_id (get-in post [:topic :_id])})
+  (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
         {:keys [date time]} (format-timestamp (:created-on post))
         excerpt? (seq (:excerpt post))]
     (html
@@ -24,7 +25,7 @@
           [:div {:class "title"}
            [:a {:href (str "/post/" (:url post))}
             (smarten title)]])
-        (when (contains? post :subtitle)
+        (when-not (nil? (:subtitle post))
           [:div {:class "subtitle"}
            (smarten (:subtitle post))])
         (comment
@@ -53,8 +54,8 @@
 
 (defmethod display-post :follow-up
   [follow-up]
-  (let [topic (get-topic {:_id (get-in follow-up [:topic :_id])})
-        parent (get-post {:_id (get-in follow-up [:parent :_id])})
+  (let [topic (get-entity {:_id (get-in follow-up [:topic :_id])} :topic)
+        parent (get-entity {:_id (get-in follow-up [:parent :_id])} :post)
         {:keys [date time]} (format-timestamp (:created-on follow-up))]
     (html
      [:div {:class "row"}
@@ -80,4 +81,7 @@
    (html
     [:div {:id "index"
            :class "container"}
-     (map display-post (filter #(contains? #{:post :follow-up} (:kind %)) (get-posts)))])))
+     (map display-post (->> (apply merge (get-entities :posts) (get-entities :follow-ups))
+                            (sort-by :created-on)
+                            reverse
+                            (take 10)))])))

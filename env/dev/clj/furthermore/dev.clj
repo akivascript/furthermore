@@ -4,7 +4,6 @@
 
             [furthermore.entities :refer :all]
             [furthermore.logging :refer :all]
-            [furthermore.static-pages :refer :all]
             [furthermore.newsfeed :refer :all]
             [furthermore.repository :refer :all]
             [furthermore.server :refer :all]
@@ -26,7 +25,6 @@
 
 (defreload "entities")
 (defreload "logging" "log")
-(defreload "static-pages" "static")
 (defreload "newsfeed" "news")
 (defreload "repository" "repo")
 (defreload "server" "server")
