@@ -41,6 +41,20 @@
   (first (str/split link #"\|")))
 
 ;;
+;; Author Stuff
+;;
+(defrecord Author
+    [name works])
+
+(defn create-author
+  [params]
+  (let [{:keys [name works]
+         :or {name "John Doe"
+              works #{}}} params]
+    (map->Author {:name name
+                  :works works})))
+
+;;
 ;; Post-Specific Stuff
 ;;
 (declare get-topic)
