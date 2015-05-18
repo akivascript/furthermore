@@ -24,12 +24,10 @@
   "Returns a Reference which links entities to each other."
   ([params]
    (let [{:keys [_id kind]} params]
-     (create-reference _id kind)))
+     (create-reference _id (keyword kind))))
   ([id kind]
    (map->Reference {:_id id
-                    :kind (if (keyword? kind)
-                            kind
-                            (keyword kind))})))
+                    :kind (keyword kind)})))
 
 (defn link-kind
   [link]
@@ -118,12 +116,6 @@
                      :tags (into #{} tags)
                      :url url})))
 
-(defn get-post
-  "Returns a single post from the repository. criterion is expected
-  to be a map (e.g., {:title 'This Is My Post'})."
-  [criterion]
-  (create-post (read-entity :post criterion)))
-
 (defn add-post
   "Adds a post entity and its updated parent to the repository."
   [entity]
@@ -148,23 +140,6 @@
   (add-db-queue! entity)
   (process-db-queue)
   (clear-db-queue!))
-
-(defn get-posts
-  "Returns posts from the database."
-  ([]
-   (let [posts (read-entities :post
-                              (array-map :created-on -1)
-                              10)]
-      (->> posts
-           vec)))
-  ([posts & {:keys [prepare] :or {prepare true}}]
-   (let [posts (map #(get-post {:_id (:_id %)}) posts)]
-     (if prepare
-       (->> posts
-            (sort-by :last-updated)
-            reverse
-            vec)
-       posts))))
 
 (defn get-post-refs
   "Returns all of the posts referenced by a given post's ID."
@@ -199,12 +174,8 @@
                 :title title
                 :url url})))
 
-(defn get-page
-  [criterion]
-  (create-page (read-entity :static criterion)))
-
 ;;
-;; Topics Specific Stuff
+;; Topics
 ;;
 (defrecord Topic
     [_id authors created-on kind last-updated tags title refs url])
@@ -227,12 +198,6 @@
                  :refs refs
                  :url url})))
 
-(defn get-topic
-  "Returns a topic from the repository. criterion is expected
-  to be a map (e.g., {:title 'This Is My Topic'})."
-  [criterion]
-  (create-topic (read-entity :topic criterion)))
-
 (defn get-topic-refs
   "Returns a topic with its actual reference objects associated."
   [id]
@@ -241,16 +206,6 @@
          (sort-by :title)
          vec
          (assoc topic :refs))))
-
-(defn get-topics
-  "Returns all of the topics currently in the repository."
-  [& {:keys [prepare] :or {prepare true}}]
-  (let [topics (read-entities :topic)]
-    (if prepare
-      (->> topics
-           (sort-by :title)
-           vec)
-      topics)))
 
 ;;
 ;; General Entity Functions
@@ -267,7 +222,6 @@
 
 (defmethod get-entity :post
   [criterion kind]
-  (println criterion kind)
   (get-entity* create-post criterion kind))
 
 (defmethod get-entity :static
@@ -277,3 +231,27 @@
 (defmethod get-entity :topic
   [criterion kind]
   (get-entity* create-topic criterion kind))
+
+
+(defmulti get-entities identity)
+
+(defmethod get-entities :topics
+  [_]
+  (->> (read-entities :topic)
+       (map create-topic)
+       (sort-by :title)
+       vec))
+
+(defmethod get-entities :posts
+  [_]
+  (->> (read-entities :post)
+       (filter #(contains? #{:post} (keyword (:kind %))))
+       (map create-post)
+       vec))
+
+(defmethod get-entities :follow-ups
+  [_]
+  (->> (read-entities :post)
+       (filter #(contains? #{:follow-up} (keyword (:kind %))))
+       (map create-follow-up)
+       vec))
