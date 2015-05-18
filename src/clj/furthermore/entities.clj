@@ -14,39 +14,31 @@
                                        create-entity-url]]))
 
 ;;
-;; General Entity Stuff
+;; References
 ;;
-(defn create-entity
-  "Returns an empty default entity."
-  []
-  {:_id (random-uuid)
-   :created-on (local-now)
-   :log? true})
+(defrecord Reference
+    [_id kind])
 
-(defn create-link-to
-  "Returns a 'link map' of a particular type to a target's ID."
-  [target link-kind]
-  {:_id (or (:_id target) target)
-   :kind link-kind})
+(defn create-reference
+  "Returns a Reference which links entities to each other."
+  [params]
+  (let [{:keys [_id kind]} params]
+    (map->Reference {:_id _id
+                     :kind (if (keyword? kind)
+                             kind
+                             (keyword kind))})))
 
 (defn link-kind
   [link]
   (if (map? link)
     (:kind link)
-    (let [kind (second (str/split link #"\|"))]
-      (or (keyword? kind)
-          kind
-          (keyword kind)))))
+    (second (str/split link #"\|"))))
 
 (defn link-id
   [link]
   (if (map? link)
     (:_id link)
     (first (str/split link #"\|"))))
-
-(defn add-tags
-  [entity tags]
-  (update entity :tags #(apply conj % tags)))
 
 ;;
 ;; Author Stuff
@@ -68,16 +60,16 @@
 (declare get-topic)
 
 (defrecord Post
-    [authors body created-on excerpt _id kind parent subtitle tags title topic url])
+    [authors body created-on excerpt _id kind parent refs subtitle tags title topic url])
 
 (defrecord Follow-Up
-    [authors body created-on excerpt _id kind parent tags url])
+    [authors body created-on excerpt _id kind parent refs tags url])
 
 (defn create-post
   "Takes a map as input and requires both parent and topic records. Produces
   a Post record."
   [params]
-  (let [{:keys [authors body excerpt _id parent subtitle tags title topic]
+  (let [{:keys [authors body excerpt _id parent subtitle refs tags title topic]
          :or {authors [(create-author {})]
               body "Somebody forgot to actually write the post."
               _id (random-uuid)
@@ -90,6 +82,7 @@
                 :_id _id
                 :kind :post
                 :parent (create-link-to (link-id parent) (link-kind parent))
+                :refs refs
                 :subtitle subtitle
                 :tags (into #{} tags)
                 :title title
@@ -99,7 +92,7 @@
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [authors body excerpt parent tags]
+  (let [{:keys [authors body excerpt parent refs tags]
          :or {authors [(create-author {})]
               body "Somebody forgot to actually write the follow-up."}} params]
     (map->Follow-Up {:authors authors
@@ -109,6 +102,7 @@
                      :_id (random-uuid)
                      :kind :follow-up
                      :parent (create-link-to (link-id parent) (link-kind parent))
+                     :refs refs
                      :tags (into #{} tags)})))
 
 (defn prepare-post
