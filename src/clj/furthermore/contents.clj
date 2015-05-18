@@ -29,7 +29,7 @@
         {:keys [date time]} (format-timestamp (:created-on post))]
     (html
      [:div {:class "col-xs-12 post"}
-       (if (= :post (:type post))
+       (if (= :post (:kind post))
          [:div
            [:div {:class "title"}
             (make-outline-selector post)
@@ -40,7 +40,7 @@
             (make-outline-selector post)
             (get-excerpt (:body post) 50)]
            [:div {:class "small date"} (str date " @ " time)]])
-       (when-let [refs (:references post)]
+       (when-let [refs (:refs post)]
          [:div {:id (subs (:_id post) 0 6)
                 :style "display: none; margin-left: 15"}
           (map display-posts (sort-by :created-on refs))])])))
@@ -48,9 +48,9 @@
 (defn- display-topic
   [topic]
   (html
-   [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
+   [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
     [:span {:class "topic"} (:title topic)]
-    (when-let [refs (:references topic)]
+    (when-let [refs (:refs topic)]
       (map display-posts refs))]))
 
 (defn display-contents-page

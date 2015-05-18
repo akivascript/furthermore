@@ -1,5 +1,5 @@
 (ns furthermore.utils
-  (:require [clojure.string :as str]
+  (:require [clojure.string :as string]
 
            [clj-time.coerce :refer [from-date to-date]]
            [clj-time.core :refer [from-time-zone
@@ -23,9 +23,9 @@
   if it does not."
   [entity]
   (-> (or (:title entity) "Untitled")
-      (str/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
-      (str/replace #" " "-")
-      str/lower-case))
+      (string/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
+      (string/replace #" " "-")
+      string/lower-case))
 
 (defn create-url-path
   "Generates a URL path part based on an entity's type."
@@ -58,5 +58,5 @@
     text
     (let [length (dec (or length 140))
           text (subs text 0 length)
-          text (replace text #"\W+$" "")]
+          text (string/replace text #"\W+$" "")]
       (str text "…"))))
