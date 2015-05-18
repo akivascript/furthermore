@@ -22,7 +22,8 @@
 (defn create-reference
   "Returns a Reference which links entities to each other."
   [params]
-  (let [{:keys [_id kind]} params]
+  (let [{:keys [_id kind]
+         :or {_id (random-uuid)}} params]
     (map->Reference {:_id _id
                      :kind (if (keyword? kind)
                              kind
@@ -60,26 +61,29 @@
 (declare get-topic)
 
 (defrecord Post
-    [authors body created-on excerpt _id kind parent refs subtitle tags title topic url])
+    [_id authors body created-on excerpt kind last-updated
+     parent refs subtitle tags title topic url])
 
 (defrecord Follow-Up
-    [authors body created-on excerpt _id kind parent refs tags url])
+    [_id authors body created-on excerpt kind parent refs tags url])
 
 (defn create-post
   "Takes a map as input and requires both parent and topic records. Produces
   a Post record."
   [params]
-  (let [{:keys [authors body excerpt _id parent subtitle refs tags title topic]
+  (let [date (local-now)
+        {:keys [_id authors body created-on excerpt last-updated
+                parent subtitle refs tags title topic]
          :or {authors [(create-author {})]
               body "Somebody forgot to actually write the post."
+              created-on date
               _id (random-uuid)
-              title "New Post"}} params
-              date (local-now)]
-    (map->Post {:authors authors
+              title "New Post"}} params]
+    (map->Post {:_id _id
+                :authors authors
                 :body body
-                :created-on date
+                :created-on created-on
                 :excerpt excerpt
-                :_id _id
                 :kind :post
                 :parent (create-link-to (link-id parent) (link-kind parent))
                 :refs refs
@@ -92,15 +96,18 @@
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [authors body excerpt parent refs tags]
+  (let [{:keys [_id authors created-on body excerpt last-updated parent refs tags url]
          :or {authors [(create-author {})]
-              body "Somebody forgot to actually write the follow-up."}} params]
-    (map->Follow-Up {:authors authors
+              body "Somebody forgot to actually write the follow-up."
+              created-on (local-now)
+              _id (random-uuid)}} params]
+    (map->Follow-Up {:_id (random-uuid)
+                     :authors authors
                      :body body
-                     :created-on (local-now)
+                     :created-on created-on
                      :excerpt excerpt
-                     :_id (random-uuid)
                      :kind :follow-up
+                     :last-updated last-updated
                      :parent (create-link-to (link-id parent) (link-kind parent))
                      :refs refs
                      :tags (into #{} tags)})))
@@ -179,14 +186,25 @@
 ;;
 ;; Topics Specific Stuff
 ;;
+(defrecord Topic
+    [_id authors created-on kind last-updated tags title refs url])
+
 (defn create-topic
   "Returns a topic entity along with its parent."
   [params]
-  (let [{:keys [authors tags title]} params]
-    (-> (create-entity tags)
-        (assoc :kind :topic)
-        (assoc :title title)
-        (assoc :authors (or authors ["John Doe"])))))
+  (let [{:keys [_id authors created-on last-updated tags title refs url]
+         :or {authors [(create-author {})]
+              _id (random-uuid)
+              created-on (local-now)
+              title "New Topic"}} params]
+    (map->Topic {:_id (random-uuid)
+                 :authors authors
+                 :created-on created-on
+                 :kind :topic
+                 :last-updated last-updated
+                 :title title
+                 :refs refs
+                 :url url})))
 
 (defn prepare-topic
   "Converts the keys necessary for the topic to be converted
