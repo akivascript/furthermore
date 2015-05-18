@@ -6,6 +6,7 @@
 
             [furthermore.repository :refer [add-db-queue!
                                             clear-db-queue!
+                                            create-update
                                             list-db-queue
                                             process-db-queue
                                             read-entities
@@ -87,13 +88,15 @@
                 :excerpt excerpt
                 :kind :post
                 :parent (or parent
-                            (create-reference (link-id parent) (link-kind parent)))
+                            (create-reference (link-id (:parent params))
+                                              (link-kind (:parent params))))
                 :refs refs
                 :subtitle subtitle
                 :tags (into #{} tags)
                 :title title
                 :topic (or topic
-                           (create-reference (link-id topic) (link-kind topic)))
+                           (create-reference (link-id (:topic params))
+                                             (link-kind (:topic params))))
                 :url url})))
 
 (defn create-follow-up
@@ -235,11 +238,11 @@
 
 (defmulti get-entities identity)
 
-(defmethod get-entities :topics
+(defmethod get-entities :follow-ups
   [_]
-  (->> (read-entities :topic)
-       (map create-topic)
-       (sort-by :title)
+  (->> (read-entities :post)
+       (filter #(contains? #{:follow-up} (keyword (:kind %))))
+       (map create-follow-up)
        vec))
 
 (defmethod get-entities :posts
@@ -249,9 +252,17 @@
        (map create-post)
        vec))
 
-(defmethod get-entities :follow-ups
+(defmethod get-entities :topics
   [_]
-  (->> (read-entities :post)
-       (filter #(contains? #{:follow-up} (keyword (:kind %))))
-       (map create-follow-up)
+  (->> (read-entities :topic)
+       (map create-topic)
+       (sort-by :title)
+       vec))
+
+(defmethod get-entities :updates
+  [_]
+  (->> (read-entities :update)
+       (map create-update)
+       (sort-by :date)
+       reverse
        vec))
