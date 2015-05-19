@@ -46,7 +46,11 @@
         parents (sel1 :#parents)]
     (ajax/GET "/api/posts" {:handler
                             (fn [xs] (reset! posts
-                                             (filter #(= :post (:kind %)) xs)))})
+                                             (filter #(contains? #{:post} (:kind %)) xs)))
+                            :error-handler
+                            (fn [{:keys [status status-text]}]
+                              (println status)
+                              (println status-text))})
     (dommy/listen! topic :change
                    (fn [_]
                      (let [id (-> (dommy/value topic)

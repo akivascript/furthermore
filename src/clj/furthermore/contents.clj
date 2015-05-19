@@ -3,9 +3,8 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-entity
-                                          get-post
-                                          get-topics]]
+            [furthermore.entities :refer [get-entities
+                                          get-entity]]
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
 
@@ -72,4 +71,4 @@
    (html
     [:div {:id "topics"
            :class "container"}
-     (map display-topic (sort-by :title (get-topics)))])))
+     (map display-topic (sort-by :title (get-entities :topics)))])))

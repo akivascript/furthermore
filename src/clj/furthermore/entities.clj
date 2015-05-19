@@ -15,6 +15,9 @@
                                        create-entity-url
                                        create-url-name]]))
 
+(declare get-entities)
+(declare get-entity)
+
 ;;
 ;; References
 ;;
@@ -124,8 +127,8 @@
   [entity]
   (let [parent (:parent entity)
         parent (case (:kind parent)
-                 :topic (get-topic {:_id (:_id parent)} :prepare false)
-                 (get-post {:_id (:_id parent)} :prepare false))
+                 :topic (get-entity {:_id (:_id parent)} :topic)
+                 (get-entity {:_id (:_id parent)} :post))
         parent (update parent :refs conj (create-reference entity (:kind entity)))
         entity (if (= :follow-up (:kind entity))
                  (assoc entity :topic (create-reference
@@ -147,8 +150,8 @@
 (defn get-post-refs
   "Returns all of the posts referenced by a given post's ID."
   [id]
-  (let [post (get-post {:_id id})]
-    (->> (get-posts (:refs post))
+  (let [post (get-entity {:_id id} :post)]
+    (->> (get-entities (:refs post) :posts)
          (sort-by :created-on)
          vec)))
 
@@ -205,7 +208,7 @@
   "Returns a topic with its actual reference objects associated."
   [id]
   (let [topic (get-topic id)]
-    (->> (get-posts (:refs topic))
+    (->> (get-entities (:refs topic) :topics)
          (sort-by :title)
          vec
          (assoc topic :refs))))
