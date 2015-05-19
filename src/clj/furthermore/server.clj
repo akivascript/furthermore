@@ -13,20 +13,20 @@
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.contents :refer [display-contents-page]]
-            [furthermore.entities :refer [create-follow-up
+            [furthermore.entities :refer [add-post
+                                          add-entity
+                                          create-follow-up
                                           create-post
                                           create-topic
-                                          add-post
-                                          add-entity
-                                          get-posts
-                                          get-topics]]
+                                          get-entities]]
             [furthermore.home :refer [display-home-page]]
             [furthermore.page :refer [display-static-page]]
             [furthermore.post :refer [display-post-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]]
             [furthermore.update :refer [display-update-page]]
-            [furthermore.updates :refer [display-updates-page]])
+            [furthermore.updates :refer [display-updates-page]]
+            [furthermore.utils :as utils])
   (:gen-class))
 
 (defn- params->map
@@ -68,6 +68,10 @@
   :available-media-types ["application/edn"]
   :handle-ok (pr-str task))
 
+(defn prepare-result
+  [result]
+  (into {} (update result :created-on utils/joda-date->java-date)))
+
 (defroutes routes
   ;; API calls
   (GET "/" [] (display-home-page))
@@ -77,8 +81,8 @@
   (GET "/admin/add-follow-up" [] (display-update-page :follow-up))
   (GET "/admin/add-post" [] (display-update-page :post))
   (GET "/admin/add-topic" [] (display-update-page :topic))
-  (GET "/api/posts" [] (return-result (get-posts)))
-  (GET "/api/topics" [] (return-result (get-topics)))
+  (GET "/api/posts" [] (return-result (map prepare-result (get-entities :posts))))
+  (GET "/api/topics" [] (return-result (get-entities :topics)))
   (POST "/api/update/:kind" [kind] (update-site kind))
   (GET "/page/:page" [page] (display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
