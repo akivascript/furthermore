@@ -49,16 +49,20 @@
 ;;
 ;; Authors
 ;;
+
 (defrecord Author
     [name works])
 
 (defn create-author
-  [params]
-  (let [{:keys [name works]
-         :or {name "John Doe"
-              works #{}}} params]
-    (map->Author {:name name
-                  :works works})))
+  ([params]
+   (if (string? params)
+     (map->Author {:name params
+                   :works #{}})
+     (let [{:keys [name works]
+            :or {name "John Doe"
+                 works #{}}} params]
+       (map->Author {:name name
+                     :works works})))))
 
 (defn author?
   "Returns true if x is an Author."
@@ -81,7 +85,7 @@
   (let [date (local-now)
         {:keys [_id authors body created-on excerpt last-updated
                 log? parent subtitle refs tags title topic url]
-         :or {authors [(create-author {})]
+         :or {authors ["John Doe"]
               body "Somebody forgot to actually write the post."
               created-on date
               _id (random-uuid)
@@ -89,7 +93,7 @@
               title "New Post"
               url (create-entity-url date title)}} params]
     (map->Post {:_id _id
-                :authors authors
+                :authors (mapv create-author authors)
                 :body body
                 :created-on created-on
                 :excerpt excerpt
@@ -218,7 +222,7 @@
   "Returns a topic entity along with its parent."
   [params]
   (let [{:keys [_id authors created-on last-updated log? tags title refs url]
-         :or {authors [(create-author {})]
+         :or {authors ["John Doe"]
               _id (random-uuid)
               created-on (local-now)
               log? true
@@ -226,7 +230,7 @@
               tags #{}
               title "New Topic"}} params]
     (map->Topic {:_id _id
-                 :authors authors
+                 :authors (map create-author authors)
                  :created-on created-on
                  :kind :topic
                  :last-updated last-updated
