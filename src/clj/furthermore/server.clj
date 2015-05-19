@@ -28,6 +28,7 @@
             [furthermore.updates :refer [display-updates-page]]
             [furthermore.utils :as utils])
   (:gen-class))
+
 ;;
 ;; EDN Functions
 ;;
@@ -78,8 +79,7 @@
   [type]
   :allowed-methods [:post]
   :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
-  :post! (fn [ctx] (let [m (params->map (get-in ctx [:request :form-params]))]
-                     (dispatch-update m))))
+  :post! (fn [ctx] (dispatch-update (params->map (get-in ctx [:request :form-params])))))
 
 (defresource return-result
   [task]
