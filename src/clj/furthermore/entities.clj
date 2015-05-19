@@ -125,17 +125,16 @@
         parent (case (:kind parent)
                  :topic (get-entity {:_id (:_id parent)} :topic)
                  (get-entity {:_id (:_id parent)} :post))
-        parent (update parent :refs conj (create-reference entity (:kind entity)))
+        parent (update parent :refs conj (create-reference entity))
+        parent (assoc parent :log? false)
         entity (if (= :follow-up (:kind entity))
                  (assoc entity :topic (create-reference
                                        (get-in parent [:topic :_id])
                                        :topic))
                  entity)]
-    (println "Entity: " entity)
-    (println "Parent: " parent)
     (add-db-queue! entity)
     (add-db-queue! parent)
-    #_(process-db-queue)
+    (process-db-queue)
     (clear-db-queue!)))
 
 (defrecord Follow-Up
