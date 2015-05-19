@@ -28,7 +28,9 @@
             [furthermore.updates :refer [display-updates-page]]
             [furthermore.utils :as utils])
   (:gen-class))
-
+;;
+;; EDN Functions
+;;
 (defn- params->map
   [params]
   (let [m (map-keys keyword params)]
@@ -36,6 +38,21 @@
       m
       (update m :authors vector))))
 
+(defn records->maps
+  "Returns a map with values converted to EDN-friendly natives (e.g.,
+  records become generic maps)."
+  [result]
+  (let [result (transient (into {} result))]
+      (doseq [k [:created-on :last-updated]]
+        (assoc! result k (utils/joda-date->java-date (k result))))
+      (doseq [k [:parent :topic]]
+        (assoc! result k (into {} (k result))))
+      (assoc! result :authors (map #(into {} %) (:authors result)))
+      (persistent! result)))
+
+;;
+;; Blog Update Dispatch
+;;
 (defn- dispatch-update*
   [fn entity]
   ((comp add-post fn) entity))
@@ -54,6 +71,9 @@
   [entity]
   ((comp add-entity create-topic) entity))
 
+;;
+;; Routes & Resources
+;;
 (defresource update-site
   [type]
   :allowed-methods [:post]
@@ -67,10 +87,6 @@
   :available-media-types ["application/edn"]
   :handle-ok (pr-str task))
 
-(defn prepare-result
-  [result]
-  (into {} (update result :created-on utils/joda-date->java-date)))
-
 (defroutes routes
   ;; API calls
   (GET "/" [] (display-home-page))
@@ -80,8 +96,8 @@
   (GET "/admin/add-follow-up" [] (display-update-page :follow-up))
   (GET "/admin/add-post" [] (display-update-page :post))
   (GET "/admin/add-topic" [] (display-update-page :topic))
-  (GET "/api/posts" [] (return-result (map prepare-result (get-entities :posts))))
-  (GET "/api/topics" [] (return-result (get-entities :topics)))
+  (GET "/api/posts" [] (return-result (records->maps (get-entities :posts))))
+  (GET "/api/topics" [] (return-result (records->maps (get-entities :topics))))
   (POST "/api/update/:kind" [kind] (update-site kind))
   (GET "/page/:page" [page] (display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
@@ -91,6 +107,9 @@
   (do (initialize-db-connection)
       (wrap-params routes)))
 
+;;
+;; This Is Where It Will All Go Wrong for You
+;;
 (defn -main
   "Launches Furthermore."
   [& port]
