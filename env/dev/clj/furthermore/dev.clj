@@ -4,7 +4,7 @@
 
             [furthermore.entities :refer :all]
             [furthermore.logging :refer :all]
-            [furthermore.newsfeed :refer :all]
+            ;[furthermore.newsfeed :refer :all]
             [furthermore.repository :refer :all]
             [furthermore.server :refer :all]
             [furthermore.twitter :refer :all]
@@ -25,7 +25,7 @@
 
 (defreload "entities")
 (defreload "logging" "log")
-(defreload "newsfeed" "news")
+;(defreload "newsfeed" "news")
 (defreload "repository" "repo")
 (defreload "server" "server")
 (defreload "twitter" "twitter")
