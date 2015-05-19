@@ -33,17 +33,18 @@
    (map->Reference {:_id id
                     :kind (keyword kind)})))
 
+(defn reference?
+  "Returns true if x is a Reference."
+  [x]
+  (instance? Reference x))
+
 (defn link-kind
   [link]
-  (if (map? link)
-    (:kind link)
-    (second (str/split link #"\|"))))
+  (second (str/split link #"\|")))
 
 (defn link-id
   [link]
-  (if (map? link)
-    (:_id link)
-    (first (str/split link #"\|"))))
+  (first (str/split link #"\|")))
 
 ;;
 ;; Authors
@@ -58,6 +59,11 @@
               works #{}}} params]
     (map->Author {:name name
                   :works works})))
+
+(defn author?
+  "Returns true if x is an Author."
+  [x]
+  (instance? Author x))
 
 ;;
 ;; Posts
@@ -90,17 +96,26 @@
                 :created-on created-on
                 :excerpt excerpt
                 :kind :post
-                :parent (or parent
-                            (create-reference (link-id (:parent params))
-                                              (link-kind (:parent params))))
+                :parent (cond
+                          (reference? parent) parent
+                          (string? parent) (create-reference ((juxt link-id link-kind) parent))
+                          :else
+                          (create-reference parent))
                 :refs refs
                 :subtitle subtitle
                 :tags (into #{} tags)
                 :title title
-                :topic (or topic
-                           (create-reference (link-id (:topic params))
-                                             (link-kind (:topic params))))
+                :topic (cond
+                          (reference? topic) topic
+                          (string? topic) (create-reference ((juxt link-id link-kind) topic))
+                          :else
+                          (create-reference topic))
                 :url url})))
+
+(defn post?
+  "Returns true if x is a post."
+  [x]
+  (instance? Post x))
 
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
@@ -117,7 +132,12 @@
                      :excerpt excerpt
                      :kind :follow-up
                      :last-updated last-updated
-                     :parent (create-reference (link-id parent) (link-kind parent))
+                     :parent (cond
+                               (reference? parent) parent
+                               (string? parent) (create-reference
+                                                 ((juxt link-id link-kind) parent))
+                               :else
+                               (create-reference parent))
                      :refs refs
                      :tags (into #{} tags)
                      :url url})))

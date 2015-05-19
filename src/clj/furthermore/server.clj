@@ -59,7 +59,6 @@
   :allowed-methods [:post]
   :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
   :post! (fn [ctx] (let [m (params->map (get-in ctx [:request :form-params]))]
-                     (println m)
                      (dispatch-update m))))
 
 (defresource return-result
