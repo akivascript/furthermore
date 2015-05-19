@@ -126,7 +126,7 @@
         (let [action (if (updated-existing? result)
                      :update
                      :new)]
-          (insert @db "updates" (create-update action entity))))
+          (insert @db "updates" (create-update {:action action :entity entity}))))
       result)))
 
 ;;
