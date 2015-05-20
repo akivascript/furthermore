@@ -136,6 +136,7 @@
                                        (get-in parent [:topic :_id])
                                        :topic))
                  entity)]
+    (clear-db-queue!)
     (add-db-queue! entity)
     (add-db-queue! parent)
     (process-db-queue)
@@ -163,8 +164,8 @@
                      :log? log?
                      :parent (cond
                                (reference? parent) parent
-                               (string? parent) (create-reference
-                                                 ((juxt link-id link-kind) parent))
+                               (string? parent) (apply create-reference
+                                                       ((juxt link-id link-kind) parent))
                                :else
                                (create-reference parent))
                      :refs refs
