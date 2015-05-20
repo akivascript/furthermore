@@ -68,6 +68,7 @@
   []
   (display-page
    :contents
+   "Contents"
    (html
     [:div {:id "topics"
            :class "container"}

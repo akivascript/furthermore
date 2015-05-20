@@ -1,5 +1,5 @@
 (ns furthermore.view.update
-  (:require [clojure.string :as str :refer [capitalize]]
+  (:require [clojure.string :as str]
             [hiccup.core :refer :all]
             [hiccup.form :refer :all]
             [monger.util :as mutil :refer [random-uuid]]
@@ -25,6 +25,7 @@
   (let [topics (get-entities :topics)]
     (display-page
      :update
+     (str "Add " (kind title))
      (html
       [:div {:id "update"
              :class "container"}

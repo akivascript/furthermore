@@ -11,6 +11,7 @@
   (let [page (entities/get-page {:url page})]
     (layout/display-page
      :static
+     (:title page)
      (html
       [:div {:id "static"
              :class "container"}
