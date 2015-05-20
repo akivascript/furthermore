@@ -307,16 +307,9 @@
   (add-entity
     [this]
     (let [parent (:parent this)
-          parent (case (:kind parent)
-                   :topic (get-topic (:_id parent))
-                   (get-post (:_id parent)))
-          parent (update parent :refs conj (create-reference this))
-          parent (assoc parent :log? false)
-          this (if (= :follow-up (:kind this))
-                 (assoc this :topic (create-reference
-                                     (get-in parent [:topic :_id])
-                                     :topic))
-                 this)]
+          parent (-> (get-entity {:_id (:_id parent)} (:kind parent))
+                     (update :refs conj (create-reference this))
+                     (assoc :log? false))]
       (doseq [e [this parent]]
         (add-db-queue! e))
       (add-entity*)))
@@ -324,8 +317,14 @@
   furthermore.entities.Follow-Up
   (add-entity
     [this]
-    (add-db-queue! this)
-    (add-entity*))
+    (let [parent (-> (get-post (get-in this [:parent :_id]))
+                     (update :refs conj (create-reference this))
+                     (assoc :log? false))
+          this (assoc this :topic (create-reference
+                                   (get-in parent [:topic :_id])))]
+      (doseq [e [this parent]]
+        (add-db-queue! e))
+      (add-entity*)))
 
   furthermore.entities.Topic
   (add-entity
