@@ -10,8 +10,8 @@
            [environ.core :refer [env]]))
 
 (def site-url (if (env :dev)
-                "http://localhost:3000/#/"
-                "http://furthermore-test.herokuapp.com/"))
+                "http://localhost:3000/"
+                "http://whatever.akiva.wtf/"))
 
 (defn joda-date->java-date
   "Returns a java.util.Date from a Joda-Time."
@@ -21,7 +21,7 @@
 (defn create-url-path
   "Generates a URL path part based on an entity's type."
   [entity]
-  (case (:type entity)
+  (case (:kind entity)
     :post "post/"
     :static "/"
     :topic "topic/"

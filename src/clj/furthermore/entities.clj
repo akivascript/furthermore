@@ -142,6 +142,11 @@
     (process-db-queue)
     (clear-db-queue!)))
 
+(defn get-post
+  "Returns a post from id."
+  [id]
+  (get-entity {:_id id} :post))
+
 (defrecord Follow-Up
     [_id authors body created-on excerpt kind log? parent refs tags url])
 
@@ -154,7 +159,7 @@
               created-on (local-now)
               _id (random-uuid)
               log? true}} params]
-    (map->Follow-Up {:_id (random-uuid)
+    (map->Follow-Up {:_id _id
                      :authors authors
                      :body body
                      :created-on created-on
@@ -163,7 +168,7 @@
                      :last-updated last-updated
                      :log? log?
                      :parent (cond
-                               (reference? parent) parent
+
                                (string? parent) (apply create-reference
                                                        ((juxt link-id link-kind) parent))
                                :else
@@ -172,6 +177,11 @@
                      :tags (into #{} tags)
                      :url url})))
 
+(defn get-follow-up
+  "Returns a follow-up from id."
+  [id]
+  (get-entity {:_id id} :follow-up))
+
 (defn add-entity
   "Adds an entity to the repository."
   [entity]
@@ -179,13 +189,11 @@
   (process-db-queue)
   (clear-db-queue!))
 
-#_(defn get-post-refs
-  "Returns all of the posts referenced by a given post's ID."
-  [id]
-  (let [post (get-entity {:_id id} :post)]
-    (->> (get-entities (:refs post) :posts)
-         (sort-by :created-on)
-         vec)))
+(defn get-parent
+  "Returns the parent entity of an entity."
+  [entity]
+  (let [parent (:parent entity)]
+    (get-entity {:_id (:_id parent)} (:kind parent))))
 
 ;;
 ;; Static Pages
@@ -212,6 +220,11 @@
                 :tags (into #{} tags)
                 :title title
                 :url url})))
+
+(defn get-page
+  "Returns a static page by id."
+  [id]
+  (get-entity {:_id id} :static))
 
 ;;
 ;; Topics
@@ -241,14 +254,13 @@
                  :refs (into #{} refs)
                  :url url})))
 
-#_(defn get-topic-refs
-  "Returns a topic with its actual reference objects associated."
-  [id]
-  (let [topic (get-topic id)]
-    (->> (get-entities (:refs topic) :topics)
-         (sort-by :title)
-         vec
-         (assoc topic :refs))))
+(defn get-topic
+  "Returns a topic by id or from a post."
+  [x]
+  (condp x
+      (string? x) (get-entity {:_id x} :topic)
+      :else
+      (get-entity (get-in x [:topic :_id] :topic))))
 
 ;;
 ;; General Entity Functions

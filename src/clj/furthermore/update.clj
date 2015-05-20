@@ -2,6 +2,7 @@
   (:require [clojure.string :as str :refer [capitalize]]
             [hiccup.core :refer :all]
             [hiccup.form :refer :all]
+            [monger.util :as mutil :refer [random-uuid]]
 
             [furthermore.entities :refer [get-entities]]
             [furthermore.layout :refer [display-page]]
@@ -101,5 +102,6 @@
                              :name "excerpt"
                              :rows 4}]]])]]
            (hidden-field {:value kind} "kind")
+           (hidden-field {:value (mutil/random-uuid)} "_id")
            [:div {:class "text-right"}
             (submit-button {:class "btn btn-default"} (kind title))])]]]]))))
