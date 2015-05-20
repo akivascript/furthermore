@@ -195,9 +195,9 @@
                 :url url})))
 
 (defn get-page
-  "Returns a static page by id."
-  [id]
-  (get-entity {:_id id} :static))
+  "Returns a static page by url."
+  [url]
+  (get-entity url :static))
 
 ;;
 ;; Topics
