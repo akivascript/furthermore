@@ -13,22 +13,25 @@
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.contents :refer [display-contents-page]]
-            [furthermore.entities :refer [create-follow-up
+            [furthermore.entities :refer [add-post
+                                          add-entity
+                                          create-follow-up
                                           create-post
                                           create-topic
-                                          add-post
-                                          add-entity
-                                          get-posts
-                                          get-topics]]
+                                          get-entities]]
             [furthermore.home :refer [display-home-page]]
             [furthermore.page :refer [display-static-page]]
             [furthermore.post :refer [display-post-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]]
             [furthermore.update :refer [display-update-page]]
-            [furthermore.updates :refer [display-updates-page]])
+            [furthermore.updates :refer [display-updates-page]]
+            [furthermore.utils :as utils])
   (:gen-class))
 
+;;
+;; EDN Functions
+;;
 (defn- params->map
   [params]
   (let [m (map-keys keyword params)]
@@ -36,6 +39,21 @@
       m
       (update m :authors vector))))
 
+(defn records->maps
+  "Returns a map with values converted to EDN-friendly natives (e.g.,
+  records become generic maps)."
+  [result]
+  (let [result (transient (into {} result))]
+      (doseq [k [:created-on :last-updated]]
+        (assoc! result k (utils/joda-date->java-date (k result))))
+      (doseq [k [:parent :topic]]
+        (assoc! result k (into {} (k result))))
+      (assoc! result :authors (map #(into {} %) (:authors result)))
+      (persistent! result)))
+
+;;
+;; Blog Update Dispatch
+;;
 (defn- dispatch-update*
   [fn entity]
   ((comp add-post fn) entity))
@@ -54,13 +72,14 @@
   [entity]
   ((comp add-entity create-topic) entity))
 
+;;
+;; Routes & Resources
+;;
 (defresource update-site
   [type]
   :allowed-methods [:post]
   :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
-  :post! (fn [ctx] (let [m (params->map (get-in ctx [:request :form-params]))]
-                     (println m)
-                     (dispatch-update m))))
+  :post! (fn [ctx] (dispatch-update (params->map (get-in ctx [:request :form-params])))))
 
 (defresource return-result
   [task]
@@ -77,18 +96,20 @@
   (GET "/admin/add-follow-up" [] (display-update-page :follow-up))
   (GET "/admin/add-post" [] (display-update-page :post))
   (GET "/admin/add-topic" [] (display-update-page :topic))
-  (GET "/api/posts" [] (return-result (get-posts)))
-  (GET "/api/topics" [] (return-result (get-topics)))
+  (GET "/api/posts" [] (return-result (map records->maps (get-entities :posts))))
+  (GET "/api/topics" [] (return-result (map records->maps (get-entities :topics))))
   (POST "/api/update/:kind" [kind] (update-site kind))
   (GET "/page/:page" [page] (display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
-  ;; UI Calls
   (resources "/"))
 
 (def app
   (do (initialize-db-connection)
       (wrap-params routes)))
 
+;;
+;; This Is Where It Will All Go Wrong for You
+;;
 (defn -main
   "Launches Furthermore."
   [& port]

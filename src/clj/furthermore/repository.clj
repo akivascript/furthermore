@@ -9,6 +9,7 @@
             [monger.operators :refer [$options $regex]]
             [monger.query :refer [find limit sort with-collection]]
             [monger.result :refer [updated-existing?]]
+            [monger.util :refer [random-uuid]]
 
             [furthermore.utils :refer [create-url-date
                                        create-url-name
@@ -35,22 +36,33 @@
   (reset! db (:db (connect-via-uri (or uri (env :blog-database-uri))))))
 
 ;;
-;; Entites stuff
+;; Entities stuff
 ;;
+(defrecord Update
+    [_id action date kind parent ref title topic url])
+
 (defn create-update
   "Creates an update entry for a newly added or updated entity."
-  [action entity]
-  (let [text (or (:title entity)
-                 (get-excerpt (:body entity) 50))]
-    {:action action
-     :kind (:kind entity)
-     :date (:last-updated entity)
-     :title text
-     :ref (:_id entity)
-     :topic (:topic entity)
-     :parent (:parent entity)
-     :url (or (:url entity)
-              (:_id entity))}))
+  [params]
+  (let [{:keys [_id action date entity kind parent ref title topic url]
+         :or {_id (random-uuid)
+              date (:last-updated entity)
+              kind (:kind entity)
+              parent (:parent entity)
+              ref (:_id entity)
+              title (or (:title entity)
+                        (get-excerpt (:body entity) 50))
+              topic (:topic entity)
+              url (:url entity)}} params]
+    (map->Update {:_id _id
+                  :action (keyword action)
+                  :date date
+                  :kind kind
+                  :parent parent
+                  :ref ref
+                  :title title
+                  :topic topic
+                  :url url})))
 
 (defn parse-entity
   "Keywordizes values in an entity loaded from the database."
@@ -114,7 +126,7 @@
         (let [action (if (updated-existing? result)
                      :update
                      :new)]
-          (insert @db "updates" (create-update action entity))))
+          (insert @db "updates" (create-update {:action action :entity entity}))))
       result)))
 
 ;;

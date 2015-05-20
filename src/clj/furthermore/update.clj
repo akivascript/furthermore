@@ -3,7 +3,7 @@
             [hiccup.core :refer :all]
             [hiccup.form :refer :all]
 
-            [furthermore.entities :refer [get-topics]]
+            [furthermore.entities :refer [get-entities]]
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
@@ -21,7 +21,7 @@
 
 (defn display-update-page
   [kind]
-  (let [topics (get-topics)]
+  (let [topics (get-entities :topics)]
     (display-page
      :update
      (html

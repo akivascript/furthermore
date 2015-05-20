@@ -3,14 +3,13 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-post
-                                          get-topic]]
+            [furthermore.entities :refer [get-entity]]
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
 (defn display-follow-up
   [follow-up]
-  (let [follow-up (get-post {:_id (:_id follow-up)})
+  (let [follow-up (get-entity {:_id (:_id follow-up)} :follow-up)
         {:keys [date time]} (format-timestamp (:created-on follow-up))]
     (html
      [:div {:class "follow-up"}
@@ -29,7 +28,7 @@
 
 (defn display-post
   [post]
-  (let [topic (get-topic {:_id (get-in post [:topic :_id])})
+  (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
         {:keys [date time]} (format-timestamp (:created-on post))
         excerpt? (contains? post :excerpt)]
     (html
@@ -56,9 +55,9 @@
            (when-let [url (get-in post [:twitter :url])]
              [:a {:href url
                   :target "_blank"} "Tweeted!"])]]]]]
-      (when (:references post)
+      (when (:refs post)
         [:div {:class "glyphicon glyphicon-triangle-bottom arrow"}])
-      (when-let [refs (:references post)]
+      (when-let [refs (:refs post)]
         (map display-follow-up refs))])))
 
 (defn display-post-page
@@ -70,5 +69,4 @@
            :class "container"}
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
-       (display-post (get-post {:url url}))]]])))
-
+       (display-post (get-entity {:url url} :post))]]])))

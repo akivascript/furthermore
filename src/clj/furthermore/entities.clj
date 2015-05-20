@@ -6,33 +6,39 @@
 
             [furthermore.repository :refer [add-db-queue!
                                             clear-db-queue!
+                                            create-update
                                             list-db-queue
                                             process-db-queue
                                             read-entities
                                             read-entity]]
-            [furthermore.utils :refer [convert-to-java-date
-                                       create-entity-url]]))
+            [furthermore.utils :refer [joda-date->java-date
+                                       create-entity-url
+                                       create-url-name]]))
+
+(declare get-entities)
+(declare get-entity)
 
 ;;
-;; General Entity Stuff
+;; References
 ;;
-(defn create-entity
-  "Returns an empty default entity."
-  [& tags]
-  (let [entity {:_id (random-uuid)
-                :created-on (local-now)
-                :log? true}]
-    (if-not (nil? tags)
-      (apply (fn [x] (reduce #(update %1 :tags conj %2) entity x)) tags)
-      entity)))
+(defrecord Reference
+    [_id kind])
 
-(defn create-link-to
-  "Returns a 'link map' of a particular type to a target's ID."
-  [target link-type]
-  {:_id (or (:_id target) target)
-   :kind (keyword link-type)})
+(defn create-reference
+  "Returns a Reference which links entities to each other."
+  ([params]
+   (let [{:keys [_id kind]} params]
+     (create-reference _id (keyword kind))))
+  ([id kind]
+   (map->Reference {:_id id
+                    :kind (keyword kind)})))
 
-(defn link-type
+(defn reference?
+  "Returns true if x is a Reference."
+  [x]
+  (instance? Reference x))
+
+(defn link-kind
   [link]
   (second (str/split link #"\|")))
 
@@ -41,72 +47,130 @@
   (first (str/split link #"\|")))
 
 ;;
-;; Post-Specific Stuff
+;; Authors
+;;
+
+(defrecord Author
+    [name works])
+
+(defn create-author
+  ([params]
+   (if (string? params)
+     (map->Author {:name params
+                   :works #{}})
+     (let [{:keys [name works]
+            :or {name "John Doe"
+                 works #{}}} params]
+       (map->Author {:name name
+                     :works works})))))
+
+(defn author?
+  "Returns true if x is an Author."
+  [x]
+  (instance? Author x))
+
+;;
+;; Posts
 ;;
 (declare get-topic)
 
+(defrecord Post
+    [_id authors body created-on excerpt kind last-updated
+     log? parent refs subtitle tags title topic url])
+
 (defn create-post
-  "Returns a post entity."
+  "Takes a map as input and requires both parent and topic records. Produces
+  a Post record."
   [params]
-  (let [{:keys [authors body excerpt parent subtitle tags title topic]} params
-        post (-> (create-entity tags)
-                 (assoc :kind :post)
-                 (assoc :title (or title "New Post"))
-                 (assoc :subtitle subtitle)
-                 (assoc :body (or body "Somebody forgot to actually write the post."))
-                 (assoc :excerpt excerpt)
-                 (assoc :authors (or authors ["John Doe"]))
-                 (assoc :parent (create-link-to (link-id parent) (link-type parent)))
-                 (assoc :topic (create-link-to (link-id topic) (link-type topic))))]
-    (assoc post :url (create-entity-url post))))
+  (let [date (local-now)
+        {:keys [_id authors body created-on excerpt last-updated
+                log? parent subtitle refs tags title topic url]
+         :or {authors ["John Doe"]
+              body "Somebody forgot to actually write the post."
+              created-on date
+              _id (random-uuid)
+              log? true
+              title "New Post"
+              url (create-entity-url date title)}} params]
+    (map->Post {:_id _id
+                :authors (mapv create-author authors)
+                :body body
+                :created-on created-on
+                :excerpt excerpt
+                :kind :post
+                :log? log?
+                :parent (cond
+                          (reference? parent) parent
+                          (string? parent) (apply create-reference
+                                                  ((juxt link-id link-kind) parent))
+                          :else
+                          (create-reference parent))
+                :refs refs
+                :subtitle subtitle
+                :tags (into #{} tags)
+                :title title
+                :topic (cond
+                          (reference? topic) topic
+                          (string? topic) (apply create-reference
+                                                 ((juxt link-id link-kind) topic))
+                          :else
+                          (create-reference topic))
+                :url url})))
 
-(defn create-follow-up
-  "Returns a follow-up entity."
-  [params]
-  (let [{:keys [authors body excerpt parent tags]} params]
-    (-> (create-entity tags)
-        (assoc :kind :follow-up)
-        (assoc :authors (or authors ["John Doe"]))
-        (assoc :body (or body "Somebody forgot to actually write the follow-up."))
-        (assoc :parent (create-link-to (link-id parent) (link-type parent))))))
-
-(defn prepare-post
-  "Converts the required keys so that the post may be converted
-  to an EDN to be set back to the browser."
-  [post]
-  (-> post
-      (update :created-on convert-to-java-date)
-      (update :last-updated convert-to-java-date)
-      (update :kind keyword)
-      (assoc :opened false)))
-
-(defn get-post
-  "Returns a single post from the repository. criterion is expected
-  to be a map (e.g., {:title 'This Is My Post'})."
-  [criterion & {:keys [prepare] :or {prepare true}}]
-  (let [post (read-entity :post criterion)]
-    (when-not (nil? post)
-      (if (true? prepare)
-        (prepare-post post)
-        post))))
+(defn post?
+  "Returns true if x is a post."
+  [x]
+  (instance? Post x))
 
 (defn add-post
   "Adds a post entity and its updated parent to the repository."
   [entity]
   (let [parent (:parent entity)
         parent (case (:kind parent)
-                 :topic (get-topic {:_id (:_id parent)} :prepare false)
-                 (get-post {:_id (:_id parent)} :prepare false))
-        parent (update parent :refs conj (create-link-to entity (:kind entity)))
+                 :topic (get-entity {:_id (:_id parent)} :topic)
+                 (get-entity {:_id (:_id parent)} :post))
+        parent (update parent :refs conj (create-reference entity))
+        parent (assoc parent :log? false)
         entity (if (= :follow-up (:kind entity))
-                 (assoc entity :topic (create-link-to
+                 (assoc entity :topic (create-reference
                                        (get-in parent [:topic :_id])
                                        :topic))
                  entity)]
+    (clear-db-queue!)
     (add-db-queue! entity)
     (add-db-queue! parent)
     (process-db-queue)
     (clear-db-queue!)))
+
+(defrecord Follow-Up
+    [_id authors body created-on excerpt kind log? parent refs tags url])
+
+(defn create-follow-up
+  "Takes a map as input and requires a parent record. Produces a Follow-up record."
+  [params]
+  (let [{:keys [_id authors created-on body excerpt last-updated log? parent refs tags url]
+         :or {authors [(create-author {})]
+              body "Somebody forgot to actually write the follow-up."
+              created-on (local-now)
+              _id (random-uuid)
+              log? true}} params]
+    (map->Follow-Up {:_id (random-uuid)
+                     :authors authors
+                     :body body
+                     :created-on created-on
+                     :excerpt excerpt
+                     :kind :follow-up
+                     :last-updated last-updated
+                     :log? log?
+                     :parent (cond
+                               (reference? parent) parent
+                               (string? parent) (apply create-reference
+                                                       ((juxt link-id link-kind) parent))
+                               :else
+                               (create-reference parent))
+                     :refs refs
+                     :tags (into #{} tags)
+                     :url url})))
 
 (defn add-entity
   "Adds an entity to the repository."
@@ -115,77 +179,130 @@
   (process-db-queue)
   (clear-db-queue!))
 
-(defn get-posts
-  "Returns posts from the database."
-  ([]
-   (let [posts (read-entities :post
-                              (array-map :created-on -1)
-                              10)]
-      (->> posts
-           (map prepare-post)
-           vec)))
-  ([posts & {:keys [prepare] :or {prepare true}}]
-   (let [posts (map #(get-post {:_id (:_id %)}) posts)]
-     (if prepare
-       (->> posts
-            (sort-by :last-updated)
-            reverse
-            vec)
-       posts))))
-
-(defn get-post-refs
+#_(defn get-post-refs
   "Returns all of the posts referenced by a given post's ID."
   [id]
-  (let [post (get-post {:_id id})]
-    (->> (get-posts (:refs post))
+  (let [post (get-entity {:_id id} :post)]
+    (->> (get-entities (:refs post) :posts)
          (sort-by :created-on)
          vec)))
 
 ;;
-;; Topics Specific Stuff
+;; Static Pages
 ;;
+(defrecord Page
+    [_id authors body created-on kind last-updated tags title url])
+
+(defn create-page
+  [params]
+  (let [{:keys [_id authors body created-on last-updated tags title url]
+         :or {_id (random-uuid)
+              authors [(create-author {})]
+              body "Somebody forgot to write the text for this page."
+              created-on (local-now)
+              tags #{}
+              title "New Page"
+              url (create-url-name title)}} params]
+    (map->Page {:_id _id
+                :authors authors
+                :body body
+                :created-on created-on
+                :kind :static
+                :last-updated last-updated
+                :tags (into #{} tags)
+                :title title
+                :url url})))
+
+;;
+;; Topics
+;;
+(defrecord Topic
+    [_id authors created-on kind last-updated log? tags title refs url])
+
 (defn create-topic
   "Returns a topic entity along with its parent."
   [params]
-  (let [{:keys [authors tags title]} params]
-    (-> (create-entity tags)
-        (assoc :kind :topic)
-        (assoc :title title)
-        (assoc :authors (or authors ["John Doe"])))))
+  (let [{:keys [_id authors created-on last-updated log? tags title refs url]
+         :or {authors ["John Doe"]
+              _id (random-uuid)
+              created-on (local-now)
+              log? true
+              refs #{}
+              tags #{}
+              title "New Topic"}} params]
+    (map->Topic {:_id _id
+                 :authors (map create-author authors)
+                 :created-on created-on
+                 :kind :topic
+                 :last-updated last-updated
+                 :log? log?
+                 :tags (into #{} tags)
+                 :title title
+                 :refs (into #{} refs)
+                 :url url})))
 
-(defn prepare-topic
-  "Converts the keys necessary for the topic to be converted
-  to an EDN to be returned to the browser."
-  [topic]
-  (-> topic
-      (update :created-on convert-to-java-date)
-      (update :last-updated convert-to-java-date)))
-
-(defn get-topic
-  "Returns a topic from the repository. criterion is expected
-  to be a map (e.g., {:title 'This Is My Topic'})."
-  [criterion & {:keys [prepare] :or {prepare true}}]
-  (let [topic (read-entity :topic criterion)]
-    (if prepare
-      (prepare-topic topic)
-      topic)))
-
-(defn get-topic-refs
+#_(defn get-topic-refs
   "Returns a topic with its actual reference objects associated."
   [id]
   (let [topic (get-topic id)]
-    (->> (get-posts (:refs topic))
+    (->> (get-entities (:refs topic) :topics)
          (sort-by :title)
          vec
          (assoc topic :refs))))
 
-(defn get-topics
-  "Returns all of the topics currently in the repository."
-  [& {:keys [prepare] :or {prepare true}}]
-  (let [topics (read-entities :topic)]
-    (if prepare
-      (->> topics
-           (map prepare-topic)
-           (sort-by :title)
-           vec)
-      topics)))
+;;
+;; General Entity Functions
+;;
+(defn- get-entity*
+  [fn criterion kind]
+  (fn (read-entity kind criterion)))
+
+(defmulti get-entity (fn [criterion kind] kind))
+
+(defmethod get-entity :follow-up
+  [criterion kind]
+  (get-entity* create-follow-up criterion kind))
+
+(defmethod get-entity :post
+  [criterion kind]
+  (get-entity* create-post criterion kind))
+
+(defmethod get-entity :static
+  [criterion kind]
+  (get-entity* create-page criterion kind))
+
+(defmethod get-entity :topic
+  [criterion kind]
+  (get-entity* create-topic criterion kind))
+
+
+(defmulti get-entities identity)
+
+(defmethod get-entities :follow-ups
+  [_]
+  (->> (read-entities :post)
+       (filter #(contains? #{:follow-up} (keyword (:kind %))))
+       (map create-follow-up)
+       vec))
+
+(defmethod get-entities :posts
+  [_]
+  (->> (read-entities :post)
+       (filter #(contains? #{:post} (keyword (:kind %))))
+       (map create-post)
+       vec))
+
+(defmethod get-entities :topics
+  [_]
+  (->> (read-entities :topic)
+       (map create-topic)
+       (sort-by :title)
+       vec))
+
+(defmethod get-entities :updates
+  [_]
+  (->> (read-entities :update)
+       (map create-update)
+       (sort-by :date)
+       reverse
+       vec))

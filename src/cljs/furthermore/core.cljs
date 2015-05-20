@@ -29,7 +29,7 @@
   (let [{:keys [date time]} (format-timestamp (:created-on item))]
     (-> (dommy/create-element "option")
         (dommy/set-text! (str (:title item) " (" date " @ " time ")"))
-        (dommy/set-value! (str (:_id item) "|" (:type item))))))
+        (dommy/set-value! (str (:_id item) "|" (name (:kind item)))))))
 
 (defn- filter-options
   [topic target]
@@ -46,7 +46,11 @@
         parents (sel1 :#parents)]
     (ajax/GET "/api/posts" {:handler
                             (fn [xs] (reset! posts
-                                             (filter #(= :post (:type %)) xs)))})
+                                             (filter #(contains? #{:post} (:kind %)) xs)))
+                            :error-handler
+                            (fn [{:keys [status status-text]}]
+                              (println status)
+                              (println status-text))})
     (dommy/listen! topic :change
                    (fn [_]
                      (let [id (-> (dommy/value topic)

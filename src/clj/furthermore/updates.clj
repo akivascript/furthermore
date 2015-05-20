@@ -3,9 +3,8 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-post
-                                          get-topic]]
-            [furthermore.logging :refer [get-updates]]
+            [furthermore.entities :refer [get-entities
+                                          get-entity]]
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
 
@@ -22,8 +21,10 @@
 (defn- display-update
   [update]
   (let [kind (:kind update)
-        topic (get-topic {:_id (get-in update [:topic :_id])})
-        parent (get-post {:_id (get-in update [:parent :_id])})
+        topic (when-let [topic (:topic update)]
+                (get-entity {:_id (:_id topic)} :topic))
+        parent (when-let [parent (:parent update)]
+                 (get-entity {:_id (:_id parent)} (:kind parent)))
         {:keys [date time]} (format-timestamp (:date update))]
     (html
      [:div {:class "row entry"}
@@ -57,4 +58,4 @@
            :class "container"}
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
-      (map display-update (get-updates))]]])))
+      (map display-update (get-entities :updates))]]])))
