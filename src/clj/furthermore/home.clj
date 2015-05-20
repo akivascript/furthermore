@@ -12,6 +12,8 @@
 
 (defmulti display-post :kind)
 
+(def format-body (comp smarten md-to-html-string))
+
 (defmethod display-post :post
   [post]
   (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
@@ -33,8 +35,8 @@
             [:div {:class "tags text-right"}
              (display-tags (:tags post))]))
         (if excerpt?
-          [:div {:class "body"} (md-to-html-string (:excerpt post))]
-          [:div {:class "body"} (md-to-html-string (:body post))])
+          [:div {:class "body"} (format-body (:excerpt post))]
+          [:div {:class "body"} (format-body (:body post))])
         [:div {:class "footer"}
          [:div {:class "row"}
           [:div {:class "col-xs-12 col-sm-6"}
@@ -61,7 +63,7 @@
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
        [:div.follow-up
-        [:div.body (md-to-html-string (:body follow-up))]
+        [:div.body (format-body (:body follow-up))]
         [:div.footer
          [:div.row
           [:div.col-xs-12.col-sm-6

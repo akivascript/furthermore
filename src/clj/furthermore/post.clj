@@ -7,6 +7,8 @@
             [furthermore.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
+(def format-body (comp smarten md-to-html-string))
+
 (defn display-follow-up
   [follow-up]
   (let [follow-up (get-entity {:_id (:_id follow-up)} :follow-up)
@@ -17,7 +19,7 @@
         (when-let [tags (:tags follow-up)]
           [:div {:class "tags text-right"}
            (display-tags tags)]))
-      [:div {:class "body"} (md-to-html-string (:body follow-up))]
+      [:div {:class "body"} (format-body (:body follow-up))]
       [:div {:class "footer"}
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
@@ -43,7 +45,7 @@
          (when (:tags post)
            [:div {:class "tags text-right"}
             (display-tags (:tags post))]))
-       [:div {:class "body"} (md-to-html-string (:body post))]
+       [:div {:class "body"} (format-body (:body post))]
        [:div {:class "footer"}
         [:div {:class "row"}
          [:div {:class "col-xs-12 col-sm-6"}
