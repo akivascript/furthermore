@@ -122,26 +122,6 @@
   [x]
   (instance? Post x))
 
-(defn add-post
-  "Adds a post entity and its updated parent to the repository."
-  [entity]
-  (let [parent (:parent entity)
-        parent (case (:kind parent)
-                 :topic (get-entity {:_id (:_id parent)} :topic)
-                 (get-entity {:_id (:_id parent)} :post))
-        parent (update parent :refs conj (create-reference entity))
-        parent (assoc parent :log? false)
-        entity (if (= :follow-up (:kind entity))
-                 (assoc entity :topic (create-reference
-                                       (get-in parent [:topic :_id])
-                                       :topic))
-                 entity)]
-    (clear-db-queue!)
-    (add-db-queue! entity)
-    (add-db-queue! parent)
-    (process-db-queue)
-    (clear-db-queue!)))
-
 (defn get-post
   "Returns a post from id."
   [id]
@@ -181,13 +161,6 @@
   "Returns a follow-up from id."
   [id]
   (get-entity {:_id id} :follow-up))
-
-(defn add-entity
-  "Adds an entity to the repository."
-  [entity]
-  (add-db-queue! entity)
-  (process-db-queue)
-  (clear-db-queue!))
 
 (defn get-parent
   "Returns the parent entity of an entity."
@@ -257,19 +230,21 @@
 (defn get-topic
   "Returns a topic by id or from a post."
   [x]
-  (condp x
+  (cond
       (string? x) (get-entity {:_id x} :topic)
+      (reference? x) (get-entity {:_id (:_id x)} :topic)
       :else
       (get-entity (get-in x [:topic :_id] :topic))))
 
 ;;
 ;; General Entity Functions
 ;;
+; The Ministry of Information Retrieval
+(defmulti get-entity (fn [criterion kind] kind))
+
 (defn- get-entity*
   [fn criterion kind]
   (fn (read-entity kind criterion)))
-
-(defmulti get-entity (fn [criterion kind] kind))
 
 (defmethod get-entity :follow-up
   [criterion kind]
@@ -286,7 +261,6 @@
 (defmethod get-entity :topic
   [criterion kind]
   (get-entity* create-topic criterion kind))
-
 
 (defmulti get-entities identity)
 
@@ -318,3 +292,43 @@
        (sort-by :date)
        reverse
        vec))
+
+; The Ministry of Information Retention
+(defprotocol AddEntity
+  (add-entity [this]))
+
+(defn- add-entity*
+  []
+  (process-db-queue)
+  (clear-db-queue!))
+
+(extend-protocol AddEntity
+  furthermore.entities.Post
+  (add-entity
+    [this]
+    (let [parent (:parent this)
+          parent (case (:kind parent)
+                   :topic (get-topic (:_id parent))
+                   (get-post (:_id parent)))
+          parent (update parent :refs conj (create-reference this))
+          parent (assoc parent :log? false)
+          this (if (= :follow-up (:kind this))
+                 (assoc this :topic (create-reference
+                                     (get-in parent [:topic :_id])
+                                     :topic))
+                 this)]
+      (doseq [e [this parent]]
+        (add-db-queue! e))
+      (add-entity*)))
+
+  furthermore.entities.Follow-Up
+  (add-entity
+    [this]
+    (add-db-queue! this)
+    (add-entity*))
+
+  furthermore.entities.Topic
+  (add-entity
+    [this]
+    (add-db-queue! this)
+    (add-entity*)))

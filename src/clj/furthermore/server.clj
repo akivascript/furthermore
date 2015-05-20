@@ -51,7 +51,7 @@
 ;;
 (defn- dispatch-update*
   [fn entity]
-  ((comp add-post fn) entity))
+  ((comp add-entity fn) entity))
 
 (defmulti dispatch-update :kind)
 
@@ -65,7 +65,7 @@
 
 (defmethod dispatch-update "topic"
   [entity]
-  ((comp add-entity create-topic) entity))
+  (dispatch-update* create-topic entity))
 
 ;;
 ;; Routes & Resources
@@ -78,7 +78,6 @@
 
 (defmethod redirect "follow-up"
   [ctx]
-  (println (:_id ctx))
   (let [post (get-follow-up (:_id ctx))]
     (redirect* (get-parent post))))
 
