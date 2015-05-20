@@ -295,9 +295,9 @@
 
 ; The Ministry of Information Retention
 (defprotocol AddEntity
-  (add-entity [this]))
+  (add-entity [entity]))
 
-(defn- add-entity*
+(defn- commit-entity
   []
   (process-db-queue)
   (clear-db-queue!))
@@ -305,29 +305,28 @@
 (extend-protocol AddEntity
   furthermore.entities.Post
   (add-entity
-    [this]
-    (let [parent (:parent this)
+    [entity]
+    (let [parent (:parent entity)
           parent (-> (get-entity {:_id (:_id parent)} (:kind parent))
-                     (update :refs conj (create-reference this))
+                     (update :refs conj (create-reference entity))
                      (assoc :log? false))]
-      (doseq [e [this parent]]
-        (add-db-queue! e))
-      (add-entity*)))
+      (doseq [e [entity parent]] (add-db-queue! e))
+      (commit-entity)))
 
   furthermore.entities.Follow-Up
   (add-entity
-    [this]
-    (let [parent (-> (get-post (get-in this [:parent :_id]))
-                     (update :refs conj (create-reference this))
+    [entity]
+    (let [parent (-> (get-post (get-in entity [:parent :_id]))
+                     (update :refs conj (create-reference entity))
                      (assoc :log? false))
-          this (assoc this :topic (create-reference
-                                   (get-in parent [:topic :_id])))]
-      (doseq [e [this parent]]
-        (add-db-queue! e))
-      (add-entity*)))
+          entity (assoc entity :topic (:topic parent))]
+      (println "Parent: " parent)
+      (println "Entity: " entity)
+      (doseq [e [entity parent]] (add-db-queue! e))
+      (commit-entity)))
 
   furthermore.entities.Topic
   (add-entity
-    [this]
-    (add-db-queue! this)
-    (add-entity*)))
+    [entity]
+    (add-db-queue! entity)
+    (commit-entity)))
