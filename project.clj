@@ -1,4 +1,4 @@
-(defproject furthermore "0.5.0-SNAPSHOT"
+(defproject furthermore "0.6.0-SNAPSHOT"
   :description
   "A topical liveblogging platform written in Clojure/ClojureScript."
   :url
@@ -45,9 +45,6 @@
   ["resources"]
 
   :main furthermore.server
-
-  :uberjar-name
-  "furthermore-0.5.0-SNAPSHOT-standalone.jar"
 
   :ring {:handler furthermore.server/app}
 
