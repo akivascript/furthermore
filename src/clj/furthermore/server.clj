@@ -12,21 +12,20 @@
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
 
-            [furthermore.contents :refer [display-contents-page]]
-            [furthermore.entities :refer [create-follow-up
-                                          create-post
-                                          add-post
-                                          get-posts
-                                          get-topics]]
-            [furthermore.home :refer [display-home-page]]
-            [furthermore.page :refer [display-static-page]]
-            [furthermore.post :refer [display-post-page]]
-            ;[furthermore.newsfeed :refer [get-feed]]
+            [furthermore.entities :refer :all]
+            [furthermore.utils :as utils]
             [furthermore.repository :refer [initialize-db-connection]]
-            [furthermore.update :refer [display-update-page]]
-            [furthermore.updates :refer [display-updates-page]])
+            [furthermore.view.contents :refer [display-contents-page]]
+            [furthermore.view.home :refer [display-home-page]]
+            [furthermore.view.page :as page :refer [display-static-page]]
+            [furthermore.view.post :refer [display-post-page]]
+            [furthermore.view.update :refer [display-update-page]]
+            [furthermore.view.updates :refer [display-updates-page]])
   (:gen-class))
 
+;;
+;; EDN Functions
+;;
 (defn- params->map
   [params]
   (let [m (map-keys keyword params)]
@@ -34,11 +33,26 @@
       m
       (update m :authors vector))))
 
+(defn records->maps
+  "Returns a map with values converted to EDN-friendly natives (e.g.,
+  records become generic maps)."
+  [result]
+  (let [result (transient (into {} result))]
+      (doseq [k [:created-on :last-updated]]
+        (assoc! result k (utils/joda-date->java-date (k result))))
+      (doseq [k [:parent :topic]]
+        (assoc! result k (into {} (k result))))
+      (assoc! result :authors (map #(into {} %) (:authors result)))
+      (persistent! result)))
+
+;;
+;; Blog Update Dispatch
+;;
 (defn- dispatch-update*
   [fn entity]
-  ((comp add-post fn) entity))
+  ((comp add-entity fn) entity))
 
-(defmulti dispatch-update #(:type %))
+(defmulti dispatch-update :kind)
 
 (defmethod dispatch-update "post"
   [entity]
@@ -48,12 +62,43 @@
   [entity]
   (dispatch-update* create-follow-up entity))
 
+(defmethod dispatch-update "topic"
+  [entity]
+  (dispatch-update* create-topic entity))
+
+;;
+;; Routes & Resources
+;;
+(defmulti redirect :kind)
+
+(defn- redirect*
+  [entity]
+  (str (utils/create-url-path entity) (utils/create-entity-url entity)))
+
+(defmethod redirect "follow-up"
+  [ctx]
+  (let [post (get-follow-up (:_id ctx))]
+    (redirect* (get-parent post))))
+
+(defmethod redirect "post"
+  [ctx]
+  (let [post (get-post (:_id ctx))]
+    (redirect* post)))
+
+(defmethod redirect "topic"
+  [ctx]
+  "contents")
+
 (defresource update-site
   [type]
   :allowed-methods [:post]
   :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
-  :post! (fn [ctx] (let [m (params->map (get-in ctx [:request :form-params]))]
-                    (dispatch-update m))))
+  :post! (fn [ctx] (let [form-params (params->map (get-in ctx [:request :form-params]))]
+                     (dispatch-update form-params)
+                     {:_id (:_id form-params)
+                      :kind (:kind form-params)}))
+  :post-redirect? (fn [ctx]
+                    {:location (str utils/site-url (redirect ctx))}))
 
 (defresource return-result
   [task]
@@ -67,23 +112,26 @@
   (GET "/contents" [] (display-contents-page))
   (GET "/updates" [] (display-updates-page))
   (GET "/post/:title" [title] (display-post-page title))
-  (GET "/add-post" [] (display-update-page :post))
-  (GET "/add-follow-up" [] (display-update-page :follow-up))
-  (GET "/api/posts" [] (return-result (get-posts)))
-  (GET "/api/topics" [] (return-result (get-topics)))
-  (POST "/api/update/:type" [type] (update-site type))
-  (GET "/page/:page" [page] (display-static-page page))
+  (GET "/admin/add-follow-up" [] (display-update-page :follow-up))
+  (GET "/admin/add-post" [] (display-update-page :post))
+  (GET "/admin/add-topic" [] (display-update-page :topic))
+  (GET "/api/posts" [] (return-result (map records->maps (get-entities :posts))))
+  (GET "/api/topics" [] (return-result (map records->maps (get-entities :topics))))
+  (POST "/api/update/:kind" [kind] (update-site kind))
+  (GET "/page/:page" [page] (page/display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
-  ;; UI Calls
   (resources "/"))
 
 (def app
   (do (initialize-db-connection)
       (wrap-params routes)))
 
+;;
+;; This Is Where It Will All Go Wrong for You
+;;
 (defn -main
   "Launches Furthermore."
   [& port]
-  (let [port (Integer. (or port (env :port) 5000))]
+  (let [port (Integer. (or (first port) (env :port) 5000))]
     (run-jetty (site #'app) {:port port :join? false})
     (println "Furthermore up and running on port" port)))

@@ -1,45 +1,46 @@
-(ns furthermore.updates
+(ns furthermore.view.updates
   (:require [hiccup.core :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-post
-                                          get-topic]]
-            [furthermore.logging :refer [get-updates]]
-            [furthermore.layout :refer [display-page]]
+            [furthermore.entities :refer [get-entities
+                                          get-entity]]
+            [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
 
 (defn- set-status
-  [kind type]
-  (let [kind (kind {:new "Added"
+  [action kind]
+  (let [action (action {:new "Added"
                     :update "Updated"})
-        type (type {:follow-up "follow-up"
+        kind (kind {:follow-up "follow-up"
                     :post "post"
                     :static "page"
                     :topic "topic"})]
-    (str kind " " type)))
+    (str action " " kind)))
 
 (defn- display-update
   [update]
-  (let [type (:type update)
-        topic (get-topic {:_id (get-in update [:topic :_id])})
-        parent (get-post {:_id (get-in update [:parent :_id])})
+  (let [kind (:kind update)
+        topic (when-let [topic (:topic update)]
+                (get-entity {:_id (:_id topic)} :topic))
+        parent (when-let [parent (:parent update)]
+                 (get-entity {:_id (:_id parent)} (:kind parent)))
         {:keys [date time]} (format-timestamp (:date update))]
     (html
      [:div {:class "row entry"}
       [:div {:class "col-xs-3 date"}
        (str date " @ " time)]
       [:div {:class "col-xs-2 text-left status"}
-       (set-status (:kind update) type)]
+       (set-status (:action update) kind)]
       [:div {:class "col-xs-5 title"}
-       (let [path-fn (case type
+       (let [path-fn (case kind
                        :follow-up (str "/post/" (:url parent))
                        :post (str "/post/" (:url update))
-                       :static (:url update)
+                       :static (str "/page/" (:url update))
                        "")]
-         (if (= :topic type)
+         (if (= :topic kind)
            (:title update)
-           (if (= :follow-up type)
+           (if (= :follow-up kind)
              [:span
               [:a {:href path-fn} (:title parent)]
               [:br]
@@ -52,9 +53,10 @@
   []
   (display-page
    :updates
+   "Updates"
    (html
     [:div {:id "updates"
            :class "container"}
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
-      (map display-update (get-updates))]]])))
+      (map display-update (get-entities :updates))]]])))

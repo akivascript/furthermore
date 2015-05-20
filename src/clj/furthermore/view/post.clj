@@ -1,16 +1,17 @@
-(ns furthermore.post
+(ns furthermore.view.post
   (:require [hiccup.core :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-post
-                                          get-topic]]
-            [furthermore.layout :refer [display-page]]
+            [furthermore.entities :refer [get-entity]]
+            [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
+
+(def format-body (comp smarten md-to-html-string))
 
 (defn display-follow-up
   [follow-up]
-  (let [follow-up (get-post {:_id (:_id follow-up)})
+  (let [follow-up (get-entity {:_id (:_id follow-up)} :follow-up)
         {:keys [date time]} (format-timestamp (:created-on follow-up))]
     (html
      [:div {:class "follow-up"}
@@ -18,7 +19,7 @@
         (when-let [tags (:tags follow-up)]
           [:div {:class "tags text-right"}
            (display-tags tags)]))
-      [:div {:class "body"} (md-to-html-string (:body follow-up))]
+      [:div {:class "body"} (format-body (:body follow-up))]
       [:div {:class "footer"}
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
@@ -29,7 +30,7 @@
 
 (defn display-post
   [post]
-  (let [topic (get-topic {:_id (get-in post [:topic :_id])})
+  (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
         {:keys [date time]} (format-timestamp (:created-on post))
         excerpt? (contains? post :excerpt)]
     (html
@@ -44,7 +45,7 @@
          (when (:tags post)
            [:div {:class "tags text-right"}
             (display-tags (:tags post))]))
-       [:div {:class "body"} (md-to-html-string (:body post))]
+       [:div {:class "body"} (format-body (:body post))]
        [:div {:class "footer"}
         [:div {:class "row"}
          [:div {:class "col-xs-12 col-sm-6"}
@@ -56,19 +57,20 @@
            (when-let [url (get-in post [:twitter :url])]
              [:a {:href url
                   :target "_blank"} "Tweeted!"])]]]]]
-      (when (:references post)
+      (when (:refs post)
         [:div {:class "glyphicon glyphicon-triangle-bottom arrow"}])
-      (when-let [refs (:references post)]
+      (when-let [refs (:refs post)]
         (map display-follow-up refs))])))
 
 (defn display-post-page
   [url]
-  (display-page
-   :post
-   (html
-    [:div {:id "post"
-           :class "container"}
-     [:div {:class "row"}
-      [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
-       (display-post (get-post {:url url}))]]])))
-
+  (let [post (get-entity {:url url} :post)]
+    (display-page
+     :post
+     (:title post)
+     (html
+      [:div {:id "post"
+             :class "container"}
+       [:div {:class "row"}
+        [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
+         (display-post post)]]]))))

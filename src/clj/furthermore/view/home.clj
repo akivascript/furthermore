@@ -1,30 +1,33 @@
-(ns furthermore.home
+(ns furthermore.view.home
   (:require [hiccup.core :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities :refer [get-post
-                                          get-posts
-                                          get-topic]]
-            [furthermore.layout :refer [display-page]]
+            [furthermore.entities :refer [create-follow-up
+                                          create-post
+                                          get-entities
+                                          get-entity]]
+            [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
-(defmulti display-post #(:type %))
+(defmulti display-post :kind)
+
+(def format-body (comp smarten md-to-html-string))
 
 (defmethod display-post :post
   [post]
-  (let [topic (get-topic {:_id (get-in post [:topic :_id])})
+  (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
         {:keys [date time]} (format-timestamp (:created-on post))
-        excerpt? (not (empty? (:excerpt post)))]
+        excerpt? (seq (:excerpt post))]
     (html
      [:div {:class "row"}
-      [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
+      [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
        [:div {:class "post"}
         (if-let [title (:title post)]
           [:div {:class "title"}
            [:a {:href (str "/post/" (:url post))}
             (smarten title)]])
-        (when (contains? post :subtitle)
+        (when-not (nil? (:subtitle post))
           [:div {:class "subtitle"}
            (smarten (:subtitle post))])
         (comment
@@ -32,8 +35,8 @@
             [:div {:class "tags text-right"}
              (display-tags (:tags post))]))
         (if excerpt?
-          [:div {:class "body"} (md-to-html-string (:excerpt post))]
-          [:div {:class "body"} (md-to-html-string (:body post))])
+          [:div {:class "body"} (format-body (:excerpt post))]
+          [:div {:class "body"} (format-body (:body post))])
         [:div {:class "footer"}
          [:div {:class "row"}
           [:div {:class "col-xs-12 col-sm-6"}
@@ -53,14 +56,14 @@
 
 (defmethod display-post :follow-up
   [follow-up]
-  (let [topic (get-topic {:_id (get-in follow-up [:topic :_id])})
-        parent (get-post {:_id (get-in follow-up [:parent :_id])})
+  (let [topic (get-entity {:_id (get-in follow-up [:topic :_id])} :topic)
+        parent (get-entity {:_id (get-in follow-up [:parent :_id])} :post)
         {:keys [date time]} (format-timestamp (:created-on follow-up))]
     (html
      [:div {:class "row"}
-      [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
+      [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
        [:div.follow-up
-        [:div.body (md-to-html-string (:body follow-up))]
+        [:div.body (format-body (:body follow-up))]
         [:div.footer
          [:div.row
           [:div.col-xs-12.col-sm-6
@@ -80,4 +83,7 @@
    (html
     [:div {:id "index"
            :class "container"}
-     (map display-post (filter #(contains? #{:post :follow-up} (:type %)) (get-posts)))])))
+     (map display-post (->> (apply merge (get-entities :posts) (get-entities :follow-ups))
+                            (sort-by :created-on)
+                            reverse
+                            (take 10)))])))

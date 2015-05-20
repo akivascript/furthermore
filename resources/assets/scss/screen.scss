@@ -11,7 +11,7 @@ a {
 }
 
 body {
-    background-color: $background-color;
+    background-color: #eee;
     background-image: url('/img/background.png');
 
     font-family: 'Lato';
@@ -26,12 +26,13 @@ code, kbd, pre, samp {
 }
 
 .navbar-default {
-    background-color: $blue-faded;
-    background-image: url('/img/background.png');
+    background-color: $gray;
+    background-image: url('/img/background-tan.png');
 
     .navbar-nav > li {
         a:hover {
-            background-color: #3D4B60;
+            background-color: $green-faded;
+            background-image: url('/img/background-tan.png');
         }
     }
 }
@@ -46,7 +47,6 @@ code, kbd, pre, samp {
 }
 
 .banner {
-
     img {
         display: block;
 
@@ -84,16 +84,14 @@ code, kbd, pre, samp {
 }
 
 .follow-up {
-    margin-bottom: 50px;
     border-top: 1px solid #aaa;
-
-    font-size: 16pt;
+    margin-bottom: 50px;
 
     .body {
         padding: 10px 0px 5px 1px; 
 
         font-family: $body-font;
-        font-size: 12pt;
+        font-size: 1.1em;
 
         text-align: left;
 
@@ -107,7 +105,7 @@ code, kbd, pre, samp {
     .footer {
         padding-top: 10px;
         
-        font-size: 10pt;
+        font-size: 1em;
 
         color: $gray-light;
     }
@@ -179,7 +177,9 @@ code, kbd, pre, samp {
         padding: 10px 0px 5px 1px; 
 
         font-family: $body-font;
-        font-size: 12pt;
+        font-size: 1.2em;
+
+        line-height: 1.5em;
 
         color: #555;
 
@@ -190,11 +190,8 @@ code, kbd, pre, samp {
     
     .footer {
         padding-top: 10px;
-        
-        font-size: 90%;
 
         color: $gray-light;
-
 
         .continue {
             font-size: 90%;
@@ -255,7 +252,7 @@ code, kbd, pre, samp {
         border-top: 1px solid #ccc;
 
         font-family: $body-font;
-        font-size: 12pt;
+        font-size: 14pt;
 
         color: #555;
     }
