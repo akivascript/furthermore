@@ -49,16 +49,20 @@
 ;;
 ;; Authors
 ;;
+
 (defrecord Author
     [name works])
 
 (defn create-author
-  [params]
-  (let [{:keys [name works]
-         :or {name "John Doe"
-              works #{}}} params]
-    (map->Author {:name name
-                  :works works})))
+  ([params]
+   (if (string? params)
+     (map->Author {:name params
+                   :works #{}})
+     (let [{:keys [name works]
+            :or {name "John Doe"
+                 works #{}}} params]
+       (map->Author {:name name
+                     :works works})))))
 
 (defn author?
   "Returns true if x is an Author."
@@ -72,10 +76,7 @@
 
 (defrecord Post
     [_id authors body created-on excerpt kind last-updated
-     parent refs subtitle tags title topic url])
-
-(defrecord Follow-Up
-    [_id authors body created-on excerpt kind parent refs tags url])
+     log? parent refs subtitle tags title topic url])
 
 (defn create-post
   "Takes a map as input and requires both parent and topic records. Produces
@@ -83,22 +84,25 @@
   [params]
   (let [date (local-now)
         {:keys [_id authors body created-on excerpt last-updated
-                parent subtitle refs tags title topic url]
-         :or {authors [(create-author {})]
+                log? parent subtitle refs tags title topic url]
+         :or {authors ["John Doe"]
               body "Somebody forgot to actually write the post."
               created-on date
               _id (random-uuid)
+              log? true
               title "New Post"
               url (create-entity-url date title)}} params]
     (map->Post {:_id _id
-                :authors authors
+                :authors (mapv create-author authors)
                 :body body
                 :created-on created-on
                 :excerpt excerpt
                 :kind :post
+                :log? log?
                 :parent (cond
                           (reference? parent) parent
-                          (string? parent) (create-reference ((juxt link-id link-kind) parent))
+                          (string? parent) (apply create-reference
+                                                  ((juxt link-id link-kind) parent))
                           :else
                           (create-reference parent))
                 :refs refs
@@ -107,7 +111,8 @@
                 :title title
                 :topic (cond
                           (reference? topic) topic
-                          (string? topic) (create-reference ((juxt link-id link-kind) topic))
+                          (string? topic) (apply create-reference
+                                                 ((juxt link-id link-kind) topic))
                           :else
                           (create-reference topic))
                 :url url})))
@@ -117,31 +122,6 @@
   [x]
   (instance? Post x))
 
-(defn create-follow-up
-  "Takes a map as input and requires a parent record. Produces a Follow-up record."
-  [params]
-  (let [{:keys [_id authors created-on body excerpt last-updated parent refs tags url]
-         :or {authors [(create-author {})]
-              body "Somebody forgot to actually write the follow-up."
-              created-on (local-now)
-              _id (random-uuid)}} params]
-    (map->Follow-Up {:_id (random-uuid)
-                     :authors authors
-                     :body body
-                     :created-on created-on
-                     :excerpt excerpt
-                     :kind :follow-up
-                     :last-updated last-updated
-                     :parent (cond
-                               (reference? parent) parent
-                               (string? parent) (create-reference
-                                                 ((juxt link-id link-kind) parent))
-                               :else
-                               (create-reference parent))
-                     :refs refs
-                     :tags (into #{} tags)
-                     :url url})))
-
 (defn add-post
   "Adds a post entity and its updated parent to the repository."
   [entity]
@@ -149,16 +129,48 @@
         parent (case (:kind parent)
                  :topic (get-entity {:_id (:_id parent)} :topic)
                  (get-entity {:_id (:_id parent)} :post))
-        parent (update parent :refs conj (create-reference entity (:kind entity)))
+        parent (update parent :refs conj (create-reference entity))
+        parent (assoc parent :log? false)
         entity (if (= :follow-up (:kind entity))
                  (assoc entity :topic (create-reference
                                        (get-in parent [:topic :_id])
                                        :topic))
                  entity)]
+    (clear-db-queue!)
     (add-db-queue! entity)
     (add-db-queue! parent)
     (process-db-queue)
     (clear-db-queue!)))
+
+(defrecord Follow-Up
+    [_id authors body created-on excerpt kind log? parent refs tags url])
+
+(defn create-follow-up
+  "Takes a map as input and requires a parent record. Produces a Follow-up record."
+  [params]
+  (let [{:keys [_id authors created-on body excerpt last-updated log? parent refs tags url]
+         :or {authors [(create-author {})]
+              body "Somebody forgot to actually write the follow-up."
+              created-on (local-now)
+              _id (random-uuid)
+              log? true}} params]
+    (map->Follow-Up {:_id (random-uuid)
+                     :authors authors
+                     :body body
+                     :created-on created-on
+                     :excerpt excerpt
+                     :kind :follow-up
+                     :last-updated last-updated
+                     :log? log?
+                     :parent (cond
+                               (reference? parent) parent
+                               (string? parent) (apply create-reference
+                                                       ((juxt link-id link-kind) parent))
+                               :else
+                               (create-reference parent))
+                     :refs refs
+                     :tags (into #{} tags)
+                     :url url})))
 
 (defn add-entity
   "Adds an entity to the repository."
@@ -167,7 +179,7 @@
   (process-db-queue)
   (clear-db-queue!))
 
-(defn get-post-refs
+#_(defn get-post-refs
   "Returns all of the posts referenced by a given post's ID."
   [id]
   (let [post (get-entity {:_id id} :post)]
@@ -188,6 +200,7 @@
               authors [(create-author {})]
               body "Somebody forgot to write the text for this page."
               created-on (local-now)
+              tags #{}
               title "New Page"
               url (create-url-name title)}} params]
     (map->Page {:_id _id
@@ -204,27 +217,31 @@
 ;; Topics
 ;;
 (defrecord Topic
-    [_id authors created-on kind last-updated tags title refs url])
+    [_id authors created-on kind last-updated log? tags title refs url])
 
 (defn create-topic
   "Returns a topic entity along with its parent."
   [params]
-  (let [{:keys [_id authors created-on last-updated tags title refs url]
-         :or {authors [(create-author {})]
+  (let [{:keys [_id authors created-on last-updated log? tags title refs url]
+         :or {authors ["John Doe"]
               _id (random-uuid)
               created-on (local-now)
+              log? true
+              refs #{}
+              tags #{}
               title "New Topic"}} params]
     (map->Topic {:_id _id
-                 :authors authors
+                 :authors (map create-author authors)
                  :created-on created-on
                  :kind :topic
                  :last-updated last-updated
+                 :log? log?
                  :tags (into #{} tags)
                  :title title
-                 :refs refs
+                 :refs (into #{} refs)
                  :url url})))
 
-(defn get-topic-refs
+#_(defn get-topic-refs
   "Returns a topic with its actual reference objects associated."
   [id]
   (let [topic (get-topic id)]
