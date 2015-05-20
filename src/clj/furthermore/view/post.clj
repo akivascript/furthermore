@@ -64,11 +64,13 @@
 
 (defn display-post-page
   [url]
-  (display-page
-   :post
-   (html
-    [:div {:id "post"
-           :class "container"}
-     [:div {:class "row"}
-      [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
-       (display-post (get-entity {:url url} :post))]]])))
+  (let [post (get-entity {:url url} :post)]
+    (display-page
+     :post
+     (:title post)
+     (html
+      [:div {:id "post"
+             :class "container"}
+       [:div {:class "row"}
+        [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
+         (display-post post)]]]))))

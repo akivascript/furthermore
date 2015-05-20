@@ -53,6 +53,7 @@
   []
   (display-page
    :updates
+   "Updates"
    (html
     [:div {:id "updates"
            :class "container"}
