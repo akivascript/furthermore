@@ -12,16 +12,15 @@
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
 
-            [furthermore.contents :refer [display-contents-page]]
             [furthermore.entities :refer :all]
-            [furthermore.home :refer [display-home-page]]
-            [furthermore.page :as page :refer [display-static-page]]
-            [furthermore.post :refer [display-post-page]]
-            ;[furthermore.newsfeed :refer [get-feed]]
+            [furthermore.utils :as utils]
             [furthermore.repository :refer [initialize-db-connection]]
-            [furthermore.update :refer [display-update-page]]
-            [furthermore.updates :refer [display-updates-page]]
-            [furthermore.utils :as utils])
+            [furthermore.view.contents :refer [display-contents-page]]
+            [furthermore.view.home :refer [display-home-page]]
+            [furthermore.view.page :as page :refer [display-static-page]]
+            [furthermore.view.post :refer [display-post-page]]
+            [furthermore.view.update :refer [display-update-page]]
+            [furthermore.view.updates :refer [display-updates-page]])
   (:gen-class))
 
 ;;

@@ -1,9 +1,9 @@
-(ns furthermore.page
+(ns furthermore.view.page
   (:require [hiccup.core :refer :all]
             [markdown.core :as md :refer [md-to-html-string]]
             [typographer.core :as typo :refer [smarten]]
 
-            [furthermore.layout :as layout :refer [display-page]]
+            [furthermore.view.layout :as layout :refer [display-page]]
             [furthermore.entities :as entities :refer [get-page]]))
 
 (defn display-static-page

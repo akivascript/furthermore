@@ -1,4 +1,4 @@
-(ns furthermore.home
+(ns furthermore.view.home
   (:require [hiccup.core :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
@@ -7,7 +7,7 @@
                                           create-post
                                           get-entities
                                           get-entity]]
-            [furthermore.layout :refer [display-page]]
+            [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
 (defmulti display-post :kind)

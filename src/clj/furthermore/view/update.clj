@@ -1,11 +1,11 @@
-(ns furthermore.update
+(ns furthermore.view.update
   (:require [clojure.string :as str :refer [capitalize]]
             [hiccup.core :refer :all]
             [hiccup.form :refer :all]
             [monger.util :as mutil :refer [random-uuid]]
 
             [furthermore.entities :refer [get-entities]]
-            [furthermore.layout :refer [display-page]]
+            [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
 (def title
