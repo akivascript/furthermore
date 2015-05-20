@@ -13,14 +13,9 @@
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.contents :refer [display-contents-page]]
-            [furthermore.entities :refer [add-post
-                                          add-entity
-                                          create-follow-up
-                                          create-post
-                                          create-topic
-                                          get-entities]]
+            [furthermore.entities :refer :all]
             [furthermore.home :refer [display-home-page]]
-            [furthermore.page :refer [display-static-page]]
+            [furthermore.page :as page :refer [display-static-page]]
             [furthermore.post :refer [display-post-page]]
             ;[furthermore.newsfeed :refer [get-feed]]
             [furthermore.repository :refer [initialize-db-connection]]
@@ -75,11 +70,37 @@
 ;;
 ;; Routes & Resources
 ;;
+(defmulti redirect :kind)
+
+(defn- redirect*
+  [entity]
+  (str (utils/create-url-path entity) (utils/create-entity-url entity)))
+
+(defmethod redirect "follow-up"
+  [ctx]
+  (println (:_id ctx))
+  (let [post (get-follow-up (:_id ctx))]
+    (redirect* (get-parent post))))
+
+(defmethod redirect "post"
+  [ctx]
+  (let [post (get-post (:_id ctx))]
+    (redirect* post)))
+
+(defmethod redirect "topic"
+  [ctx]
+  "contents")
+
 (defresource update-site
   [type]
   :allowed-methods [:post]
   :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
-  :post! (fn [ctx] (dispatch-update (params->map (get-in ctx [:request :form-params])))))
+  :post! (fn [ctx] (let [form-params (params->map (get-in ctx [:request :form-params]))]
+                     (dispatch-update form-params)
+                     {:_id (:_id form-params)
+                      :kind (:kind form-params)}))
+  :post-redirect? (fn [ctx]
+                    {:location (str utils/site-url (redirect ctx))}))
 
 (defresource return-result
   [task]
@@ -99,7 +120,7 @@
   (GET "/api/posts" [] (return-result (map records->maps (get-entities :posts))))
   (GET "/api/topics" [] (return-result (map records->maps (get-entities :topics))))
   (POST "/api/update/:kind" [kind] (update-site kind))
-  (GET "/page/:page" [page] (display-static-page page))
+  (GET "/page/:page" [page] (page/display-static-page page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   (resources "/"))
 
