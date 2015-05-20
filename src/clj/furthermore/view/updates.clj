@@ -1,11 +1,11 @@
-(ns furthermore.updates
+(ns furthermore.view.updates
   (:require [hiccup.core :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entities
                                           get-entity]]
-            [furthermore.layout :refer [display-page]]
+            [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
 
 (defn- set-status

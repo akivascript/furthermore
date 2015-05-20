@@ -1,10 +1,10 @@
-(ns furthermore.post
+(ns furthermore.view.post
   (:require [hiccup.core :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entity]]
-            [furthermore.layout :refer [display-page]]
+            [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [format-timestamp]]))
 
 (def format-body (comp smarten md-to-html-string))

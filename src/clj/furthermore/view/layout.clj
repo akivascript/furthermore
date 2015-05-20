@@ -1,4 +1,4 @@
-(ns furthermore.layout
+(ns furthermore.view.layout
   (:require [hiccup.core :refer :all]
             [hiccup.page :refer [html5 include-css include-js]]))
 

@@ -1,11 +1,11 @@
-(ns furthermore.contents
+(ns furthermore.view.contents
   (:require [hiccup.core :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entities
                                           get-entity]]
-            [furthermore.layout :refer [display-page]]
+            [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [get-excerpt format-timestamp]]))
 
 (defn- make-outline-selector
