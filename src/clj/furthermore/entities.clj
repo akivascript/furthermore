@@ -1,5 +1,5 @@
 (ns furthermore.entities
-  (:require [clojure.string :as str :refer [split]]
+  (:require [clojure.string :as string]
 
             [clj-time.local :as l :refer [local-now]]
             [monger.util :refer [random-uuid]]
@@ -17,6 +17,26 @@
 
 (declare get-entities)
 (declare get-entity)
+
+;;
+;; Utility Functions
+;;
+(defprotocol Tags
+  (->tags [tags]))
+
+(extend-protocol Tags
+  clojure.lang.PersistentHashSet
+  (->tags [tags] tags)
+
+  java.lang.String
+  (->tags
+    [tags]
+    (set (map string/trim (string/split tags #";|,"))))
+
+  clojure.lang.PersistentVector
+  (->tags
+    [tags]
+    (into #{} tags)))
 
 ;;
 ;; References
@@ -40,16 +60,15 @@
 
 (defn link-kind
   [link]
-  (second (str/split link #"\|")))
+  (second (string/split link #"\|")))
 
 (defn link-id
   [link]
-  (first (str/split link #"\|")))
+  (first (string/split link #"\|")))
 
 ;;
 ;; Authors
 ;;
-
 (defrecord Author
     [name works])
 
@@ -90,6 +109,7 @@
               created-on date
               _id (random-uuid)
               log? true
+              tags #{}
               title "New Post"
               url (create-entity-url date title)}} params]
     (map->Post {:_id _id
@@ -107,7 +127,7 @@
                           (create-reference parent))
                 :refs refs
                 :subtitle subtitle
-                :tags (into #{} tags)
+                :tags (->tags tags)
                 :title title
                 :topic (cond
                           (reference? topic) topic
@@ -138,7 +158,8 @@
               body "Somebody forgot to actually write the follow-up."
               created-on (local-now)
               _id (random-uuid)
-              log? true}} params]
+              log? true
+              tags #{}}} params]
     (map->Follow-Up {:_id _id
                      :authors authors
                      :body body
@@ -154,7 +175,7 @@
                                :else
                                (create-reference parent))
                      :refs refs
-                     :tags (into #{} tags)
+                     :tags (->tags tags)
                      :url url})))
 
 (defn get-follow-up
@@ -222,7 +243,7 @@
                  :kind :topic
                  :last-updated last-updated
                  :log? log?
-                 :tags (into #{} tags)
+                 :tags (->tags tags)
                  :title title
                  :refs (into #{} refs)
                  :url url})))
@@ -297,7 +318,7 @@
 (defprotocol AddEntity
   (add-entity [entity]))
 
-(defn- commit-entity
+(defn- commit-entities
   []
   (process-db-queue)
   (clear-db-queue!))
@@ -311,7 +332,8 @@
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))]
       (doseq [e [entity parent]] (add-db-queue! e))
-      (commit-entity)))
+      (println entity)
+      (commit-entities)))
 
   furthermore.entities.Follow-Up
   (add-entity
@@ -323,10 +345,10 @@
       (println "Parent: " parent)
       (println "Entity: " entity)
       (doseq [e [entity parent]] (add-db-queue! e))
-      (commit-entity)))
+      (commit-entities)))
 
   furthermore.entities.Topic
   (add-entity
     [entity]
     (add-db-queue! entity)
-    (commit-entity)))
+    (commit-entities)))
