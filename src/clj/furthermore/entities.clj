@@ -19,54 +19,6 @@
 (declare get-entity)
 
 ;;
-;; Utility Functions
-;;
-(defprotocol Tags
-  (->tags [tags]))
-
-(extend-protocol Tags
-  clojure.lang.PersistentHashSet
-  (->tags [tags] tags)
-
-  java.lang.String
-  (->tags
-    [tags]
-    (set (map string/trim (string/split tags #";|,"))))
-
-  clojure.lang.PersistentVector
-  (->tags
-    [tags]
-    (into #{} tags)))
-
-;;
-;; References
-;;
-(defrecord Reference
-    [_id kind])
-
-(defn create-reference
-  "Returns a Reference which links entities to each other."
-  ([params]
-   (let [{:keys [_id kind]} params]
-     (create-reference _id (keyword kind))))
-  ([id kind]
-   (map->Reference {:_id id
-                    :kind (keyword kind)})))
-
-(defn reference?
-  "Returns true if x is a Reference."
-  [x]
-  (instance? Reference x))
-
-(defn link-kind
-  [link]
-  (second (string/split link #"\|")))
-
-(defn link-id
-  [link]
-  (first (string/split link #"\|")))
-
-;;
 ;; Authors
 ;;
 (defrecord Author
@@ -109,6 +61,7 @@
               created-on date
               _id (random-uuid)
               log? true
+              refs #{}
               tags #{}
               title "New Post"
               url (create-entity-url date title)}} params]
@@ -119,22 +72,12 @@
                 :excerpt excerpt
                 :kind :post
                 :log? log?
-                :parent (cond
-                          (reference? parent) parent
-                          (string? parent) (apply create-reference
-                                                  ((juxt link-id link-kind) parent))
-                          :else
-                          (create-reference parent))
-                :refs refs
+                :parent (->ref parent)
+                :refs (set (map ->ref refs))
                 :subtitle subtitle
                 :tags (->tags tags)
                 :title title
-                :topic (cond
-                          (reference? topic) topic
-                          (string? topic) (apply create-reference
-                                                 ((juxt link-id link-kind) topic))
-                          :else
-                          (create-reference topic))
+                :topic (->ref topic)
                 :url url})))
 
 (defn post?
@@ -159,6 +102,7 @@
               created-on (local-now)
               _id (random-uuid)
               log? true
+              refs #{}
               tags #{}}} params]
     (map->Follow-Up {:_id _id
                      :authors authors
@@ -168,13 +112,8 @@
                      :kind :follow-up
                      :last-updated last-updated
                      :log? log?
-                     :parent (cond
-
-                               (string? parent) (apply create-reference
-                                                       ((juxt link-id link-kind) parent))
-                               :else
-                               (create-reference parent))
-                     :refs refs
+                     :parent (->ref parent)
+                     :refs (set (map ->ref refs))
                      :tags (->tags tags)
                      :url url})))
 
@@ -188,6 +127,41 @@
   [entity]
   (let [parent (:parent entity)]
     (get-entity {:_id (:_id parent)} (:kind parent))))
+
+;;
+;; References
+;;
+(defrecord Reference
+    [_id kind])
+
+(defprotocol References
+  (->ref [ref]))
+
+(extend-protocol References
+  furthermore.entities.Reference
+  (->ref [ref] ref)
+
+  clojure.lang.PersistentArrayMap
+  (->ref [ref] (create-reference ref))
+
+  java.lang.String
+  (->ref [ref]
+    (create-reference (first (string/split ref #"\|"))
+                      (second (string/split ref #"\|")))))
+
+(defn create-reference
+  "Returns a Reference which links entities to each other."
+  ([params]
+   (let [{:keys [_id kind]} params]
+     (create-reference _id (keyword kind))))
+  ([id kind]
+   (map->Reference {:_id id
+                    :kind (keyword kind)})))
+
+(defn reference?
+  "Returns true if x is a Reference."
+  [x]
+  (instance? Reference x))
 
 ;;
 ;; Static Pages
@@ -211,7 +185,7 @@
                 :created-on created-on
                 :kind :static
                 :last-updated last-updated
-                :tags (into #{} tags)
+                :tags ()
                 :title title
                 :url url})))
 
@@ -219,6 +193,40 @@
   "Returns a static page by url."
   [url]
   (get-entity url :static))
+
+;;
+;; Tags
+;;
+(defrecord Tag
+    [_id name refs])
+
+(defn create-tag
+  "Returns a tag entity."
+  [params]
+  (let [{:keys [_id name refs]
+         :or {_id (random-uuid)
+              name "Miscellania"
+              refs #{}}} params]
+    (map->Tag {:_id _id
+               :name name
+               :refs (set (map ->ref refs))})))
+
+(defprotocol Tags
+  (->tags [tags]))
+
+(extend-protocol Tags
+  clojure.lang.PersistentHashSet
+  (->tags [tags] tags)
+
+  java.lang.String
+  (->tags
+    [tags]
+    (set (map string/trim (string/split tags #";|,"))))
+
+  clojure.lang.PersistentVector
+  (->tags
+    [tags]
+    (into #{} tags)))
 
 ;;
 ;; Topics
@@ -230,8 +238,8 @@
   "Returns a topic entity along with its parent."
   [params]
   (let [{:keys [_id authors created-on last-updated log? tags title refs url]
-         :or {authors ["John Doe"]
-              _id (random-uuid)
+         :or {_id (random-uuid)
+              authors ["John Doe"]
               created-on (local-now)
               log? true
               refs #{}
