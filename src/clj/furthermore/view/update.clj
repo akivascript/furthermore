@@ -61,6 +61,10 @@
                        :name "authors"
                        :ref "authors"
                        :value "Akiva"}]]
+             [:div
+              [:label {:for "tags"} "Tags"]
+              (text-field {:class "form-control"
+                           :ref "tags"} "tags")]
              (when-not (= :topic kind)
                [:div
                 [:div
