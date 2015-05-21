@@ -79,7 +79,7 @@
 ;; Tags
 ;;
 (defrecord Tag
-    [_id created-on kind last-updated log? name refs])
+    [_id created-on kind last-updated log? title refs])
 
 (defprotocol Tags
   (->tags [tags]))
@@ -104,23 +104,23 @@
 (defn create-tag
   "Returns a tag entity."
   [params]
-  (let [{:keys [_id created-on last-updated log? name refs]
+  (let [{:keys [_id created-on last-updated log? title refs]
          :or {_id (random-uuid)
               created-on (local-now)
               log? true
-              name "Miscellania"
+              title "Miscellania"
               refs #{}}} params]
     (map->Tag {:_id _id
                :created-on created-on
                :kind :tag
                :last-updated last-updated
                :log? log?
-               :name name
+               :title title
                :refs (into #{} refs)})))
 
-(defn tag-by-name
-  [name]
-  (get-entity {:name name} :tags))
+(defn tag-by-title
+  [title]
+  (get-entity {:title title} :tags))
 
 ;;
 ;; Posts
@@ -358,7 +358,6 @@
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))]
       (doseq [e [entity parent]] (add-db-queue! e))
-      (println entity)
       (commit-entities)))
 
   furthermore.entities.Follow-Up
