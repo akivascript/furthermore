@@ -54,6 +54,11 @@
           [:div {:class "small text-right date"}
            (str date " @ " time)
            [:br]
+           (when-let [tags (seq (:tags post))]
+             (println (apply str (interpose ", " tags)))
+             [:div {:class "tags text-right"}
+              (apply str (interpose ", " tags))
+              [:br]])
            (when-let [url (get-in post [:twitter :url])]
              [:a {:href url
                   :target "_blank"} "Tweeted!"])]]]]]
