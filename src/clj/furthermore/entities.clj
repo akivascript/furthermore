@@ -41,6 +41,88 @@
   (instance? Author x))
 
 ;;
+;; References
+;;
+(defrecord Reference
+    [_id kind])
+
+(defprotocol References
+  (->ref [ref]))
+
+(extend-protocol References
+  furthermore.entities.Reference
+  (->ref [ref] ref)
+
+  clojure.lang.PersistentArrayMap
+  (->ref [ref] (create-reference ref))
+
+  java.lang.String
+  (->ref [ref]
+    (create-reference (first (string/split ref #"\|"))
+                      (second (string/split ref #"\|")))))
+
+(defn create-reference
+  "Returns a Reference which links entities to each other."
+  ([params]
+   (let [{:keys [_id kind]} params]
+     (create-reference _id (keyword kind))))
+  ([id kind]
+   (map->Reference {:_id id
+                    :kind (keyword kind)})))
+
+(defn reference?
+  "Returns true if x is a Reference."
+  [x]
+  (instance? Reference x))
+
+;;
+;; Tags
+;;
+(defrecord Tag
+    [_id created-on kind last-updated log? name refs])
+
+(defprotocol Tags
+  (->tags [tags]))
+
+(extend-protocol Tags
+  furthermore.entities.Tag
+  (->tags [tags] tags)
+
+  clojure.lang.PersistentArrayMap
+  (->tags [tags] tags)
+
+  java.lang.String
+  (->tags
+    [tags]
+    (set (map string/trim (string/split tags #";|,"))))
+
+  clojure.lang.PersistentVector
+  (->tags
+    [tags]
+    (into #{} tags)))
+
+(defn create-tag
+  "Returns a tag entity."
+  [params]
+  (let [{:keys [_id created-on last-updated log? name refs]
+         :or {_id (random-uuid)
+              created-on (local-now)
+              log? true
+              name "Miscellania"
+              refs #{}}} params]
+    (map->Tag {:_id _id
+               :created-on created-on
+               :kind :tag
+               :last-updated last-updated
+               :log? log?
+               :name name
+               :refs (into #{} refs)})))
+
+(defn tag-by-name
+  [name]
+  (get-entity {:name name} :tags))
+
+;;
 ;; Posts
 ;;
 (declare get-topic)
@@ -129,41 +211,6 @@
     (get-entity {:_id (:_id parent)} (:kind parent))))
 
 ;;
-;; References
-;;
-(defrecord Reference
-    [_id kind])
-
-(defprotocol References
-  (->ref [ref]))
-
-(extend-protocol References
-  furthermore.entities.Reference
-  (->ref [ref] ref)
-
-  clojure.lang.PersistentArrayMap
-  (->ref [ref] (create-reference ref))
-
-  java.lang.String
-  (->ref [ref]
-    (create-reference (first (string/split ref #"\|"))
-                      (second (string/split ref #"\|")))))
-
-(defn create-reference
-  "Returns a Reference which links entities to each other."
-  ([params]
-   (let [{:keys [_id kind]} params]
-     (create-reference _id (keyword kind))))
-  ([id kind]
-   (map->Reference {:_id id
-                    :kind (keyword kind)})))
-
-(defn reference?
-  "Returns true if x is a Reference."
-  [x]
-  (instance? Reference x))
-
-;;
 ;; Static Pages
 ;;
 (defrecord Page
@@ -193,40 +240,6 @@
   "Returns a static page by url."
   [url]
   (get-entity url :static))
-
-;;
-;; Tags
-;;
-(defrecord Tag
-    [_id name refs])
-
-(defn create-tag
-  "Returns a tag entity."
-  [params]
-  (let [{:keys [_id name refs]
-         :or {_id (random-uuid)
-              name "Miscellania"
-              refs #{}}} params]
-    (map->Tag {:_id _id
-               :name name
-               :refs (set (map ->ref refs))})))
-
-(defprotocol Tags
-  (->tags [tags]))
-
-(extend-protocol Tags
-  clojure.lang.PersistentHashSet
-  (->tags [tags] tags)
-
-  java.lang.String
-  (->tags
-    [tags]
-    (set (map string/trim (string/split tags #";|,"))))
-
-  clojure.lang.PersistentVector
-  (->tags
-    [tags]
-    (into #{} tags)))
 
 ;;
 ;; Topics
@@ -286,6 +299,11 @@
 (defmethod get-entity :static
   [criterion kind]
   (get-entity* create-page criterion kind))
+
+#_(defmethod get-entity :tag
+  [criterion kind]
+  (when-let [tag (read-entity kind criterion)]
+    (get-entity* create-topic criterion kind)))
 
 (defmethod get-entity :topic
   [criterion kind]
@@ -354,6 +372,12 @@
       (println "Entity: " entity)
       (doseq [e [entity parent]] (add-db-queue! e))
       (commit-entities)))
+
+  furthermore.entities.Tag
+  (add-entity
+    [entity]
+    (add-db-queue! entity)
+    (commit-entities))
 
   furthermore.entities.Topic
   (add-entity

@@ -23,6 +23,7 @@
    :follow-up "posts"
    :post "posts"
    :static "pages"
+   :tag "tags"
    :topic "topics"})
 
 ;;
