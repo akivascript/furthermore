@@ -12,6 +12,17 @@
             [furthermore.utils :refer [create-url-name
                                        format-timestamp]]))
 
+(defn- display-tags
+  [tags]
+  (when (seq tags)
+    (html
+     [:div {:class "tags text-right"}
+      (apply str (interpose ", " (map #(html
+                                        (link-to
+                                         (str "/tags/"
+                                              (create-url-name %)) %))
+                                      tags)))])))
+
 (defmulti display-post :kind)
 
 (def format-body (comp smarten md-to-html-string))
@@ -46,14 +57,7 @@
             "Filed under "
             [:span {:class "topic"} (smarten (:title topic))]
             [:br]
-            (when-let [tags (seq (:tags post))]
-              [:div {:class "tags text-right"}
-               (apply str (interpose ", " (map #(html
-                                                 (link-to
-                                                  (str "/tags/"
-                                                       (create-url-name %)) %))
-                                               tags)))
-               [:br]])
+            (display-tags (:tags post))
             (str date " @ " time)
             [:br]
             (when-let [url (get-in post [:twitter :url])]
@@ -85,6 +89,7 @@
             [:a.parent {:href (str "/post/" (:url parent))}
              (smarten (or (:title parent) "Untitled"))]
             [:br]
+            (display-tags (:tags follow-up))
             (str date " @ " time)]]]]]]])))
 
 (defn display-home-page

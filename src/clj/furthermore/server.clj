@@ -41,7 +41,7 @@
   (let [result (transient (into {} result))]
       (doseq [k [:created-on :last-updated]]
         (assoc! result k (utils/joda-date->java-date (k result))))
-      (doseq [k [:parent :topic]]
+      (doseq [k [:parent :refs :topic]]
         (assoc! result k (into {} (k result))))
       (assoc! result :authors (map #(into {} %) (:authors result)))
       (persistent! result)))
