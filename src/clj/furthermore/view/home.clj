@@ -47,7 +47,6 @@
             [:span {:class "topic"} (smarten (:title topic))]
             [:br]
             (when-let [tags (seq (:tags post))]
-              (println (apply str (interpose ", " tags)))
               [:div {:class "tags text-right"}
                (apply str (interpose ", " (map #(html
                                                  (link-to
@@ -65,16 +64,21 @@
   [follow-up]
   (let [topic (get-entity {:_id (get-in follow-up [:topic :_id])} :topic)
         parent (get-entity {:_id (get-in follow-up [:parent :_id])} :post)
-        {:keys [date time]} (format-timestamp (:created-on follow-up))]
+        {:keys [date time]} (format-timestamp (:created-on follow-up))
+        excerpt? (seq (:excerpt follow-up))]
     (html
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
        [:div.follow-up
-        [:div.body (format-body (:body follow-up))]
+        (if excerpt?
+          [:div {:class "body"} (format-body (:excerpt follow-up))]
+          [:div {:class "body"} (format-body (:body follow-up))])
         [:div.footer
          [:div.row
           [:div.col-xs-12.col-sm-6
-           [:div.small.text-left.stuff]]
+           (when excerpt?
+             [:div {:class "continue"}
+              [:a {:href (str "/post/" (:url parent))} "Continue &raquo;"]])]
           [:div.col-xs-12.col-sm-6
            [:div.small.text-right.date
             "A follow-up to "
