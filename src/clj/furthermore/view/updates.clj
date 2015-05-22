@@ -15,6 +15,7 @@
         kind (kind {:follow-up "follow-up"
                     :post "post"
                     :static "page"
+                    :tag "tag"
                     :topic "topic"})]
     (str action " " kind)))
 
@@ -37,6 +38,7 @@
                        :follow-up (str "/post/" (:url parent))
                        :post (str "/post/" (:url update))
                        :static (str "/page/" (:url update))
+                       :tag (str "/tags/" (:url update))
                        "")]
          (if (= :topic kind)
            (:title update)

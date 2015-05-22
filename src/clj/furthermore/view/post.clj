@@ -1,18 +1,31 @@
 (ns furthermore.view.post
   (:require [hiccup.core :refer :all]
+            [hiccup.element :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entity]]
             [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :refer [format-timestamp]]))
+            [furthermore.utils :as utils :refer [create-url-name
+                                                 format-timestamp]]))
+
+(defn- display-tags
+  [tags]
+  (when (seq tags)
+    (html
+     [:div {:class "tags"}
+      (apply str (interpose ", " (map #(html
+                                        (link-to
+                                         (str "/tags/"
+                                              (create-url-name %)) %))
+                                      tags)))])))
 
 (def format-body (comp smarten md-to-html-string))
 
 (defn display-follow-up
   [follow-up]
   (let [follow-up (get-entity {:_id (:_id follow-up)} :follow-up)
-        {:keys [date time]} (format-timestamp (:created-on follow-up))]
+        {:keys [date time]} (utils/format-timestamp (:created-on follow-up))]
     (html
      [:div {:class "follow-up"}
       (comment
@@ -24,6 +37,7 @@
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
          [:div {:class "small text-left date"}
+          (display-tags (:tags follow-up))
           (str date " @ " time)]]
         [:div {:class "col-xs-12 col-sm-6"}
          [:div {:class "small text-right date"}]]]]])))
@@ -31,7 +45,7 @@
 (defn display-post
   [post]
   (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
-        {:keys [date time]} (format-timestamp (:created-on post))
+        {:keys [date time]} (utils/format-timestamp (:created-on post))
         excerpt? (contains? post :excerpt)]
     (html
      [:div {:class "content"}
@@ -54,6 +68,7 @@
           [:div {:class "small text-right date"}
            (str date " @ " time)
            [:br]
+           (display-tags (:tags post))
            (when-let [url (get-in post [:twitter :url])]
              [:a {:href url
                   :target "_blank"} "Tweeted!"])]]]]]

@@ -1,5 +1,6 @@
 (ns furthermore.view.home
   (:require [hiccup.core :refer :all]
+            [hiccup.element :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
@@ -8,7 +9,19 @@
                                           get-entities
                                           get-entity]]
             [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :refer [format-timestamp]]))
+            [furthermore.utils :refer [create-url-name
+                                       format-timestamp]]))
+
+(defn- display-tags
+  [tags]
+  (when (seq tags)
+    (html
+     [:div {:class "tags text-right"}
+      (apply str (interpose ", " (map #(html
+                                        (link-to
+                                         (str "/tags/"
+                                              (create-url-name %)) %))
+                                      tags)))])))
 
 (defmulti display-post :kind)
 
@@ -27,13 +40,9 @@
           [:div {:class "title"}
            [:a {:href (str "/post/" (:url post))}
             (smarten title)]])
-        (when-not (nil? (:subtitle post))
+        (when-let [subtitle (:subtitle post)]
           [:div {:class "subtitle"}
            (smarten (:subtitle post))])
-        (comment
-          (when (:tags post)
-            [:div {:class "tags text-right"}
-             (display-tags (:tags post))]))
         (if excerpt?
           [:div {:class "body"} (format-body (:excerpt post))]
           [:div {:class "body"} (format-body (:body post))])
@@ -48,6 +57,7 @@
             "Filed under "
             [:span {:class "topic"} (smarten (:title topic))]
             [:br]
+            (display-tags (:tags post))
             (str date " @ " time)
             [:br]
             (when-let [url (get-in post [:twitter :url])]
@@ -58,22 +68,28 @@
   [follow-up]
   (let [topic (get-entity {:_id (get-in follow-up [:topic :_id])} :topic)
         parent (get-entity {:_id (get-in follow-up [:parent :_id])} :post)
-        {:keys [date time]} (format-timestamp (:created-on follow-up))]
+        {:keys [date time]} (format-timestamp (:created-on follow-up))
+        excerpt? (seq (:excerpt follow-up))]
     (html
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
        [:div.follow-up
-        [:div.body (format-body (:body follow-up))]
+        (if excerpt?
+          [:div {:class "body"} (format-body (:excerpt follow-up))]
+          [:div {:class "body"} (format-body (:body follow-up))])
         [:div.footer
          [:div.row
           [:div.col-xs-12.col-sm-6
-           [:div.small.text-left.stuff]]
+           (when excerpt?
+             [:div {:class "continue"}
+              [:a {:href (str "/post/" (:url parent))} "Continue &raquo;"]])]
           [:div.col-xs-12.col-sm-6
            [:div.small.text-right.date
             "A follow-up to "
             [:a.parent {:href (str "/post/" (:url parent))}
              (smarten (or (:title parent) "Untitled"))]
             [:br]
+            (display-tags (:tags follow-up))
             (str date " @ " time)]]]]]]])))
 
 (defn display-home-page

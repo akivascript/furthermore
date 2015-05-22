@@ -19,6 +19,7 @@
             [furthermore.view.home :refer [display-home-page]]
             [furthermore.view.page :as page :refer [display-static-page]]
             [furthermore.view.post :refer [display-post-page]]
+            [furthermore.view.tags :refer [display-tags-page]]
             [furthermore.view.update :refer [display-update-page]]
             [furthermore.view.updates :refer [display-updates-page]])
   (:gen-class))
@@ -40,7 +41,7 @@
   (let [result (transient (into {} result))]
       (doseq [k [:created-on :last-updated]]
         (assoc! result k (utils/joda-date->java-date (k result))))
-      (doseq [k [:parent :topic]]
+      (doseq [k [:parent :refs :topic]]
         (assoc! result k (into {} (k result))))
       (assoc! result :authors (map #(into {} %) (:authors result)))
       (persistent! result)))
@@ -112,10 +113,15 @@
   (GET "/contents" [] (display-contents-page))
   (GET "/updates" [] (display-updates-page))
   (GET "/post/:title" [title] (display-post-page title))
+  (GET "/tags" [] (display-tags-page))
+  (GET "/tags/:tag" [tag] (display-tags-page tag))
   (GET "/admin/add-follow-up" [] (display-update-page :follow-up))
   (GET "/admin/add-post" [] (display-update-page :post))
   (GET "/admin/add-topic" [] (display-update-page :topic))
+  (GET "/api/post/:id" [id] (return-result (records->maps (get-post id))))
   (GET "/api/posts" [] (return-result (map records->maps (get-entities :posts))))
+  (GET "/api/tag/:tag" [tag] (return-result (records->maps (get-tag tag))))
+  (GET "/api/tags" [] (return-result (map records->maps (get-tags))))
   (GET "/api/topics" [] (return-result (map records->maps (get-entities :topics))))
   (POST "/api/update/:kind" [kind] (update-site kind))
   (GET "/page/:page" [page] (page/display-static-page page))

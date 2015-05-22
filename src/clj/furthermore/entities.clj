@@ -1,5 +1,5 @@
 (ns furthermore.entities
-  (:require [clojure.string :as str :refer [split]]
+  (:require [clojure.string :as string]
 
             [clj-time.local :as l :refer [local-now]]
             [monger.util :refer [random-uuid]]
@@ -19,37 +19,8 @@
 (declare get-entity)
 
 ;;
-;; References
-;;
-(defrecord Reference
-    [_id kind])
-
-(defn create-reference
-  "Returns a Reference which links entities to each other."
-  ([params]
-   (let [{:keys [_id kind]} params]
-     (create-reference _id (keyword kind))))
-  ([id kind]
-   (map->Reference {:_id id
-                    :kind (keyword kind)})))
-
-(defn reference?
-  "Returns true if x is a Reference."
-  [x]
-  (instance? Reference x))
-
-(defn link-kind
-  [link]
-  (second (str/split link #"\|")))
-
-(defn link-id
-  [link]
-  (first (str/split link #"\|")))
-
-;;
 ;; Authors
 ;;
-
 (defrecord Author
     [name works])
 
@@ -68,6 +39,109 @@
   "Returns true if x is an Author."
   [x]
   (instance? Author x))
+
+;;
+;; References
+;;
+(defrecord Reference
+    [_id kind])
+
+(defn create-reference
+  "Returns a Reference which links entities to each other."
+  ([params]
+   (let [{:keys [_id kind]} params]
+     (create-reference _id (keyword kind))))
+  ([id kind]
+   (map->Reference {:_id id
+                    :kind (keyword kind)})))
+
+(defprotocol References
+  (->ref [ref]))
+
+(extend-protocol References
+  furthermore.entities.Reference
+  (->ref [ref] ref)
+
+  clojure.lang.PersistentArrayMap
+  (->ref [ref] (create-reference ref))
+
+  java.lang.String
+  (->ref [ref]
+    (create-reference (first (string/split ref #"\|"))
+                      (second (string/split ref #"\|")))))
+
+(defn reference?
+  "Returns true if x is a Reference."
+  [x]
+  (instance? Reference x))
+
+;;
+;; Tags
+;;
+(declare create-tag)
+
+(defrecord Tag
+    [_id created-on kind last-updated log? title refs url])
+
+(defprotocol Tags
+  (->tags [tags]))
+
+(extend-protocol Tags
+  clojure.lang.PersistentHashSet
+  (->tags [tags] (map create-tag tags))
+
+  furthermore.entities.Tag
+  (->tags [tag] tag)
+
+  clojure.lang.PersistentArrayMap
+  (->tags [tags] tags)
+
+  java.lang.String
+  (->tags
+    [tags]
+    (set (map string/trim (string/split tags #";|,"))))
+
+  clojure.lang.PersistentVector
+  (->tags
+    [tags]
+    (into #{} tags)))
+
+(defn- create-tag*
+  [params]
+  (let [{:keys [_id created-on last-updated log? title refs url]
+         :or {_id (random-uuid)
+              created-on (local-now)
+              log? true
+              title "Miscellania"
+              refs #{}
+              url (create-url-name title)}} params]
+    (map->Tag {:_id _id
+               :created-on created-on
+               :kind :tag
+               :last-updated last-updated
+               :log? log?
+               :title title
+               :refs (set (map ->ref refs))
+               :url url})))
+
+(defn create-tag
+  "Returns a tag entity."
+  [x]
+  (if (map? x)
+    (create-tag* x)
+    (create-tag* {:title x})))
+
+(defn get-tag
+  [title]
+  (get-entity {:title title} :tag))
+
+(defn get-tag-by-url
+  [url]
+  (get-entity {:url url} :tag))
+
+(defn get-tags
+  []
+  (get-entities :tags))
 
 ;;
 ;; Posts
@@ -90,6 +164,8 @@
               created-on date
               _id (random-uuid)
               log? true
+              refs #{}
+              tags #{}
               title "New Post"
               url (create-entity-url date title)}} params]
     (map->Post {:_id _id
@@ -99,22 +175,12 @@
                 :excerpt excerpt
                 :kind :post
                 :log? log?
-                :parent (cond
-                          (reference? parent) parent
-                          (string? parent) (apply create-reference
-                                                  ((juxt link-id link-kind) parent))
-                          :else
-                          (create-reference parent))
-                :refs refs
+                :parent (->ref parent)
+                :refs (set (map ->ref refs))
                 :subtitle subtitle
-                :tags (into #{} tags)
+                :tags (->tags tags)
                 :title title
-                :topic (cond
-                          (reference? topic) topic
-                          (string? topic) (apply create-reference
-                                                 ((juxt link-id link-kind) topic))
-                          :else
-                          (create-reference topic))
+                :topic (->ref topic)
                 :url url})))
 
 (defn post?
@@ -127,18 +193,27 @@
   [id]
   (get-entity {:_id id} :post))
 
+(defn get-posts
+  "Returns all posts."
+  []
+  (get-entities :posts))
+
 (defrecord Follow-Up
-    [_id authors body created-on excerpt kind log? parent refs tags url])
+    [_id authors body created-on excerpt kind log? parent refs tags topic url])
 
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [_id authors created-on body excerpt last-updated log? parent refs tags url]
+  (let [{:keys [_id authors created-on body excerpt
+                last-updated log? parent refs tags topic url]
          :or {authors [(create-author {})]
               body "Somebody forgot to actually write the follow-up."
               created-on (local-now)
               _id (random-uuid)
-              log? true}} params]
+              log? true
+              refs #{}
+              tags #{}
+              topic (get-in parent [:topic :_id])}} params]
     (map->Follow-Up {:_id _id
                      :authors authors
                      :body body
@@ -147,14 +222,10 @@
                      :kind :follow-up
                      :last-updated last-updated
                      :log? log?
-                     :parent (cond
-
-                               (string? parent) (apply create-reference
-                                                       ((juxt link-id link-kind) parent))
-                               :else
-                               (create-reference parent))
-                     :refs refs
-                     :tags (into #{} tags)
+                     :parent (->ref parent)
+                     :refs (set (map ->ref refs))
+                     :tags (->tags tags)
+                     :topic (->ref topic)
                      :url url})))
 
 (defn get-follow-up
@@ -190,7 +261,7 @@
                 :created-on created-on
                 :kind :static
                 :last-updated last-updated
-                :tags (into #{} tags)
+                :tags ()
                 :title title
                 :url url})))
 
@@ -205,12 +276,11 @@
 (defrecord Topic
     [_id authors created-on kind last-updated log? tags title refs url])
 
-(defn create-topic
-  "Returns a topic entity along with its parent."
+(defn- create-topic*
   [params]
   (let [{:keys [_id authors created-on last-updated log? tags title refs url]
-         :or {authors ["John Doe"]
-              _id (random-uuid)
+         :or {_id (random-uuid)
+              authors ["John Doe"]
               created-on (local-now)
               log? true
               refs #{}
@@ -222,19 +292,26 @@
                  :kind :topic
                  :last-updated last-updated
                  :log? log?
-                 :tags (into #{} tags)
+                 :tags (->tags tags)
                  :title title
-                 :refs (into #{} refs)
+                 :refs (set (map ->ref refs))
                  :url url})))
+
+(defn create-topic
+  "Returns a topic entity."
+  [x]
+  (if (map? x)
+    (create-topic* x)
+    (create-topic* {:title x})))
 
 (defn get-topic
   "Returns a topic by id or from a post."
   [x]
   (cond
-      (string? x) (get-entity {:_id x} :topic)
-      (reference? x) (get-entity {:_id (:_id x)} :topic)
-      :else
-      (get-entity (get-in x [:topic :_id] :topic))))
+    (string? x) (get-entity {:_id x} :topic)
+    (reference? x) (get-entity {:_id (:_id x)} :topic)
+    :else
+    (get-entity (get-in x [:topic :_id]) :topic)))
 
 ;;
 ;; General Entity Functions
@@ -258,6 +335,12 @@
   [criterion kind]
   (get-entity* create-page criterion kind))
 
+(defmethod get-entity :tag
+  [criterion kind]
+  (if-let [tag (read-entity kind criterion)]
+    (create-tag tag)
+    (create-tag criterion)))
+
 (defmethod get-entity :topic
   [criterion kind]
   (get-entity* create-topic criterion kind))
@@ -276,6 +359,13 @@
   (->> (read-entities :post)
        (filter #(contains? #{:post} (keyword (:kind %))))
        (map create-post)
+       vec))
+
+(defmethod get-entities :tags
+  [_]
+  (->> (read-entities :tag)
+       (map create-tag)
+       (sort-by :title)
        vec))
 
 (defmethod get-entities :topics
@@ -297,7 +387,7 @@
 (defprotocol AddEntity
   (add-entity [entity]))
 
-(defn- commit-entity
+(defn- commit-entities
   []
   (process-db-queue)
   (clear-db-queue!))
@@ -309,9 +399,14 @@
     (let [parent (:parent entity)
           parent (-> (get-entity {:_id (:_id parent)} (:kind parent))
                      (update :refs conj (create-reference entity))
-                     (assoc :log? false))]
-      (doseq [e [entity parent]] (add-db-queue! e))
-      (commit-entity)))
+                     (assoc :log? false))
+          tags (map #(update (get-tag %)
+                             :refs conj
+                             (create-reference (:_id entity)
+                                               :post))
+                    (:tags entity))]
+      (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
+      (commit-entities)))
 
   furthermore.entities.Follow-Up
   (add-entity
@@ -319,14 +414,27 @@
     (let [parent (-> (get-post (get-in entity [:parent :_id]))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
-          entity (assoc entity :topic (:topic parent))]
-      (println "Parent: " parent)
-      (println "Entity: " entity)
-      (doseq [e [entity parent]] (add-db-queue! e))
-      (commit-entity)))
+          tags (map #(update (get-tag %)
+                             :refs conj
+                             (create-reference (:_id entity)
+                                               :follow-up))
+                    (:tags entity))]
+      (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
+      (commit-entities)))
+
+  furthermore.entities.Tag
+  (add-entity
+    [entity]
+    (add-db-queue! entity)
+    (commit-entities))
 
   furthermore.entities.Topic
   (add-entity
     [entity]
-    (add-db-queue! entity)
-    (commit-entity)))
+    (let [tags (map #(update (get-tag %)
+                             :refs conj
+                             (create-reference (:_id entity)
+                                               :topic))
+                    (:tags entity))]
+      (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
+      (commit-entities))))

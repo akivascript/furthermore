@@ -13,6 +13,14 @@
                 "http://localhost:3000/"
                 "http://whatever.akiva.wtf/"))
 
+(defn uuid?
+  "Returns true if x is a valid UUID."
+  [x]
+  (let [result (re-find
+                #"^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x)]
+    (if (nil? result) false true)))
+
 (defn joda-date->java-date
   "Returns a java.util.Date from a Joda-Time."
   [joda-date]
