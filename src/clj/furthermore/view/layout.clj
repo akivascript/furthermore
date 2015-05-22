@@ -5,6 +5,7 @@
 (def about-path "/page/about")
 (def contents-path "/contents")
 (def home-path "/")
+(def tags-path "/tags")
 (def updates-path "/updates")
 
 (def nav-bar
@@ -25,6 +26,8 @@
      [:ul {:class "nav navbar-nav"}
       [:li
        [:a {:href contents-path} "Table of Contents"]]
+      [:li
+       [:a {:href tags-path} "Tags"]]
       [:li
        [:a {:href updates-path} "Updates"]]
       [:li

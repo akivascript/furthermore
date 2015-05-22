@@ -76,9 +76,10 @@
                  (if-not (nil? (get-in e [:topic :kind]))
                    (update-in e [:topic :kind] keyword)
                    e))
-        refs (:references entity)]
-    (if-not (empty? refs)
-      (reduce #(update-in %1 [:references (.indexOf refs %2) :kind] keyword) entity refs)
+        refs (:refs entity)]
+    (if (and (map? refs)
+             (seq refs))
+      (reduce #(update-in %1 [:refs (.indexOf refs %2) :kind] keyword) entity refs)
       entity)))
 
 (defn read-entities
@@ -95,7 +96,11 @@
   "Returns a single entity from the database. criterion is expected
   to be a map (e.g., {:_id 0de661a...})."
   [kind criterion]
-  (let [entity (find-one-as-map @db (kind kinds) criterion)]
+  (let [entity (if (contains? criterion :title)
+                 (find-one-as-map @db (kind kinds) {:title
+                                                    {$regex (:title criterion)
+                                                     $options "i"}})
+                 (find-one-as-map @db (kind kinds) criterion))]
     (when-not (nil? entity)
       (parse-entity entity))))
 

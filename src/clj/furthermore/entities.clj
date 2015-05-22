@@ -46,6 +46,15 @@
 (defrecord Reference
     [_id kind])
 
+(defn create-reference
+  "Returns a Reference which links entities to each other."
+  ([params]
+   (let [{:keys [_id kind]} params]
+     (create-reference _id (keyword kind))))
+  ([id kind]
+   (map->Reference {:_id id
+                    :kind (keyword kind)})))
+
 (defprotocol References
   (->ref [ref]))
 
@@ -60,15 +69,6 @@
   (->ref [ref]
     (create-reference (first (string/split ref #"\|"))
                       (second (string/split ref #"\|")))))
-
-(defn create-reference
-  "Returns a Reference which links entities to each other."
-  ([params]
-   (let [{:keys [_id kind]} params]
-     (create-reference _id (keyword kind))))
-  ([id kind]
-   (map->Reference {:_id id
-                    :kind (keyword kind)})))
 
 (defn reference?
   "Returns true if x is a Reference."
@@ -118,9 +118,13 @@
                :title title
                :refs (into #{} refs)})))
 
-(defn tag-by-title
+(defn get-tag
   [title]
-  (get-entity {:title title} :tags))
+  (get-entity {:title title} :tag))
+
+(defn get-tags
+  []
+  (get-entities :tags))
 
 ;;
 ;; Posts
@@ -171,6 +175,11 @@
   "Returns a post from id."
   [id]
   (get-entity {:_id id} :post))
+
+(defn get-posts
+  "Returns all posts."
+  []
+  (get-entities :posts))
 
 (defrecord Follow-Up
     [_id authors body created-on excerpt kind log? parent refs tags url])
@@ -273,15 +282,15 @@
   "Returns a topic by id or from a post."
   [x]
   (cond
-      (string? x) (get-entity {:_id x} :topic)
-      (reference? x) (get-entity {:_id (:_id x)} :topic)
-      :else
-      (get-entity (get-in x [:topic :_id] :topic))))
+    (string? x) (get-entity {:_id x} :topic)
+    (reference? x) (get-entity {:_id (:_id x)} :topic)
+    :else
+    (get-entity (get-in x [:topic :_id] :topic))))
 
 ;;
 ;; General Entity Functions
 ;;
-; The Ministry of Information Retrieval
+                                        ; The Ministry of Information Retrieval
 (defmulti get-entity (fn [criterion kind] kind))
 
 (defn- get-entity*
@@ -300,10 +309,9 @@
   [criterion kind]
   (get-entity* create-page criterion kind))
 
-#_(defmethod get-entity :tag
+(defmethod get-entity :tag
   [criterion kind]
-  (when-let [tag (read-entity kind criterion)]
-    (get-entity* create-topic criterion kind)))
+  (get-entity* create-tag criterion kind))
 
 (defmethod get-entity :topic
   [criterion kind]
@@ -323,6 +331,13 @@
   (->> (read-entities :post)
        (filter #(contains? #{:post} (keyword (:kind %))))
        (map create-post)
+       vec))
+
+(defmethod get-entities :tags
+  [_]
+  (->> (read-entities :tag)
+       (map create-tag)
+       (sort-by :title)
        vec))
 
 (defmethod get-entities :topics
@@ -356,8 +371,9 @@
     (let [parent (:parent entity)
           parent (-> (get-entity {:_id (:_id parent)} (:kind parent))
                      (update :refs conj (create-reference entity))
-                     (assoc :log? false))]
-      (doseq [e [entity parent]] (add-db-queue! e))
+                     (assoc :log? false))
+          tags (map #(update (get-tag %) :refs conj (:_id entity)) (:tags entity))]
+      (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
       (commit-entities)))
 
   furthermore.entities.Follow-Up
@@ -367,8 +383,6 @@
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
           entity (assoc entity :topic (:topic parent))]
-      (println "Parent: " parent)
-      (println "Entity: " entity)
       (doseq [e [entity parent]] (add-db-queue! e))
       (commit-entities)))
 
