@@ -66,7 +66,7 @@
        [:div {:class "hidden-xs col-sm-6 text-right small"}
         "&copy; 2015 Whatever, Akiva"[:br]
         "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"]
-        [:span {:class "small"} " (v0.5&beta;)"]
+        [:span {:class "small"} " (v0.6&beta;)"]
         [:br]
         "Clojure and ClojureScript are a-okay!"]
        [:div {:class "visible-xs-block hidden-sm hidden-lg text-center small"
