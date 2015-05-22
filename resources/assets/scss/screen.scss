@@ -233,10 +233,11 @@ code, kbd, pre, samp {
     }
     
     .post {
-        border-top: none;
-        
+        margin-bottom: 0px;
         padding: 5px 0px 5px 0px;
 
+        border-top: none;
+        
         a:hover {
             color: #000;
         }
@@ -256,6 +257,8 @@ code, kbd, pre, samp {
             font-size: 100%;
             font-variant: normal;
 
+            color: #000;
+            
             a {
                 color: #008cba;
             }
@@ -265,7 +268,6 @@ code, kbd, pre, samp {
         
         .topic {
             padding: 2px 0px 0px 5px;
-
 
             font-size: 90%;
             
