@@ -59,8 +59,9 @@
 (defn- display-topic
   [topic]
   (html
-   [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
-    [:span {:class "topic"} (:title topic)]
+   [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"
+          :style "padding-bottom: 10px;"}
+    [:div {:class "topic"} (:title topic)]
     (when-let [refs (:refs topic)]
       (map display-posts refs))]))
 
