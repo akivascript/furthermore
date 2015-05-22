@@ -6,6 +6,7 @@
 
             [furthermore.view.layout :as layout :refer [display-page]]
             [furthermore.entities :as entities :refer [get-entity
+                                                       get-parent
                                                        get-tag
                                                        get-tag-by-url
                                                        get-topic]]
@@ -17,9 +18,13 @@
 
 (defmethod display-title :follow-up
   [follow-up]
-  (let [{:keys [date time]} (format-timestamp (:created-on follow-up))]
+  (let [parent (get-parent follow-up)
+        {:keys [date time]} (format-timestamp (:created-on follow-up))]
     (html
-      [:div.col-xs-5.title (get-excerpt (:body follow-up) 50)])))
+      [:div.col-xs-5.title (link-to (str utils/site-url
+                                        (utils/create-url-path parent)
+                                        (:url parent))
+                                    (smarten (get-excerpt (:body follow-up) 50)))])))
 
 (defmethod display-title :post
   [post]
