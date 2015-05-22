@@ -78,18 +78,20 @@
 ;;
 ;; Tags
 ;;
+(declare create-tag)
+
 (defrecord Tag
-    [_id created-on kind last-updated log? title refs])
+    [_id created-on kind last-updated log? title refs url])
 
 (defprotocol Tags
   (->tags [tags]))
 
 (extend-protocol Tags
   clojure.lang.PersistentHashSet
-  (->tags [tags] tags)
+  (->tags [tags] (map create-tag tags))
 
   furthermore.entities.Tag
-  (->tags [tags] tags)
+  (->tags [tag] tag)
 
   clojure.lang.PersistentArrayMap
   (->tags [tags] tags)
@@ -104,22 +106,30 @@
     [tags]
     (into #{} tags)))
 
-(defn create-tag
-  "Returns a tag entity."
+(defn- create-tag*
   [params]
-  (let [{:keys [_id created-on last-updated log? title refs]
+  (let [{:keys [_id created-on last-updated log? title refs url]
          :or {_id (random-uuid)
               created-on (local-now)
               log? true
               title "Miscellania"
-              refs #{}}} params]
+              refs #{}
+              url (create-url-name title)}} params]
     (map->Tag {:_id _id
                :created-on created-on
                :kind :tag
                :last-updated last-updated
                :log? log?
                :title title
-               :refs (into #{} refs)})))
+               :refs (into #{} refs)
+               :url url})))
+
+(defn create-tag
+  "Returns a tag entity."
+  [x]
+  (if (map? x)
+    (create-tag* x)
+    (create-tag* {:title x})))
 
 (defn get-tag
   [title]
@@ -259,8 +269,7 @@
 (defrecord Topic
     [_id authors created-on kind last-updated log? tags title refs url])
 
-(defn create-topic
-  "Returns a topic entity along with its parent."
+(defn- create-topic*
   [params]
   (let [{:keys [_id authors created-on last-updated log? tags title refs url]
          :or {_id (random-uuid)
@@ -280,6 +289,13 @@
                  :title title
                  :refs (into #{} refs)
                  :url url})))
+
+(defn create-topic
+  "Returns a topic entity."
+  [x]
+  (if (map? x)
+    (create-topic* x)
+    (create-topic* {:title x})))
 
 (defn get-topic
   "Returns a topic by id or from a post."
@@ -314,7 +330,9 @@
 
 (defmethod get-entity :tag
   [criterion kind]
-  (get-entity* create-tag criterion kind))
+  (if-let [tag (read-entity kind criterion)]
+    (create-tag tag)
+    (create-tag criterion)))
 
 (defmethod get-entity :topic
   [criterion kind]
@@ -385,8 +403,8 @@
     (let [parent (-> (get-post (get-in entity [:parent :_id]))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
-          entity (assoc entity :topic (:topic parent))]
-      (doseq [e [entity parent]] (add-db-queue! e))
+          tags (map #(update (get-tag %) :refs conj (:_id entity)) (:tags entity))]
+      (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
       (commit-entities)))
 
   furthermore.entities.Tag
@@ -398,5 +416,6 @@
   furthermore.entities.Topic
   (add-entity
     [entity]
-    (add-db-queue! entity)
-    (commit-entities)))
+    (let [tags (map #(update (get-tag %) :refs conj (:_id entity)) (:tags entity))]
+      (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
+      (commit-entities))))
