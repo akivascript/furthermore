@@ -135,6 +135,10 @@
   [title]
   (get-entity {:title title} :tag))
 
+(defn get-tag-by-url
+  [url]
+  (get-entity {:url url} :tag))
+
 (defn get-tags
   []
   (get-entities :tags))
@@ -195,19 +199,21 @@
   (get-entities :posts))
 
 (defrecord Follow-Up
-    [_id authors body created-on excerpt kind log? parent refs tags url])
+    [_id authors body created-on excerpt kind log? parent refs tags topic url])
 
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [_id authors created-on body excerpt last-updated log? parent refs tags url]
+  (let [{:keys [_id authors created-on body excerpt
+                last-updated log? parent refs tags topic url]
          :or {authors [(create-author {})]
               body "Somebody forgot to actually write the follow-up."
               created-on (local-now)
               _id (random-uuid)
               log? true
               refs #{}
-              tags #{}}} params]
+              tags #{}
+              topic (get-in parent [:topic :_id])}} params]
     (map->Follow-Up {:_id _id
                      :authors authors
                      :body body
@@ -219,6 +225,7 @@
                      :parent (->ref parent)
                      :refs (set (map ->ref refs))
                      :tags (->tags tags)
+                     :topic (->ref topic)
                      :url url})))
 
 (defn get-follow-up
