@@ -85,6 +85,9 @@
   (->tags [tags]))
 
 (extend-protocol Tags
+  clojure.lang.PersistentHashSet
+  (->tags [tags] tags)
+
   furthermore.entities.Tag
   (->tags [tags] tags)
 
