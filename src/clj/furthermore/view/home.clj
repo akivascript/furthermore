@@ -1,5 +1,6 @@
 (ns furthermore.view.home
   (:require [hiccup.core :refer :all]
+            [hiccup.element :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
@@ -8,7 +9,8 @@
                                           get-entities
                                           get-entity]]
             [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :refer [format-timestamp]]))
+            [furthermore.utils :refer [create-url-name
+                                       format-timestamp]]))
 
 (defmulti display-post :kind)
 
@@ -47,7 +49,11 @@
             (when-let [tags (seq (:tags post))]
               (println (apply str (interpose ", " tags)))
               [:div {:class "tags text-right"}
-               (apply str (interpose ", " tags))
+               (apply str (interpose ", " (map #(html
+                                                 (link-to
+                                                  (str "/tags/"
+                                                       (create-url-name %)) %))
+                                               tags)))
                [:br]])
             (str date " @ " time)
             [:br]

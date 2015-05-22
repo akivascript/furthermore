@@ -1,18 +1,20 @@
 (ns furthermore.view.post
   (:require [hiccup.core :refer :all]
+            [hiccup.element :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entity]]
             [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :refer [format-timestamp]]))
+            [furthermore.utils :as utils :refer [create-url-name
+                                                 format-timestamp]]))
 
 (def format-body (comp smarten md-to-html-string))
 
 (defn display-follow-up
   [follow-up]
   (let [follow-up (get-entity {:_id (:_id follow-up)} :follow-up)
-        {:keys [date time]} (format-timestamp (:created-on follow-up))]
+        {:keys [date time]} (utils/format-timestamp (:created-on follow-up))]
     (html
      [:div {:class "follow-up"}
       (comment
@@ -31,7 +33,7 @@
 (defn display-post
   [post]
   (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
-        {:keys [date time]} (format-timestamp (:created-on post))
+        {:keys [date time]} (utils/format-timestamp (:created-on post))
         excerpt? (contains? post :excerpt)]
     (html
      [:div {:class "content"}
@@ -57,7 +59,11 @@
            (when-let [tags (seq (:tags post))]
              (println (apply str (interpose ", " tags)))
              [:div {:class "tags text-right"}
-              (apply str (interpose ", " tags))
+              (apply str (interpose ", " (map #(html
+                                                (link-to
+                                                 (str "/tags/"
+                                                      (create-url-name %)) %))
+                                              tags)))
               [:br]])
            (when-let [url (get-in post [:twitter :url])]
              [:a {:href url
