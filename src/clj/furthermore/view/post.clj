@@ -9,6 +9,17 @@
             [furthermore.utils :as utils :refer [create-url-name
                                                  format-timestamp]]))
 
+(defn- display-tags
+  [tags]
+  (when (seq tags)
+    (html
+     [:div {:class "tags"}
+      (apply str (interpose ", " (map #(html
+                                        (link-to
+                                         (str "/tags/"
+                                              (create-url-name %)) %))
+                                      tags)))])))
+
 (def format-body (comp smarten md-to-html-string))
 
 (defn display-follow-up
@@ -26,6 +37,7 @@
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
          [:div {:class "small text-left date"}
+          (display-tags (:tags follow-up))
           (str date " @ " time)]]
         [:div {:class "col-xs-12 col-sm-6"}
          [:div {:class "small text-right date"}]]]]])))
@@ -56,15 +68,7 @@
           [:div {:class "small text-right date"}
            (str date " @ " time)
            [:br]
-           (when-let [tags (seq (:tags post))]
-             (println (apply str (interpose ", " tags)))
-             [:div {:class "tags text-right"}
-              (apply str (interpose ", " (map #(html
-                                                (link-to
-                                                 (str "/tags/"
-                                                      (create-url-name %)) %))
-                                              tags)))
-              [:br]])
+           (display-tags (:tags post))
            (when-let [url (get-in post [:twitter :url])]
              [:a {:href url
                   :target "_blank"} "Tweeted!"])]]]]]
