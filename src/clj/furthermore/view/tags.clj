@@ -30,15 +30,16 @@
 
 (defn display-post
   [post]
-  (println post)
   (let [topic (entities/get-topic (get-in post [:topic :_id]))
         {:keys [date time]} (utils/format-timestamp (:created-on post))]
     (html
      [:div.post
-      [:div.col-xs-5.title (link-to (str utils/site-url
+      [:div.col-xs-5.title (if-not (= :topic (:kind post))
+                             (link-to (str utils/site-url
                                          (utils/create-url-path post)
                                          (:url post))
-                                    (smarten (:title post)))]
+                                      (smarten (:title post)))
+                             (smarten (:title post)))]
       [:div.col-xs-3.topic (smarten (:title topic))]
       [:div.col-xs-4.date (str date " @ " time)]])))
 
