@@ -5,8 +5,7 @@
             [typographer.core :as typo :refer [smarten]]
 
             [furthermore.view.layout :as layout :refer [display-page]]
-            [furthermore.entities :as entities :refer [get-post
-                                                       get-posts
+            [furthermore.entities :as entities :refer [get-entity
                                                        get-tag
                                                        get-topic]]
             [furthermore.utils :as utils :refer [create-url-path
@@ -31,6 +30,7 @@
 
 (defn display-post
   [post]
+  (println post)
   (let [topic (entities/get-topic (get-in post [:topic :_id]))
         {:keys [date time]} (utils/format-timestamp (:created-on post))]
     (html
@@ -44,7 +44,7 @@
 
 (defn display-tags-page
   ([tag]
-   (let [posts (map get-post (:refs (get-tag tag)))
+   (let [posts (map #(get-entity {:_id (:_id %)} (:kind %)) (:refs (get-tag tag)))
          tag (get-tag tag)]
      (layout/display-page
       :tags

@@ -121,7 +121,7 @@
                :last-updated last-updated
                :log? log?
                :title title
-               :refs (into #{} refs)
+               :refs (set (map ->ref refs))
                :url url})))
 
 (defn create-tag
@@ -287,7 +287,7 @@
                  :log? log?
                  :tags (->tags tags)
                  :title title
-                 :refs (into #{} refs)
+                 :refs (set (map ->ref refs))
                  :url url})))
 
 (defn create-topic
@@ -304,12 +304,12 @@
     (string? x) (get-entity {:_id x} :topic)
     (reference? x) (get-entity {:_id (:_id x)} :topic)
     :else
-    (get-entity (get-in x [:topic :_id] :topic))))
+    (get-entity (get-in x [:topic :_id]) :topic)))
 
 ;;
 ;; General Entity Functions
 ;;
-                                        ; The Ministry of Information Retrieval
+; The Ministry of Information Retrieval
 (defmulti get-entity (fn [criterion kind] kind))
 
 (defn- get-entity*
@@ -393,7 +393,11 @@
           parent (-> (get-entity {:_id (:_id parent)} (:kind parent))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
-          tags (map #(update (get-tag %) :refs conj (:_id entity)) (:tags entity))]
+          tags (map #(update (get-tag %)
+                             :refs conj
+                             (create-reference (:_id entity)
+                                               :post))
+                    (:tags entity))]
       (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
       (commit-entities)))
 
@@ -403,7 +407,11 @@
     (let [parent (-> (get-post (get-in entity [:parent :_id]))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
-          tags (map #(update (get-tag %) :refs conj (:_id entity)) (:tags entity))]
+          tags (map #(update (get-tag %)
+                             :refs conj
+                             (create-reference (:_id entity)
+                                               :follow-up))
+                    (:tags entity))]
       (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
       (commit-entities)))
 
@@ -416,6 +424,10 @@
   furthermore.entities.Topic
   (add-entity
     [entity]
-    (let [tags (map #(update (get-tag %) :refs conj (:_id entity)) (:tags entity))]
+    (let [tags (map #(update (get-tag %)
+                             :refs conj
+                             (create-reference (:_id entity)
+                                               :topic))
+                    (:tags entity))]
       (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
       (commit-entities))))
