@@ -15,6 +15,7 @@
         kind (kind {:follow-up "follow-up"
                     :post "post"
                     :static "page"
+                    :tag "tag"
                     :topic "topic"})]
     (str action " " kind)))
 

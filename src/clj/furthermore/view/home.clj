@@ -27,13 +27,9 @@
           [:div {:class "title"}
            [:a {:href (str "/post/" (:url post))}
             (smarten title)]])
-        (when-not (nil? (:subtitle post))
+        (when-let [subtitle (:subtitle post)]
           [:div {:class "subtitle"}
            (smarten (:subtitle post))])
-        (comment
-          (when (:tags post)
-            [:div {:class "tags text-right"}
-             (display-tags (:tags post))]))
         (if excerpt?
           [:div {:class "body"} (format-body (:excerpt post))]
           [:div {:class "body"} (format-body (:body post))])
@@ -48,6 +44,11 @@
             "Filed under "
             [:span {:class "topic"} (smarten (:title topic))]
             [:br]
+            (when-let [tags (seq (:tags post))]
+              (println (apply str (interpose ", " tags)))
+              [:div {:class "tags text-right"}
+               (apply str (interpose ", " tags))
+               [:br]])
             (str date " @ " time)
             [:br]
             (when-let [url (get-in post [:twitter :url])]
