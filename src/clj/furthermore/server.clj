@@ -2,7 +2,7 @@
   (:require [clojure.edn :as edn :refer [read-string]]
             [clojure.java.io :as io]
 
-            [compojure.core :refer [GET POST context defroutes]]
+            [compojure.core :refer [GET POST context defroutes routes wrap-routes]]
             [compojure.handler :refer [site]]
             [compojure.response :refer [render]]
             [compojure.route :refer [resources]]
@@ -10,6 +10,7 @@
             [medley.core :refer [map-keys]]
             [liberator.core :refer [defresource resource]]
             [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.basic-authentication :refer [wrap-basic-authentication]]
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.entities :refer :all]
@@ -90,6 +91,19 @@
   [ctx]
   "contents")
 
+(defn authenticated?
+  [name pass]
+  (and (= name (env :admin-name))
+       (= pass (env :admin-pass))))
+
+(defresource admin-only
+  [kind]
+  :allowed-methods [:get]
+  :available-media-types ["text/html"]
+  :handle-ok (display-update-page kind)
+  :handle-unauthorized "It's a secret to everybody."
+  :authorized? (fn [{{auth :basic-authentication} :request}] (println auth) auth))
+
 (defresource update-site
   [type]
   :allowed-methods [:post]
@@ -107,30 +121,38 @@
   :available-media-types ["application/edn"]
   :handle-ok (pr-str task))
 
-(defroutes routes
-  ;; API calls
+(defroutes public-routes
   (GET "/" [] (display-home-page))
   (GET "/contents" [] (display-contents-page))
-  (GET "/updates" [] (display-updates-page))
+  (GET "/page/:page" [page] (page/display-static-page page))
   (GET "/post/:title" [title] (display-post-page title))
   (GET "/tags" [] (display-tags-page))
   (GET "/tags/:tag" [tag] (display-tags-page tag))
-  (GET "/admin/add-follow-up" [] (display-update-page :follow-up))
-  (GET "/admin/add-post" [] (display-update-page :post))
-  (GET "/admin/add-topic" [] (display-update-page :topic))
+  (GET "/updates" [] (display-updates-page))
+  ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
+  (resources "/"))
+
+(defroutes api-routes
   (GET "/api/post/:id" [id] (return-result (records->maps (get-post id))))
   (GET "/api/posts" [] (return-result (map records->maps (get-entities :posts))))
   (GET "/api/tag/:tag" [tag] (return-result (records->maps (get-tag tag))))
   (GET "/api/tags" [] (return-result (map records->maps (get-tags))))
   (GET "/api/topics" [] (return-result (map records->maps (get-entities :topics))))
-  (POST "/api/update/:kind" [kind] (update-site kind))
-  (GET "/page/:page" [page] (page/display-static-page page))
-  ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
-  (resources "/"))
+  (POST "/api/update/:kind" [kind] (update-site kind)))
+
+(defroutes admin-routes
+  (GET "/admin/add-follow-up" [] (admin-only :follow-up))
+  (GET "/admin/add-post" [] (admin-only :post))
+  (GET "/admin/add-topic" [] (admin-only :topic)))
 
 (def app
   (do (initialize-db-connection)
-      (wrap-params routes)))
+      (routes
+       (wrap-params public-routes)
+       (wrap-params api-routes)
+       (-> admin-routes
+           wrap-params
+           (wrap-basic-authentication authenticated?)))))
 
 ;;
 ;; This Is Where It Will All Go Wrong for You
