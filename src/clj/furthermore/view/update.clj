@@ -9,7 +9,8 @@
             [furthermore.utils :refer [format-timestamp]]))
 
 (def title
-  {:post "Post"
+  {:page "Page"
+   :post "Post"
    :follow-up "Follow-Up"
    :topic "Topic"})
 
@@ -39,7 +40,8 @@
            [:div {:class "panel panel-default"}
             [:div {:class "panel-body"}
              (when (or (= :post kind)
-                       (= :topic kind))
+                       (= :topic kind)
+                       (= :page kind))
                [:div
                 [:div
                  [:label {:for "title"} "Title"]
@@ -65,7 +67,8 @@
               [:label {:for "tags"} "Tags"]
               (text-field {:class "form-control"
                            :ref "tags"} "tags")]
-             (when-not (= :topic kind)
+             (when-not (or (= :topic kind)
+                           (= :page kind))
                [:div
                 [:div
                  [:label {:for "topic"} "Topic"]
@@ -93,20 +96,22 @@
                    [:input {:type "checkbox"
                             :name "tweet"
                             :ref "tweet"}]
-                   "Tweet this?"]]]
-                [:div
-                 [:label {:for "body"} "Body"]
-                 [:textarea {:ref "body"
-                             :class "form-control"
-                             :name "body"
-                             :rows 16}]]
-                [:div
-                 [:label {:for "excerpt"} "Excerpt"]
-                 [:textarea {:ref "excerpt"
-                             :class "form-control"
-                             :name "excerpt"
-                             :rows 4}]]])]]
+                   "Tweet this?"]]]])
+             [:div
+              [:label {:for "body"} "Body"]
+              [:textarea {:ref "body"
+                          :class "form-control"
+                          :name "body"
+                          :rows 16}]]
+             (when-not (= :page kind)
+               [:div
+                [:label {:for "excerpt"} "Excerpt"]
+                [:textarea {:ref "excerpt"
+                            :class "form-control"
+                            :name "excerpt"
+                            :rows 4}]])]]
            (hidden-field {:value kind} "kind")
            (hidden-field {:value (mutil/random-uuid)} "_id")
            [:div {:class "text-right"}
-            (submit-button {:class "btn btn-default"} (kind title))])]]]]))))
+            (submit-button {:class "btn btn-default"} (str "Add "
+                                                           (kind title)))])]]]]))))

@@ -102,7 +102,7 @@
   :available-media-types ["text/html"]
   :handle-ok (display-update-page kind)
   :handle-unauthorized "It's a secret to everybody."
-  :authorized? (fn [{{auth :basic-authentication} :request}] (println auth) auth))
+  :authorized? (fn [{{auth :basic-authentication} :request}] auth))
 
 (defresource update-site
   [type]
@@ -142,6 +142,7 @@
 
 (defroutes admin-routes
   (GET "/admin/add-follow-up" [] (admin-only :follow-up))
+  (GET "/admin/add-page" [] (admin-only :page))
   (GET "/admin/add-post" [] (admin-only :post))
   (GET "/admin/add-topic" [] (admin-only :topic)))
 
