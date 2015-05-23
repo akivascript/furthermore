@@ -27,6 +27,7 @@
    [markdown-clj "0.9.66"]
    [medley "0.6.0"]
    [com.novemberain/monger "2.1.0"]
+   [ring-basic-authentication "1.0.5"]
    [ring/ring-defaults "0.1.5"]
    [ring/ring-jetty-adapter "1.3.2"]
    [org.clojure/tools.reader "0.9.2" :classifier "aot"]
