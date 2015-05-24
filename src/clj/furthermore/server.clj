@@ -1,6 +1,7 @@
 (ns furthermore.server
   (:require [clojure.edn :as edn :refer [read-string]]
             [clojure.java.io :as io]
+            [clojure.pprint :as pprint]
 
             [compojure.core :refer [GET POST context defroutes routes wrap-routes]]
             [compojure.handler :refer [site]]
@@ -10,7 +11,9 @@
             [medley.core :refer [map-keys]]
             [liberator.core :refer [defresource resource]]
             [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.anti-forgery :refer :all]
             [ring.middleware.basic-authentication :refer [wrap-basic-authentication]]
+            [ring.middleware.defaults :refer :all]
             [ring.middleware.params :refer [wrap-params]]
 
             [furthermore.entities :refer :all]
@@ -40,12 +43,12 @@
   records become generic maps)."
   [result]
   (let [result (transient (into {} result))]
-      (doseq [k [:created-on :last-updated]]
-        (assoc! result k (utils/joda-date->java-date (k result))))
-      (doseq [k [:parent :refs :topic]]
-        (assoc! result k (into {} (k result))))
-      (assoc! result :authors (map #(into {} %) (:authors result)))
-      (persistent! result)))
+    (doseq [k [:created-on :last-updated]]
+      (assoc! result k (utils/joda-date->java-date (k result))))
+    (doseq [k [:parent :refs :topic]]
+      (assoc! result k (into {} (k result))))
+    (assoc! result :authors (map #(into {} %) (:authors result)))
+    (persistent! result)))
 
 ;;
 ;; Blog Update Dispatch
@@ -56,13 +59,17 @@
 
 (defmulti dispatch-update :kind)
 
-(defmethod dispatch-update "post"
-  [entity]
-  (dispatch-update* create-post entity))
-
 (defmethod dispatch-update "follow-up"
   [entity]
   (dispatch-update* create-follow-up entity))
+
+(defmethod dispatch-update "page"
+  [entity]
+  (dispatch-update* create-page entity))
+
+(defmethod dispatch-update "post"
+  [entity]
+  (dispatch-update* create-post entity))
 
 (defmethod dispatch-update "topic"
   [entity]
@@ -82,13 +89,18 @@
   (let [post (get-follow-up (:_id ctx))]
     (redirect* (get-parent post))))
 
+(defmethod redirect "page"
+  [ctx]
+  (let [page (get-entity {:title (:title ctx)} :static)]
+    (str (utils/create-url-path page) (:url page))))
+
 (defmethod redirect "post"
   [ctx]
   (let [post (get-post (:_id ctx))]
     (redirect* post)))
 
 (defmethod redirect "topic"
-  [ctx]
+  [_]
   "contents")
 
 (defn authenticated?
@@ -96,21 +108,22 @@
   (and (= name (env :admin-name))
        (= pass (env :admin-pass))))
 
-(defresource admin-only
+(defresource admin-page
   [kind]
   :allowed-methods [:get]
   :available-media-types ["text/html"]
+  :authorized? (fn [{{auth :basic-authentication} :request}] auth)
   :handle-ok (display-update-page kind)
-  :handle-unauthorized "It's a secret to everybody."
-  :authorized? (fn [{{auth :basic-authentication} :request}] auth))
+  :handle-unauthorized "It's a secret to everybody.")
 
 (defresource update-site
   [type]
   :allowed-methods [:post]
-  :available-media-types ["text/html" "application/edn" "application/x-www-form-urlencoded"]
+  :available-media-types ["application/x-www-form-urlencoded"]
   :post! (fn [ctx] (let [form-params (params->map (get-in ctx [:request :form-params]))]
                      (dispatch-update form-params)
                      {:_id (:_id form-params)
+                      :title (:title form-params)
                       :kind (:kind form-params)}))
   :post-redirect? (fn [ctx]
                     {:location (str utils/site-url (redirect ctx))}))
@@ -141,19 +154,22 @@
   (POST "/api/update/:kind" [kind] (update-site kind)))
 
 (defroutes admin-routes
-  (GET "/admin/add-follow-up" [] (admin-only :follow-up))
-  (GET "/admin/add-page" [] (admin-only :page))
-  (GET "/admin/add-post" [] (admin-only :post))
-  (GET "/admin/add-topic" [] (admin-only :topic)))
+  (GET "/admin/add-follow-up" [] (admin-page :follow-up))
+  (GET "/admin/add-page" [] (admin-page :page))
+  (GET "/admin/add-post" [] (admin-page :post))
+  (GET "/admin/add-topic" [] (admin-page :topic)))
 
 (def app
-  (do (initialize-db-connection)
-      (routes
-       (wrap-params public-routes)
-       (wrap-params api-routes)
-       (-> admin-routes
-           wrap-params
-           (wrap-basic-authentication authenticated?)))))
+  (do
+    (initialize-db-connection)
+    (routes
+     (-> public-routes
+         (wrap-routes wrap-defaults site-defaults))
+     (-> api-routes
+         (wrap-routes wrap-defaults api-defaults))
+     (-> admin-routes
+         (wrap-routes wrap-basic-authentication authenticated?)
+         (wrap-routes wrap-defaults site-defaults)))))
 
 ;;
 ;; This Is Where It Will All Go Wrong for You
@@ -162,5 +178,5 @@
   "Launches Furthermore."
   [& port]
   (let [port (Integer. (or (first port) (env :port) 5000))]
-    (run-jetty (site #'app) {:port port :join? false})
+    (run-jetty #'app {:port port :join? false})
     (println "Furthermore up and running on port" port)))
