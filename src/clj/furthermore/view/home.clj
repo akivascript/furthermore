@@ -33,36 +33,34 @@
         {:keys [date time]} (format-timestamp (:created-on post))
         excerpt? (seq (:excerpt post))]
     (html
-     [:div {:class "row"}
-      [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
-       [:div {:class "post"}
-        (if-let [title (:title post)]
-          [:div {:class "title"}
-           [:a {:href (str "/post/" (:url post))}
-            (smarten title)]])
-        (when-let [subtitle (:subtitle post)]
-          [:div {:class "subtitle"}
-           (smarten (:subtitle post))])
-        (if excerpt?
-          [:div {:class "body"} (format-body (:excerpt post))]
-          [:div {:class "body"} (format-body (:body post))])
-        [:div {:class "footer"}
-         [:div {:class "row"}
-          [:div {:class "col-xs-12 col-sm-6"}
-           (when excerpt?
-             [:div {:class "continue"}
-              [:a {:href (str "/post/" (:url post))} "Continue &raquo;"]])]
-          [:div {:class "col-xs-12 col-sm-6"}
-           [:div {:class "small text-right date"}
-            "Filed under "
-            [:span {:class "topic"} (smarten (:title topic))]
-            [:br]
-            (display-tags (:tags post))
-            (str date " @ " time)
-            [:br]
-            (when-let [url (get-in post [:twitter :url])]
-              [:a {:href url
-                   :target "_blank"} "Tweeted!"])]]]]]]])))
+     [:div {:class "post"}
+      (if-let [title (:title post)]
+        [:div {:class "title"}
+         [:a {:href (str "/post/" (:url post))}
+          (smarten title)]])
+      (when-let [subtitle (:subtitle post)]
+        [:div {:class "subtitle"}
+         (smarten (:subtitle post))])
+      (if excerpt?
+        [:div {:class "body"} (format-body (:excerpt post))]
+        [:div {:class "body"} (format-body (:body post))])
+      [:div {:class "footer"}
+       [:div {:class "row"}
+        [:div {:class "col-xs-12 col-sm-6"}
+         (when excerpt?
+           [:div {:class "continue"}
+            [:a {:href (str "/post/" (:url post))} "Continue &raquo;"]])]
+        [:div {:class "col-xs-12 col-sm-6"}
+         [:div {:class "small text-right date"}
+          "Filed under "
+          [:span {:class "topic"} (smarten (:title topic))]
+          [:br]
+          (display-tags (:tags post))
+          (str date " @ " time)
+          [:br]
+          (when-let [url (get-in post [:twitter :url])]
+            [:a {:href url
+                 :target "_blank"} "Tweeted!"])]]]]])))
 
 (defmethod display-post :follow-up
   [follow-up]
@@ -71,35 +69,35 @@
         {:keys [date time]} (format-timestamp (:created-on follow-up))
         excerpt? (seq (:excerpt follow-up))]
     (html
-     [:div {:class "row"}
-      [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
-       [:div.follow-up
-        (if excerpt?
-          [:div {:class "body"} (format-body (:excerpt follow-up))]
-          [:div {:class "body"} (format-body (:body follow-up))])
-        [:div.footer
-         [:div.row
-          [:div.col-xs-12.col-sm-6
-           (when excerpt?
-             [:div {:class "continue"}
-              [:a {:href (str "/post/" (:url parent))} "Continue &raquo;"]])]
-          [:div.col-xs-12.col-sm-6
-           [:div.small.text-right.date
-            "A follow-up to "
-            [:a.parent {:href (str "/post/" (:url parent))}
-             (smarten (or (:title parent) "Untitled"))]
-            [:br]
-            (display-tags (:tags follow-up))
-            (str date " @ " time)]]]]]]])))
+     [:div.follow-up
+      (if excerpt?
+        [:div {:class "body"} (format-body (:excerpt follow-up))]
+        [:div {:class "body"} (format-body (:body follow-up))])
+      [:div.footer
+       [:div.row
+        [:div.col-xs-12.col-sm-6
+         (when excerpt?
+           [:div {:class "continue"}
+            [:a {:href (str "/post/" (:url parent))} "Continue &raquo;"]])]
+        [:div.col-xs-12.col-sm-6
+         [:div.small.text-right.date
+          "A follow-up to "
+          [:a.parent {:href (str "/post/" (:url parent))}
+           (smarten (or (:title parent) "Untitled"))]
+          [:br]
+          (display-tags (:tags follow-up))
+          (str date " @ " time)]]]]])))
 
 (defn display-home-page
   []
   (display-page
    :home
    (html
-    [:div {:id "index"
+    [:div {:id "home"
            :class "container"}
-     (map display-post (->> (apply merge (get-entities :posts) (get-entities :follow-ups))
-                            (sort-by :created-on)
-                            reverse
-                            (take 10)))])))
+     [:div {:class "row"}
+      [:div {:class "content col-xs-12 col-sm-10 col-sm-offset-1"}
+       (map display-post (->> (apply merge (get-entities :posts) (get-entities :follow-ups))
+                              (sort-by :created-on)
+                              reverse
+                              (take 10)))]]])))
