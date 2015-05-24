@@ -26,6 +26,15 @@
                                         (:url parent))
                                     (smarten (get-excerpt (:body follow-up) 50)))])))
 
+(defmethod display-title :static
+  [page]
+  (let [{:keys [date time]} (format-timestamp (:created-on page))]
+    (html
+     [:div.col-xs-5.title (link-to (str utils/site-url
+                                        (utils/create-url-path page)
+                                        (:url page))
+                                   (smarten (:title page)))])))
+
 (defmethod display-title :post
   [post]
   (let [{:keys [date time]} (format-timestamp (:created-on post))]
