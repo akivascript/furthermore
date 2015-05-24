@@ -96,7 +96,7 @@
     [:div {:id "home"
            :class "container"}
      [:div {:class "row"}
-      [:div {:class "content col-xs-12 col-sm-10 col-sm-offset-1"}
+      [:div {:class "content col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2"}
        (map display-post (->> (apply merge (get-entities :posts) (get-entities :follow-ups))
                               (sort-by :created-on)
                               reverse

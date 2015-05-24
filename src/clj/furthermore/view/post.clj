@@ -72,7 +72,7 @@
            (when-let [url (get-in post [:twitter :url])]
              [:a {:href url
                   :target "_blank"} "Tweeted!"])]]]]]
-      (when (:refs post)
+      (when (seq (:refs post))
         [:div {:class "glyphicon glyphicon-triangle-bottom arrow"}])
       (when-let [refs (:refs post)]
         (map display-follow-up refs))])))
@@ -87,5 +87,5 @@
       [:div {:id "post"
              :class "container"}
        [:div {:class "row"}
-        [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
+        [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2"}
          (display-post post)]]]))))
