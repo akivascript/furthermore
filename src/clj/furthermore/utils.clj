@@ -31,7 +31,7 @@
   [entity]
   (case (:kind entity)
     :post "post/"
-    :static "/"
+    :static "page/"
     :topic "topic/"
     ""))
 

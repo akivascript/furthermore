@@ -261,14 +261,14 @@
                 :created-on created-on
                 :kind :static
                 :last-updated last-updated
-                :tags ()
+                :tags (set (->tags tags))
                 :title title
                 :url url})))
 
 (defn get-page
   "Returns a static page by url."
   [url]
-  (get-entity url :static))
+  (get-entity {:url url} :static))
 
 ;;
 ;; Topics
@@ -420,6 +420,17 @@
                                                :follow-up))
                     (:tags entity))]
       (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
+      (commit-entities)))
+
+  furthermore.entities.Page
+  (add-entity
+    [entity]
+    (let [tags (map #(update (get-tag %)
+                             :refs conj
+                             (create-reference (:_id entity)
+                                               :static))
+                    (:tags entity))]
+      (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
       (commit-entities)))
 
   furthermore.entities.Tag

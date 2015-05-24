@@ -9,7 +9,8 @@
             [furthermore.utils :refer [format-timestamp]]))
 
 (def title
-  {:post "Post"
+  {:page "Page"
+   :post "Post"
    :follow-up "Follow-Up"
    :topic "Topic"})
 
@@ -22,50 +23,52 @@
 
 (defn display-update-page
   [kind]
-  (let [topics (get-entities :topics)]
-    (display-page
-     :update
-     (str "Add " (kind title))
-     (html
-      [:div {:id "update"
-             :class "container"}
-       [:div {:class "row"}
-        [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
-         [:div {:class "content"}
-          (form-to
-           {:enckind "application/x-www-form-urlencoded"}
-           [:post (str "/api/update/" (name kind))]
-           [:h2 (str "New " (kind title))]
-           [:div {:class "panel panel-default"}
-            [:div {:class "panel-body"}
-             (when (or (= :post kind)
-                       (= :topic kind))
-               [:div
+  (display-page
+   :update
+   (str "Add " (title kind))
+   (html
+    [:div {:id "update"
+           :class "container"}
+     [:div {:class "row"}
+      [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
+       [:div {:class "content"}
+        (form-to
+         {:enckind "application/x-www-form-urlencoded"}
+         [:post (str "/api/update/" (name kind))]
+         [:h2 (str "New " (title kind))]
+         [:div {:class "panel panel-default"}
+          [:div {:class "panel-body"}
+           (when (or (= :post kind)
+                     (= :topic kind)
+                     (= :page kind))
+             [:div
+              [:div
+               [:label {:for "title"} "Title"]
+               [:input {:class "form-control"
+                        :type "text"
+                        :name "title"
+                        :ref "title"}]]
+              (when (= :post kind)
                 [:div
-                 [:label {:for "title"} "Title"]
+                 [:label {:for "subtitle"} "Subtitle"]
                  [:input {:class "form-control"
-                          :kind "text"
-                          :name "title"
-                          :ref "title"}]]
-                (when (= :post kind)
-                  [:div
-                   [:label {:for "subtitle"} "Subtitle"]
-                   [:input {:class "form-control"
-                            :kind "text"
-                            :name "subtitle"
-                            :ref "subtitle"}]])])
-             [:div
-              [:label {:for "authors"} "Author"]
-              [:input {:class "form-control"
-                       :kind "text"
-                       :name "authors"
-                       :ref "authors"
-                       :value "Akiva"}]]
-             [:div
-              [:label {:for "tags"} "Tags"]
-              (text-field {:class "form-control"
-                           :ref "tags"} "tags")]
-             (when-not (= :topic kind)
+                          :type "text"
+                          :name "subtitle"
+                          :ref "subtitle"}]])])
+           [:div
+            [:label {:for "authors"} "Author"]
+            [:input {:class "form-control"
+                     :type "text"
+                     :name "authors"
+                     :ref "authors"
+                     :value "Akiva"}]]
+           [:div
+            [:label {:for "tags"} "Tags"]
+            (text-field {:class "form-control"
+                         :ref "tags"} "tags")]
+           (when (or (= :post kind)
+                     (= :follow-up kind))
+             (let [topics (get-entities :topics)]
                [:div
                 [:div
                  [:label {:for "topic"} "Topic"]
@@ -93,20 +96,24 @@
                    [:input {:type "checkbox"
                             :name "tweet"
                             :ref "tweet"}]
-                   "Tweet this?"]]]
-                [:div
-                 [:label {:for "body"} "Body"]
-                 [:textarea {:ref "body"
-                             :class "form-control"
-                             :name "body"
-                             :rows 16}]]
+                   "Tweet this?"]]]]))
+           (when-not (= :topic kind)
+             [:div
+              [:div
+               [:label {:for "body"} "Body"]
+               [:textarea {:ref "body"
+                           :class "form-control"
+                           :name "body"
+                           :rows 16}]]
+              (when-not (= :page kind)
                 [:div
                  [:label {:for "excerpt"} "Excerpt"]
                  [:textarea {:ref "excerpt"
                              :class "form-control"
                              :name "excerpt"
-                             :rows 4}]]])]]
-           (hidden-field {:value kind} "kind")
-           (hidden-field {:value (mutil/random-uuid)} "_id")
-           [:div {:class "text-right"}
-            (submit-button {:class "btn btn-default"} (kind title))])]]]]))))
+                             :rows 4}]])])]]
+         (hidden-field {:value kind} "kind")
+         (hidden-field {:value (mutil/random-uuid)} "_id")
+         [:div {:class "text-right"}
+          (submit-button {:class "btn btn-default"} (str "Add "
+                                                         (title kind)))])]]]])))
