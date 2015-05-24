@@ -47,14 +47,15 @@
 
 (defn- display-posts
   [post]
-  (let [post (get-entity {:_id (:_id post)} (keyword (:kind post)))]
     (html
      [:div {:class "col-xs-12 post"}
       (display-title post)
       (when-let [refs (:refs post)]
         [:div {:id (subs (:_id post) 0 6)
                :style "display: none; margin-left: 15"}
-         (map display-posts (sort-by :created-on refs))])])))
+         (map display-posts
+              (sort-by :created-on
+                       (map #(get-entity {:_id (:_id %)} (keyword (:kind %))) refs)))])]))
 
 (defn- display-topic
   [topic]
@@ -63,7 +64,9 @@
           :style "padding-bottom: 10px;"}
     [:div {:class "topic"} (:title topic)]
     (when-let [refs (:refs topic)]
-      (map display-posts refs))]))
+      (map display-posts
+           (sort-by :title
+                    (map #(get-entity {:_id (:_id %)} (keyword (:kind %))) refs))))]))
 
 (defn display-contents-page
   []

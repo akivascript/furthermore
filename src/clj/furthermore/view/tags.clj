@@ -81,7 +81,7 @@
 (defn display-tags-page
   ([tag]
    (let [tag (get-tag-by-url tag)
-         posts (map #(get-entity {:_id (:_id %)} (:kind %)) (:refs tag))]
+         posts (sort-by :title (map #(get-entity {:_id (:_id %)} (:kind %)) (:refs tag)))]
      (layout/display-page
       :tags
       (str "Tags &mdash; " (:title tag))
