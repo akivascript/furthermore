@@ -55,8 +55,8 @@
           "Filed under "
           [:span {:class "topic"} (smarten (:title topic))]
           [:br]
-          (display-tags (:tags post))
           (str date " @ " time)
+          (display-tags (:tags post))
           [:br]
           (when-let [url (get-in post [:twitter :url])]
             [:a {:href url
@@ -85,8 +85,8 @@
           [:a.parent {:href (str "/post/" (:url parent))}
            (smarten (or (:title parent) "Untitled"))]
           [:br]
-          (display-tags (:tags follow-up))
-          (str date " @ " time)]]]]])))
+          (str date " @ " time)
+          (display-tags (:tags follow-up))]]]]])))
 
 (defn display-home-page
   []

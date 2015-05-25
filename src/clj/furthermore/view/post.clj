@@ -34,8 +34,8 @@
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
          [:div {:class "small text-left date"}
-          (display-tags (:tags follow-up))
-          (str date " @ " time)]]
+          (str date " @ " time)
+          (display-tags (:tags follow-up))]]
         [:div {:class "col-xs-12 col-sm-6"}
          [:div {:class "small text-right date"}]]]]])))
 
