@@ -38,7 +38,7 @@
   (let [{:keys [date time]} (utils/format-timestamp (:created-on topic))]
     (html
      [:div {:class "title"} (smarten (:title topic))]
-      [:div {:class "description"} (format-text (:description topic))]
+     [:div {:class "description"} (:description topic)]
       [:div {:class "footer"}
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
