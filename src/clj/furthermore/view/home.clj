@@ -57,10 +57,9 @@
           [:br]
           (str date " @ " time)
           (display-tags (:tags post))
-          [:br]
           (when-let [url (get-in post [:twitter :url])]
-            [:a {:href url
-                 :target "_blank"} "Tweeted!"])]]]]])))
+            (link-to {:class "fa fa-twitter"
+                      :target "_blank"} url))]]]]])))
 
 (defmethod display-post :follow-up
   [follow-up]
@@ -86,7 +85,10 @@
            (smarten (or (:title parent) "Untitled"))]
           [:br]
           (str date " @ " time)
-          (display-tags (:tags follow-up))]]]]])))
+          (display-tags (:tags follow-up))
+          (when-let [url (get-in follow-up [:twitter :url])]
+            (link-to {:class "fa fa-twitter"
+                      :target "_blank"} url))]]]]])))
 
 (defn display-home-page
   []
