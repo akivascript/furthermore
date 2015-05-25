@@ -188,8 +188,11 @@
 
 (defn get-post
   "Returns a post from id."
-  [id]
-  (get-entity {:_id id} :post))
+  [x]
+  (cond
+    (uuid? x) (get-entity {:_id x} :post)
+    :else
+    (get-post (:_id x))))
 
 (defn get-posts
   "Returns all posts."
