@@ -29,10 +29,6 @@
         {:keys [date time]} (utils/format-timestamp (:created-on follow-up))]
     (html
      [:div {:class "follow-up"}
-      (comment
-        (when-let [tags (:tags follow-up)]
-          [:div {:class "tags text-right"}
-           (display-tags tags)]))
       [:div {:class "body"} (format-body (:body follow-up))]
       [:div {:class "footer"}
        [:div {:class "row"}
@@ -58,10 +54,6 @@
        (when (contains? post :subtitle)
          [:div {:class "subtitle"}
           (smarten (:subtitle post))])
-       (comment
-         (when (:tags post)
-           [:div {:class "tags text-right"}
-            (display-tags (:tags post))]))
        [:div {:class "body"} (format-body (:body post))]
        [:div {:class "footer"}
         [:div {:class "row"}
