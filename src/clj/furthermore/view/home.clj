@@ -81,8 +81,9 @@
         [:div.col-xs-12.col-sm-6
          [:div.small.text-right.date
           "A follow-up to "
-          [:a.parent {:href (str "/post/" (:url parent))}
-           (smarten (or (:title parent) "Untitled"))]
+          (link-to {:class "parent"}
+                   (str "/post/" (:url parent) "#" (:url follow-up))
+                   (smarten (:title parent)))
           [:br]
           (str date " @ " time)
           (display-tags (:tags follow-up))
