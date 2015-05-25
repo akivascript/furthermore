@@ -61,7 +61,12 @@
 ;;
 (defn ^:export apply-markdown
   []
-  (doseq [body (sel ".body")]
-    (let [parent (dommy/parent body)]
-      (dommy/set-html! body (js/marked (dommy/html body)))
-      (dommy/set-style! parent :display "block"))))
+  (letfn [(mark [elem] (dommy/set-html! elem (js/marked (dommy/html elem))))
+          (show [elem] (dommy/set-style! elem :display "block"))]
+    (doseq [body (sel ".body")]
+      (mark body)
+      (show (dommy/parent body)))
+
+    (when-let [desc (sel1 ".description")]
+      (mark desc)
+      (show desc))))

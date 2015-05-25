@@ -363,36 +363,37 @@ img {
 /* line 404, ../../assets/scss/screen.scss */
 #topic .description {
   padding: 0px 0px 5px 1px;
+  display: none;
   font-family: "Puritan";
   font-size: 1.1em;
   line-height: 1.5em;
   color: #555;
 }
-/* line 414, ../../assets/scss/screen.scss */
+/* line 416, ../../assets/scss/screen.scss */
 #topic .description p {
   padding-top: 10px;
 }
-/* line 419, ../../assets/scss/screen.scss */
+/* line 421, ../../assets/scss/screen.scss */
 #topic .footer {
   padding-bottom: 10px;
   border-bottom: 1px solid #aaa;
   font-size: 1em;
   color: #aaa;
 }
-/* line 429, ../../assets/scss/screen.scss */
+/* line 431, ../../assets/scss/screen.scss */
 #topic .post {
   margin-bottom: 0px;
   padding: 5px 0px 5px 0px;
   border-top: none;
 }
-/* line 435, ../../assets/scss/screen.scss */
+/* line 437, ../../assets/scss/screen.scss */
 #topic .post .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   text-align: right;
   color: #7a7a7a;
 }
-/* line 445, ../../assets/scss/screen.scss */
+/* line 447, ../../assets/scss/screen.scss */
 #topic .post .title {
   padding-left: 5px;
   border-bottom: 0px;
@@ -401,95 +402,95 @@ img {
   text-transform: none;
   text-align: left;
 }
-/* line 454, ../../assets/scss/screen.scss */
+/* line 456, ../../assets/scss/screen.scss */
 #topic .post .title a {
   color: #955;
 }
-/* line 457, ../../assets/scss/screen.scss */
+/* line 459, ../../assets/scss/screen.scss */
 #topic .post .title a:hover {
   color: black;
 }
 
-/* line 468, ../../assets/scss/screen.scss */
+/* line 470, ../../assets/scss/screen.scss */
 #topics .topic {
   font-family: "Cinzel";
   font-size: 140%;
   text-decoration: underline;
 }
-/* line 474, ../../assets/scss/screen.scss */
+/* line 476, ../../assets/scss/screen.scss */
 #topics .topic a {
   color: #aaa;
 }
-/* line 477, ../../assets/scss/screen.scss */
+/* line 479, ../../assets/scss/screen.scss */
 #topics .topic a:hover {
   color: #465871;
 }
-/* line 482, ../../assets/scss/screen.scss */
+/* line 484, ../../assets/scss/screen.scss */
 #topics .topic .permalink {
   padding-left: 7px;
   font-size: 60%;
 }
-/* line 489, ../../assets/scss/screen.scss */
+/* line 491, ../../assets/scss/screen.scss */
 #topics .post {
   margin-top: -2.5px;
   margin-bottom: 0px;
   display: block;
   border-top: 0px;
 }
-/* line 497, ../../assets/scss/screen.scss */
+/* line 499, ../../assets/scss/screen.scss */
 #topics .post .title {
   display: inline-block;
   padding-right: 10px;
   font-family: "Crimson Text";
   font-size: 125%;
 }
-/* line 506, ../../assets/scss/screen.scss */
+/* line 508, ../../assets/scss/screen.scss */
 #topics .post .follow-up-title {
   display: inline-block;
   padding: 2px 10px 0px 0px;
   color: #777;
 }
-/* line 514, ../../assets/scss/screen.scss */
+/* line 516, ../../assets/scss/screen.scss */
 #topics .post .date {
   display: inline-block;
   color: #aaa;
 }
 
-/* line 522, ../../assets/scss/screen.scss */
+/* line 524, ../../assets/scss/screen.scss */
 #updates {
   font-size: 90%;
 }
-/* line 525, ../../assets/scss/screen.scss */
+/* line 527, ../../assets/scss/screen.scss */
 #updates .parent {
   color: #aaa;
 }
-/* line 529, ../../assets/scss/screen.scss */
+/* line 531, ../../assets/scss/screen.scss */
 #updates .entries {
   border-bottom: 1px solid #aaa;
 }
-/* line 532, ../../assets/scss/screen.scss */
+/* line 534, ../../assets/scss/screen.scss */
 #updates .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
-/* line 536, ../../assets/scss/screen.scss */
+/* line 538, ../../assets/scss/screen.scss */
 #updates .entries .entry a:hover {
   color: #000;
 }
-/* line 540, ../../assets/scss/screen.scss */
+/* line 542, ../../assets/scss/screen.scss */
 #updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 548, ../../assets/scss/screen.scss */
+/* line 550, ../../assets/scss/screen.scss */
 #updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 557, ../../assets/scss/screen.scss */
+/* line 559, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;
