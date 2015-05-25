@@ -367,96 +367,97 @@ code, kbd, pre, samp {
 }
 /* line 415, ../../assets/scss/screen.scss */
 #topic .post .title {
+  padding-left: 5px;
   border-bottom: 0px;
   font-family: 'Lato';
   font-size: 100%;
   text-transform: none;
   text-align: left;
 }
-/* line 423, ../../assets/scss/screen.scss */
+/* line 424, ../../assets/scss/screen.scss */
 #topic .post .title a {
   color: #955;
 }
-/* line 426, ../../assets/scss/screen.scss */
+/* line 427, ../../assets/scss/screen.scss */
 #topic .post .title a:hover {
   color: black;
 }
 
-/* line 437, ../../assets/scss/screen.scss */
+/* line 438, ../../assets/scss/screen.scss */
 #topics .topic {
   font-family: "Cinzel";
   font-size: 140%;
   text-decoration: underline;
 }
-/* line 443, ../../assets/scss/screen.scss */
+/* line 444, ../../assets/scss/screen.scss */
 #topics .topic a {
   color: #aaa;
 }
-/* line 446, ../../assets/scss/screen.scss */
+/* line 447, ../../assets/scss/screen.scss */
 #topics .topic a:hover {
   color: #465871;
 }
-/* line 451, ../../assets/scss/screen.scss */
+/* line 452, ../../assets/scss/screen.scss */
 #topics .topic .permalink {
   padding-left: 7px;
   font-size: 60%;
 }
-/* line 458, ../../assets/scss/screen.scss */
+/* line 459, ../../assets/scss/screen.scss */
 #topics .post {
   margin-top: -2.5px;
   margin-bottom: 0px;
   border-top: 0px;
 }
-/* line 464, ../../assets/scss/screen.scss */
+/* line 465, ../../assets/scss/screen.scss */
 #topics .post .title {
   display: inline-block;
   padding-right: 10px;
   font-family: "Crimson Text";
   font-size: 125%;
 }
-/* line 473, ../../assets/scss/screen.scss */
+/* line 474, ../../assets/scss/screen.scss */
 #topics .post .follow-up-title {
   display: inline-block;
   padding: 2px 10px 0px 0px;
   color: #777;
 }
-/* line 481, ../../assets/scss/screen.scss */
+/* line 482, ../../assets/scss/screen.scss */
 #topics .post .date {
   display: inline-block;
   color: #aaa;
 }
 
-/* line 489, ../../assets/scss/screen.scss */
+/* line 490, ../../assets/scss/screen.scss */
 #updates {
   font-size: 90%;
 }
-/* line 492, ../../assets/scss/screen.scss */
+/* line 493, ../../assets/scss/screen.scss */
 #updates .entries {
   border-bottom: 1px solid #aaa;
 }
-/* line 495, ../../assets/scss/screen.scss */
+/* line 496, ../../assets/scss/screen.scss */
 #updates .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
-/* line 499, ../../assets/scss/screen.scss */
+/* line 500, ../../assets/scss/screen.scss */
 #updates .entries .entry a:hover {
   color: #000;
 }
-/* line 503, ../../assets/scss/screen.scss */
+/* line 504, ../../assets/scss/screen.scss */
 #updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 511, ../../assets/scss/screen.scss */
+/* line 512, ../../assets/scss/screen.scss */
 #updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 520, ../../assets/scss/screen.scss */
+/* line 521, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;
