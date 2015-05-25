@@ -40,11 +40,14 @@
 (defn create-url-name
   "Returns a web-friendly url from an entity's title (or 'Untitled')
   if it does not."
-  [title]
-  (-> (or title "Untitled")
-      (string/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
-      (string/replace #" " "-")
-      string/lower-case))
+  [x]
+  (cond
+    (uuid? x) (create-url-name (apply str (take 4 x)))
+    :else
+    (-> (or x "Untitled")
+        (string/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
+        (string/replace #" " "-")
+        string/lower-case)))
 
 (defn create-url-date
   "Returns a string representation of an entity's date."

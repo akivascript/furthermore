@@ -60,7 +60,7 @@
   furthermore.entities.Reference
   (->ref [ref] ref)
 
-  clojure.lang.PersistentArrayMap
+  clojure.lang.IPersistentMap
   (->ref [ref] (create-reference ref))
 
   java.lang.String
@@ -214,7 +214,8 @@
               log? true
               refs #{}
               tags #{}
-              topic (get-in parent [:topic :_id])}} params]
+              topic (get-in parent [:topic :_id])
+              url (create-url-name _id)}} params]
     (map->Follow-Up {:_id _id
                      :authors authors
                      :body body
