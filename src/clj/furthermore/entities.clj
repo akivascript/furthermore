@@ -414,7 +414,8 @@
                              :refs conj
                              (create-reference (:_id entity)
                                                :post))
-                    (:tags entity))]
+                    (:tags entity))
+          tags (map #(assoc % :log? false) tags)]
       (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
       (commit-entities)))
 
@@ -428,7 +429,8 @@
                              :refs conj
                              (create-reference (:_id entity)
                                                :follow-up))
-                    (:tags entity))]
+                    (:tags entity))
+          tags (map #(assoc % :log? false) tags)]
       (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
       (commit-entities)))
 
@@ -439,14 +441,15 @@
                              :refs conj
                              (create-reference (:_id entity)
                                                :static))
-                    (:tags entity))]
+                    (:tags entity))
+          tags (map #(assoc % :log? false) tags)]
       (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
       (commit-entities)))
 
   furthermore.entities.Tag
   (add-entity
-    [entity]
-    (add-db-queue! entity)
+    [tag]
+    (add-db-queue! (assoc tag :log? true))
     (commit-entities))
 
   furthermore.entities.Topic
@@ -456,6 +459,7 @@
                              :refs conj
                              (create-reference (:_id entity)
                                                :topic))
-                    (:tags entity))]
+                    (:tags entity))
+          tags (map #(assoc % :log? false) tags)]
       (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
       (commit-entities))))
