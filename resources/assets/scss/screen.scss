@@ -21,6 +21,27 @@ code, kbd, pre, samp {
     font-family: $code-font;
 }
 
+img {
+    margin: 4px 10px 0px 0px;
+    
+    @include borders (10px);
+    border: 1px solid #aaa;
+}
+
+.img-left {
+    margin-right: 10px;
+    margin-top: 4px; 
+
+    float: left;
+}
+
+.img-right {
+    margin-left: 10px;
+    margin-top: 4px; 
+
+    float: right;
+}
+
 .nav {
     font-weight: 300;
 }
@@ -94,6 +115,8 @@ code, kbd, pre, samp {
 .follow-up {
     border-top: 1px solid #aaa;
     margin-bottom: 50px;
+        
+    display: none;
 
     .body {
         padding: 10px 0px 5px 1px; 
@@ -144,6 +167,8 @@ code, kbd, pre, samp {
 .post {
     border-top: 1px solid #aaa;
     margin-bottom: 50px;
+
+    display: none;
 
     .title {
         font-size: 250%;
@@ -216,6 +241,8 @@ code, kbd, pre, samp {
         .fa-twitter {
             opacity: 0.5;
         }
+
+        clear: both;
     }
 }
 
@@ -229,6 +256,8 @@ code, kbd, pre, samp {
 
         .body {
             padding: 0px 0px 0px 1px;
+
+            display: none;
         }
 
         .footer {
@@ -335,13 +364,6 @@ code, kbd, pre, samp {
         font-size: 140%;
 
         color: $gray-dark;
-    }
-    
-    img {
-        margin: 4px 10px 0px 0px;
-        
-        @include borders (10px);
-        border: 1px solid #aaa;
     }
     
     .body {

@@ -92,5 +92,7 @@
      (case page
        :contents [:script "furthermore.core.initialize_contents ()"]
        :update [:script "furthermore.core.initialize_update ()"]
+       :post [:script "furthermore.core.apply_markdown ()"]
+       :home [:script "furthermore.core.apply_markdown ()"]
        "")
      ])))
