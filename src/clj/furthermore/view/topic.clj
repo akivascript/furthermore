@@ -24,9 +24,7 @@
 
 (defn display-post
   [post]
-  (println post)
-  (let [post (entities/get-post post)
-        {:keys [date time]} (utils/format-timestamp (:created-on post))]
+  (let [{:keys [date time]} (utils/format-timestamp (:created-on post))]
     (html
      [:div.post
       [:div.col-xs-7.title (link-to (str utils/site-url
@@ -41,10 +39,6 @@
     (html
      [:div {:class "title"} (smarten (:title topic))]
       [:div {:class "description"} (format-text (:description topic))]
-      (comment
-        (when (:tags topic)
-          [:div {:class "tags text-right"}
-           (display-tags (:tags topic))]))
       [:div {:class "footer"}
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
@@ -54,8 +48,9 @@
           (str "Started on " date " @ " time)
           [:br]
           (display-tags (:tags topic))]]]]
-      (when-let [refs (filter #(= :post (:kind %)) (:refs topic))]
-        (map display-post refs)))))
+      (when-let [posts (sort-by :title (filter #(= :post (:kind %))
+                                              (map entities/get-post (:refs topic))))]
+        (map display-post posts)))))
 
 (defn display-topic-page
   [url]
