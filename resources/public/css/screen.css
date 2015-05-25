@@ -318,67 +318,138 @@ code, kbd, pre, samp {
 }
 
 /* line 355, ../../assets/scss/screen.scss */
+#topic .title {
+  border-bottom: 1px solid #aaa;
+  font-size: 150%;
+  text-align: center;
+  text-transform: uppercase;
+  color: #aaa;
+}
+/* line 366, ../../assets/scss/screen.scss */
+#topic .description {
+  padding: 0px 0px 5px 1px;
+  font-family: "Puritan";
+  font-size: 1.1em;
+  line-height: 1.5em;
+  color: #555;
+}
+/* line 376, ../../assets/scss/screen.scss */
+#topic .description p {
+  padding-top: 10px;
+}
+/* line 381, ../../assets/scss/screen.scss */
+#topic .footer {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #aaa;
+  font-size: 1em;
+  color: #aaa;
+}
+/* line 391, ../../assets/scss/screen.scss */
+#topic .post {
+  margin-bottom: 0px;
+  padding: 5px 0px 5px 0px;
+  border-top: none;
+}
+/* line 397, ../../assets/scss/screen.scss */
+#topic .post a:hover {
+  color: #000;
+}
+/* line 401, ../../assets/scss/screen.scss */
+#topic .post .date {
+  padding: 2px 5px 0px 5px;
+  font-size: 90%;
+  text-align: right;
+  color: #7a7a7a;
+}
+/* line 411, ../../assets/scss/screen.scss */
+#topic .post .title {
+  border-bottom: 0px;
+  font-family: 'Lato';
+  font-size: 100%;
+  text-transform: none;
+  color: #000;
+  text-align: left;
+}
+/* line 421, ../../assets/scss/screen.scss */
+#topic .post .title a {
+  color: #008cba;
+}
+
+/* line 431, ../../assets/scss/screen.scss */
 #topics .topic {
   font-family: "Cinzel";
   font-size: 140%;
   text-decoration: underline;
 }
-/* line 362, ../../assets/scss/screen.scss */
+/* line 437, ../../assets/scss/screen.scss */
+#topics .topic a {
+  color: #aaa;
+}
+/* line 440, ../../assets/scss/screen.scss */
+#topics .topic a:hover {
+  color: #465871;
+}
+/* line 445, ../../assets/scss/screen.scss */
+#topics .topic .permalink {
+  padding-left: 7px;
+  font-size: 60%;
+}
+/* line 452, ../../assets/scss/screen.scss */
 #topics .post {
   margin-top: -2.5px;
   margin-bottom: 0px;
   border-top: 0px;
 }
-/* line 368, ../../assets/scss/screen.scss */
+/* line 458, ../../assets/scss/screen.scss */
 #topics .post .title {
   display: inline-block;
   padding-right: 10px;
   font-family: "Crimson Text";
   font-size: 125%;
 }
-/* line 377, ../../assets/scss/screen.scss */
+/* line 467, ../../assets/scss/screen.scss */
 #topics .post .follow-up-title {
   display: inline-block;
   padding: 2px 10px 0px 0px;
   color: #777;
 }
-/* line 385, ../../assets/scss/screen.scss */
+/* line 475, ../../assets/scss/screen.scss */
 #topics .post .date {
   display: inline-block;
   color: #aaa;
 }
 
-/* line 393, ../../assets/scss/screen.scss */
+/* line 483, ../../assets/scss/screen.scss */
 #updates {
   font-size: 90%;
 }
-/* line 396, ../../assets/scss/screen.scss */
+/* line 486, ../../assets/scss/screen.scss */
 #updates .entries {
   border-bottom: 1px solid #aaa;
 }
-/* line 399, ../../assets/scss/screen.scss */
+/* line 489, ../../assets/scss/screen.scss */
 #updates .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
-/* line 403, ../../assets/scss/screen.scss */
+/* line 493, ../../assets/scss/screen.scss */
 #updates .entries .entry a:hover {
   color: #000;
 }
-/* line 407, ../../assets/scss/screen.scss */
+/* line 497, ../../assets/scss/screen.scss */
 #updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 415, ../../assets/scss/screen.scss */
+/* line 505, ../../assets/scss/screen.scss */
 #updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 424, ../../assets/scss/screen.scss */
+/* line 514, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;

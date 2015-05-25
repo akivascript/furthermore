@@ -1,12 +1,14 @@
 (ns furthermore.view.contents
   (:require [hiccup.core :refer :all]
-            [markdown.core :refer [md-to-html-string]]
+            [hiccup.element :refer :all]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entities
                                           get-entity]]
             [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :refer [get-excerpt format-timestamp]]))
+            [furthermore.utils :refer [create-url-path
+                                       get-excerpt
+                                       format-timestamp]]))
 
 (defn- make-outline-selector
   [post]
@@ -32,7 +34,7 @@
      [:div
       [:div {:class "title"}
        (make-outline-selector post)
-       [:a {:href url} (:title post)]]
+       (link-to (str (create-url-path post) (:url post)) (:title post))]
       [:div {:class "small date"} date]])))
 
 (defmethod display-title :follow-up
@@ -62,7 +64,9 @@
   (html
    [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"
           :style "padding-bottom: 10px;"}
-    [:div {:class "topic"} (:title topic)]
+    [:div {:class "topic"} (:title topic)
+     (link-to {:class "glyphicon glyphicon-link permalink"}
+              (str (create-url-path topic) (:url topic)))]
     (when-let [refs (:refs topic)]
       (map display-posts
            (sort-by :title

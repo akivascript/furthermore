@@ -351,12 +351,102 @@ code, kbd, pre, samp {
     }
 }
 
+#topic {
+    .title {
+        border-bottom: 1px solid #aaa;
+
+        font-size: 150%;
+
+        text-align: center;
+        text-transform: uppercase;
+
+        color: $gray-light; 
+    }
+
+    .description {
+        padding: 0px 0px 5px 1px; 
+
+        font-family: $body-font;
+        font-size: 1.1em;
+
+        line-height: 1.5em;
+
+        color: #555;
+
+        p {
+            padding-top: 10px;
+        }
+    }
+
+    .footer {
+        padding-bottom: 10px;
+
+        border-bottom: 1px solid #aaa;
+
+        font-size: 1em;
+
+        color: $gray-light;
+    }
+    
+    .post {
+        margin-bottom: 0px;
+        padding: 5px 0px 5px 0px;
+
+        border-top: none;
+        
+        a:hover {
+            color: #000;
+        }
+
+        .date {
+            padding: 2px 5px 0px 5px;
+
+            font-size: 90%;
+
+            text-align: right;
+            
+            color: $gray;
+        }
+
+        .title {
+            border-bottom: 0px;
+            
+            font-family: 'Lato';
+            font-size: 100%;
+
+            text-transform: none;
+            
+            color: #000;
+            
+            a {
+                color: #008cba;
+            }
+            
+            text-align: left;
+        }
+    }
+}
+        
 #topics {
     .topic {
         font-family: $page-title-font;
         font-size: 140%;
 
         text-decoration: underline;
+
+        a {
+            color: $gray-light;
+
+            &:hover {
+                color: $blue-faded;
+            }
+        }
+
+        .permalink {
+            padding-left: 7px;
+            
+            font-size: 60%;
+        }
     }
     
     .post {

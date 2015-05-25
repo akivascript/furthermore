@@ -11,9 +11,7 @@
                                             process-db-queue
                                             read-entities
                                             read-entity]]
-            [furthermore.utils :refer [joda-date->java-date
-                                       create-entity-url
-                                       create-url-name]]))
+            [furthermore.utils :refer :all]))
 
 (declare get-entities)
 (declare get-entity)
@@ -190,8 +188,11 @@
 
 (defn get-post
   "Returns a post from id."
-  [id]
-  (get-entity {:_id id} :post))
+  [x]
+  (cond
+    (uuid? x) (get-entity {:_id x} :post)
+    :else
+    (get-post (:_id x))))
 
 (defn get-posts
   "Returns all posts."
@@ -274,21 +275,24 @@
 ;; Topics
 ;;
 (defrecord Topic
-    [_id authors created-on kind last-updated log? tags title refs url])
+    [_id authors created-on description kind last-updated log? tags title refs url])
 
 (defn- create-topic*
   [params]
-  (let [{:keys [_id authors created-on last-updated log? tags title refs url]
+  (let [{:keys [_id authors created-on description last-updated log? tags title refs url]
          :or {_id (random-uuid)
               authors ["John Doe"]
               created-on (local-now)
+              description "Someone forgot to write a description."
               log? true
               refs #{}
               tags #{}
-              title "New Topic"}} params]
+              title "New Topic"
+              url (create-url-name title)}} params]
     (map->Topic {:_id _id
                  :authors (map create-author authors)
                  :created-on created-on
+                 :description description
                  :kind :topic
                  :last-updated last-updated
                  :log? log?
@@ -308,10 +312,16 @@
   "Returns a topic by id or from a post."
   [x]
   (cond
-    (string? x) (get-entity {:_id x} :topic)
+    (uuid? x) (get-entity {:_id x} :topic)
+    (string? x) (get-entity {:url x} :topic)
     (reference? x) (get-entity {:_id (:_id x)} :topic)
     :else
     (get-entity (get-in x [:topic :_id]) :topic)))
+
+(defn get-topics
+  "Returns all topics."
+  []
+  (get-entities :topics))
 
 ;;
 ;; General Entity Functions

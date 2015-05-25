@@ -24,6 +24,7 @@
             [furthermore.view.page :as page :refer [display-static-page]]
             [furthermore.view.post :refer [display-post-page]]
             [furthermore.view.tags :refer [display-tags-page]]
+            [furthermore.view.topic :as topic :refer [display-topic-page]]
             [furthermore.view.update :refer [display-update-page]]
             [furthermore.view.updates :refer [display-updates-page]])
   (:gen-class))
@@ -141,6 +142,7 @@
   (GET "/post/:title" [title] (display-post-page title))
   (GET "/tags" [] (display-tags-page))
   (GET "/tags/:tag" [tag] (display-tags-page tag))
+  (GET "/topic/:topic" [topic] (topic/display-topic-page topic))
   (GET "/updates" [] (display-updates-page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
   (resources "/"))
@@ -150,6 +152,7 @@
   (GET "/api/posts" [] (return-result (map records->maps (get-entities :posts))))
   (GET "/api/tag/:tag" [tag] (return-result (records->maps (get-tag tag))))
   (GET "/api/tags" [] (return-result (map records->maps (get-tags))))
+  (GET "/api/topic/:id" [id] (return-result (map records->maps (get-topic id))))
   (GET "/api/topics" [] (return-result (map records->maps (get-entities :topics))))
   (POST "/api/update/:kind" [kind] (update-site kind)))
 
