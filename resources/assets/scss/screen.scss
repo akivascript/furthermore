@@ -116,6 +116,10 @@ code, kbd, pre, samp {
         font-size: 1em;
 
         color: $gray-light;
+
+        .fa-twitter {
+            opacity: 0.5;
+        }
     }
 }
     
@@ -207,6 +211,10 @@ code, kbd, pre, samp {
 
         .topic {
             font-weight: bold;
+        }
+
+        .fa-twitter {
+            opacity: 0.5;
         }
     }
 }

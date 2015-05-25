@@ -114,13 +114,17 @@ code, kbd, pre, samp {
   font-size: 1em;
   color: #aaa;
 }
+/* line 120, ../../assets/scss/screen.scss */
+.follow-up .footer .fa-twitter {
+  opacity: 0.5;
+}
 
-/* line 122, ../../assets/scss/screen.scss */
+/* line 126, ../../assets/scss/screen.scss */
 .form-control {
   background-color: #fcfcfc;
 }
 
-/* line 126, ../../assets/scss/screen.scss */
+/* line 130, ../../assets/scss/screen.scss */
 .arrow {
   width: 100%;
   font-size: 400%;
@@ -128,31 +132,31 @@ code, kbd, pre, samp {
   color: #dbdbdb;
 }
 
-/* line 136, ../../assets/scss/screen.scss */
+/* line 140, ../../assets/scss/screen.scss */
 .panel {
   background-color: #f7f5ef;
 }
 
-/* line 140, ../../assets/scss/screen.scss */
+/* line 144, ../../assets/scss/screen.scss */
 .post {
   border-top: 1px solid #aaa;
   margin-bottom: 50px;
 }
-/* line 144, ../../assets/scss/screen.scss */
+/* line 148, ../../assets/scss/screen.scss */
 .post .title {
   font-size: 250%;
   font-family: "Crimson Text";
   color: #955;
 }
-/* line 150, ../../assets/scss/screen.scss */
+/* line 154, ../../assets/scss/screen.scss */
 .post .title a {
   color: #955;
 }
-/* line 153, ../../assets/scss/screen.scss */
+/* line 157, ../../assets/scss/screen.scss */
 .post .title a:hover {
   color: #465871;
 }
-/* line 159, ../../assets/scss/screen.scss */
+/* line 163, ../../assets/scss/screen.scss */
 .post .subtitle {
   margin-top: -5px;
   font-size: 120%;
@@ -160,7 +164,7 @@ code, kbd, pre, samp {
   text-transform: uppercase;
   color: #aaa;
 }
-/* line 169, ../../assets/scss/screen.scss */
+/* line 173, ../../assets/scss/screen.scss */
 .post .btn-tag {
   padding: 2px 6px;
   -webkit-border-radius: 5px;
@@ -170,12 +174,12 @@ code, kbd, pre, samp {
   border-color: #8798a7;
   font-size: 80%;
 }
-/* line 178, ../../assets/scss/screen.scss */
+/* line 182, ../../assets/scss/screen.scss */
 .post .btn-tag a:hover {
   background-color: #6f7d8a;
   border-color: #6f7d8a;
 }
-/* line 184, ../../assets/scss/screen.scss */
+/* line 188, ../../assets/scss/screen.scss */
 .post .body {
   padding: 10px 0px 5px 1px;
   font-family: "Puritan";
@@ -183,68 +187,72 @@ code, kbd, pre, samp {
   line-height: 1.5em;
   color: #555;
 }
-/* line 194, ../../assets/scss/screen.scss */
+/* line 198, ../../assets/scss/screen.scss */
 .post .body p {
   padding-top: 10px;
 }
-/* line 199, ../../assets/scss/screen.scss */
+/* line 203, ../../assets/scss/screen.scss */
 .post .footer {
   padding-top: 10px;
   color: #aaa;
 }
-/* line 204, ../../assets/scss/screen.scss */
+/* line 208, ../../assets/scss/screen.scss */
 .post .footer .continue {
   font-size: 90%;
 }
-/* line 208, ../../assets/scss/screen.scss */
+/* line 212, ../../assets/scss/screen.scss */
 .post .footer .topic {
   font-weight: bold;
 }
+/* line 216, ../../assets/scss/screen.scss */
+.post .footer .fa-twitter {
+  opacity: 0.5;
+}
 
-/* line 215, ../../assets/scss/screen.scss */
+/* line 223, ../../assets/scss/screen.scss */
 #post .follow-up {
   padding: 10px;
   border-top: 0px;
   /* background-color: #f5f5f5; */
 }
-/* line 222, ../../assets/scss/screen.scss */
+/* line 230, ../../assets/scss/screen.scss */
 #post .follow-up .body {
   padding: 0px 0px 0px 1px;
 }
-/* line 226, ../../assets/scss/screen.scss */
+/* line 234, ../../assets/scss/screen.scss */
 #post .follow-up .footer {
   padding: 0px;
 }
 
-/* line 232, ../../assets/scss/screen.scss */
+/* line 240, ../../assets/scss/screen.scss */
 #page-content {
   margin: 63px 0px 19px 0px;
   padding-top: 9.5px;
   padding-bottom: 9.5px;
 }
 
-/* line 239, ../../assets/scss/screen.scss */
+/* line 247, ../../assets/scss/screen.scss */
 #tags .posts {
   border-top: 1px solid #ccc;
 }
-/* line 243, ../../assets/scss/screen.scss */
+/* line 251, ../../assets/scss/screen.scss */
 #tags .post {
   margin-bottom: 0px;
   padding: 5px 0px 5px 0px;
   border-top: none;
 }
-/* line 249, ../../assets/scss/screen.scss */
+/* line 257, ../../assets/scss/screen.scss */
 #tags .post a:hover {
   color: #000;
 }
-/* line 253, ../../assets/scss/screen.scss */
+/* line 261, ../../assets/scss/screen.scss */
 #tags .post .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   text-align: right;
   color: #7a7a7a;
 }
-/* line 263, ../../assets/scss/screen.scss */
+/* line 271, ../../assets/scss/screen.scss */
 #tags .post .title {
   font-family: 'Lato';
   font-size: 100%;
@@ -252,37 +260,37 @@ code, kbd, pre, samp {
   color: #000;
   text-align: left;
 }
-/* line 270, ../../assets/scss/screen.scss */
+/* line 278, ../../assets/scss/screen.scss */
 #tags .post .title a {
   color: #008cba;
 }
-/* line 277, ../../assets/scss/screen.scss */
+/* line 285, ../../assets/scss/screen.scss */
 #tags .post .topic {
   padding: 2px 0px 0px 5px;
   font-size: 90%;
   color: #aaa;
 }
-/* line 286, ../../assets/scss/screen.scss */
+/* line 294, ../../assets/scss/screen.scss */
 #tags .tags {
   padding: 10px 0 10px 0;
   border-top: 1px solid #ccc;
   text-align: center;
 }
-/* line 293, ../../assets/scss/screen.scss */
+/* line 301, ../../assets/scss/screen.scss */
 #tags .tags .active {
   color: #496ea1;
 }
-/* line 296, ../../assets/scss/screen.scss */
+/* line 304, ../../assets/scss/screen.scss */
 #tags .tags .active:hover {
   text-decoration: none;
   color: #465871;
   cursor: pointer;
 }
-/* line 305, ../../assets/scss/screen.scss */
+/* line 313, ../../assets/scss/screen.scss */
 #tags .tags .inactive {
   color: #7a7a7a;
 }
-/* line 310, ../../assets/scss/screen.scss */
+/* line 318, ../../assets/scss/screen.scss */
 #tags .title {
   font-family: "Crimson Text";
   font-size: 250%;
@@ -291,7 +299,7 @@ code, kbd, pre, samp {
   color: #aa5555;
 }
 
-/* line 322, ../../assets/scss/screen.scss */
+/* line 330, ../../assets/scss/screen.scss */
 #static h3 {
   margin-bottom: 2px;
   font-family: 'Lato';
@@ -299,7 +307,7 @@ code, kbd, pre, samp {
   font-size: 140%;
   color: #555;
 }
-/* line 332, ../../assets/scss/screen.scss */
+/* line 340, ../../assets/scss/screen.scss */
 #static img {
   margin: 4px 10px 0px 0px;
   -webkit-border-radius: 10px;
@@ -307,7 +315,7 @@ code, kbd, pre, samp {
   border-radius: 10px;
   border: 1px solid #aaa;
 }
-/* line 339, ../../assets/scss/screen.scss */
+/* line 347, ../../assets/scss/screen.scss */
 #static .body {
   margin-top: -5px;
   padding-top: 10px;
@@ -316,7 +324,7 @@ code, kbd, pre, samp {
   font-size: 14pt;
   color: #555;
 }
-/* line 351, ../../assets/scss/screen.scss */
+/* line 359, ../../assets/scss/screen.scss */
 #static .title {
   font-family: "Crimson Text";
   font-size: 250%;
@@ -325,7 +333,7 @@ code, kbd, pre, samp {
   color: #aa5555;
 }
 
-/* line 363, ../../assets/scss/screen.scss */
+/* line 371, ../../assets/scss/screen.scss */
 #topic .title {
   border-bottom: 1px solid #aaa;
   font-size: 150%;
@@ -333,7 +341,7 @@ code, kbd, pre, samp {
   text-transform: uppercase;
   color: #aaa;
 }
-/* line 374, ../../assets/scss/screen.scss */
+/* line 382, ../../assets/scss/screen.scss */
 #topic .description {
   padding: 0px 0px 5px 1px;
   font-family: "Puritan";
@@ -341,31 +349,31 @@ code, kbd, pre, samp {
   line-height: 1.5em;
   color: #555;
 }
-/* line 384, ../../assets/scss/screen.scss */
+/* line 392, ../../assets/scss/screen.scss */
 #topic .description p {
   padding-top: 10px;
 }
-/* line 389, ../../assets/scss/screen.scss */
+/* line 397, ../../assets/scss/screen.scss */
 #topic .footer {
   padding-bottom: 10px;
   border-bottom: 1px solid #aaa;
   font-size: 1em;
   color: #aaa;
 }
-/* line 399, ../../assets/scss/screen.scss */
+/* line 407, ../../assets/scss/screen.scss */
 #topic .post {
   margin-bottom: 0px;
   padding: 5px 0px 5px 0px;
   border-top: none;
 }
-/* line 405, ../../assets/scss/screen.scss */
+/* line 413, ../../assets/scss/screen.scss */
 #topic .post .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   text-align: right;
   color: #7a7a7a;
 }
-/* line 415, ../../assets/scss/screen.scss */
+/* line 423, ../../assets/scss/screen.scss */
 #topic .post .title {
   padding-left: 5px;
   border-bottom: 0px;
@@ -374,94 +382,94 @@ code, kbd, pre, samp {
   text-transform: none;
   text-align: left;
 }
-/* line 424, ../../assets/scss/screen.scss */
+/* line 432, ../../assets/scss/screen.scss */
 #topic .post .title a {
   color: #955;
 }
-/* line 427, ../../assets/scss/screen.scss */
+/* line 435, ../../assets/scss/screen.scss */
 #topic .post .title a:hover {
   color: black;
 }
 
-/* line 438, ../../assets/scss/screen.scss */
+/* line 446, ../../assets/scss/screen.scss */
 #topics .topic {
   font-family: "Cinzel";
   font-size: 140%;
   text-decoration: underline;
 }
-/* line 444, ../../assets/scss/screen.scss */
+/* line 452, ../../assets/scss/screen.scss */
 #topics .topic a {
   color: #aaa;
 }
-/* line 447, ../../assets/scss/screen.scss */
+/* line 455, ../../assets/scss/screen.scss */
 #topics .topic a:hover {
   color: #465871;
 }
-/* line 452, ../../assets/scss/screen.scss */
+/* line 460, ../../assets/scss/screen.scss */
 #topics .topic .permalink {
   padding-left: 7px;
   font-size: 60%;
 }
-/* line 459, ../../assets/scss/screen.scss */
+/* line 467, ../../assets/scss/screen.scss */
 #topics .post {
   margin-top: -2.5px;
   margin-bottom: 0px;
   border-top: 0px;
 }
-/* line 465, ../../assets/scss/screen.scss */
+/* line 473, ../../assets/scss/screen.scss */
 #topics .post .title {
   display: inline-block;
   padding-right: 10px;
   font-family: "Crimson Text";
   font-size: 125%;
 }
-/* line 474, ../../assets/scss/screen.scss */
+/* line 482, ../../assets/scss/screen.scss */
 #topics .post .follow-up-title {
   display: inline-block;
   padding: 2px 10px 0px 0px;
   color: #777;
 }
-/* line 482, ../../assets/scss/screen.scss */
+/* line 490, ../../assets/scss/screen.scss */
 #topics .post .date {
   display: inline-block;
   color: #aaa;
 }
 
-/* line 490, ../../assets/scss/screen.scss */
+/* line 498, ../../assets/scss/screen.scss */
 #updates {
   font-size: 90%;
 }
-/* line 493, ../../assets/scss/screen.scss */
+/* line 501, ../../assets/scss/screen.scss */
 #updates .parent {
   color: #aaa;
 }
-/* line 497, ../../assets/scss/screen.scss */
+/* line 505, ../../assets/scss/screen.scss */
 #updates .entries {
   border-bottom: 1px solid #aaa;
 }
-/* line 500, ../../assets/scss/screen.scss */
+/* line 508, ../../assets/scss/screen.scss */
 #updates .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
-/* line 504, ../../assets/scss/screen.scss */
+/* line 512, ../../assets/scss/screen.scss */
 #updates .entries .entry a:hover {
   color: #000;
 }
-/* line 508, ../../assets/scss/screen.scss */
+/* line 516, ../../assets/scss/screen.scss */
 #updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 516, ../../assets/scss/screen.scss */
+/* line 524, ../../assets/scss/screen.scss */
 #updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 525, ../../assets/scss/screen.scss */
+/* line 533, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;
