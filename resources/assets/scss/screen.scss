@@ -81,6 +81,14 @@ code, kbd, pre, samp {
     text-transform: uppercase;
 
     color: $gray-light; 
+
+    a {
+        color: $gray-light;
+
+        &:hover {
+            color: $blue-faded;
+        }
+    }
 }
 
 .follow-up {

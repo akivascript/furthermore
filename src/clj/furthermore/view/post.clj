@@ -6,7 +6,8 @@
 
             [furthermore.entities :refer [get-entity]]
             [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :as utils :refer [create-url-name
+            [furthermore.utils :as utils :refer [create-url-path
+                                                 create-url-name
                                                  format-timestamp]]))
 
 (defn- display-tags
@@ -49,7 +50,9 @@
         excerpt? (contains? post :excerpt)]
     (html
      [:div {:class "content"}
-      [:div {:class "post-topic"} (smarten (:title topic))]
+      [:div {:class "post-topic"}
+       (link-to (str "/" (create-url-path topic) (:url topic))
+                (smarten (:title topic)))]
       [:div {:class "post"}
        [:div {:class "title"} (smarten (:title post))]
        (when (contains? post :subtitle)
