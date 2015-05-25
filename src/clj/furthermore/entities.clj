@@ -285,7 +285,8 @@
               log? true
               refs #{}
               tags #{}
-              title "New Topic"}} params]
+              title "New Topic"
+              url (create-url-name title)}} params]
     (map->Topic {:_id _id
                  :authors (map create-author authors)
                  :created-on created-on
@@ -312,6 +313,11 @@
     (reference? x) (get-entity {:_id (:_id x)} :topic)
     :else
     (get-entity (get-in x [:topic :_id]) :topic)))
+
+(defn get-topics
+  "Returns all topics."
+  []
+  (get-entities :topics))
 
 ;;
 ;; General Entity Functions
