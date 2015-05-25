@@ -4,7 +4,8 @@
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entities
-                                          get-entity]]
+                                          get-entity
+                                          get-parent]]
             [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [create-url-path
                                        get-excerpt
@@ -39,12 +40,16 @@
 
 (defmethod display-title :follow-up
   [follow-up]
-  (let [{:keys [date time]} (format-timestamp (:created-on follow-up))]
+  (let [parent (get-parent follow-up)
+        {:keys [date time]} (format-timestamp (:created-on follow-up))
+        url (str (create-url-path parent)
+                 (:url parent) "#" (:url follow-up))]
+    (println parent)
     (html
      [:div
       [:div {:class "follow-up-title"}
        (make-outline-selector follow-up)
-       (get-excerpt (:body follow-up) 50)]
+       (link-to url (get-excerpt (:body follow-up) 50))]
       [:div {:class "small date"} (str date " @ " time)]])))
 
 (defn- display-posts

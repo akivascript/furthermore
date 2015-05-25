@@ -28,6 +28,7 @@
   (let [follow-up (get-entity {:_id (:_id follow-up)} :follow-up)
         {:keys [date time]} (utils/format-timestamp (:created-on follow-up))]
     (html
+     [:a {:name (:url follow-up)}]
      [:div {:class "follow-up"}
       [:div {:class "body"} (format-body (:body follow-up))]
       [:div {:class "footer"}

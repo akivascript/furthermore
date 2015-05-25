@@ -432,32 +432,36 @@ code, kbd, pre, samp {
   font-size: 90%;
 }
 /* line 493, ../../assets/scss/screen.scss */
+#updates .parent {
+  color: #aaa;
+}
+/* line 497, ../../assets/scss/screen.scss */
 #updates .entries {
   border-bottom: 1px solid #aaa;
 }
-/* line 496, ../../assets/scss/screen.scss */
+/* line 500, ../../assets/scss/screen.scss */
 #updates .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
-/* line 500, ../../assets/scss/screen.scss */
+/* line 504, ../../assets/scss/screen.scss */
 #updates .entries .entry a:hover {
   color: #000;
 }
-/* line 504, ../../assets/scss/screen.scss */
+/* line 508, ../../assets/scss/screen.scss */
 #updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 512, ../../assets/scss/screen.scss */
+/* line 516, ../../assets/scss/screen.scss */
 #updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 521, ../../assets/scss/screen.scss */
+/* line 525, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;
