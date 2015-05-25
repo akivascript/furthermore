@@ -97,7 +97,7 @@
                             :name "tweet"
                             :ref "tweet"}]
                    "Tweet this?"]]]]))
-           (when-not (= :topic kind)
+           (if-not (= :topic kind)
              [:div
               [:div
                [:label {:for "body"} "Body"]
@@ -111,7 +111,14 @@
                  [:textarea {:ref "excerpt"
                              :class "form-control"
                              :name "excerpt"
-                             :rows 4}]])])]]
+                             :rows 4}]])]
+             [:div
+              [:div
+               [:label {:for "description"} "Description"]
+               [:textarea {:ref "description"
+                           :class "form-control"
+                           :name "description"
+                           :rows 8}]]])]]
          (hidden-field {:value kind} "kind")
          (hidden-field {:value (mutil/random-uuid)} "_id")
          [:div {:class "text-right"}
