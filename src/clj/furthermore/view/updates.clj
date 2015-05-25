@@ -1,5 +1,6 @@
 (ns furthermore.view.updates
   (:require [hiccup.core :refer :all]
+            [hiccup.element :refer :all]
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
@@ -35,7 +36,7 @@
        (set-status (:action update) kind)]
       [:div {:class "col-xs-5 title"}
        (let [path-fn (case kind
-                       :follow-up (str "/post/" (:url parent))
+                       :follow-up (str "/post/" (:url parent) "#" (:url update))
                        :post (str "/post/" (:url update))
                        :static (str "/page/" (:url update))
                        :tag (str "/tags/" (:url update))
@@ -44,9 +45,9 @@
            (:title update)
            (if (= :follow-up kind)
              [:span
-              [:a {:href path-fn} (:title parent)]
+              (link-to path-fn (:title update))
               [:br]
-              (:title update)]
+              [:span.parent (:title parent)]]
              [:a {:href path-fn} (:title update)])))]
       (when-let [topic-title (:title topic)]
         [:div {:class "col-xs-2 topic"} topic-title])])))

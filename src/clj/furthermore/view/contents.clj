@@ -4,7 +4,8 @@
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entities
-                                          get-entity]]
+                                          get-entity
+                                          get-parent]]
             [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [create-url-path
                                        get-excerpt

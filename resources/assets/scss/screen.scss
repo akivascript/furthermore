@@ -490,6 +490,10 @@ code, kbd, pre, samp {
 #updates {
     font-size: 90%;
     
+    .parent {
+        color: $gray-light;
+    }
+
     .entries {
         border-bottom: 1px solid $gray-light;
 
