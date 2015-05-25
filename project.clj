@@ -1,4 +1,4 @@
-(defproject furthermore "0.6.0-SNAPSHOT"
+(defproject furthermore "0.6.5-SNAPSHOT"
   :description
   "A topical liveblogging platform written in Clojure/ClojureScript."
   :url
@@ -9,8 +9,8 @@
   :min-lein-version "2.5.0"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0-beta3"]
-   [org.clojure/clojurescript "0.0-3269"
+  [[org.clojure/clojure "1.7.0-RC1"]
+   [org.clojure/clojurescript "0.0-3297"
     :classifier "aot"
     :exclusions [org.clojure/tools.reader org.clojure/data.json]]
    [clj-time "0.9.0"]
@@ -23,7 +23,7 @@
    [environ "1.0.0"]
    [com.cemerick/friend "0.2.2-SNAPSHOT"]
    [hiccup "1.0.5"]
-   [liberator "0.12.2"]
+   [liberator "0.13"]
    [markdown-clj "0.9.66"]
    [medley "0.6.0"]
    [com.novemberain/monger "2.1.0"]
