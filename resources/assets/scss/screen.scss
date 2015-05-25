@@ -137,10 +137,10 @@ code, kbd, pre, samp {
         font-size: 250%;
         font-family: $header-font;
 
-        color: #955;
+        color: $red-dark;
 
         a {
-            color: #955;
+            color: $red-dark;
 
             &:hover {
                 color: $blue-faded;
@@ -393,10 +393,6 @@ code, kbd, pre, samp {
         padding: 5px 0px 5px 0px;
 
         border-top: none;
-        
-        a:hover {
-            color: #000;
-        }
 
         .date {
             padding: 2px 5px 0px 5px;
@@ -416,10 +412,12 @@ code, kbd, pre, samp {
 
             text-transform: none;
             
-            color: #000;
-            
             a {
-                color: #008cba;
+                color: $red-dark;
+
+                &:hover {
+                    color: black;
+                }
             }
             
             text-align: left;
