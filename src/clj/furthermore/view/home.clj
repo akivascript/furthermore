@@ -9,6 +9,7 @@
                                           get-entity]]
             [furthermore.view.layout :refer [display-page]]
             [furthermore.utils :refer [create-url-name
+                                       create-url-path
                                        format-timestamp]]))
 
 (defn- display-tags
@@ -50,7 +51,8 @@
         [:div {:class "col-xs-12 col-sm-6"}
          [:div {:class "small text-right date"}
           "Filed under "
-          [:span {:class "topic"} (smarten (:title topic))]
+          [:span.topic
+           (link-to (str (create-url-path topic) (:url topic)) (smarten (:title topic)))]
           [:br]
           (str date " @ " time)
           (display-tags (:tags post))
