@@ -44,7 +44,6 @@
         {:keys [date time]} (format-timestamp (:created-on follow-up))
         url (str (create-url-path parent)
                  (:url parent) "#" (:url follow-up))]
-    (println parent)
     (html
      [:div
       [:div {:class "follow-up-title"}
