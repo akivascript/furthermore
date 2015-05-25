@@ -1,7 +1,6 @@
 (ns furthermore.view.home
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer :all]
-            [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [create-follow-up
@@ -25,8 +24,6 @@
 
 (defmulti display-post :kind)
 
-(def format-body (comp smarten md-to-html-string))
-
 (defmethod display-post :post
   [post]
   (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
@@ -42,8 +39,8 @@
         [:div {:class "subtitle"}
          (smarten (:subtitle post))])
       (if excerpt?
-        [:div {:class "body"} (format-body (:excerpt post))]
-        [:div {:class "body"} (format-body (:body post))])
+        [:div {:class "body"} (:excerpt post)]
+        [:div {:class "body"} (:body post)])
       [:div {:class "footer"}
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
@@ -70,8 +67,8 @@
     (html
      [:div.follow-up
       (if excerpt?
-        [:div {:class "body"} (format-body (:excerpt follow-up))]
-        [:div {:class "body"} (format-body (:body follow-up))])
+        [:div {:class "body"} (:excerpt follow-up)]
+        [:div {:class "body"} (:body follow-up)])
       [:div.footer
        [:div.row
         [:div.col-xs-12.col-sm-6

@@ -30,7 +30,7 @@
     (html
      [:a {:name (:url follow-up)}]
      [:div {:class "follow-up"}
-      [:div {:class "body"} (format-body (:body follow-up))]
+      [:div {:class "body"} (:body follow-up)]
       [:div {:class "footer"}
        [:div {:class "row"}
         [:div {:class "col-xs-12 col-sm-6"}
@@ -58,7 +58,7 @@
        (when (contains? post :subtitle)
          [:div {:class "subtitle"}
           (smarten (:subtitle post))])
-       [:div {:class "body"} (format-body (:body post))]
+       [:div {:class "body"} (:body post)]
        [:div {:class "footer"}
         [:div {:class "row"}
          [:div {:class "col-xs-12 col-sm-6"}
