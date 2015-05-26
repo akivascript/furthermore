@@ -57,8 +57,9 @@
           (str date " @ " time)
           (display-tags (:tags post))
           (when-let [url (get-in post [:twitter :url])]
-            (link-to {:class "fa fa-twitter"
-                      :target "_blank"} url))]]]]])))
+            [:span.twitter
+             (link-to {:class "whatever-twitter"
+                       :target "_blank"} url)])]]]]])))
 
 (defmethod display-post :follow-up
   [follow-up]
@@ -87,8 +88,9 @@
           (str date " @ " time)
           (display-tags (:tags follow-up))
           (when-let [url (get-in follow-up [:twitter :url])]
-            (link-to {:class "fa fa-twitter"
-                      :target "_blank"} url))]]]]])))
+            [:span.twitter
+             (link-to {:class "whatever-twitter"
+                       :target "_blank"} url)])]]]]])))
 
 (defn display-home-page
   []

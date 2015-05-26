@@ -1,28 +1,65 @@
 /* $background-color: #fbf9f4; */
 /* $background-color: #fcfbf6; */
-/* line 3, ../../assets/scss/screen.scss */
+@font-face {
+  font-family: 'whatever';
+  src: url("/fonts/whatever.eot?-g8qxr1");
+  src: url("/fonts/whatever.eot?#iefix-g8qxr1") format("embedded-opentype"), url("/fonts/whatever.ttf?-g8qxr1") format("truetype"), url("/fonts/whatever.woff?-g8qxr1") format("woff"), url("/fonts/whatever.svg?-g8qxr1#whatever") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+/* line 14, ../../assets/scss/screen.scss */
+[class^="whatever-"],
+[class*=" whatever-"] {
+  font-family: 'whatever';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 29, ../../assets/scss/screen.scss */
+.whatever-forward:before {
+  content: "\e969";
+}
+
+/* line 32, ../../assets/scss/screen.scss */
+.whatever-link:before {
+  content: "\e9cb";
+}
+
+/* line 35, ../../assets/scss/screen.scss */
+.whatever-twitter:before {
+  content: "\ea91";
+}
+
+/* line 39, ../../assets/scss/screen.scss */
 a {
   color: #496ea1;
 }
-/* line 6, ../../assets/scss/screen.scss */
+/* line 42, ../../assets/scss/screen.scss */
 a:hover {
   text-decoration: none;
   color: #465871;
 }
 
-/* line 13, ../../assets/scss/screen.scss */
+/* line 49, ../../assets/scss/screen.scss */
 body {
   background-color: #eee;
   background-image: url("/img/background.png");
   font-family: 'Lato';
 }
 
-/* line 20, ../../assets/scss/screen.scss */
+/* line 56, ../../assets/scss/screen.scss */
 code, kbd, pre, samp {
   font-family: "VT323";
 }
 
-/* line 24, ../../assets/scss/screen.scss */
+/* line 60, ../../assets/scss/screen.scss */
 img {
   margin: 4px 10px 0px 0px;
   -webkit-border-radius: 10px;
@@ -31,48 +68,48 @@ img {
   border: 1px solid #aaa;
 }
 
-/* line 31, ../../assets/scss/screen.scss */
+/* line 67, ../../assets/scss/screen.scss */
 .img-left {
   margin-right: 10px;
   margin-top: 4px;
   float: left;
 }
 
-/* line 38, ../../assets/scss/screen.scss */
+/* line 74, ../../assets/scss/screen.scss */
 .img-right {
   margin-left: 10px;
   margin-top: 4px;
   float: right;
 }
 
-/* line 45, ../../assets/scss/screen.scss */
+/* line 81, ../../assets/scss/screen.scss */
 .nav {
   font-weight: 300;
 }
 
-/* line 49, ../../assets/scss/screen.scss */
+/* line 85, ../../assets/scss/screen.scss */
 .navbar-default {
   background-color: #7a7a7a;
   background-image: url("/img/background-tan.png");
 }
-/* line 54, ../../assets/scss/screen.scss */
+/* line 90, ../../assets/scss/screen.scss */
 .navbar-default .navbar-nav > li a:hover {
   background-color: #667977;
   background-image: url("/img/background-tan.png");
 }
 
-/* line 61, ../../assets/scss/screen.scss */
+/* line 97, ../../assets/scss/screen.scss */
 .navbar-header {
   font-family: "Cinzel Decorative";
 }
 
-/* line 65, ../../assets/scss/screen.scss */
+/* line 101, ../../assets/scss/screen.scss */
 .page-header {
   margin-top: 0px;
   border-bottom: none;
 }
 
-/* line 71, ../../assets/scss/screen.scss */
+/* line 107, ../../assets/scss/screen.scss */
 .banner img {
   display: block;
   margin: 0px auto;
@@ -83,14 +120,14 @@ img {
   border: 1px solid #aaa;
 }
 
-/* line 82, ../../assets/scss/screen.scss */
+/* line 118, ../../assets/scss/screen.scss */
 .outline-widget {
   margin-right: 3px;
   cursor: pointer;
   color: #aaa;
 }
 
-/* line 90, ../../assets/scss/screen.scss */
+/* line 126, ../../assets/scss/screen.scss */
 .page-footer {
   padding: 15px;
   border-top: 1px solid #dbdbdb;
@@ -98,28 +135,28 @@ img {
   font-weight: 400;
 }
 
-/* line 98, ../../assets/scss/screen.scss */
+/* line 134, ../../assets/scss/screen.scss */
 .post-topic {
   font-size: 80%;
   text-align: center;
   text-transform: uppercase;
   color: #aaa;
 }
-/* line 106, ../../assets/scss/screen.scss */
+/* line 142, ../../assets/scss/screen.scss */
 .post-topic a {
   color: #aaa;
 }
-/* line 109, ../../assets/scss/screen.scss */
+/* line 145, ../../assets/scss/screen.scss */
 .post-topic a:hover {
   color: #465871;
 }
 
-/* line 115, ../../assets/scss/screen.scss */
+/* line 151, ../../assets/scss/screen.scss */
 .follow-up {
   border-top: 1px solid #aaa;
   margin-bottom: 50px;
 }
-/* line 119, ../../assets/scss/screen.scss */
+/* line 155, ../../assets/scss/screen.scss */
 .follow-up .body {
   padding: 10px 0px 5px 1px;
   font-family: "Puritan";
@@ -127,27 +164,27 @@ img {
   text-align: left;
   color: #555;
 }
-/* line 129, ../../assets/scss/screen.scss */
+/* line 165, ../../assets/scss/screen.scss */
 .follow-up .body p {
   padding-top: 10px;
 }
-/* line 134, ../../assets/scss/screen.scss */
+/* line 170, ../../assets/scss/screen.scss */
 .follow-up .footer {
   padding-top: 10px;
   font-size: 1em;
   color: #aaa;
 }
-/* line 141, ../../assets/scss/screen.scss */
-.follow-up .footer .fa-twitter {
+/* line 177, ../../assets/scss/screen.scss */
+.follow-up .footer .whatever-twitter {
   opacity: 0.5;
 }
 
-/* line 147, ../../assets/scss/screen.scss */
+/* line 183, ../../assets/scss/screen.scss */
 .form-control {
   background-color: #fcfcfc;
 }
 
-/* line 151, ../../assets/scss/screen.scss */
+/* line 187, ../../assets/scss/screen.scss */
 .arrow {
   width: 100%;
   font-size: 400%;
@@ -155,31 +192,31 @@ img {
   color: #dbdbdb;
 }
 
-/* line 161, ../../assets/scss/screen.scss */
+/* line 197, ../../assets/scss/screen.scss */
 .panel {
   background-color: #f7f5ef;
 }
 
-/* line 165, ../../assets/scss/screen.scss */
+/* line 201, ../../assets/scss/screen.scss */
 .post {
   border-top: 1px solid #aaa;
   margin-bottom: 50px;
 }
-/* line 169, ../../assets/scss/screen.scss */
+/* line 205, ../../assets/scss/screen.scss */
 .post .title {
   font-size: 250%;
   font-family: "Crimson Text";
   color: #955;
 }
-/* line 175, ../../assets/scss/screen.scss */
+/* line 211, ../../assets/scss/screen.scss */
 .post .title a {
   color: #955;
 }
-/* line 178, ../../assets/scss/screen.scss */
+/* line 214, ../../assets/scss/screen.scss */
 .post .title a:hover {
   color: #465871;
 }
-/* line 184, ../../assets/scss/screen.scss */
+/* line 220, ../../assets/scss/screen.scss */
 .post .subtitle {
   margin-top: -5px;
   font-size: 120%;
@@ -187,7 +224,7 @@ img {
   text-transform: uppercase;
   color: #aaa;
 }
-/* line 194, ../../assets/scss/screen.scss */
+/* line 230, ../../assets/scss/screen.scss */
 .post .btn-tag {
   padding: 2px 6px;
   -webkit-border-radius: 5px;
@@ -197,12 +234,12 @@ img {
   border-color: #8798a7;
   font-size: 80%;
 }
-/* line 203, ../../assets/scss/screen.scss */
+/* line 239, ../../assets/scss/screen.scss */
 .post .btn-tag a:hover {
   background-color: #6f7d8a;
   border-color: #6f7d8a;
 }
-/* line 209, ../../assets/scss/screen.scss */
+/* line 245, ../../assets/scss/screen.scss */
 .post .body {
   padding: 10px 0px 5px 1px;
   font-family: "Puritan";
@@ -210,73 +247,78 @@ img {
   line-height: 1.5em;
   color: #555;
 }
-/* line 219, ../../assets/scss/screen.scss */
+/* line 255, ../../assets/scss/screen.scss */
 .post .body p {
   padding-top: 10px;
 }
-/* line 224, ../../assets/scss/screen.scss */
+/* line 260, ../../assets/scss/screen.scss */
 .post .footer {
   padding-top: 10px;
   color: #aaa;
   clear: both;
 }
-/* line 229, ../../assets/scss/screen.scss */
+/* line 265, ../../assets/scss/screen.scss */
 .post .footer .continue {
   font-size: 90%;
 }
-/* line 233, ../../assets/scss/screen.scss */
+/* line 269, ../../assets/scss/screen.scss */
 .post .footer .topic {
   font-weight: bold;
 }
-/* line 237, ../../assets/scss/screen.scss */
-.post .footer .fa-twitter {
+
+/* line 278, ../../assets/scss/screen.scss */
+.twitter a {
   opacity: 0.5;
 }
+/* line 281, ../../assets/scss/screen.scss */
+.twitter a:hover {
+  opacity: 1.0;
+}
 
-/* line 246, ../../assets/scss/screen.scss */
+/* line 288, ../../assets/scss/screen.scss */
 #post .follow-up {
   padding: 10px;
   border-top: 0px;
   /* background-color: #f5f5f5; */
 }
-/* line 253, ../../assets/scss/screen.scss */
+/* line 295, ../../assets/scss/screen.scss */
 #post .follow-up .body {
   padding: 0px 0px 0px 1px;
 }
-/* line 257, ../../assets/scss/screen.scss */
+/* line 299, ../../assets/scss/screen.scss */
 #post .follow-up .footer {
   padding: 0px;
 }
 
-/* line 263, ../../assets/scss/screen.scss */
+/* line 305, ../../assets/scss/screen.scss */
 #page-content {
   margin: 63px 0px 19px 0px;
   padding-top: 9.5px;
   padding-bottom: 9.5px;
 }
 
-/* line 270, ../../assets/scss/screen.scss */
+/* line 312, ../../assets/scss/screen.scss */
 #tags .posts {
   border-top: 1px solid #ccc;
 }
-/* line 274, ../../assets/scss/screen.scss */
+/* line 316, ../../assets/scss/screen.scss */
 #tags .post {
   margin-bottom: 0px;
   padding: 5px 0px 5px 0px;
   border-top: none;
 }
-/* line 280, ../../assets/scss/screen.scss */
+/* line 322, ../../assets/scss/screen.scss */
 #tags .post a:hover {
   color: #000;
 }
-/* line 284, ../../assets/scss/screen.scss */
+/* line 326, ../../assets/scss/screen.scss */
 #tags .post .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   text-align: right;
   color: #7a7a7a;
 }
-/* line 294, ../../assets/scss/screen.scss */
+/* line 336, ../../assets/scss/screen.scss */
 #tags .post .title {
   font-family: 'Lato';
   font-size: 100%;
@@ -284,37 +326,37 @@ img {
   color: #000;
   text-align: left;
 }
-/* line 301, ../../assets/scss/screen.scss */
+/* line 343, ../../assets/scss/screen.scss */
 #tags .post .title a {
   color: #008cba;
 }
-/* line 308, ../../assets/scss/screen.scss */
+/* line 350, ../../assets/scss/screen.scss */
 #tags .post .topic {
   padding: 2px 0px 0px 5px;
   font-size: 90%;
   color: #aaa;
 }
-/* line 317, ../../assets/scss/screen.scss */
+/* line 359, ../../assets/scss/screen.scss */
 #tags .tags {
   padding: 10px 0 10px 0;
   border-top: 1px solid #ccc;
   text-align: center;
 }
-/* line 324, ../../assets/scss/screen.scss */
+/* line 366, ../../assets/scss/screen.scss */
 #tags .tags .active {
   color: #496ea1;
 }
-/* line 327, ../../assets/scss/screen.scss */
+/* line 369, ../../assets/scss/screen.scss */
 #tags .tags .active:hover {
   text-decoration: none;
   color: #465871;
   cursor: pointer;
 }
-/* line 336, ../../assets/scss/screen.scss */
+/* line 378, ../../assets/scss/screen.scss */
 #tags .tags .inactive {
   color: #7a7a7a;
 }
-/* line 341, ../../assets/scss/screen.scss */
+/* line 383, ../../assets/scss/screen.scss */
 #tags .title {
   font-family: "Crimson Text";
   font-size: 250%;
@@ -323,7 +365,7 @@ img {
   color: #aa5555;
 }
 
-/* line 353, ../../assets/scss/screen.scss */
+/* line 395, ../../assets/scss/screen.scss */
 #static h3 {
   margin-bottom: 2px;
   font-family: 'Lato';
@@ -331,7 +373,7 @@ img {
   font-size: 140%;
   color: #555;
 }
-/* line 363, ../../assets/scss/screen.scss */
+/* line 405, ../../assets/scss/screen.scss */
 #static .body {
   margin-top: -5px;
   padding-top: 10px;
@@ -340,7 +382,7 @@ img {
   font-size: 14pt;
   color: #555;
 }
-/* line 375, ../../assets/scss/screen.scss */
+/* line 417, ../../assets/scss/screen.scss */
 #static .title {
   font-family: "Crimson Text";
   font-size: 250%;
@@ -349,7 +391,7 @@ img {
   color: #aa5555;
 }
 
-/* line 387, ../../assets/scss/screen.scss */
+/* line 429, ../../assets/scss/screen.scss */
 #topic .title {
   border-bottom: 1px solid #aaa;
   font-size: 150%;
@@ -357,7 +399,7 @@ img {
   text-transform: uppercase;
   color: #aaa;
 }
-/* line 398, ../../assets/scss/screen.scss */
+/* line 440, ../../assets/scss/screen.scss */
 #topic .body {
   padding: 0px 0px 5px 1px;
   font-family: "Puritan";
@@ -365,31 +407,31 @@ img {
   line-height: 1.5em;
   color: #555;
 }
-/* line 408, ../../assets/scss/screen.scss */
+/* line 450, ../../assets/scss/screen.scss */
 #topic .body p {
   padding-top: 10px;
 }
-/* line 413, ../../assets/scss/screen.scss */
+/* line 455, ../../assets/scss/screen.scss */
 #topic .footer {
   padding-bottom: 10px;
   border-bottom: 1px solid #aaa;
   font-size: 1em;
   color: #aaa;
 }
-/* line 423, ../../assets/scss/screen.scss */
+/* line 465, ../../assets/scss/screen.scss */
 #topic .post {
   margin-bottom: 0px;
   padding: 5px 0px 5px 0px;
   border-top: none;
 }
-/* line 429, ../../assets/scss/screen.scss */
+/* line 471, ../../assets/scss/screen.scss */
 #topic .post .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   text-align: right;
   color: #7a7a7a;
 }
-/* line 439, ../../assets/scss/screen.scss */
+/* line 481, ../../assets/scss/screen.scss */
 #topic .post .title {
   padding-left: 5px;
   border-bottom: 0px;
@@ -398,99 +440,100 @@ img {
   text-transform: none;
   text-align: left;
 }
-/* line 448, ../../assets/scss/screen.scss */
+/* line 490, ../../assets/scss/screen.scss */
 #topic .post .title a {
   color: #955;
 }
-/* line 451, ../../assets/scss/screen.scss */
+/* line 493, ../../assets/scss/screen.scss */
 #topic .post .title a:hover {
   color: black;
 }
 
-/* line 462, ../../assets/scss/screen.scss */
+/* line 504, ../../assets/scss/screen.scss */
 #topics .topic {
   font-family: "Cinzel";
   font-size: 140%;
   text-decoration: underline;
 }
-/* line 468, ../../assets/scss/screen.scss */
-#topics .topic a {
+/* line 511, ../../assets/scss/screen.scss */
+#topics .permalink {
+  padding-left: 7px;
+  font-size: 75%;
+  text-decoration: none;
+}
+/* line 518, ../../assets/scss/screen.scss */
+#topics .permalink a {
   color: #aaa;
 }
-/* line 471, ../../assets/scss/screen.scss */
-#topics .topic a:hover {
+/* line 521, ../../assets/scss/screen.scss */
+#topics .permalink a:hover {
   color: #465871;
 }
-/* line 476, ../../assets/scss/screen.scss */
-#topics .topic .permalink {
-  padding-left: 7px;
-  font-size: 60%;
-}
-/* line 483, ../../assets/scss/screen.scss */
+/* line 527, ../../assets/scss/screen.scss */
 #topics .post {
   margin-top: -2.5px;
   margin-bottom: 0px;
   display: block;
   border-top: 0px;
 }
-/* line 491, ../../assets/scss/screen.scss */
+/* line 535, ../../assets/scss/screen.scss */
 #topics .post .title {
   display: inline-block;
   padding-right: 10px;
   font-family: "Crimson Text";
   font-size: 125%;
 }
-/* line 500, ../../assets/scss/screen.scss */
+/* line 544, ../../assets/scss/screen.scss */
 #topics .post .follow-up-title {
   display: inline-block;
   padding: 2px 10px 0px 0px;
   color: #777;
 }
-/* line 508, ../../assets/scss/screen.scss */
+/* line 552, ../../assets/scss/screen.scss */
 #topics .post .date {
   display: inline-block;
   color: #aaa;
 }
 
-/* line 516, ../../assets/scss/screen.scss */
+/* line 560, ../../assets/scss/screen.scss */
 #updates {
   font-size: 90%;
 }
-/* line 519, ../../assets/scss/screen.scss */
+/* line 563, ../../assets/scss/screen.scss */
 #updates .parent {
   color: #aaa;
 }
-/* line 523, ../../assets/scss/screen.scss */
+/* line 567, ../../assets/scss/screen.scss */
 #updates .entries {
   border-bottom: 1px solid #aaa;
 }
-/* line 526, ../../assets/scss/screen.scss */
+/* line 570, ../../assets/scss/screen.scss */
 #updates .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
-/* line 530, ../../assets/scss/screen.scss */
+/* line 574, ../../assets/scss/screen.scss */
 #updates .entries .entry a:hover {
   color: #000;
 }
-/* line 534, ../../assets/scss/screen.scss */
+/* line 578, ../../assets/scss/screen.scss */
 #updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 542, ../../assets/scss/screen.scss */
+/* line 586, ../../assets/scss/screen.scss */
 #updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 552, ../../assets/scss/screen.scss */
+/* line 596, ../../assets/scss/screen.scss */
 #updates .entries .entry .title p {
   margin: 0px;
 }
-/* line 557, ../../assets/scss/screen.scss */
+/* line 601, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;

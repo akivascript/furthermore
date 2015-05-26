@@ -45,7 +45,6 @@
      [:meta {:http-equiv "content-type" :content "text/html;charset=utf-8"}]
      [:link {:rel "icon" :type "image/png" :href "/favicon.png"}]
      (include-css "http://maxcdn.bootstrapcdn.com/bootswatch/3.3.2/yeti/bootstrap.min.css")
-     (include-css "http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
      [:link {:href "http://fonts.googleapis.com/css?family=Lato:400,300,700|Puritan:400,400italic|Cinzel+Decorative|Cinzel|Crimson+Text:400,400italic|VT323"
              :rel "stylesheet"
              :type "text/css"}]
@@ -83,7 +82,6 @@
      (include-js
       "http://code.jquery.com/jquery-2.1.3.min.js"
       "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"
-      "/js/marked.min.js"
       "/js/highlight.pack.js"
       "/js/compiled/furthermore.js")
 

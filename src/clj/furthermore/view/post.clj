@@ -38,7 +38,7 @@
           (str date " @ " time)
           (display-tags (:tags follow-up))
           (when-let [url (get-in follow-up [:twitter :url])]
-             (link-to {:class "fa fa-twitter"
+            (link-to {:class "whatever-twitter"
                        :target "_blank"} url))]]
         [:div {:class "col-xs-12 col-sm-6"}
          [:div {:class "small text-right date"}]]]]])))
@@ -69,7 +69,7 @@
            [:br]
            (display-tags (:tags post))
            (when-let [url (get-in post [:twitter :url])]
-             (link-to {:class "fa fa-twitter"
+             (link-to {:class "whatever-twitter"
                        :target "_blank"} url))]]]]]
       (when (seq (:refs post))
         [:div {:class "glyphicon glyphicon-triangle-bottom arrow"}])
