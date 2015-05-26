@@ -4,13 +4,8 @@
             [clj-time.local :as l :refer [local-now]]
             [monger.util :refer [random-uuid]]
 
-            [furthermore.repository :refer [add-db-queue!
-                                            clear-db-queue!
-                                            create-update
-                                            list-db-queue
-                                            process-db-queue
-                                            read-entities
-                                            read-entity]]
+            [furthermore.formatters :as formatters :refer :all]
+            [furthermore.repository :refer :all]
             [furthermore.utils :refer :all]))
 
 (declare get-entities)
@@ -276,27 +271,30 @@
 ;; Topics
 ;;
 (defrecord Topic
-    [_id authors created-on description kind last-updated log? tags title refs url])
+    [_id authors body created-on kind
+     last-updated log? source tags title refs url])
 
 (defn- create-topic*
   [params]
-  (let [{:keys [_id authors created-on description last-updated log? tags title refs url]
+  (let [{:keys [_id authors body created-on last-updated
+                log? source tags title refs url]
          :or {_id (random-uuid)
               authors ["John Doe"]
               created-on (local-now)
-              description "Someone forgot to write a description."
               log? true
               refs #{}
+              source "*Somebody* forgot to write a description."
               tags #{}
               title "New Topic"
               url (create-url-name title)}} params]
     (map->Topic {:_id _id
                  :authors (map create-author authors)
                  :created-on created-on
-                 :description description
+                 :body body
                  :kind :topic
                  :last-updated last-updated
                  :log? log?
+                 :source source
                  :tags (->tags tags)
                  :title title
                  :refs (set (map ->ref refs))
@@ -456,7 +454,8 @@
   furthermore.entities.Topic
   (add-entity
     [entity]
-    (let [tags (map #(update (get-tag %)
+    (let [entity (assoc entity :body (formatters/mmd->html (:source entity)))
+          tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
                                                :topic))
