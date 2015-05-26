@@ -245,15 +245,15 @@
 ;; Static Pages
 ;;
 (defrecord Page
-    [_id authors body created-on kind last-updated tags title url])
+    [_id authors body created-on last-updated source tags title url])
 
 (defn create-page
   [params]
-  (let [{:keys [_id authors body created-on last-updated tags title url]
+  (let [{:keys [_id authors body created-on last-updated source tags title url]
          :or {_id (random-uuid)
               authors [(create-author {})]
-              body "Somebody forgot to write the text for this page."
               created-on (local-now)
+              source "Somebody forgot to write the text for this page."
               tags #{}
               title "New Page"
               url (create-url-name title)}} params]
@@ -263,6 +263,7 @@
                 :created-on created-on
                 :kind :static
                 :last-updated last-updated
+                :source source
                 :tags (set (->tags tags))
                 :title title
                 :url url})))
@@ -449,7 +450,8 @@
   furthermore.entities.Page
   (add-entity
     [entity]
-    (let [tags (map #(update (get-tag %)
+    (let [entity (assoc entity :body (formatters/mmd->html (:source entity)))
+          tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
                                                :static))
