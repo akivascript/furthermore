@@ -46,7 +46,9 @@
            (if (= :follow-up kind)
              [:span
               (link-to path-fn (:title update))
-              [:span.parent (:title parent)]]
+              [:span.parent
+               [:span.whatever-forward {:style "padding-right: 2px;"}]
+               (:title parent)]]
              [:a {:href path-fn} (:title update)])))]
       (when-let [topic-title (:title topic)]
         [:div {:class "col-xs-2 topic"} topic-title])])))

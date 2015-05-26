@@ -68,9 +68,11 @@
   (html
    [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"
           :style "padding-bottom: 10px;"}
-    [:div {:class "topic"} (:title topic)
-     (link-to {:class "glyphicon glyphicon-link permalink"}
-              (str (create-url-path topic) (:url topic)))]
+    [:div
+     [:span {:class "topic"} (:title topic)]
+     [:span.permalink
+      (link-to {:class "whatever-link"}
+               (str (create-url-path topic) (:url topic)))]]
     (when-let [refs (:refs topic)]
       (map display-posts
            (sort-by :title
