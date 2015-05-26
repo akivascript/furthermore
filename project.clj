@@ -57,7 +57,6 @@
              :compiler {:output-to "resources/public/js/compiled/furthermore.js"
                         :output-dir "resources/public/js/compiled/out"
                         :asset-path "/js/compiled/out"
-                        :externs ["resources/public/js/marked.min.js"]
                         :cache-analysis true
                         :optimizations :advanced
                         :source-map "resources/public/js/compiled/furthermore.js.map"
@@ -68,7 +67,6 @@
              :compiler {:output-to "resources/public/js/compiled/furthermore.js"
                         :output-dir "resources/public/js/compiled/dev"
                         :asset-path "/js/compiled/dev"
-                        :externs ["resources/public/js/marked.min.js"]
                         :main furthermore.dev
                         :cache-analysis true
                         :optimizations :none
