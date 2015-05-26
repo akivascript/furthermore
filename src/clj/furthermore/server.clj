@@ -63,8 +63,10 @@
 (defmethod dispatch-update "follow-up"
   [entity]
   (let [entity (-> entity
-                   (assoc :source (:body entity))
-                   (dissoc :body))]
+                   (assoc-in [:source :body] (:body entity))
+                   (assoc-in [:source :excerpt] (:excerpt entity))
+                   (dissoc :body)
+                   (dissoc :excerpt))]
     (dispatch-update* create-follow-up entity)))
 
 (defmethod dispatch-update "page"

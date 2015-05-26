@@ -197,19 +197,21 @@
   (get-entities :posts))
 
 (defrecord Follow-Up
-    [_id authors body created-on excerpt kind log? parent refs tags topic url])
+    [_id authors body created-on excerpt kind last-updated
+     log? parent refs source tags topic url])
 
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [_id authors created-on body excerpt
-                last-updated log? parent refs tags topic url]
+  (let [{:keys [_id authors body created-on excerpt last-updated
+                log? parent refs source tags topic url]
          :or {authors [(create-author {})]
-              body "Somebody forgot to actually write the follow-up."
               created-on (local-now)
               _id (random-uuid)
               log? true
               refs #{}
+              source {:body "Somebody forgot to actually write the follow-up."
+                      :excerpt nil}
               tags #{}
               topic (get-in parent [:topic :_id])
               url (create-url-name _id)}} params]
@@ -223,6 +225,7 @@
                      :log? log?
                      :parent (->ref parent)
                      :refs (set (map ->ref refs))
+                     :source source
                      :tags (->tags tags)
                      :topic (->ref topic)
                      :url url})))
@@ -430,6 +433,10 @@
     (let [parent (-> (get-post (get-in entity [:parent :_id]))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
+          source (:source entity)
+          entity (-> entity
+                     (assoc :body (formatters/mmd->html (:body source)))
+                     (assoc :excerpt (formatters/mmd->html (:excerpt source))))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
