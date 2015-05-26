@@ -116,8 +116,6 @@ img {
     border-top: 1px solid #aaa;
     margin-bottom: 50px;
         
-    display: none;
-
     .body {
         padding: 10px 0px 5px 1px; 
 
@@ -167,8 +165,6 @@ img {
 .post {
     border-top: 1px solid #aaa;
     margin-bottom: 50px;
-
-    display: none;
 
     .title {
         font-size: 250%;
@@ -256,8 +252,6 @@ img {
 
         .body {
             padding: 0px 0px 0px 1px;
-
-            display: none;
         }
 
         .footer {
@@ -401,10 +395,8 @@ img {
         color: $gray-light; 
     }
 
-    .description {
+    .body {
         padding: 0px 0px 5px 1px; 
-
-        display: none;
         
         font-family: $body-font;
         font-size: 1.1em;

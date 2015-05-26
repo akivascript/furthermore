@@ -4,13 +4,8 @@
             [clj-time.local :as l :refer [local-now]]
             [monger.util :refer [random-uuid]]
 
-            [furthermore.repository :refer [add-db-queue!
-                                            clear-db-queue!
-                                            create-update
-                                            list-db-queue
-                                            process-db-queue
-                                            read-entities
-                                            read-entity]]
+            [furthermore.formatters :as formatters :refer :all]
+            [furthermore.repository :refer :all]
             [furthermore.utils :refer :all]))
 
 (declare get-entities)
@@ -148,7 +143,7 @@
 
 (defrecord Post
     [_id authors body created-on excerpt kind last-updated
-     log? parent refs subtitle tags title topic url])
+     log? parent refs source-body source-excerpt subtitle tags title topic url])
 
 (defn create-post
   "Takes a map as input and requires both parent and topic records. Produces
@@ -156,13 +151,14 @@
   [params]
   (let [date (local-now)
         {:keys [_id authors body created-on excerpt last-updated
-                log? parent subtitle refs tags title topic url]
+                log? parent source subtitle refs tags title topic url]
          :or {authors ["John Doe"]
-              body "Somebody forgot to actually write the post."
               created-on date
               _id (random-uuid)
               log? true
               refs #{}
+              source {:body "*Somebody* forgot to actually write the post."
+                      :excerpt nil}
               tags #{}
               title "New Post"
               url (create-entity-url date title)}} params]
@@ -175,6 +171,7 @@
                 :log? log?
                 :parent (->ref parent)
                 :refs (set (map ->ref refs))
+                :source source
                 :subtitle subtitle
                 :tags (->tags tags)
                 :title title
@@ -200,19 +197,21 @@
   (get-entities :posts))
 
 (defrecord Follow-Up
-    [_id authors body created-on excerpt kind log? parent refs tags topic url])
+    [_id authors body created-on excerpt kind last-updated
+     log? parent refs source tags topic url])
 
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [_id authors created-on body excerpt
-                last-updated log? parent refs tags topic url]
+  (let [{:keys [_id authors body created-on excerpt last-updated
+                log? parent refs source tags topic url]
          :or {authors [(create-author {})]
-              body "Somebody forgot to actually write the follow-up."
               created-on (local-now)
               _id (random-uuid)
               log? true
               refs #{}
+              source {:body "Somebody forgot to actually write the follow-up."
+                      :excerpt nil}
               tags #{}
               topic (get-in parent [:topic :_id])
               url (create-url-name _id)}} params]
@@ -226,6 +225,7 @@
                      :log? log?
                      :parent (->ref parent)
                      :refs (set (map ->ref refs))
+                     :source source
                      :tags (->tags tags)
                      :topic (->ref topic)
                      :url url})))
@@ -245,15 +245,15 @@
 ;; Static Pages
 ;;
 (defrecord Page
-    [_id authors body created-on kind last-updated tags title url])
+    [_id authors body created-on last-updated source tags title url])
 
 (defn create-page
   [params]
-  (let [{:keys [_id authors body created-on last-updated tags title url]
+  (let [{:keys [_id authors body created-on last-updated source tags title url]
          :or {_id (random-uuid)
               authors [(create-author {})]
-              body "Somebody forgot to write the text for this page."
               created-on (local-now)
+              source "Somebody forgot to write the text for this page."
               tags #{}
               title "New Page"
               url (create-url-name title)}} params]
@@ -263,6 +263,7 @@
                 :created-on created-on
                 :kind :static
                 :last-updated last-updated
+                :source source
                 :tags (set (->tags tags))
                 :title title
                 :url url})))
@@ -276,27 +277,30 @@
 ;; Topics
 ;;
 (defrecord Topic
-    [_id authors created-on description kind last-updated log? tags title refs url])
+    [_id authors body created-on kind
+     last-updated log? source tags title refs url])
 
 (defn- create-topic*
   [params]
-  (let [{:keys [_id authors created-on description last-updated log? tags title refs url]
+  (let [{:keys [_id authors body created-on last-updated
+                log? source tags title refs url]
          :or {_id (random-uuid)
               authors ["John Doe"]
               created-on (local-now)
-              description "Someone forgot to write a description."
               log? true
               refs #{}
+              source "*Somebody* forgot to write a description."
               tags #{}
               title "New Topic"
               url (create-url-name title)}} params]
     (map->Topic {:_id _id
                  :authors (map create-author authors)
                  :created-on created-on
-                 :description description
+                 :body body
                  :kind :topic
                  :last-updated last-updated
                  :log? log?
+                 :source source
                  :tags (->tags tags)
                  :title title
                  :refs (set (map ->ref refs))
@@ -411,6 +415,10 @@
           parent (-> (get-entity {:_id (:_id parent)} (:kind parent))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
+          source (:source entity)
+          entity (-> entity
+                     (assoc :body (formatters/mmd->html (:body source)))
+                     (assoc :excerpt (formatters/mmd->html (:excerpt source))))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
@@ -426,6 +434,10 @@
     (let [parent (-> (get-post (get-in entity [:parent :_id]))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
+          source (:source entity)
+          entity (-> entity
+                     (assoc :body (formatters/mmd->html (:body source)))
+                     (assoc :excerpt (formatters/mmd->html (:excerpt source))))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
@@ -438,7 +450,8 @@
   furthermore.entities.Page
   (add-entity
     [entity]
-    (let [tags (map #(update (get-tag %)
+    (let [entity (assoc entity :body (formatters/mmd->html (:source entity)))
+          tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
                                                :static))
@@ -456,7 +469,8 @@
   furthermore.entities.Topic
   (add-entity
     [entity]
-    (let [tags (map #(update (get-tag %)
+    (let [entity (assoc entity :body (formatters/mmd->html (:source entity)))
+          tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
                                                :topic))
