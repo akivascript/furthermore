@@ -543,10 +543,14 @@ img {
 
         .follow-up-title {
             display: inline-block;
-
+            
             padding: 2px 10px 0px 0px;
             
             color: #777;
+
+            p {
+                display: inline;
+            }
         }
         
         .date {
