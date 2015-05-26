@@ -3,8 +3,8 @@
             [environ.core :refer [env]]
 
             [furthermore.entities :refer :all]
+            [furthermore.formatters :refer :all]
             [furthermore.logging :refer :all]
-            ;[furthermore.newsfeed :refer :all]
             [furthermore.repository :refer :all]
             [furthermore.server :refer :all]
             [furthermore.twitter :refer :all]
@@ -24,8 +24,8 @@
 (defmacro defreload [& args] (apply defreload* args))
 
 (defreload "entities")
+(defreload "formatters" "fmt")
 (defreload "logging" "log")
-;(defreload "newsfeed" "news")
 (defreload "repository" "repo")
 (defreload "server" "server")
 (defreload "twitter" "twitter")
