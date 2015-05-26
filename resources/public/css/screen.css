@@ -486,7 +486,11 @@ img {
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 551, ../../assets/scss/screen.scss */
+/* line 552, ../../assets/scss/screen.scss */
+#updates .entries .entry .title p {
+  margin: 0px;
+}
+/* line 557, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;

@@ -46,7 +46,6 @@
            (if (= :follow-up kind)
              [:span
               (link-to path-fn (:title update))
-              [:br]
               [:span.parent (:title parent)]]
              [:a {:href path-fn} (:title update)])))]
       (when-let [topic-title (:title topic)]
