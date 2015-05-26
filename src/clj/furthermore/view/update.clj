@@ -117,7 +117,7 @@
                [:label {:for "description"} "Description"]
                [:textarea {:ref "description"
                            :class "form-control"
-                           :name "description"
+                           :name "body"
                            :rows 8}]]])]]
          (hidden-field {:value kind} "kind")
          (hidden-field {:value (mutil/random-uuid)} "_id")

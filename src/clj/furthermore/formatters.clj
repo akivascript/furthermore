@@ -26,7 +26,9 @@
 
 (defn mmd->html
   [content]
-  (let [file (save-tmp-file (tmp-file) content)
-        html (convert-file file)]
-    (delete-file (str tmp-dir file))
-    (:out html)))
+  (if (empty? content)
+    nil
+    (let [file (save-tmp-file (tmp-file) content)
+          html (convert-file file)]
+      (delete-file (str tmp-dir file))
+      (:out html))))

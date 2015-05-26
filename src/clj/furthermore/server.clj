@@ -62,19 +62,33 @@
 
 (defmethod dispatch-update "follow-up"
   [entity]
-  (dispatch-update* create-follow-up entity))
+  (let [entity (-> entity
+                   (assoc :source (:body entity))
+                   (dissoc :body))]
+    (dispatch-update* create-follow-up entity)))
 
 (defmethod dispatch-update "page"
   [entity]
-  (dispatch-update* create-page entity))
+  (let [entity (-> entity
+                   (assoc :source (:body entity))
+                   (dissoc :body))]
+    (dispatch-update* create-page entity)))
 
 (defmethod dispatch-update "post"
   [entity]
-  (dispatch-update* create-post entity))
+  (let [entity (-> entity
+                   (assoc-in [:source :body] (:body entity))
+                   (assoc-in [:source :excerpt] (:excerpt entity))
+                   (dissoc :body)
+                   (dissoc :excerpt))]
+    (dispatch-update* create-post entity)))
 
 (defmethod dispatch-update "topic"
   [entity]
-  (dispatch-update* create-topic entity))
+  (let [entity (-> entity
+                   (assoc :source (:body entity))
+                   (dissoc :body))]
+    (dispatch-update* create-topic entity)))
 
 ;;
 ;; Routes & Resources

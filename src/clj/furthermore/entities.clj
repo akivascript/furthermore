@@ -143,7 +143,7 @@
 
 (defrecord Post
     [_id authors body created-on excerpt kind last-updated
-     log? parent refs subtitle tags title topic url])
+     log? parent refs source-body source-excerpt subtitle tags title topic url])
 
 (defn create-post
   "Takes a map as input and requires both parent and topic records. Produces
@@ -151,13 +151,14 @@
   [params]
   (let [date (local-now)
         {:keys [_id authors body created-on excerpt last-updated
-                log? parent subtitle refs tags title topic url]
+                log? parent source subtitle refs tags title topic url]
          :or {authors ["John Doe"]
-              body "Somebody forgot to actually write the post."
               created-on date
               _id (random-uuid)
               log? true
               refs #{}
+              source {:body "*Somebody* forgot to actually write the post."
+                      :excerpt nil}
               tags #{}
               title "New Post"
               url (create-entity-url date title)}} params]
@@ -170,6 +171,7 @@
                 :log? log?
                 :parent (->ref parent)
                 :refs (set (map ->ref refs))
+                :source source
                 :subtitle subtitle
                 :tags (->tags tags)
                 :title title
@@ -409,6 +411,10 @@
           parent (-> (get-entity {:_id (:_id parent)} (:kind parent))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
+          source (:source entity)
+          entity (-> entity
+                     (assoc :body (formatters/mmd->html (:body source)))
+                     (assoc :excerpt (formatters/mmd->html (:excerpt source))))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
