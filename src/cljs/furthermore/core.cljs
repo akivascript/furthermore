@@ -8,8 +8,6 @@
 
 (defonce posts (atom {}))
 
-(.setOptions js/marked (clj->js {:smartypants true}))
-
 ;;
 ;; Contents page
 ;;
@@ -55,18 +53,3 @@
                                   (split "|")
                                   first)]
                        (filter-options id parents))))))
-
-;;
-;; Posts
-;;
-(defn ^:export apply-markdown
-  []
-  (letfn [(mark [elem] (dommy/set-html! elem (js/marked (dommy/html elem))))
-          (show [elem] (dommy/set-style! elem :display "block"))]
-    (doseq [body (sel ".body")]
-      (mark body)
-      (show (dommy/parent body)))
-
-    (when-let [desc (sel1 ".description")]
-      (mark desc)
-      (show desc))))
