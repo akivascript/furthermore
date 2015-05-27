@@ -245,15 +245,16 @@
 ;; Static Pages
 ;;
 (defrecord Page
-    [_id authors body created-on last-updated source tags title url])
+    [_id authors body created-on last-updated log? source tags title url])
 
 (defn create-page
   [params]
-  (let [{:keys [_id authors body created-on last-updated source tags title url]
+  (let [{:keys [_id authors body created-on last-updated log? source tags title url]
          :or {_id (random-uuid)
               authors [(create-author {})]
               created-on (local-now)
               source "Somebody forgot to write the text for this page."
+              log? true
               tags #{}
               title "New Page"
               url (create-url-name title)}} params]
@@ -263,6 +264,7 @@
                 :created-on created-on
                 :kind :static
                 :last-updated last-updated
+                :log? log?
                 :source source
                 :tags (set (->tags tags))
                 :title title
@@ -272,6 +274,11 @@
   "Returns a static page by url."
   [url]
   (get-entity {:url url} :static))
+
+(defn get-pages
+  "Returns all pages."
+  []
+  (get-entities :pages))
 
 ;;
 ;; Topics
@@ -367,6 +374,13 @@
   (->> (read-entities :post)
        (filter #(contains? #{:follow-up} (keyword (:kind %))))
        (map create-follow-up)
+       vec))
+
+(defmethod get-entities :pages
+  [_]
+  (->> (read-entities :static)
+       (map create-page)
+       (sort-by :title)
        vec))
 
 (defmethod get-entities :posts
