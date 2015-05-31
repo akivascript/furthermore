@@ -1,6 +1,7 @@
 (ns furthermore.dev
-  (:require [clojure.string :as str]
+  (:require [clojure.string :refer :all]
             [environ.core :refer [env]]
+            [ring.adapter.jetty :refer [run-jetty]]
 
             [furthermore.entities :refer :all]
             [furthermore.formatters :refer :all]
@@ -11,6 +12,11 @@
             [furthermore.utils :refer :all]))
 
 (def is-dev? (env :dev))
+
+(defonce server (run-jetty #'app {:port 3000 :join? false}))
+
+(defn start-server [] (.start server))
+(defn stop-server [] (.stop server))
 
 (defn- defreload*
   ([namespace] (defreload* namespace nil))
