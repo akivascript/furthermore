@@ -126,11 +126,11 @@
        (= pass (env :admin-pass))))
 
 (defresource admin-page
-  [kind]
+  [kind mode id]
   :allowed-methods [:get]
   :available-media-types ["text/html"]
   :authorized? (fn [{{auth :basic-authentication} :request}] auth)
-  :handle-ok (display-update-page kind)
+  :handle-ok (display-update-page kind mode id)
   :handle-unauthorized "It's a secret to everybody.")
 
 (defresource update-site
@@ -164,19 +164,23 @@
   (resources "/"))
 
 (defroutes api-routes
-  (GET "/api/post/:id" [id] (return-result (records->maps (get-post id))))
-  (GET "/api/posts" [] (return-result (map records->maps (get-entities :posts))))
-  (GET "/api/tag/:tag" [tag] (return-result (records->maps (get-tag tag))))
-  (GET "/api/tags" [] (return-result (map records->maps (get-tags))))
-  (GET "/api/topic/:id" [id] (return-result (map records->maps (get-topic id))))
-  (GET "/api/topics" [] (return-result (map records->maps (get-entities :topics))))
-  (POST "/api/update/:kind" [kind] (update-site kind)))
+  (context "/api" []
+           (GET "/post/:id" [id] (return-result (records->maps (get-post id))))
+           (GET "/posts" [] (return-result (map records->maps (get-entities :posts))))
+           (GET "/tag/:tag" [tag] (return-result (records->maps (get-tag tag))))
+           (GET "/tags" [] (return-result (map records->maps (get-tags))))
+           (GET "/topic/:id" [id] (return-result (map records->maps (get-topic id))))
+           (GET "/topics" [] (return-result (map records->maps (get-entities :topics))))
+           (POST "/update/:kind" [kind] (update-site kind))))
 
 (defroutes admin-routes
-  (GET "/admin/add-follow-up" [] (admin-page :follow-up))
-  (GET "/admin/add-page" [] (admin-page :page))
-  (GET "/admin/add-post" [] (admin-page :post))
-  (GET "/admin/add-topic" [] (admin-page :topic)))
+  (context "/admin" []
+           (GET "/add-follow-up" [] (admin-page :follow-up :new nil))
+           (GET "/add-page" [] (admin-page :page :new nil))
+           (GET "/add-post" [] (admin-page :post :new nil))
+           (GET "/add-topic" [] (admin-page :topic :new nil))
+           (GET "/edit-post" [] (admin-page :post :update nil))
+           (GET "/edit-post/:id" [id] (admin-page :post :update id))))
 
 (def app
   (do
@@ -197,5 +201,5 @@
   "Launches Furthermore."
   [& port]
   (let [port (Integer. (or (first port) (env :port) 5000))]
-    (run-jetty #'app {:port port :join? false})
-    (println "Furthermore up and running on port" port)))
+    (println "Furthermore up and running on port" port)
+    (run-jetty #'app {:port port :join? false})))
