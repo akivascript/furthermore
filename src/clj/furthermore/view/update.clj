@@ -134,7 +134,10 @@
                               "description"
                               (:description entity))])]]
              (hidden-field {:value kind} "kind")
-             (hidden-field {:value (mutil/random-uuid)} "_id")
+             (let [id (if (= mode :new)
+                        (mutil/random-uuid)
+                        (:_id entity))]
+               (hidden-field {:value id} "_id"))
              [:div {:class "text-right"}
               (submit-button {:class "btn btn-default"} (str "Add "
                                                              (title kind)))])]]]]))))
