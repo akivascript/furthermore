@@ -72,12 +72,11 @@
   (let [topic (entities/get-topic (get-in post [:topic :_id]))
         {:keys [date time]} (utils/format-timestamp (:created-on post))]
     (html
-     [:div
-      [:div.post
-       (display-title post)
-       [:div.col-xs-3.topic (when-let [topic (:title topic)]
-                              (smarten topic))]
-       [:div.col-xs-4.date (str date " @ " time)]]])))
+     [:div.post
+      (display-title post)
+      [:div.col-xs-3.topic (when-let [topic (:title topic)]
+                             (smarten topic))]
+      [:div.col-xs-4.date (str date " @ " time)]])))
 
 (defn display-tags-page
   ([tag]
