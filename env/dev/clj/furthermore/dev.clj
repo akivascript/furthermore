@@ -13,11 +13,6 @@
 
 (def is-dev? (env :dev))
 
-(def server (run-jetty #'app {:port 3000 :join? false}))
-
-(defn start-server [] (.start server))
-(defn stop-server [] (.stop server))
-
 (defn- defreload*
   ([namespace] (defreload* namespace nil))
   ([namespace nickname]
