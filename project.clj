@@ -1,8 +1,6 @@
 (defproject furthermore "0.6.5-SNAPSHOT"
-  :description
-  "A topical liveblogging platform written in Clojure/ClojureScript."
-  :url
-  "https://github.com/akivaschoen/furthermore"
+  :description "A topical liveblogging platform written in Clojure/ClojureScript."
+  :url "https://github.com/akivaschoen/furthermore"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
@@ -10,12 +8,12 @@
 
   :dependencies
   [[org.clojure/clojure "1.7.0-RC1"]
-   [org.clojure/clojurescript "0.0-3297"
+   [org.clojure/clojurescript "0.0-3308"
     :classifier "aot"
     :exclusions [org.clojure/tools.reader org.clojure/data.json]]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
-   [cljs-ajax "0.3.11"]
+   [cljs-ajax "0.3.12"]
    [com.andrewmcveigh/cljs-time "0.3.5"]
    [compojure "1.3.4"]
    [org.clojure/data.json "0.2.6" :classifier "aot"]
