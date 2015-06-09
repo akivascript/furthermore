@@ -9,13 +9,13 @@
             [monger.operators :refer [$options $regex]]
             [monger.query :refer [find limit sort with-collection]]
             [monger.result :refer [updated-existing?]]
-            [monger.util :refer [keywordize
-                                 random-uuid]]
+            [monger.util :refer [random-uuid]]
 
             [furthermore.utils :refer [create-url-date
                                        create-url-name
                                        create-url-path
                                        get-excerpt
+                                       keywordize
                                        site-url]]
             [furthermore.twitter :refer [update-twitter-status]]))
 
@@ -69,7 +69,7 @@
 (defn parse-entity
   "Keywordizes values in an entity loaded from the database."
   [entity]
-  (let [entity (-> e
+  (let [entity (-> entity
                  (keywordize :kind)
                  (keywordize :parent :kind)
                  (keywordize :topic :kind))
