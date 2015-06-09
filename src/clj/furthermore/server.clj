@@ -175,12 +175,16 @@
 
 (defroutes admin-routes
   (context "/admin" []
-           (GET "/add-follow-up" [] (admin-page :follow-up :new nil))
-           (GET "/add-page" [] (admin-page :page :new nil))
-           (GET "/add-post" [] (admin-page :post :new nil))
-           (GET "/add-topic" [] (admin-page :topic :new nil))
-           (GET "/edit-post" [] (admin-page :post :update nil))
-           (GET "/edit-post/:id" [id] (admin-page :post :update id))))
+           (context "/add" []
+                    (GET "/follow-up" [] (admin-page :follow-up :new nil))
+                    (GET "/page" [] (admin-page :page :new nil))
+                    (GET "/post" [] (admin-page :post :new nil))
+                    (GET "/topic" [] (admin-page :topic :new nil)))
+           (context "/edit" []
+                    (GET "/follow-up/:id" [id] (admin-page :follow-up :update id))
+                    (GET "/page/:url" [url] (admin-page :static :update url))
+                    (GET "/post/:id" [id] (admin-page :post :update id))
+                    (GET "/topic/:id" [id] (admin-page :topic :update id)))))
 
 (def app
   (do
