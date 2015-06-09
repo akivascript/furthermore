@@ -216,7 +216,7 @@
               topic (get-in parent [:topic :_id])
               url (create-url-name _id)}} params]
     (map->Follow-Up {:_id _id
-                     :authors authors
+                     :authors (mapv create-author authors)
                      :body body
                      :created-on created-on
                      :excerpt excerpt
@@ -259,7 +259,7 @@
               title "New Page"
               url (create-url-name title)}} params]
     (map->Page {:_id _id
-                :authors authors
+                :authors (mapv create-author authors)
                 :body body
                 :created-on created-on
                 :kind :static
@@ -301,7 +301,7 @@
               title "New Topic"
               url (create-url-name title)}} params]
     (map->Topic {:_id _id
-                 :authors (map create-author authors)
+                 :authors (mapv create-author authors)
                  :created-on created-on
                  :body body
                  :kind :topic
