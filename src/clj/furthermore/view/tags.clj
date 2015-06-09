@@ -24,7 +24,7 @@
       [:div.col-xs-5.title (link-to (str utils/site-url
                                         (utils/create-url-path parent)
                                         (:url parent))
-                                    (smarten (get-excerpt (:body follow-up) 50)))])))
+                                    (smarten (:body follow-up)))])))
 
 (defmethod display-title :static
   [page]
@@ -72,16 +72,18 @@
   (let [topic (entities/get-topic (get-in post [:topic :_id]))
         {:keys [date time]} (utils/format-timestamp (:created-on post))]
     (html
-     [:div.post
-      (display-title post)
-      [:div.col-xs-3.topic (when-let [topic (:title topic)]
-                             (smarten topic))]
-      [:div.col-xs-4.date (str date " @ " time)]])))
+     [:div
+      [:div.post
+       (display-title post)
+       [:div.col-xs-3.topic (when-let [topic (:title topic)]
+                              (smarten topic))]
+       [:div.col-xs-4.date (str date " @ " time)]]])))
 
 (defn display-tags-page
   ([tag]
    (let [tag (get-tag-by-url tag)
-         posts (sort-by :title (map #(get-entity {:_id (:_id %)} (:kind %)) (:refs tag)))]
+         posts (sort-by #(or (:title %) (get-in % [:source :body]))
+                        (map #(get-entity {:_id (:_id %)} (:kind %)) (:refs tag)))]
      (layout/display-page
       :tags
       (str "Tags &mdash; " (:title tag))
