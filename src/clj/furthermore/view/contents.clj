@@ -1,12 +1,15 @@
 (ns furthermore.view.contents
   (:require [hiccup.core :refer :all]
-            [markdown.core :refer [md-to-html-string]]
+            [hiccup.element :refer :all]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entities
-                                          get-entity]]
+                                          get-entity
+                                          get-parent]]
             [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :refer [get-excerpt format-timestamp]]))
+            [furthermore.utils :refer [create-url-path
+                                       get-excerpt
+                                       format-timestamp]]))
 
 (defn- make-outline-selector
   [post]
@@ -32,37 +35,48 @@
      [:div
       [:div {:class "title"}
        (make-outline-selector post)
-       [:a {:href url} (:title post)]]
+       (link-to (str (create-url-path post) (:url post)) (:title post))]
       [:div {:class "small date"} date]])))
 
 (defmethod display-title :follow-up
   [follow-up]
-  (let [{:keys [date time]} (format-timestamp (:created-on follow-up))]
+  (let [parent (get-parent follow-up)
+        {:keys [date time]} (format-timestamp (:created-on follow-up))
+        url (str (create-url-path parent)
+                 (:url parent) "#" (:url follow-up))]
     (html
      [:div
       [:div {:class "follow-up-title"}
        (make-outline-selector follow-up)
-       (get-excerpt (:body follow-up) 50)]
+       (link-to url (get-excerpt (:body follow-up) 50))]
       [:div {:class "small date"} (str date " @ " time)]])))
 
 (defn- display-posts
   [post]
-  (let [post (get-entity {:_id (:_id post)} (keyword (:kind post)))]
     (html
      [:div {:class "col-xs-12 post"}
       (display-title post)
       (when-let [refs (:refs post)]
         [:div {:id (subs (:_id post) 0 6)
                :style "display: none; margin-left: 15"}
-         (map display-posts (sort-by :created-on refs))])])))
+         (map display-posts
+              (sort-by :created-on
+                       (map #(get-entity {:_id (:_id %)} (keyword (:kind %))) refs)))])]))
 
 (defn- display-topic
   [topic]
   (html
-   [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"}
-    [:span {:class "topic"} (:title topic)]
+   [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"
+          :style "padding-bottom: 10px;"}
+    [:div
+     [:span {:class "topic"} (:title topic)]
+     [:span.permalink
+      (link-to {:class "whatever-link"}
+               (str (create-url-path topic) (:url topic)))]]
     (when-let [refs (:refs topic)]
-      (map display-posts refs))]))
+      (map display-posts
+           (sort-by :title
+                    (map #(get-entity {:_id (:_id %)} (keyword (:kind %))) refs))))]))
 
 (defn display-contents-page
   []

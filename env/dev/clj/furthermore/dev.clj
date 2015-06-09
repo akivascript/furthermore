@@ -1,10 +1,11 @@
 (ns furthermore.dev
-  (:require [clojure.string :as str]
+  (:require [clojure.string :refer :all]
             [environ.core :refer [env]]
+            [ring.adapter.jetty :refer [run-jetty]]
 
             [furthermore.entities :refer :all]
+            [furthermore.formatters :refer :all]
             [furthermore.logging :refer :all]
-            ;[furthermore.newsfeed :refer :all]
             [furthermore.repository :refer :all]
             [furthermore.server :refer :all]
             [furthermore.twitter :refer :all]
@@ -23,9 +24,10 @@
 
 (defmacro defreload [& args] (apply defreload* args))
 
+(defreload "dev")
 (defreload "entities")
+(defreload "formatters" "fmt")
 (defreload "logging" "log")
-;(defreload "newsfeed" "news")
 (defreload "repository" "repo")
 (defreload "server" "server")
 (defreload "twitter" "twitter")

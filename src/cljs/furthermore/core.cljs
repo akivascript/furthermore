@@ -6,6 +6,8 @@
 
             [furthermore.utils :refer [format-timestamp]]))
 
+(defonce posts (atom {}))
+
 ;;
 ;; Contents page
 ;;
@@ -22,8 +24,6 @@
 ;;
 ;; Updates page
 ;;
-(defonce posts (atom {}))
-
 (defn- create-option
   [item]
   (let [{:keys [date time]} (format-timestamp (:created-on item))]
@@ -46,11 +46,7 @@
         parents (sel1 :#parents)]
     (ajax/GET "/api/posts" {:handler
                             (fn [xs] (reset! posts
-                                             (filter #(contains? #{:post} (:kind %)) xs)))
-                            :error-handler
-                            (fn [{:keys [status status-text]}]
-                              (println status)
-                              (println status-text))})
+                                             (filter #(contains? #{:post} (:kind %)) xs)))})
     (dommy/listen! topic :change
                    (fn [_]
                      (let [id (-> (dommy/value topic)

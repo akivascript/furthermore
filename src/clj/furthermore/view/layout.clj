@@ -5,6 +5,7 @@
 (def about-path "/page/about")
 (def contents-path "/contents")
 (def home-path "/")
+(def tags-path "/tags")
 (def updates-path "/updates")
 
 (def nav-bar
@@ -25,6 +26,8 @@
      [:ul {:class "nav navbar-nav"}
       [:li
        [:a {:href contents-path} "Table of Contents"]]
+      [:li
+       [:a {:href tags-path} "Tags"]]
       [:li
        [:a {:href updates-path} "Updates"]]
       [:li
@@ -63,7 +66,7 @@
        [:div {:class "hidden-xs col-sm-6 text-right small"}
         "&copy; 2015 Whatever, Akiva"[:br]
         "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"]
-        [:span {:class "small"} " (v0.5&beta;)"]
+        [:span {:class "small"} " (v0.6.5&beta;)"]
         [:br]
         "Clojure and ClojureScript are a-okay!"]
        [:div {:class "visible-xs-block hidden-sm hidden-lg text-center small"
@@ -79,7 +82,6 @@
      (include-js
       "http://code.jquery.com/jquery-2.1.3.min.js"
       "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"
-      "/js/marked.min.js"
       "/js/highlight.pack.js"
       "/js/compiled/furthermore.js")
 

@@ -15,6 +15,7 @@
                                        create-url-name
                                        create-url-path
                                        get-excerpt
+                                       keywordize
                                        site-url]]
             [furthermore.twitter :refer [update-twitter-status]]))
 
@@ -23,6 +24,7 @@
    :follow-up "posts"
    :post "posts"
    :static "pages"
+   :tag "tags"
    :topic "topics"})
 
 ;;
@@ -67,17 +69,14 @@
 (defn parse-entity
   "Keywordizes values in an entity loaded from the database."
   [entity]
-  (let [entity (as-> entity e
-                 (update e :kind keyword)
-                 (if-not (nil? (get-in e [:parent :kind]))
-                   (update-in e [:parent :kind] keyword)
-                   e)
-                 (if-not (nil? (get-in e [:topic :kind]))
-                   (update-in e [:topic :kind] keyword)
-                   e))
-        refs (:references entity)]
-    (if-not (empty? refs)
-      (reduce #(update-in %1 [:references (.indexOf refs %2) :kind] keyword) entity refs)
+  (let [entity (-> entity
+                 (keywordize :kind)
+                 (keywordize :parent :kind)
+                 (keywordize :topic :kind))
+        refs (:refs entity)]
+    (if (and (map? refs)
+             (seq refs))
+      (reduce #(update-in %1 [:refs (.indexOf refs %2) :kind] keyword) entity refs)
       entity)))
 
 (defn read-entities
@@ -94,7 +93,11 @@
   "Returns a single entity from the database. criterion is expected
   to be a map (e.g., {:_id 0de661a...})."
   [kind criterion]
-  (let [entity (find-one-as-map @db (kind kinds) criterion)]
+  (let [entity (if (contains? criterion :title)
+                 (find-one-as-map @db (kind kinds) {:title
+                                                    {$regex (:title criterion)
+                                                     $options "i"}})
+                 (find-one-as-map @db (kind kinds) criterion))]
     (when-not (nil? entity)
       (parse-entity entity))))
 
@@ -126,7 +129,9 @@
         (let [action (if (updated-existing? result)
                      :update
                      :new)]
-          (insert @db "updates" (create-update {:action action :entity entity}))))
+          (when-not (and (= kind :tag)
+                         (= action :update))
+            (insert @db "updates" (create-update {:action action :entity entity})))))
       result)))
 
 ;;

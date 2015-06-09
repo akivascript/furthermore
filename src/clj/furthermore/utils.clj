@@ -13,6 +13,28 @@
                 "http://localhost:3000/"
                 "http://whatever.akiva.wtf/"))
 
+(defn keywordize
+  "Returns a map with a particular key's value as a
+  keyword where ks is a sequence of keys. Returns an
+  unaltered map if the key is not present."
+  [m & ks]
+  (let [ks (if (vector? (first ks)) (first ks) (vec ks))
+        k (get-in m ks)]
+    (if (or (nil? k)
+            (map? k))
+      m
+      (update-in m ks keyword))))
+
+(defn uuid?
+  "Returns true if x is a valid UUID."
+  [x]
+  (if (string? x)
+    (let [result (re-find
+                  #"^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                  x)]
+      (if (nil? result) false true))
+    false))
+
 (defn joda-date->java-date
   "Returns a java.util.Date from a Joda-Time."
   [joda-date]
@@ -23,18 +45,21 @@
   [entity]
   (case (:kind entity)
     :post "post/"
-    :static "/"
+    :static "page/"
     :topic "topic/"
     ""))
 
 (defn create-url-name
   "Returns a web-friendly url from an entity's title (or 'Untitled')
   if it does not."
-  [title]
-  (-> (or title "Untitled")
-      (string/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
-      (string/replace #" " "-")
-      string/lower-case))
+  [x]
+  (cond
+    (uuid? x) (create-url-name (apply str (take 4 x)))
+    :else
+    (-> (or x "Untitled")
+        (string/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
+        (string/replace #" " "-")
+        string/lower-case)))
 
 (defn create-url-date
   "Returns a string representation of an entity's date."

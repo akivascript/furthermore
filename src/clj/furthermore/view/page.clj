@@ -8,7 +8,7 @@
 
 (defn display-static-page
   [page]
-  (let [page (entities/get-page {:url page})]
+  (let [page (entities/get-page page)]
     (layout/display-page
      :static
      (:title page)
