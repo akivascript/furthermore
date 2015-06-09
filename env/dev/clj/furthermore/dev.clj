@@ -13,7 +13,7 @@
 
 (def is-dev? (env :dev))
 
-(defonce server (run-jetty #'app {:port 3000 :join? false}))
+(def server (run-jetty #'app {:port 3000 :join? false}))
 
 (defn start-server [] (.start server))
 (defn stop-server [] (.stop server))
