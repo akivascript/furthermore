@@ -29,6 +29,7 @@
 
 (defmacro defreload [& args] (apply defreload* args))
 
+(defreload "dev")
 (defreload "entities")
 (defreload "formatters" "fmt")
 (defreload "logging" "log")
