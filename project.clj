@@ -33,8 +33,10 @@
    [typographer "1.1.0"]]
 
   :plugins
-  [[lein-cljsbuild "1.0.6"]
+  [[lein-autoexpect "1.4.2"]
+   [lein-cljsbuild "1.0.6"]
    [lein-environ "1.0.0"]
+   [lein-figwheel "0.3.3"]
    [lein-ring "0.9.3"]]
 
   :source-paths
@@ -47,6 +49,8 @@
 
   :ring {:handler furthermore.server/app}
 
+  :target-path "target/%s"
+
   :clean-targets ^{:protect false} ["resources/public/js/compiled"]
 
   :cljsbuild
@@ -57,8 +61,6 @@
                         :asset-path "/js/compiled/out"
                         :cache-analysis true
                         :optimizations :advanced
-                        :source-map "resources/public/js/compiled/furthermore.js.map"
-                        :source-map-timestamp true
                         :pretty-print false}}
             {:id "dev"
              :source-paths ["src/cljs" "env/dev/cljs"]
@@ -73,26 +75,34 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar [:private
-             :twitter-api
+  {:uberjar {:hooks [leiningen.cljsbuild]
+              :env {:production true}
+              :omit-source true
+              :aot :all}
+
+   :prod [:prod
+          :twitter
+          {:hooks [leiningen.cljsbuild]
+           :env {:production true}
+           :omit-source true
+           :aot :all}]
+
+   :staging [:staging
+             :twitter
              {:hooks [leiningen.cljsbuild]
               :env {:production true}
               :omit-source true
               :aot :all}]
 
-   :dev [:private
-         :twitter-api
+   :dev [:dev
+         :twitter
          {:source-paths ["env/dev/clj"]
 
           :dependencies
           [[expectations "2.0.16"]
-           [figwheel "0.2.5"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
-
-          :plugins [[lein-figwheel "0.2.5"]
-                    [lein-autoexpect "1.4.2"]]
 
           :env {:dev true}
 
