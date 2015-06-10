@@ -10,3 +10,4 @@ compiled/
 *.org
 *.md
 *sass*
+/figwheel_server.log
