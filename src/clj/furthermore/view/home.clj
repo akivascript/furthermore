@@ -21,7 +21,7 @@
                                         (link-to
                                          (str "/tags/"
                                               (create-url-name %)) %))
-                                      tags)))])))
+                                      (sort tags))))])))
 
 (defmulti display-post :kind)
 
