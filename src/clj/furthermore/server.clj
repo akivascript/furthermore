@@ -10,6 +10,10 @@
             [ring.middleware.defaults :refer :all]
 
             [furthermore.entities :refer :all]
+            [furthermore.utils :as utils :refer [create-entity-url
+                                                 create-url-path
+                                                 joda-date->java-date
+                                                 site-url]]
             [furthermore.repository :refer [initialize-db-connection]]
             [furthermore.view.contents :refer [display-contents-page]]
             [furthermore.view.home :refer [display-home-page]]
