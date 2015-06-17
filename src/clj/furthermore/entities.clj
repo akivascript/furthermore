@@ -18,15 +18,15 @@
     [name works])
 
 (defn create-author
-  ([params]
-   (if (string? params)
-     (map->Author {:name params
-                   :works #{}})
-     (let [{:keys [name works]
-            :or {name "John Doe"
-                 works #{}}} params]
-       (map->Author {:name name
-                     :works works})))))
+  [params]
+  (if (string? params)
+    (map->Author {:name params
+                  :works #{}})
+    (let [{:keys [name works]
+           :or {name "John Doe"
+                works #{}}} params]
+      (map->Author {:name name
+                    :works works}))))
 
 (defn author?
   "Returns true if x is an Author."

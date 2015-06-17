@@ -1,7 +1,7 @@
 (ns furthermore.dev
   (:require [clojure.string :refer :all]
             [environ.core :refer [env]]
-            [ring.adapter.jetty :refer [run-jetty]]
+            [midje.repl :refer :all]
 
             [furthermore.entities :refer :all]
             [furthermore.formatters :refer :all]
