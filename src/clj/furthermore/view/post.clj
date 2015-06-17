@@ -19,7 +19,7 @@
                                         (link-to
                                          (str "/tags/"
                                               (create-url-name %)) %))
-                                      tags)))])))
+                                      (sort tags))))])))
 
 (def format-body (comp smarten md-to-html-string))
 

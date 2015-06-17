@@ -18,15 +18,15 @@
     [name works])
 
 (defn create-author
-  ([params]
-   (if (string? params)
-     (map->Author {:name params
-                   :works #{}})
-     (let [{:keys [name works]
-            :or {name "John Doe"
-                 works #{}}} params]
-       (map->Author {:name name
-                     :works works})))))
+  [params]
+  (if (string? params)
+    (map->Author {:name params
+                  :works #{}})
+    (let [{:keys [name works]
+           :or {name "John Doe"
+                works #{}}} params]
+      (map->Author {:name name
+                    :works works}))))
 
 (defn author?
   "Returns true if x is an Author."
@@ -126,11 +126,15 @@
 
 (defn get-tag
   [title]
-  (get-entity {:title title} :tag))
+  (if (nil? title)
+    nil
+    (get-entity {:title title} :tag)))
 
 (defn get-tag-by-url
   [url]
-  (get-entity {:url url} :tag))
+  (if (nil? url)
+    nil
+    (get-entity {:url url} :tag)))
 
 (defn get-tags
   []
@@ -187,6 +191,7 @@
   "Returns a post from id."
   [x]
   (cond
+    (nil? x) nil
     (uuid? x) (get-entity {:_id x} :post)
     :else
     (get-post (:_id x))))
@@ -233,7 +238,9 @@
 (defn get-follow-up
   "Returns a follow-up from id."
   [id]
-  (get-entity {:_id id} :follow-up))
+  (if (nil? id)
+    nil
+    (get-entity {:_id id} :follow-up)))
 
 (defn get-parent
   "Returns the parent entity of an entity."
@@ -273,7 +280,9 @@
 (defn get-page
   "Returns a static page by url."
   [url]
-  (get-entity {:url url} :static))
+  (if (nil? url)
+    nil
+    (get-entity {:url url} :static)))
 
 (defn get-pages
   "Returns all pages."
@@ -324,6 +333,7 @@
   "Returns a topic by id or from a post."
   [x]
   (cond
+    (nil? x) x
     (uuid? x) (get-entity {:_id x} :topic)
     (string? x) (get-entity {:url x} :topic)
     (reference? x) (get-entity {:_id (:_id x)} :topic)
@@ -437,8 +447,7 @@
                              :refs conj
                              (create-reference (:_id entity)
                                                :post))
-                    (:tags entity))
-          tags (map #(assoc % :log? false) tags)]
+                    (:tags entity))]
       (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
       (commit-entities)))
 
@@ -456,8 +465,7 @@
                              :refs conj
                              (create-reference (:_id entity)
                                                :follow-up))
-                    (:tags entity))
-          tags (map #(assoc % :log? false) tags)]
+                    (:tags entity))]
       (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
       (commit-entities)))
 
@@ -469,8 +477,7 @@
                              :refs conj
                              (create-reference (:_id entity)
                                                :static))
-                    (:tags entity))
-          tags (map #(assoc % :log? false) tags)]
+                    (:tags entity))]
       (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
       (commit-entities)))
 
@@ -488,7 +495,6 @@
                              :refs conj
                              (create-reference (:_id entity)
                                                :topic))
-                    (:tags entity))
-          tags (map #(assoc % :log? false) tags)]
+                    (:tags entity))]
       (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
       (commit-entities))))

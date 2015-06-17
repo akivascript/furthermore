@@ -18,9 +18,7 @@
                                         (link-to
                                          (str "/tags/"
                                               (create-url-name %)) %))
-                                      tags)))])))
-
-(def format-text (comp smarten md-to-html-string))
+                                      (sort tags))))])))
 
 (defn display-post
   [post]

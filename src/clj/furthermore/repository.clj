@@ -15,6 +15,7 @@
                                        create-url-name
                                        create-url-path
                                        get-excerpt
+                                       keywordize
                                        site-url]]
             [furthermore.twitter :refer [update-twitter-status]]))
 
@@ -68,14 +69,10 @@
 (defn parse-entity
   "Keywordizes values in an entity loaded from the database."
   [entity]
-  (let [entity (as-> entity e
-                 (update e :kind keyword)
-                 (if-not (nil? (get-in e [:parent :kind]))
-                   (update-in e [:parent :kind] keyword)
-                   e)
-                 (if-not (nil? (get-in e [:topic :kind]))
-                   (update-in e [:topic :kind] keyword)
-                   e))
+  (let [entity (-> entity
+                 (keywordize :kind)
+                 (keywordize :parent :kind)
+                 (keywordize :topic :kind))
         refs (:refs entity)]
     (if (and (map? refs)
              (seq refs))
@@ -132,7 +129,9 @@
         (let [action (if (updated-existing? result)
                      :update
                      :new)]
-          (insert @db "updates" (create-update {:action action :entity entity}))))
+          (when-not (and (= kind :tag)
+                         (= action :update))
+            (insert @db "updates" (create-update {:action action :entity entity})))))
       result)))
 
 ;;

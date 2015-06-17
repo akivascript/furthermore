@@ -1,8 +1,6 @@
 (defproject furthermore "0.6.5-SNAPSHOT"
-  :description
-  "A topical liveblogging platform written in Clojure/ClojureScript."
-  :url
-  "https://github.com/akivaschoen/furthermore"
+  :description "A topical liveblogging platform written in Clojure/ClojureScript."
+  :url "https://github.com/akivaschoen/furthermore"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
@@ -10,18 +8,17 @@
 
   :dependencies
   [[org.clojure/clojure "1.7.0-RC1"]
-   [org.clojure/clojurescript "0.0-3297"
+   [org.clojure/clojurescript "0.0-3308"
     :classifier "aot"
     :exclusions [org.clojure/tools.reader org.clojure/data.json]]
    [clj-time "0.9.0"]
    [clj-rss "0.1.9"]
-   [cljs-ajax "0.3.11"]
+   [cljs-ajax "0.3.12"]
    [com.andrewmcveigh/cljs-time "0.3.5"]
    [compojure "1.3.4"]
    [org.clojure/data.json "0.2.6" :classifier "aot"]
    [prismatic/dommy "1.1.0"]
    [environ "1.0.0"]
-   [com.cemerick/friend "0.2.2-SNAPSHOT"]
    [hiccup "1.0.5"]
    [liberator "0.13"]
    [markdown-clj "0.9.66"]
@@ -35,8 +32,10 @@
    [typographer "1.1.0"]]
 
   :plugins
-  [[lein-cljsbuild "1.0.6"]
+  [[lein-autoexpect "1.4.2"]
+   [lein-cljsbuild "1.0.6"]
    [lein-environ "1.0.0"]
+   [lein-figwheel "0.3.3" :exclusions [cider/cider-nrepl]]
    [lein-ring "0.9.3"]]
 
   :source-paths
@@ -49,6 +48,8 @@
 
   :ring {:handler furthermore.server/app}
 
+  :target-path "target/%s"
+
   :clean-targets ^{:protect false} ["resources/public/js/compiled"]
 
   :cljsbuild
@@ -59,8 +60,6 @@
                         :asset-path "/js/compiled/out"
                         :cache-analysis true
                         :optimizations :advanced
-                        :source-map "resources/public/js/compiled/furthermore.js.map"
-                        :source-map-timestamp true
                         :pretty-print false}}
             {:id "dev"
              :source-paths ["src/cljs" "env/dev/cljs"]
@@ -75,31 +74,42 @@
                         :pretty-print true}}]}
 
   :profiles
-  {:uberjar [:private
-             :twitter-api
+  {:uberjar {:hooks [leiningen.cljsbuild]
+              :env {:production true}
+              :omit-source true
+              :aot :all}
+
+   :prod [:prod-config
+          :twitter
+          {:hooks [leiningen.cljsbuild]
+           :env {:production true}
+           :omit-source true
+           :aot :all}]
+
+   :staging [:staging-config
+             :twitter
              {:hooks [leiningen.cljsbuild]
               :env {:production true}
               :omit-source true
               :aot :all}]
 
-   :dev [:private
-         :twitter-api
+   :dev [:local-config
+         :twitter
          {:source-paths ["env/dev/clj"]
 
           :dependencies
           [[expectations "2.0.16"]
-           [figwheel "0.2.5"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
+           [midje "2.0.0-SNAPSHOT"]
            [ring-mock "0.1.5"]]
-
-          :plugins [[lein-figwheel "0.2.5"]
-                    [lein-autoexpect "1.4.2"]]
 
           :env {:dev true}
 
           :figwheel {:http-server-root "public"
                      :server-port 3449
+                     :nrepl-port 7003
+                     :ring-handler furthermore.server/app
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
 
