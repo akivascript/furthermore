@@ -19,7 +19,6 @@
    [org.clojure/data.json "0.2.6" :classifier "aot"]
    [prismatic/dommy "1.1.0"]
    [environ "1.0.0"]
-   [com.cemerick/friend "0.2.2-SNAPSHOT"]
    [hiccup "1.0.5"]
    [liberator "0.13"]
    [markdown-clj "0.9.66"]
@@ -36,7 +35,7 @@
   [[lein-autoexpect "1.4.2"]
    [lein-cljsbuild "1.0.6"]
    [lein-environ "1.0.0"]
-   [lein-figwheel "0.3.3"]
+   [lein-figwheel "0.3.3" :exclusions [cider/cider-nrepl]]
    [lein-ring "0.9.3"]]
 
   :source-paths
@@ -80,21 +79,21 @@
               :omit-source true
               :aot :all}
 
-   :prod [:prod
+   :prod [:prod-config
           :twitter
           {:hooks [leiningen.cljsbuild]
            :env {:production true}
            :omit-source true
            :aot :all}]
 
-   :staging [:staging
+   :staging [:staging-config
              :twitter
              {:hooks [leiningen.cljsbuild]
               :env {:production true}
               :omit-source true
               :aot :all}]
 
-   :dev [:dev
+   :dev [:local-config
          :twitter
          {:source-paths ["env/dev/clj"]
 
@@ -102,12 +101,15 @@
           [[expectations "2.0.16"]
            [leiningen "2.5.1"]
            [javax.servlet/servlet-api "2.5"]
+           [midje "2.0.0-SNAPSHOT"]
            [ring-mock "0.1.5"]]
 
           :env {:dev true}
 
           :figwheel {:http-server-root "public"
                      :server-port 3449
+                     :nrepl-port 7003
+                     :ring-handler furthermore.server/app
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
 
