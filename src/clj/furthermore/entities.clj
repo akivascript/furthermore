@@ -163,7 +163,6 @@
           {:keys [_id authors body body-source created-on excerpt excerpt-source
                   last-updated log? parent subtitle refs tags title topic url]
            :or {authors ["John Doe"]
-                body-source "*Somebody* forgot to actually write the post."
                 created-on date
                 _id (random-uuid)
                 log? true
@@ -219,7 +218,6 @@
     (let [{:keys [_id authors body body-source created-on excerpt excerpt-source
                   last-updated log? parent refs tags topic url]
            :or {authors [(create-author {})]
-                body-source "Somebody forgot to actually write the follow-up."
                 created-on (local-now)
                 _id (random-uuid)
                 log? true
@@ -270,7 +268,6 @@
                   tags title url]
            :or {_id (random-uuid)
                 authors [(create-author {})]
-                body-source "Somebody forgot to write the text for this page."
                 created-on (local-now)
                 log? true
                 tags #{}
@@ -304,42 +301,41 @@
 ;; Topics
 ;;
 (defrecord Topic
-    [_id authors description description-source created-on kind
+    [_id authors body body-source created-on kind
      last-updated log? tags title refs url])
 
 (defn- create-topic*
   [params]
-  (if (nil? params)
-    nil
-    (let [{:keys [_id authors description description-source created-on last-updated
-                  log? tags title refs url]
-           :or {_id (random-uuid)
-                authors ["John Doe"]
-                description-source "*Somedescription* forgot to write a description."
-                created-on (local-now)
-                log? true
-                refs #{}
-                tags #{}
-                title "New Topic"
-                url (create-url-name title)}} params]
-      (map->Topic {:_id _id
-                   :authors (mapv create-author authors)
-                   :created-on created-on
-                   :description description
-                   :description-source description-source
-                   :kind :topic
-                   :last-updated last-updated
-                   :log? log?
-                   :tags (->tags tags)
-                   :title title
-                   :refs (set (map ->ref refs))
-                   :url url}))))
+  (let [{:keys [_id authors body body-source created-on last-updated
+                log? tags title refs url]
+         :or {_id (random-uuid)
+              authors ["John Doe"]
+              created-on (local-now)
+              log? true
+              refs #{}
+              tags #{}
+              title "New Topic"
+              url (create-url-name title)}} params]
+    (map->Topic {:_id _id
+                 :authors (mapv create-author authors)
+                 :created-on created-on
+                 :body body
+                 :body-source body-source
+                 :kind :topic
+                 :last-updated last-updated
+                 :log? log?
+                 :tags (->tags tags)
+                 :title title
+                 :refs (set (map ->ref refs))
+                 :url url})))
 
 (defn create-topic
   "Returns a topic entity."
   [x]
-  (if (map? x)
-    (create-topic* x)
+  (cond
+    (nil? x) nil
+    (map? x) (create-topic* x)
+    :else
     (create-topic* {:title x})))
 
 (defn get-topic

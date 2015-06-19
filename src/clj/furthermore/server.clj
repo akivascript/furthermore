@@ -72,10 +72,7 @@
 
 (defmethod dispatch-update "topic"
   [entity]
-  (let [entity (-> entity
-                   (assoc :body-source (:description entity))
-                   (dissoc :description))]
-    (dispatch-update* create-topic entity)))
+  (dispatch-update* create-topic entity))
 
 ;;
 ;; Routes & Resources
