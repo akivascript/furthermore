@@ -111,30 +111,26 @@
                                 :name "tweet"
                                 :ref "tweet"}]
                        "Tweet this?"]]]]))
-               (if-not (= :topic kind)
-                 [:div
-                  [:div
-                   (label "body" "Body")
+               [:div
+                [:div
+                 (if (= :topic kind)
+                   (label "body-source" "Description")
+                   (label "body-source" "Body"))
+                 (let [rows (if (= :topic kind) 8 16)]
                    (text-area {:class "form-control"
                                :ref "body-source"
-                               :rows 16}
+                               :rows rows}
                               "body-source"
-                              (:body-source entity))]
-                  (when-not (= :static kind)
-                    [:div
-                     (label "excerpt" "Excerpt")
-                     (text-area {:class "form-control"
-                                 :ref "excerpt-source"
-                                 :rows 4}
-                                "excerpt-source"
-                                (:excerpt-source entity))])]
+                              (:body-source entity)))]
+                (when-not (or (= :static kind)
+                              (= :topic kind))
                   [:div
-                   (label "description" "Description")
+                   (label "excerpt" "Excerpt")
                    (text-area {:class "form-control"
-                               :ref "description"
-                               :rows 8}
-                              "description"
-                              (:description entity))])]]
+                               :ref "excerpt-source"
+                               :rows 4}
+                              "excerpt-source"
+                              (:excerpt-source entity))])]]]
              (hidden-field {:value kind} "kind")
              (let [id (if (= mode :new)
                         (mutil/random-uuid)

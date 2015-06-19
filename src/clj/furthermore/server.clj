@@ -15,6 +15,7 @@
                                                  joda-date->java-date
                                                  site-url]]
             [furthermore.repository :refer [initialize-db-connection]]
+            [furthermore.view.admin :refer [display-admin-page]]
             [furthermore.view.contents :refer [display-contents-page]]
             [furthermore.view.home :refer [display-home-page]]
             [furthermore.view.page :as page :refer [display-static-page]]
@@ -158,6 +159,7 @@
 
 (defroutes admin-routes
   (context "/admin" []
+           (GET "/" [] (display-admin-page))
            (context "/add" []
                     (GET "/follow-up" [] (admin-page :follow-up :new nil))
                     (GET "/static" [] (admin-page :static :new nil))

@@ -284,6 +284,54 @@ img {
     }
 }
 
+#admin {
+    .topic {
+        padding-bottom: 15px;
+
+        .title {
+            border-bottom: 1px solid $gray-light;
+        }
+    }
+
+    .post {
+        display: block;
+
+        margin-bottom: 0px;
+        padding-left: 0px;
+
+        border: none;
+
+        .date {
+            display: inline-block;
+
+            color: $gray-light;
+        }
+
+        .follow-up-title {
+            display: inline-block;
+
+            border: none;
+
+            margin-left: -12px;
+            padding-right: 10px;
+
+            p {
+                display: inline;
+            }
+        }
+
+        .title {
+            display: inline-block;
+
+            border: none;
+
+            padding-right: 10px;
+
+            font-size: 125%;
+        }
+    }
+}
+
 #post {
     .follow-up {
         padding: 10px;
@@ -562,7 +610,7 @@ img {
         .date {
             display: inline-block;
 
-            color: #aaa;
+            color: $gray-light;
         }
     }
 }

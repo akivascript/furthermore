@@ -294,16 +294,16 @@
 ;; Topics
 ;;
 (defrecord Topic
-    [_id authors body body-source created-on kind
+    [_id authors description description-source created-on kind
      last-updated log? tags title refs url])
 
 (defn- create-topic*
   [params]
-  (let [{:keys [_id authors body body-source created-on last-updated
+  (let [{:keys [_id authors description description-source created-on last-updated
                 log? tags title refs url]
          :or {_id (random-uuid)
               authors ["John Doe"]
-              body-source "*Somebody* forgot to write a description."
+              description-source "*Somedescription* forgot to write a description."
               created-on (local-now)
               log? true
               refs #{}
@@ -313,8 +313,8 @@
     (map->Topic {:_id _id
                  :authors (mapv create-author authors)
                  :created-on created-on
-                 :body body
-                 :body-source body-source
+                 :description description
+                 :description-source description-source
                  :kind :topic
                  :last-updated last-updated
                  :log? log?
