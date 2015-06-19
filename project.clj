@@ -108,8 +108,8 @@
 
           :figwheel {:http-server-root "public"
                      :server-port 3449
-                     :nrepl-port 7003
-                     :ring-handler furthermore.server/app
+                     ;:nrepl-port 7003
+                     ;:ring-handler furthermore.server/app
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
 
