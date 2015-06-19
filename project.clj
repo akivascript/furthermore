@@ -1,4 +1,4 @@
-(defproject furthermore "0.6.5-SNAPSHOT"
+(defproject furthermore "0.7.0-SNAPSHOT"
   :description "A topical liveblogging platform written in Clojure/ClojureScript."
   :url "https://github.com/akivaschoen/furthermore"
   :license {:name "Eclipse Public License"
@@ -108,8 +108,6 @@
 
           :figwheel {:http-server-root "public"
                      :server-port 3449
-                     ;:nrepl-port 7003
-                     ;:ring-handler furthermore.server/app
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
 
