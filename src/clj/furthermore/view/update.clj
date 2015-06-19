@@ -33,7 +33,6 @@
                  (str "Add " (title kind)))
         entity (when update?
                  (entities/get-entity {:_id id} kind))]
-    (println entity)
       (display-page
        :update
        page-title
@@ -102,7 +101,9 @@
                         [:optgroup {:label "Topics"}
                          (map #(create-option % "topic" entity) topics)])
                       [:optgroup {:id "posts"
-                                  :label "Posts"}]]]
+                                  :label "Posts"}
+                       (let [posts (entities/get-entities :posts)]
+                         (map #(create-option % "parent" entity) posts))]]]
                     [:div
                      [:div {:class "checkbox float-left"}
                       [:label {:for "tweet"}
