@@ -74,6 +74,11 @@
                         :pretty-print true}}]}
 
   :profiles
+  {:uberjar {:hooks [leiningen.cljsbuild]
+             :env {:production true}
+             :omit-source true
+             :aot :all}
+
    :prod [:prod-config
           :twitter
           {:hooks [leiningen.cljsbuild]
