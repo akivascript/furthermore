@@ -115,6 +115,7 @@
      [:script "hljs.initHighlightingOnLoad ()"]
 
      (case page
+       :admin [:script "furthermore.core.initialize_contents ()"]
        :contents [:script "furthermore.core.initialize_contents ()"]
        :update [:script "furthermore.core.initialize_update ()"]
        "")
