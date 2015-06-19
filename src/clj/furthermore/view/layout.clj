@@ -8,30 +8,57 @@
 (def tags-path "/tags")
 (def updates-path "/updates")
 
-(def nav-bar
+(def standard-nav
   (html
-   [:div {:class "container"}
-    [:div {:class "navbar-header"}
-     [:button {:class "navbar-toggle"
-               :type "button"
-               :data-toggle "collapse"
-               :data-target "#navbar-main"}
-      [:span {:class "icon-bar"}]
-      [:span {:class "icon-bar"}]
-      [:span {:class "icon-bar"}]]
-     [:a {:href home-path
-          :class "navbar-brand"} "WhaTEveR"]]
-    [:div {:id "navbar-main"
-           :class "navbar-collapse collapse"}
-     [:ul {:class "nav navbar-nav"}
-      [:li
-       [:a {:href contents-path} "Table of Contents"]]
-      [:li
-       [:a {:href tags-path} "Tags"]]
-      [:li
-       [:a {:href updates-path} "Updates"]]
-      [:li
-       [:a {:href about-path} "About"]]]]]))
+   [:li
+    [:a {:href contents-path} "Table of Contents"]]
+   [:li
+    [:a {:href tags-path} "Tags"]]
+   [:li
+    [:a {:href updates-path} "Updates"]]
+   [:li
+    [:a {:href about-path} "About"]]))
+
+(def admin-nav
+  (html
+   [:li
+    [:a {:href "/admin"} "Admin Home"]]
+   [:li.dropdown
+    [:a.dropdown-toggle {:href "#" :data-toggle "dropdown" :role "button"
+                         :aria-expanded false} "Add "
+     [:span.caret]]
+    [:ul.dropdown-menu {:role "menu"}
+     [:li
+      [:a {:href "/admin/add/post"} "New Post"]]
+     [:li
+      [:a {:href "/admin/add/follow-up"} "New Follow-Up"]]
+     [:li
+      [:a {:href "/admin/add/topic"} "New Topic"]]
+     [:li
+      [:a {:href "/admin/add/static"} "New Page"]]]]))
+
+(defn nav-bar
+  [page]
+  (let [links (case page
+                (:admin :update) admin-nav
+                standard-nav)]
+    (html
+     [:div {:class "container"}
+      [:div {:class "navbar-header"}
+       [:button {:class "navbar-toggle"
+                 :type "button"
+                 :data-toggle "collapse"
+                 :data-target "#navbar-main"}
+        [:span {:class "icon-bar"}]
+        [:span {:class "icon-bar"}]
+        [:span {:class "icon-bar"}]]
+       [:a {:href home-path
+            :class "navbar-brand"} "WhaTEveR"]]
+      [:div {:id "navbar-main"
+             :class "navbar-collapse collapse"}
+       [:ul {:class "nav navbar-nav"}
+        links
+        ]]])))
 
 (defn display-page
   ([page content]
@@ -53,14 +80,14 @@
 
     [:body
      [:div {:id "navbar"
-            :class "navbar navbar-default navbar-fixed-top"} nav-bar]
+            :class "navbar navbar-default navbar-fixed-top"} (nav-bar page)]
 
      [:div {:id "page-content"} content]
 
      [:div {:class "page-footer"}
       [:div {:class "row"}
        [:div {:class "hidden-xs col-sm-6 text-left small"}
-        "RSS feed hidden until it works!"[:br]
+        "RSS feed coming soon!"[:br]
         "Only slightly more colorful!"[:br]
         "Toast goes in the toaster!"]
        [:div {:class "hidden-xs col-sm-6 text-right small"}
@@ -75,7 +102,7 @@
         "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"][:br]
         "Clojure and ClojureScript are a-okay!"]
        [:div {:class "visible-xs-block hidden-sm hidden-lg text-center small"}
-        "RSS feed hidden until it works!"[:br]
+        "RSS feed coming soon!"[:br]
         "Only slightly more colorful!"[:br]
         "Toast goes in the toaster!"]]]
 
