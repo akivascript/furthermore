@@ -9,7 +9,7 @@
             [furthermore.utils :refer [format-timestamp]]))
 
 (def ^:private title
-  {:page "Page"
+  {:static "Page"
    :post "Post"
    :follow-up "Follow-Up"
    :topic "Topic"})
@@ -28,14 +28,15 @@
 (defn display-update-page
   [kind mode id]
   (let [update? (= :update mode)
-        header (if update?
+        page-title (if update?
                  (str "Update " (title kind))
                  (str "Add " (title kind)))
         entity (when update?
                  (entities/get-entity {:_id id} kind))]
+    (println entity)
       (display-page
        :update
-       header
+       page-title
        (html
         [:div {:id "update"
                :class "container"}
@@ -45,12 +46,12 @@
             (form-to
              {:enckind "application/x-www-form-urlencoded"}
              [:post (str "/api/update/" (name kind))]
-             [:h2 header]
+             [:h2 page-title]
              [:div {:class "panel panel-default"}
               [:div {:class "panel-body"}
                (when (or (= :post kind)
                          (= :topic kind)
-                         (= :page kind))
+                         (= :static kind))
                  [:div
                   [:div
                    (label "title" "Title")
@@ -114,18 +115,18 @@
                   [:div
                    (label "body" "Body")
                    (text-area {:class "form-control"
-                               :ref "body"
+                               :ref "body-source"
                                :rows 16}
-                              "body"
-                              (get-in entity [:source :body]))]
-                  (when-not (= :page kind)
+                              "body-source"
+                              (:body-source entity))]
+                  (when-not (= :static kind)
                     [:div
                      (label "excerpt" "Excerpt")
                      (text-area {:class "form-control"
-                                 :ref "excerpt"
+                                 :ref "excerpt-source"
                                  :rows 4}
-                                "excerpt"
-                                (get-in entity [:source :excerpt]))])]
+                                "excerpt-source"
+                                (:excerpt-source entity))])]
                   [:div
                    (label "description" "Description")
                    (text-area {:class "form-control"
@@ -139,5 +140,4 @@
                         (:_id entity))]
                (hidden-field {:value id} "_id"))
              [:div {:class "text-right"}
-              (submit-button {:class "btn btn-default"} (str "Add "
-                                                             (title kind)))])]]]]))))
+              (submit-button {:class "btn btn-default"} page-title)])]]]]))))

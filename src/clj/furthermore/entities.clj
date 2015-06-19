@@ -146,36 +146,36 @@
 (declare get-topic)
 
 (defrecord Post
-    [_id authors body created-on excerpt kind last-updated
-     log? parent refs source-body source-excerpt subtitle tags title topic url])
+    [_id authors body body-source created-on excerpt excerpt-source
+     kind last-updated log? parent refs subtitle tags title topic url])
 
 (defn create-post
   "Takes a map as input and requires both parent and topic records. Produces
   a Post record."
   [params]
   (let [date (local-now)
-        {:keys [_id authors body created-on excerpt last-updated
-                log? parent source subtitle refs tags title topic url]
+        {:keys [_id authors body body-source created-on excerpt excerpt-source
+                last-updated log? parent subtitle refs tags title topic url]
          :or {authors ["John Doe"]
+              body-source "*Somebody* forgot to actually write the post."
               created-on date
               _id (random-uuid)
               log? true
               refs #{}
-              source {:body "*Somebody* forgot to actually write the post."
-                      :excerpt nil}
               tags #{}
               title "New Post"
               url (create-entity-url date title)}} params]
     (map->Post {:_id _id
                 :authors (mapv create-author authors)
                 :body body
+                :body-source body-source
                 :created-on created-on
                 :excerpt excerpt
+                :excerpt-source excerpt-source
                 :kind :post
                 :log? log?
                 :parent (->ref parent)
                 :refs (set (map ->ref refs))
-                :source source
                 :subtitle subtitle
                 :tags (->tags tags)
                 :title title
@@ -202,35 +202,35 @@
   (get-entities :posts))
 
 (defrecord Follow-Up
-    [_id authors body created-on excerpt kind last-updated
-     log? parent refs source tags topic url])
+    [_id authors body body-source created-on excerpt excerpt-source
+     kind last-updated log? parent refs tags topic url])
 
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [_id authors body created-on excerpt last-updated
-                log? parent refs source tags topic url]
+  (let [{:keys [_id authors body body-source created-on excerpt excerpt-source
+                last-updated log? parent refs tags topic url]
          :or {authors [(create-author {})]
+              body-source "Somebody forgot to actually write the follow-up."
               created-on (local-now)
               _id (random-uuid)
               log? true
               refs #{}
-              source {:body "Somebody forgot to actually write the follow-up."
-                      :excerpt nil}
               tags #{}
               topic (get-in parent [:topic :_id])
               url (create-url-name _id)}} params]
     (map->Follow-Up {:_id _id
                      :authors (mapv create-author authors)
                      :body body
+                     :body-source body-source
                      :created-on created-on
                      :excerpt excerpt
+                     :excerpt-source excerpt-source
                      :kind :follow-up
                      :last-updated last-updated
                      :log? log?
                      :parent (->ref parent)
                      :refs (set (map ->ref refs))
-                     :source source
                      :tags (->tags tags)
                      :topic (->ref topic)
                      :url url})))
@@ -252,15 +252,16 @@
 ;; Static Pages
 ;;
 (defrecord Page
-    [_id authors body created-on last-updated log? source tags title url])
+    [_id authors body body-source created-on last-updated log? tags title url])
 
 (defn create-page
   [params]
-  (let [{:keys [_id authors body created-on last-updated log? source tags title url]
+  (let [{:keys [_id authors body body-source created-on last-updated log?
+                tags title url]
          :or {_id (random-uuid)
               authors [(create-author {})]
+              body-source "Somebody forgot to write the text for this page."
               created-on (local-now)
-              source "Somebody forgot to write the text for this page."
               log? true
               tags #{}
               title "New Page"
@@ -268,11 +269,11 @@
     (map->Page {:_id _id
                 :authors (mapv create-author authors)
                 :body body
+                :body-source body-source
                 :created-on created-on
                 :kind :static
                 :last-updated last-updated
                 :log? log?
-                :source source
                 :tags (set (->tags tags))
                 :title title
                 :url url})))
@@ -293,19 +294,19 @@
 ;; Topics
 ;;
 (defrecord Topic
-    [_id authors body created-on kind
-     last-updated log? source tags title refs url])
+    [_id authors body body-source created-on kind
+     last-updated log? tags title refs url])
 
 (defn- create-topic*
   [params]
-  (let [{:keys [_id authors body created-on last-updated
-                log? source tags title refs url]
+  (let [{:keys [_id authors body body-source created-on last-updated
+                log? tags title refs url]
          :or {_id (random-uuid)
               authors ["John Doe"]
+              body-source "*Somebody* forgot to write a description."
               created-on (local-now)
               log? true
               refs #{}
-              source "*Somebody* forgot to write a description."
               tags #{}
               title "New Topic"
               url (create-url-name title)}} params]
@@ -313,10 +314,10 @@
                  :authors (mapv create-author authors)
                  :created-on created-on
                  :body body
+                 :body-source body-source
                  :kind :topic
                  :last-updated last-updated
                  :log? log?
-                 :source source
                  :tags (->tags tags)
                  :title title
                  :refs (set (map ->ref refs))
@@ -439,10 +440,9 @@
           parent (-> (get-entity {:_id (:_id parent)} (:kind parent))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
-          source (:source entity)
           entity (-> entity
-                     (assoc :body (formatters/mmd->html (:body source)))
-                     (assoc :excerpt (formatters/mmd->html (:excerpt source))))
+                     (assoc :body (formatters/mmd->html (:body-source entity)))
+                     (assoc :excerpt (formatters/mmd->html (:excerpt-source entity))))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
@@ -457,10 +457,9 @@
     (let [parent (-> (get-post (get-in entity [:parent :_id]))
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
-          source (:source entity)
           entity (-> entity
-                     (assoc :body (formatters/mmd->html (:body source)))
-                     (assoc :excerpt (formatters/mmd->html (:excerpt source))))
+                     (assoc :body (formatters/mmd->html (:body-source entity)))
+                     (assoc :excerpt (formatters/mmd->html (:excerpt-source entity))))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
@@ -472,7 +471,7 @@
   furthermore.entities.Page
   (add-entity
     [entity]
-    (let [entity (assoc entity :body (formatters/mmd->html (:source entity)))
+    (let [entity (assoc entity :body (formatters/mmd->html (:body-source entity)))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
@@ -490,7 +489,7 @@
   furthermore.entities.Topic
   (add-entity
     [entity]
-    (let [entity (assoc entity :body (formatters/mmd->html (:source entity)))
+    (let [entity (assoc entity :body (formatters/mmd->html (:body-source entity)))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
