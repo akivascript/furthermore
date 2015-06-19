@@ -53,7 +53,8 @@
 ;;
 (defn- dispatch-update*
   [fn entity]
-  ((comp add-entity fn) entity))
+  (let [original (get-entity {:_id (:_id entity)} (keyword (:kind entity)))]
+    ((comp add-entity fn) (merge original entity))))
 
 (defmulti dispatch-update :kind)
 

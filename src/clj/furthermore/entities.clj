@@ -42,8 +42,10 @@
 (defn create-reference
   "Returns a Reference which links entities to each other."
   ([params]
-   (let [{:keys [_id kind]} params]
-     (create-reference _id (keyword kind))))
+   (if (nil? params)
+     nil
+     (let [{:keys [_id kind]} params]
+       (create-reference _id (keyword kind)))))
   ([id kind]
    (map->Reference {:_id id
                     :kind (keyword kind)})))
@@ -120,8 +122,10 @@
 (defn create-tag
   "Returns a tag entity."
   [x]
-  (if (map? x)
-    (create-tag* x)
+  (cond  
+    (nil? x) nil
+    (map? x) (create-tag* x)
+    :else
     (create-tag* {:title x})))
 
 (defn get-tag
@@ -153,34 +157,36 @@
   "Takes a map as input and requires both parent and topic records. Produces
   a Post record."
   [params]
-  (let [date (local-now)
-        {:keys [_id authors body body-source created-on excerpt excerpt-source
-                last-updated log? parent subtitle refs tags title topic url]
-         :or {authors ["John Doe"]
-              body-source "*Somebody* forgot to actually write the post."
-              created-on date
-              _id (random-uuid)
-              log? true
-              refs #{}
-              tags #{}
-              title "New Post"
-              url (create-entity-url date title)}} params]
-    (map->Post {:_id _id
-                :authors (mapv create-author authors)
-                :body body
-                :body-source body-source
-                :created-on created-on
-                :excerpt excerpt
-                :excerpt-source excerpt-source
-                :kind :post
-                :log? log?
-                :parent (->ref parent)
-                :refs (set (map ->ref refs))
-                :subtitle subtitle
-                :tags (->tags tags)
-                :title title
-                :topic (->ref topic)
-                :url url})))
+  (if (nil? params)
+    nil
+    (let [date (local-now)
+          {:keys [_id authors body body-source created-on excerpt excerpt-source
+                  last-updated log? parent subtitle refs tags title topic url]
+           :or {authors ["John Doe"]
+                body-source "*Somebody* forgot to actually write the post."
+                created-on date
+                _id (random-uuid)
+                log? true
+                refs #{}
+                tags #{}
+                title "New Post"
+                url (create-entity-url date title)}} params]
+      (map->Post {:_id _id
+                  :authors (mapv create-author authors)
+                  :body body
+                  :body-source body-source
+                  :created-on created-on
+                  :excerpt excerpt
+                  :excerpt-source excerpt-source
+                  :kind :post
+                  :log? log?
+                  :parent (->ref parent)
+                  :refs (set (map ->ref refs))
+                  :subtitle subtitle
+                  :tags (->tags tags)
+                  :title title
+                  :topic (->ref topic)
+                  :url url}))))
 
 (defn post?
   "Returns true if x is a post."
@@ -208,32 +214,34 @@
 (defn create-follow-up
   "Takes a map as input and requires a parent record. Produces a Follow-up record."
   [params]
-  (let [{:keys [_id authors body body-source created-on excerpt excerpt-source
-                last-updated log? parent refs tags topic url]
-         :or {authors [(create-author {})]
-              body-source "Somebody forgot to actually write the follow-up."
-              created-on (local-now)
-              _id (random-uuid)
-              log? true
-              refs #{}
-              tags #{}
-              topic (get-in parent [:topic :_id])
-              url (create-url-name _id)}} params]
-    (map->Follow-Up {:_id _id
-                     :authors (mapv create-author authors)
-                     :body body
-                     :body-source body-source
-                     :created-on created-on
-                     :excerpt excerpt
-                     :excerpt-source excerpt-source
-                     :kind :follow-up
-                     :last-updated last-updated
-                     :log? log?
-                     :parent (->ref parent)
-                     :refs (set (map ->ref refs))
-                     :tags (->tags tags)
-                     :topic (->ref topic)
-                     :url url})))
+  (if (nil? params)
+    nil
+    (let [{:keys [_id authors body body-source created-on excerpt excerpt-source
+                  last-updated log? parent refs tags topic url]
+           :or {authors [(create-author {})]
+                body-source "Somebody forgot to actually write the follow-up."
+                created-on (local-now)
+                _id (random-uuid)
+                log? true
+                refs #{}
+                tags #{}
+                topic (get-in parent [:topic :_id])
+                url (create-url-name _id)}} params]
+      (map->Follow-Up {:_id _id
+                       :authors (mapv create-author authors)
+                       :body body
+                       :body-source body-source
+                       :created-on created-on
+                       :excerpt excerpt
+                       :excerpt-source excerpt-source
+                       :kind :follow-up
+                       :last-updated last-updated
+                       :log? log?
+                       :parent (->ref parent)
+                       :refs (set (map ->ref refs))
+                       :tags (->tags tags)
+                       :topic (->ref topic)
+                       :url url}))))
 
 (defn get-follow-up
   "Returns a follow-up from id."
@@ -256,27 +264,29 @@
 
 (defn create-page
   [params]
-  (let [{:keys [_id authors body body-source created-on last-updated log?
-                tags title url]
-         :or {_id (random-uuid)
-              authors [(create-author {})]
-              body-source "Somebody forgot to write the text for this page."
-              created-on (local-now)
-              log? true
-              tags #{}
-              title "New Page"
-              url (create-url-name title)}} params]
-    (map->Page {:_id _id
-                :authors (mapv create-author authors)
-                :body body
-                :body-source body-source
-                :created-on created-on
-                :kind :static
-                :last-updated last-updated
-                :log? log?
-                :tags (set (->tags tags))
-                :title title
-                :url url})))
+  (if (nil? nil)
+    nil
+    (let [{:keys [_id authors body body-source created-on last-updated log?
+                  tags title url]
+           :or {_id (random-uuid)
+                authors [(create-author {})]
+                body-source "Somebody forgot to write the text for this page."
+                created-on (local-now)
+                log? true
+                tags #{}
+                title "New Page"
+                url (create-url-name title)}} params]
+      (map->Page {:_id _id
+                  :authors (mapv create-author authors)
+                  :body body
+                  :body-source body-source
+                  :created-on created-on
+                  :kind :static
+                  :last-updated last-updated
+                  :log? log?
+                  :tags (set (->tags tags))
+                  :title title
+                  :url url}))))
 
 (defn get-page
   "Returns a static page by url."
@@ -299,29 +309,31 @@
 
 (defn- create-topic*
   [params]
-  (let [{:keys [_id authors description description-source created-on last-updated
-                log? tags title refs url]
-         :or {_id (random-uuid)
-              authors ["John Doe"]
-              description-source "*Somedescription* forgot to write a description."
-              created-on (local-now)
-              log? true
-              refs #{}
-              tags #{}
-              title "New Topic"
-              url (create-url-name title)}} params]
-    (map->Topic {:_id _id
-                 :authors (mapv create-author authors)
-                 :created-on created-on
-                 :description description
-                 :description-source description-source
-                 :kind :topic
-                 :last-updated last-updated
-                 :log? log?
-                 :tags (->tags tags)
-                 :title title
-                 :refs (set (map ->ref refs))
-                 :url url})))
+  (if (nil? params)
+    nil
+    (let [{:keys [_id authors description description-source created-on last-updated
+                  log? tags title refs url]
+           :or {_id (random-uuid)
+                authors ["John Doe"]
+                description-source "*Somedescription* forgot to write a description."
+                created-on (local-now)
+                log? true
+                refs #{}
+                tags #{}
+                title "New Topic"
+                url (create-url-name title)}} params]
+      (map->Topic {:_id _id
+                   :authors (mapv create-author authors)
+                   :created-on created-on
+                   :description description
+                   :description-source description-source
+                   :kind :topic
+                   :last-updated last-updated
+                   :log? log?
+                   :tags (->tags tags)
+                   :title title
+                   :refs (set (map ->ref refs))
+                   :url url}))))
 
 (defn create-topic
   "Returns a topic entity."
