@@ -58,33 +58,20 @@
 
 (defmethod dispatch-update "follow-up"
   [entity]
-  (let [entity (-> entity
-                   (assoc-in [:source :body] (:body entity))
-                   (assoc-in [:source :excerpt] (:excerpt entity))
-                   (dissoc :body)
-                   (dissoc :excerpt))]
-    (dispatch-update* create-follow-up entity)))
+  (dispatch-update* create-follow-up entity))
 
-(defmethod dispatch-update "page"
+(defmethod dispatch-update "static"
   [entity]
-  (let [entity (-> entity
-                   (assoc :source (:body entity))
-                   (dissoc :body))]
-    (dispatch-update* create-page entity)))
+  (dispatch-update* create-page entity))
 
 (defmethod dispatch-update "post"
   [entity]
-  (let [entity (-> entity
-                   (assoc-in [:source :body] (:body entity))
-                   (assoc-in [:source :excerpt] (:excerpt entity))
-                   (dissoc :body)
-                   (dissoc :excerpt))]
-    (dispatch-update* create-post entity)))
+  (dispatch-update* create-post entity))
 
 (defmethod dispatch-update "topic"
   [entity]
   (let [entity (-> entity
-                   (assoc :source (:description entity))
+                   (assoc :body-source (:description entity))
                    (dissoc :description))]
     (dispatch-update* create-topic entity)))
 
@@ -102,7 +89,7 @@
   (let [post (get-follow-up (:_id ctx))]
     (redirect* (get-parent post))))
 
-(defmethod redirect "page"
+(defmethod redirect "static"
   [ctx]
   (let [page (get-entity {:title (:title ctx)} :static)]
     (str (utils/create-url-path page) (:url page))))
@@ -173,12 +160,12 @@
   (context "/admin" []
            (context "/add" []
                     (GET "/follow-up" [] (admin-page :follow-up :new nil))
-                    (GET "/page" [] (admin-page :page :new nil))
+                    (GET "/static" [] (admin-page :static :new nil))
                     (GET "/post" [] (admin-page :post :new nil))
                     (GET "/topic" [] (admin-page :topic :new nil)))
            (context "/edit" []
                     (GET "/follow-up/:id" [id] (admin-page :follow-up :update id))
-                    (GET "/page/:url" [url] (admin-page :static :update url))
+                    (GET "/static/:id" [id] (admin-page :static :update id))
                     (GET "/post/:id" [id] (admin-page :post :update id))
                     (GET "/topic/:id" [id] (admin-page :topic :update id)))))
 
