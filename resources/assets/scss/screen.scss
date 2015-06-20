@@ -64,6 +64,18 @@ img {
     border: 1px solid #aaa;
 }
 
+.btn-delete {
+    background-color: #bfa1A1;
+
+    color: $gray-dark;
+
+    &:hover {
+        background-color: #795454;
+
+        color: #000;
+    }
+}
+
 .img-left {
     margin-right: 10px;
     margin-top: 4px; 

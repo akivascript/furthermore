@@ -136,5 +136,9 @@
                         (mutil/random-uuid)
                         (:_id entity))]
                (hidden-field {:value id} "_id"))
-             [:div {:class "text-right"}
-              (submit-button {:class "btn btn-default"} page-title)])]]]]))))
+             [:div.row
+              [:div.col-xs-6
+               (submit-button {:class "btn btn-default btn-delete"
+                               :formmethod "delete"} "Delete")]
+              [:div.col-xs-6.text-right
+               (submit-button {:class "btn btn-default"} page-title)]])]]]]))))
