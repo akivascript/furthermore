@@ -21,7 +21,6 @@
    [environ "1.0.0"]
    [hiccup "1.0.5"]
    [liberator "0.13"]
-   [markdown-clj "0.9.66"]
    [medley "0.6.0"]
    [com.novemberain/monger "2.1.0"]
    [ring-basic-authentication "1.0.5"]
