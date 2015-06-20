@@ -62,7 +62,7 @@
   [entity]
   (dispatch-update* create-follow-up entity))
 
-(defmethod dispatch-update "static"
+(defmethod dispatch-update "page"
   [entity]
   (dispatch-update* create-page entity))
 
@@ -88,9 +88,9 @@
   (let [post (get-follow-up (:_id ctx))]
     (redirect* (get-parent post))))
 
-(defmethod redirect "static"
+(defmethod redirect "page"
   [ctx]
-  (let [page (get-entity {:title (:title ctx)} :static)]
+  (let [page (get-entity {:title (:title ctx)} :page)]
     (str (utils/create-url-path page) (:url page))))
 
 (defmethod redirect "post"
@@ -160,12 +160,12 @@
            (GET "/" [] (display-admin-page))
            (context "/add" []
                     (GET "/follow-up" [] (admin-page :follow-up :new nil))
-                    (GET "/static" [] (admin-page :static :new nil))
+                    (GET "/page" [] (admin-page :page :new nil))
                     (GET "/post" [] (admin-page :post :new nil))
                     (GET "/topic" [] (admin-page :topic :new nil)))
            (context "/edit" []
                     (GET "/follow-up/:id" [id] (admin-page :follow-up :update id))
-                    (GET "/static/:id" [id] (admin-page :static :update id))
+                    (GET "/page/:id" [id] (admin-page :page :update id))
                     (GET "/post/:id" [id] (admin-page :post :update id))
                     (GET "/topic/:id" [id] (admin-page :topic :update id)))))
 

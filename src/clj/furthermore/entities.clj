@@ -255,14 +255,14 @@
     (get-entity {:_id (:_id parent)} (:kind parent))))
 
 ;;
-;; Static Pages
+;; Pages
 ;;
 (defrecord Page
     [_id authors body body-source created-on last-updated log? tags title url])
 
 (defn create-page
   [params]
-  (if (nil? nil)
+  (if (nil? params)
     nil
     (let [{:keys [_id authors body body-source created-on last-updated log?
                   tags title url]
@@ -278,7 +278,7 @@
                   :body body
                   :body-source body-source
                   :created-on created-on
-                  :kind :static
+                  :kind :page
                   :last-updated last-updated
                   :log? log?
                   :tags (set (->tags tags))
@@ -286,11 +286,13 @@
                   :url url}))))
 
 (defn get-page
-  "Returns a static page by url."
-  [url]
-  (if (nil? url)
-    nil
-    (get-entity {:url url} :static)))
+  "Returns a static page."
+  [x]
+  (cond
+    (nil? x) nil
+    (uuid? x) (get-entity {:_id x} :page)
+    :else
+    (get-entity {:url x} :page)))
 
 (defn get-pages
   "Returns all pages."
@@ -372,7 +374,7 @@
   [criterion kind]
   (get-entity* create-post criterion kind))
 
-(defmethod get-entity :static
+(defmethod get-entity :page
   [criterion kind]
   (get-entity* create-page criterion kind))
 
@@ -397,7 +399,7 @@
 
 (defmethod get-entities :pages
   [_]
-  (->> (read-entities :static)
+  (->> (read-entities :page)
        (map create-page)
        (sort-by :title)
        vec))
@@ -483,7 +485,7 @@
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
-                                               :static))
+                                               :page))
                     (:tags entity))]
       (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
       (commit-entities)))

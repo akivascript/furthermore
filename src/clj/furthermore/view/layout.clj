@@ -35,7 +35,7 @@
      [:li
       [:a {:href "/admin/add/topic"} "New Topic"]]
      [:li
-      [:a {:href "/admin/add/static"} "New Page"]]]]))
+      [:a {:href "/admin/add/page"} "New Page"]]]]))
 
 (defn nav-bar
   [page]

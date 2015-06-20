@@ -9,7 +9,7 @@
             [furthermore.utils :refer [format-timestamp]]))
 
 (def ^:private title
-  {:static "Page"
+  {:page "Page"
    :post "Post"
    :follow-up "Follow-Up"
    :topic "Topic"})
@@ -50,7 +50,7 @@
               [:div {:class "panel-body"}
                (when (or (= :post kind)
                          (= :topic kind)
-                         (= :static kind))
+                         (= :page kind))
                  [:div
                   [:div
                    (label "title" "Title")
@@ -122,7 +122,7 @@
                                :rows rows}
                               "body-source"
                               (:body-source entity)))]
-                (when-not (or (= :static kind)
+                (when-not (or (= :page kind)
                               (= :topic kind))
                   [:div
                    (label "excerpt" "Excerpt")

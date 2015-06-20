@@ -23,7 +23,7 @@
   {:update "updates"
    :follow-up "posts"
    :post "posts"
-   :static "pages"
+   :page "pages"
    :tag "tags"
    :topic "topics"})
 
