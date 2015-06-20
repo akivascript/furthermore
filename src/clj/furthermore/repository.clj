@@ -68,8 +68,8 @@
 
 (defn remove-entity
   "Removes an entity from the database."
-  [entity]
-  (mc/remove-by-id @db (kinds (:kind entity)) (:_id entity)))
+  [[id kind]]
+  (mc/remove-by-id @db (kinds kind) id))
 
 (defn parse-entity
   "Keywordizes values in an entity loaded from the database."
