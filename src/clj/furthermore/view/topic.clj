@@ -1,7 +1,6 @@
 (ns furthermore.view.topic
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer :all]
-            [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :as entities]

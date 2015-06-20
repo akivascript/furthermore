@@ -1,7 +1,6 @@
 (ns furthermore.view.post
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer :all]
-            [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities :refer [get-entity]]
@@ -20,8 +19,6 @@
                                          (str "/tags/"
                                               (create-url-name %)) %))
                                       (sort tags))))])))
-
-(def format-body (comp smarten md-to-html-string))
 
 (defn display-follow-up
   [follow-up]
