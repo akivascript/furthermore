@@ -43,7 +43,8 @@
           [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
            [:div {:class "content"}
             (form-to
-             {:enckind "application/x-www-form-urlencoded"}
+             {:id "update-form"
+              :enckind "application/x-www-form-urlencoded"}
              [:post (str "/api/update/" (name kind))]
              [:h2 page-title]
              [:div {:class "panel panel-default"}
@@ -138,7 +139,10 @@
                (hidden-field {:value id} "_id"))
              [:div.row
               [:div.col-xs-6
-               (submit-button {:class "btn btn-default btn-delete"
-                               :formmethod "delete"} "Delete")]
+               (when update?
+                 [:input.btn.btn-default.btn-delete {:id "delete"
+                                                     :form "update-form"
+                                                     :type "button"
+                                                     :value "Delete"}])]
               [:div.col-xs-6.text-right
                (submit-button {:class "btn btn-default"} page-title)]])]]]]))))

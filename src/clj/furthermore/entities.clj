@@ -5,7 +5,7 @@
             [monger.util :refer [random-uuid]]
 
             [furthermore.formatters :as formatters :refer :all]
-            [furthermore.repository :refer :all]
+            [furthermore.repository :as repo]
             [furthermore.utils :refer :all]))
 
 (declare get-entities)
@@ -50,6 +50,11 @@
    (map->Reference {:_id id
                     :kind (keyword kind)})))
 
+(defn delete-reference
+  "Removes a given reference from an entity."
+  [ref entity]
+  (disj (:refs entity) ref))
+
 (defprotocol References
   (->ref [ref]))
 
@@ -68,7 +73,7 @@
 (defn reference?
   "Returns true if x is a Reference."
   [x]
-  (instance? Reference x))
+  (instance? furthermore.entities.Reference x))
 
 ;;
 ;; Tags
@@ -364,7 +369,7 @@
 
 (defn- get-entity*
   [fn criterion kind]
-  (fn (read-entity kind criterion)))
+  (fn (repo/read-entity kind criterion)))
 
 (defmethod get-entity :follow-up
   [criterion kind]
@@ -380,7 +385,7 @@
 
 (defmethod get-entity :tag
   [criterion kind]
-  (if-let [tag (read-entity kind criterion)]
+  (if-let [tag (repo/read-entity kind criterion)]
     (create-tag tag)
     (create-tag criterion)))
 
@@ -392,43 +397,43 @@
 
 (defmethod get-entities :follow-ups
   [_]
-  (->> (read-entities :post)
+  (->> (repo/read-entities :post)
        (filter #(contains? #{:follow-up} (keyword (:kind %))))
        (map create-follow-up)
        vec))
 
 (defmethod get-entities :pages
   [_]
-  (->> (read-entities :page)
+  (->> (repo/read-entities :page)
        (map create-page)
        (sort-by :title)
        vec))
 
 (defmethod get-entities :posts
   [_]
-  (->> (read-entities :post)
+  (->> (repo/read-entities :post)
        (filter #(contains? #{:post} (keyword (:kind %))))
        (map create-post)
        vec))
 
 (defmethod get-entities :tags
   [_]
-  (->> (read-entities :tag)
+  (->> (repo/read-entities :tag)
        (map create-tag)
        (sort-by :title)
        vec))
 
 (defmethod get-entities :topics
   [_]
-  (->> (read-entities :topic)
+  (->> (repo/read-entities :topic)
        (map create-topic)
        (sort-by :title)
        vec))
 
 (defmethod get-entities :updates
   [_]
-  (->> (read-entities :update)
-       (map create-update)
+  (->> (repo/read-entities :update)
+       (map repo/create-update)
        (sort-by :date)
        reverse
        vec))
@@ -439,8 +444,8 @@
 
 (defn- commit-entities
   []
-  (process-db-queue)
-  (clear-db-queue!))
+  (repo/process-db-queue)
+  (repo/clear-db-queue!))
 
 (extend-protocol AddEntity
   furthermore.entities.Post
@@ -458,7 +463,7 @@
                              (create-reference (:_id entity)
                                                :post))
                     (:tags entity))]
-      (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
+      (doseq [e (apply merge [entity parent] tags)] (repo/add-db-queue! e))
       (commit-entities)))
 
   furthermore.entities.Follow-Up
@@ -475,7 +480,7 @@
                              (create-reference (:_id entity)
                                                :follow-up))
                     (:tags entity))]
-      (doseq [e (apply merge [entity parent] tags)] (add-db-queue! e))
+      (doseq [e (apply merge [entity parent] tags)] (repo/add-db-queue! e))
       (commit-entities)))
 
   furthermore.entities.Page
@@ -487,13 +492,13 @@
                              (create-reference (:_id entity)
                                                :page))
                     (:tags entity))]
-      (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
+      (doseq [e (apply merge [entity] tags)] (repo/add-db-queue! e))
       (commit-entities)))
 
   furthermore.entities.Tag
   (add-entity
     [tag]
-    (add-db-queue! (assoc tag :log? true))
+    (repo/add-db-queue! (assoc tag :log? true))
     (commit-entities))
 
   furthermore.entities.Topic
@@ -505,5 +510,30 @@
                              (create-reference (:_id entity)
                                                :topic))
                     (:tags entity))]
-      (doseq [e (apply merge [entity] tags)] (add-db-queue! e))
+      (doseq [e (apply merge [entity] tags)] (repo/add-db-queue! e))
       (commit-entities))))
+
+; The Ministry of Information Absolution
+(defn orphan
+  [entity]
+  (let [ref (create-reference (:_id entity) (:kind entity))
+        parent (get-topic entity)
+        topic (get-parent entity)]
+    (println ref)
+    (delete-reference ref parent)
+    (when-not (= topic parent)
+      (delete-reference ref topic))))
+
+(defn delete-entity
+  [[id kind]]
+  (when-let [entity (get-entity {:_id id} kind)]
+    (let [ref (create-reference (:_id entity) (:kind entity))]
+      (loop [refs (:refs entity)]
+        (if-not (seq refs)
+          (do
+            (orphan entity)
+            (repo/remove-entity [id kind]))
+          (do
+            (let [from-ref (first refs)]
+              (delete-reference ref from-ref))
+            (recur (rest refs))))))))

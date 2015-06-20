@@ -52,4 +52,14 @@
                      (let [id (-> (dommy/value topic)
                                   (split "|")
                                   first)]
-                       (filter-options id parents))))))
+                       (filter-options id parents))))
+    (dommy/listen! (sel1 :#delete) :click
+                   (fn [_]
+                       (ajax/ajax-request
+                        {:uri (str "/api/update/" (dommy/value (sel1 :#kind)) "/"
+                                   (dommy/value (sel1 :#_id)))
+                         :method :delete
+                         :handler (fn [[ok response]]
+                                    (set! (-> js/window .-location .-href) "/admin"))
+                         :format (ajax/edn-request-format)
+                         :response-format (ajax/edn-request-format)})))))
