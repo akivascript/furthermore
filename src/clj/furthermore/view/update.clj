@@ -139,9 +139,10 @@
                (hidden-field {:value id} "_id"))
              [:div.row
               [:div.col-xs-6
-               [:input.btn.btn-default.btn-delete {:id "delete"
-                                                   :form "update-form"
-                                                   :type "button"
-                                                   :value "Delete"}]]
+               (when update?
+                 [:input.btn.btn-default.btn-delete {:id "delete"
+                                                     :form "update-form"
+                                                     :type "button"
+                                                     :value "Delete"}])]
               [:div.col-xs-6.text-right
                (submit-button {:class "btn btn-default"} page-title)]])]]]]))))
