@@ -15,7 +15,7 @@
                     :update "Updated"})
         kind (kind {:follow-up "follow-up"
                     :post "post"
-                    :static "page"
+                    :page "page"
                     :tag "tag"
                     :topic "topic"})]
     (str action " " kind)))
@@ -38,7 +38,7 @@
        (let [path-fn (case kind
                        :follow-up (str "/post/" (:url parent) "#" (:url update))
                        :post (str "/post/" (:url update))
-                       :static (str "/page/" (:url update))
+                       :page (str "/page/" (:url update))
                        :tag (str "/tags/" (:url update))
                        "")]
          (if (= :topic kind)
