@@ -3,7 +3,7 @@
 
             [clj-time.local :refer [local-now]]
             [environ.core :refer [env]]
-            [monger.collection :refer [find-maps find-one-as-map insert upsert]]
+            [monger.collection :as mc]
             [monger.core :refer [connect-via-uri]]
             [monger.joda-time :refer :all]
             [monger.operators :refer [$options $regex]]
@@ -66,6 +66,11 @@
                   :topic topic
                   :url url})))
 
+(defn remove-entity
+  "Removes an entity from the database."
+  [entity]
+  (mc/remove-by-id @db (kinds (:kind entity)) (:_id entity)))
+
 (defn parse-entity
   "Keywordizes values in an entity loaded from the database."
   [entity]
@@ -82,7 +87,7 @@
 (defn read-entities
   "Returns entities from the database."
   ([kind]
-   (map parse-entity (find-maps @db (kind kinds))))
+   (map parse-entity (mc/find-maps @db (kind kinds))))
   ([kind criteria limit-by]
    (with-collection @db (kind kinds)
      (find {})
@@ -94,10 +99,10 @@
   to be a map (e.g., {:_id 0de661a...})."
   [kind criterion]
   (let [entity (if (contains? criterion :title)
-                 (find-one-as-map @db (kind kinds) {:title
+                 (mc/find-one-as-map @db (kind kinds) {:title
                                                     {$regex (:title criterion)
                                                      $options "i"}})
-                 (find-one-as-map @db (kind kinds) criterion))]
+                 (mc/find-one-as-map @db (kind kinds) criterion))]
     (when-not (nil? entity)
       (parse-entity entity))))
 
@@ -105,7 +110,7 @@
   "Returns one or more entities from the database. criterion is
   expected to be a map (e.g., {:_id 0de661a...})."
   [kind criterion]
-  (let [entities (find-maps @db (kind kinds)
+  (let [entities (mc/find-maps @db (kind kinds)
                                {(first (keys criterion))
                                 {$regex (first (vals criterion)) $options "i"}})]
     (map parse-entity entities)))
@@ -124,14 +129,14 @@
                    (assoc :last-updated (local-now))
                    (dissoc :log?)
                    (dissoc :tweet))]
-    (let [result (upsert @db (kind kinds) {:_id (:_id entity)} entity)]
+    (let [result (mc/upsert @db (kind kinds) {:_id (:_id entity)} entity)]
       (when log?
         (let [action (if (updated-existing? result)
                      :update
                      :new)]
           (when-not (and (= kind :tag)
                          (= action :update))
-            (insert @db "updates" (create-update {:action action :entity entity})))))
+            (mc/insert @db "updates" (create-update {:action action :entity entity})))))
       result)))
 
 ;;
