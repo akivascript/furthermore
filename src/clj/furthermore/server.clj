@@ -86,17 +86,20 @@
 
 (defmethod redirect "follow-up"
   [ctx]
-  (let [post (get-follow-up (:_id ctx))]
+  "admin"
+  #_(let [post (get-follow-up (:_id ctx))]
     (redirect* (get-parent post))))
 
 (defmethod redirect "page"
   [ctx]
-  (let [page (get-entity {:title (:title ctx)} :page)]
+  "admin"
+  #_(let [page (get-entity {:title (:title ctx)} :page)]
     (str (utils/create-url-path page) (:url page))))
 
 (defmethod redirect "post"
   [ctx]
-  (let [post (get-post (:_id ctx))]
+  "admin"
+  #_(let [post (get-post (:_id ctx))]
     (redirect* post)))
 
 (defmethod redirect "topic"
@@ -127,6 +130,7 @@
                       :title (:title form-params)
                       :kind (:kind form-params)}))
   :delete! (fn [ctx] (let [{:keys [id kind]} (get-in ctx [:request :params])]
+                      (println id kind)
                       (delete-entity id (keyword kind))))
   :post-redirect? (fn [ctx]
                     {:location (str utils/site-url (redirect ctx))}))

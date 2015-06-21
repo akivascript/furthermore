@@ -48,7 +48,7 @@
   [params]
   (let [{:keys [_id action date entity kind parent ref title topic url]
          :or {_id (random-uuid)
-              date (:last-updated entity)
+              date (local-now)
               kind (:kind entity)
               parent (:parent entity)
               ref (:_id entity)
@@ -68,8 +68,9 @@
 
 (defn remove-entity
   "Removes an entity from the database."
-  [[id kind]]
-  (mc/remove-by-id @db (kinds kind) id))
+  [entity]
+  (mc/remove-by-id @db (kinds (:kind entity)) (:_id entity))
+  (mc/insert @db "updates" (create-update {:action :delete :entity entity})))
 
 (defn parse-entity
   "Keywordizes values in an entity loaded from the database."

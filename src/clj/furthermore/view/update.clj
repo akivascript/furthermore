@@ -140,7 +140,7 @@
              [:div.row
               [:div.col-xs-6
                (when update?
-                 [:input.btn.btn-default.btn-delete {:id "delete"
+                 [:input.btn.btn-default.btn-delete {:id "delete-btn"
                                                      :form "update-form"
                                                      :type "button"
                                                      :value "Delete"}])]
