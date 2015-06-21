@@ -36,7 +36,7 @@
   (let [ps (map create-option (filter #(= topic (get-in % [:topic :_id])) @posts))
         optgroup (sel1 :#posts)]
     (dommy/clear! optgroup)
-    (if-not (nil? topic)
+    (when-not (nil? topic)
       (doseq [p ps]
         (dom/appendChild optgroup p)))))
 
@@ -47,20 +47,19 @@
     (ajax/GET "/api/posts" {:handler
                             (fn [xs] (reset! posts
                                              (filter #(contains? #{:post} (:kind %)) xs)))})
-    (when topic
-      (dommy/listen! topic :change
-                     (fn [_]
-                       (let [id (-> (dommy/value topic)
-                                    (split "|")
-                                    first)]
-                         (filter-options id parents)))))
-    (dommy/listen! (sel1 :#delete-btn) :click
+    (dommy/listen! topic :change
                    (fn [_]
-                     (ajax/ajax-request
-                      {:uri (str "/api/update/" (dommy/value (sel1 :#kind)) "/"
-                                 (dommy/value (sel1 :#_id)))
-                       :method :delete
-                       :handler (fn [[ok response]]
-                                  (set! (-> js/window .-location .-href) "/admin"))
-                       :format (ajax/edn-request-format)
-                       :response-format (ajax/edn-request-format)})))))
+                     (let [id (-> (dommy/value topic)
+                                  (split "|")
+                                  first)]
+                       (filter-options id parents))))
+    (dommy/listen! (sel1 :#delete) :click
+                   (fn [_]
+                       (ajax/ajax-request
+                        {:uri (str "/api/update/" (dommy/value (sel1 :#kind)) "/"
+                                   (dommy/value (sel1 :#_id)))
+                         :method :delete
+                         :handler (fn [[ok response]]
+                                    (set! (-> js/window .-location .-href) "/admin"))
+                         :format (ajax/edn-request-format)
+                         :response-format (ajax/edn-request-format)})))))
