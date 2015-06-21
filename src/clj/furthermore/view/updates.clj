@@ -11,7 +11,8 @@
 (defn- set-status
   [action kind]
   (let [action (action {:new "Added"
-                    :update "Updated"})
+                        :delete "Deleted"
+                        :update "Updated"})
         kind (kind {:follow-up "follow-up"
                     :post "post"
                     :page "page"

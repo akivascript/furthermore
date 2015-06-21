@@ -52,8 +52,8 @@
 
 (defn delete-reference
   "Removes a given reference from an entity."
-  [ref entity]
-  (disj (:refs entity) ref))
+  [entity ref]
+  (disj entity ref))
 
 (defprotocol References
   (->ref [ref]))
@@ -246,6 +246,11 @@
                        :topic (->ref topic)
                        :url url}))))
 
+(defn follow-up?
+  "Returns true if x is a follow-up."
+  [x]
+  (instance? Follow-Up x))
+
 (defn get-follow-up
   "Returns a follow-up from id."
   [id]
@@ -336,6 +341,10 @@
                  :refs (set (map ->ref refs))
                  :url url})))
 
+(defn topic?
+  [x]
+  (instance? Topic x))
+
 (defn create-topic
   "Returns a topic entity."
   [x]
@@ -354,7 +363,8 @@
     (string? x) (get-entity {:url x} :topic)
     (reference? x) (get-entity {:_id (:_id x)} :topic)
     :else
-    (get-entity (get-in x [:topic :_id]) :topic)))
+    (let [topic (:topic x)]
+      (get-entity {:_id (:_id topic)} (:kind topic)))))
 
 (defn get-topics
   "Returns all topics."
@@ -364,7 +374,18 @@
 ;;
 ;; General Entity Functions
 ;;
-; The Ministry of Information Retrieval
+;; The Ministry of Information Miscellanea
+(defn same?
+  "Returns true if the two entities are the same by _id."
+  [x y]
+  (= (:_id x) (:_id y)))
+
+(defn parent?
+  "Returns true if x is the parent of y."
+  [x y]
+  (= (:_id x) (get-in y [:parent :_id])))
+
+;; The Ministry of Information Retrieval
 (defmulti get-entity (fn [criterion kind] kind))
 
 (defn- get-entity*
@@ -438,7 +459,7 @@
        reverse
        vec))
 
-; The Ministry of Information Retention
+;; The Ministry of Information Retention
 (defprotocol AddEntity
   (add-entity [entity]))
 
@@ -513,27 +534,33 @@
       (doseq [e (apply merge [entity] tags)] (repo/add-db-queue! e))
       (commit-entities))))
 
-; The Ministry of Information Absolution
+;; The Ministry of Information Absolution
 (defn orphan
   [entity]
   (let [ref (create-reference (:_id entity) (:kind entity))
-        parent (get-topic entity)
-        topic (get-parent entity)]
-    (println ref)
-    (delete-reference ref parent)
+        parent (assoc (get-parent entity) :log? false)
+        topic (assoc (get-topic (:topic entity)) :log? false)]
+    (repo/add-db-queue! (update parent :refs delete-reference ref))
     (when-not (= topic parent)
-      (delete-reference ref topic))))
+      (repo/add-db-queue! (update topic :refs delete-reference ref)))
+    (repo/process-db-queue)
+    (repo/clear-db-queue!)))
 
 (defn delete-entity
-  [[id kind]]
-  (when-let [entity (get-entity {:_id id} kind)]
-    (let [ref (create-reference (:_id entity) (:kind entity))]
-      (loop [refs (:refs entity)]
-        (if-not (seq refs)
-          (do
-            (orphan entity)
-            (repo/remove-entity [id kind]))
-          (do
-            (let [from-ref (first refs)]
-              (delete-reference ref from-ref))
-            (recur (rest refs))))))))
+  ([entity]
+   (let [source (create-reference (:_id entity) (:kind entity))]
+     (loop [refs (:refs entity)]
+       (when (seq refs)
+         (let [ref (first refs)
+               target (get-entity {:_id (:_id ref)} (:kind ref))]
+           (if (and (or (follow-up? target)
+                        (post? target))
+                    (parent? entity target))
+             (delete-entity target)
+             (update target :refs delete-reference source)))
+         (recur (rest refs))))
+     (when-not (topic? entity)
+       (orphan entity))
+     (repo/remove-entity entity)))
+  ([id kind]
+   (delete-entity (get-entity {:_id id} kind))))
