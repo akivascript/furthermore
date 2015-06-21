@@ -40,16 +40,15 @@
                        :post (str "/post/" (:url update))
                        :page (str "/page/" (:url update))
                        :tag (str "/tags/" (:url update))
+                       :topic (str "/topic/" (:url update))
                        "")]
-         (if (= :topic kind)
-           (:title update)
-           (if (= :follow-up kind)
-             [:span
-              (link-to path-fn (:title update))
-              [:span.parent
-               [:span.whatever-forward {:style "padding-right: 2px;"}]
-               (:title parent)]]
-             [:a {:href path-fn} (:title update)])))]
+         (if (= :follow-up kind)
+           [:span
+            (link-to path-fn (:title update))
+            [:span.parent
+             [:span.whatever-forward {:style "padding-right: 2px;"}]
+             (:title parent)]]
+           [:a {:href path-fn} (:title update)]))]
       (when-let [topic-title (:title topic)]
         [:div {:class "col-xs-2 topic"} topic-title])])))
 
