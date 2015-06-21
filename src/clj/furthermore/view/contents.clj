@@ -36,7 +36,7 @@
       [:div {:class "title"}
        (make-outline-selector post)
        (link-to (str (create-url-path post) (:url post)) (:title post))]
-      [:div {:class "small date"} date]])))
+      [:div {:class "date small"} date]])))
 
 (defmethod display-title :follow-up
   [follow-up]
@@ -49,12 +49,12 @@
       [:div {:class "follow-up-title"}
        (make-outline-selector follow-up)
        (link-to url (get-excerpt (:body follow-up) 50))]
-      [:div {:class "small date"} (str date " @ " time)]])))
+      [:div {:class "date small"} (str date " @ " time)]])))
 
 (defn- display-posts
   [post]
     (html
-     [:div {:class "col-xs-12 post"}
+     [:div.post
       (display-title post)
       (when-let [refs (:refs post)]
         [:div {:id (subs (:_id post) 0 6)
@@ -68,15 +68,16 @@
   (html
    [:div {:class "col-xs-12 col-sm-10 col-sm-offset-1"
           :style "padding-bottom: 10px;"}
-    [:div
-     [:span {:class "topic"} (:title topic)]
+    [:div.topic
+     [:span (:title topic)]
      [:span.permalink
       (link-to {:class "whatever-link"}
-               (str (create-url-path topic) (:url topic)))]]
-    (when-let [refs (:refs topic)]
-      (map display-posts
-           (sort-by :title
-                    (map #(get-entity {:_id (:_id %)} (keyword (:kind %))) refs))))]))
+               (str (create-url-path topic) (:url topic)))]
+     (when-let [refs (:refs topic)]
+       [:div.posts
+        (map display-posts
+             (sort-by :title
+                      (map #(get-entity {:_id (:_id %)} (keyword (:kind %))) refs)))])]]))
 
 (defn display-contents-page
   []
