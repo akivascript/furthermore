@@ -322,9 +322,10 @@ img {
         .follow-up-title {
             display: inline-block;
 
+            margin-left: 0px;
+
             border: none;
 
-            margin-left: -12px;
             padding-right: 10px;
 
             p {
@@ -335,11 +336,13 @@ img {
         .title {
             display: inline-block;
 
-            border: none;
-
             padding-right: 10px;
 
-            font-size: 125%;
+            border: none;
+
+            font-family: inherit;
+
+            font-size: 100%;
         }
     }
 }
