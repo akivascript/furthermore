@@ -101,7 +101,7 @@
 
 (defmethod redirect "topic"
   [_]
-  "contents")
+  "admin")
 
 (defn authenticated?
   [name pass]
@@ -126,7 +126,8 @@
                      {:_id (:_id form-params)
                       :title (:title form-params)
                       :kind (:kind form-params)}))
-  :delete! (fn [ctx] (println (get-in ctx [:request :params])))
+  :delete! (fn [ctx] (let [{:keys [id kind]} (get-in ctx [:request :params])]
+                      (delete-entity id (keyword kind))))
   :post-redirect? (fn [ctx]
                     {:location (str utils/site-url (redirect ctx))}))
 
