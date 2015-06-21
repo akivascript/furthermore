@@ -1,9 +1,10 @@
 (ns furthermore.server
-  (:require [compojure.core :refer [GET POST context defroutes routes wrap-routes]]
+  (:require [compojure.core :as cmp :refer [DELETE GET POST defroutes]]
             [compojure.route :refer [resources]]
             [environ.core :refer [env]]
             [medley.core :refer [map-keys]]
             [liberator.core :refer [defresource]]
+            [liberator.dev :as dev]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.anti-forgery :refer :all]
             [ring.middleware.basic-authentication :refer [wrap-basic-authentication]]
@@ -100,7 +101,7 @@
 
 (defmethod redirect "topic"
   [_]
-  "contents")
+  "admin")
 
 (defn authenticated?
   [name pass]
@@ -117,13 +118,16 @@
 
 (defresource update-site
   [type]
-  :allowed-methods [:post]
-  :available-media-types ["application/x-www-form-urlencoded"]
+  :allowed-methods [:post :delete]
+  :available-media-types ["application/x-www-form-urlencoded"
+                          "application/edn"]
   :post! (fn [ctx] (let [form-params (params->map (get-in ctx [:request :form-params]))]
                      (dispatch-update form-params)
                      {:_id (:_id form-params)
                       :title (:title form-params)
                       :kind (:kind form-params)}))
+  :delete! (fn [ctx] (let [{:keys [id kind]} (get-in ctx [:request :params])]
+                      (delete-entity id (keyword kind))))
   :post-redirect? (fn [ctx]
                     {:location (str utils/site-url (redirect ctx))}))
 
@@ -146,24 +150,25 @@
   (resources "/"))
 
 (defroutes api-routes
-  (context "/api" []
+  (cmp/context "/api" []
            (GET "/post/:id" [id] (return-result (records->maps (get-post id))))
            (GET "/posts" [] (return-result (map records->maps (get-entities :posts))))
            (GET "/tag/:tag" [tag] (return-result (records->maps (get-tag tag))))
            (GET "/tags" [] (return-result (map records->maps (get-tags))))
            (GET "/topic/:id" [id] (return-result (map records->maps (get-topic id))))
            (GET "/topics" [] (return-result (map records->maps (get-entities :topics))))
-           (POST "/update/:kind" [kind] (update-site kind))))
+           (POST "/update/:kind" [kind] (update-site kind))
+           (DELETE "/update/:kind/:id" [kind] (update-site kind))))
 
 (defroutes admin-routes
-  (context "/admin" []
+  (cmp/context "/admin" []
            (GET "/" [] (display-admin-page))
-           (context "/add" []
+           (cmp/context "/add" []
                     (GET "/follow-up" [] (admin-page :follow-up :new nil))
                     (GET "/page" [] (admin-page :page :new nil))
                     (GET "/post" [] (admin-page :post :new nil))
                     (GET "/topic" [] (admin-page :topic :new nil)))
-           (context "/edit" []
+           (cmp/context "/edit" []
                     (GET "/follow-up/:id" [id] (admin-page :follow-up :update id))
                     (GET "/page/:id" [id] (admin-page :page :update id))
                     (GET "/post/:id" [id] (admin-page :post :update id))
@@ -172,14 +177,15 @@
 (def app
   (do
     (initialize-db-connection)
-    (routes
+    (cmp/routes
      (-> public-routes
-         (wrap-routes wrap-defaults site-defaults))
+         (cmp/wrap-routes wrap-defaults site-defaults))
      (-> api-routes
-         (wrap-routes wrap-defaults api-defaults))
+         (dev/wrap-trace :header :ui)
+         (cmp/wrap-routes wrap-defaults api-defaults))
      (-> admin-routes
-         (wrap-routes wrap-basic-authentication authenticated?)
-         (wrap-routes wrap-defaults site-defaults)))))
+         (cmp/wrap-routes wrap-basic-authentication authenticated?)
+         (cmp/wrap-routes wrap-defaults site-defaults)))))
 
 ;;
 ;; This Is Where It Will All Go Wrong for You
