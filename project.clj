@@ -31,7 +31,7 @@
    [typographer "1.1.0"]]
 
   :plugins
-  [[lein-autoexpect "1.4.2"]
+  [[lein-autoexpect "1.6.0"]
    [lein-cljsbuild "1.0.6"]
    [lein-environ "1.0.0"]
    [lein-figwheel "0.3.3" :exclusions [cider/cider-nrepl]]
