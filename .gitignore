@@ -10,4 +10,5 @@ compiled/
 *.org
 *.md
 *sass*
+profiles.clj
 /figwheel_server.log
