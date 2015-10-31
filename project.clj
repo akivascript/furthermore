@@ -7,35 +7,35 @@
   :min-lein-version "2.5.0"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0-RC2"]
-   [org.clojure/clojurescript "0.0-3308"
+  [[org.clojure/clojure "1.7.0"]
+   [org.clojure/clojurescript "1.7.145"
     :classifier "aot"
     :exclusions [org.clojure/tools.reader org.clojure/data.json]]
-   [clj-time "0.9.0"]
-   [clj-rss "0.1.9"]
-   [cljs-ajax "0.3.13"]
-   [com.andrewmcveigh/cljs-time "0.3.7"]
-   [compojure "1.3.4"]
+   [clj-time "0.11.0"]
+   [clj-rss "0.2.3"]
+   [cljs-ajax "0.5.1"]
+   [com.andrewmcveigh/cljs-time "0.3.14"]
+   [compojure "1.4.0"]
    [org.clojure/data.json "0.2.6" :classifier "aot"]
    [prismatic/dommy "1.1.0"]
-   [environ "1.0.0"]
+   [environ "1.0.1"]
    [hiccup "1.0.5"]
    [liberator "0.13"]
-   [medley "0.6.0"]
-   [com.novemberain/monger "2.1.0"]
+   [medley "0.7.0"]
+   [com.novemberain/monger "3.0.1"]
    [ring-basic-authentication "1.0.5"]
    [ring/ring-defaults "0.1.5"]
-   [ring/ring-jetty-adapter "1.3.2"]
-   [org.clojure/tools.reader "0.9.2" :classifier "aot"]
+   [ring/ring-jetty-adapter "1.4.0"]
+   [org.clojure/tools.reader "0.10.0" :classifier "aot"]
    [twitter-api "0.7.8"]
    [typographer "1.1.0"]]
 
   :plugins
-  [[lein-autoexpect "1.6.0"]
-   [lein-cljsbuild "1.0.6"]
-   [lein-environ "1.0.0"]
-   [lein-figwheel "0.3.3" :exclusions [cider/cider-nrepl]]
-   [lein-ring "0.9.3"]]
+  [[lein-autoexpect "1.7.0"]
+   [lein-cljsbuild "1.1.0"]
+   [lein-environ "1.0.1"]
+   [lein-figwheel "0.4.1" :exclusions [cider/cider-nrepl]]
+   [lein-ring "0.9.7"]]
 
   :source-paths
   ["src/clj"]
@@ -110,5 +110,4 @@
                      :css-dirs ["resources/public/css"]
                      :server-logfile "tmp/logs/figwheel-server.log"}
 
-          :repl-options {:init-ns furthermore.dev}
-          :jvm-opts ^:replace ["-XX:-OmitStackTraceInFastThrow"]}]})
+          :repl-options {:init-ns furthermore.dev}}]})
