@@ -68,6 +68,7 @@
                         :main furthermore.dev
                         :cache-analysis true
                         :optimizations :none
+                        :recompile-dependents true
                         :source-map true
                         :source-map-timestamp true
                         :pretty-print true}}]}
@@ -94,7 +95,9 @@
 
    :dev [:local-config
          :twitter
-         {:source-paths ["env/dev/clj"]
+         {:env {:dev true}
+
+          :source-paths ["env/dev/clj"]
 
           :dependencies
           [[expectations "2.0.16"]
@@ -102,8 +105,6 @@
            [javax.servlet/servlet-api "2.5"]
            [midje "2.0.0-SNAPSHOT"]
            [ring-mock "0.1.5"]]
-
-          :env {:dev true}
 
           :figwheel {:http-server-root "public"
                      :server-port 3449
