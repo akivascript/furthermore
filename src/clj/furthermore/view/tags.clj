@@ -24,7 +24,7 @@
       [:div.col-xs-5.title (link-to (str utils/site-url
                                         (utils/create-url-path parent)
                                         (:url parent))
-                                    (smarten (:body follow-up)))])))
+                                    (smarten (get-excerpt (:body follow-up) 50)))])))
 
 (defmethod display-title :static
   [page]
