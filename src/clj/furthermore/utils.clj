@@ -10,7 +10,7 @@
            [environ.core :refer [env]]))
 
 (def site-url (if (env :dev)
-                "http://localhost:3000/"
+                "http://localhost:5000/"
                 "http://whatever.akiva.wtf/"))
 
 (defn keywordize
