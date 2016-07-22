@@ -4,28 +4,28 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :min-lein-version "2.5.0"
+  :min-lein-version "2.6.1"
 
   :dependencies
-  [[org.clojure/clojure "1.7.0"]
-   [org.clojure/clojurescript "1.7.145"
+  [[org.clojure/clojure "1.9.0-alpha10"]
+   [org.clojure/clojurescript "1.9.93"
     :classifier "aot"
     :exclusions [org.clojure/tools.reader org.clojure/data.json]]
-   [clj-time "0.11.0"]
+   [clj-time "0.12.0"]
    [clj-rss "0.2.3"]
-   [cljs-ajax "0.5.1"]
-   [com.andrewmcveigh/cljs-time "0.3.14"]
-   [compojure "1.4.0"]
+   [cljs-ajax "0.5.8"]
+   [com.andrewmcveigh/cljs-time "0.4.0"]
+   [compojure "1.5.1"]
    [org.clojure/data.json "0.2.6" :classifier "aot"]
    [prismatic/dommy "1.1.0"]
-   [environ "1.0.1"]
+   [environ "1.0.3"]
    [hiccup "1.0.5"]
-   [liberator "0.13"]
-   [medley "0.7.0"]
-   [com.novemberain/monger "3.0.1"]
+   [liberator "0.14.1"]
+   [medley "0.8.2"]
+   [com.novemberain/monger "3.0.2"]
    [ring-basic-authentication "1.0.5"]
-   [ring/ring-defaults "0.1.5"]
-   [ring/ring-jetty-adapter "1.4.0"]
+   [ring/ring-defaults "0.2.1"]
+   [ring/ring-jetty-adapter "1.5.0"]
    [org.clojure/tools.reader "0.10.0" :classifier "aot"]
    [twitter-api "0.7.8"]
    [typographer "1.1.0"]]
@@ -100,8 +100,8 @@
           :source-paths ["env/dev/clj"]
 
           :dependencies
-          [[expectations "2.0.16"]
-           [leiningen "2.5.1"]
+          [[expectations "2.1.9"]
+           [leiningen "2.6.1"]
            [javax.servlet/servlet-api "2.5"]
            [midje "2.0.0-SNAPSHOT"]
            [ring-mock "0.1.5"]]

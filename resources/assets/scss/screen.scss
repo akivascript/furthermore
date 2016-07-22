@@ -42,13 +42,13 @@ a {
     &:hover {
         text-decoration: none;
 
-        color: $blue-faded;
+        color: #000;
     }
 }
 
 body {
-    background-color: #eee;
-    background-image: url('/img/background.png');
+    background-color: #fff;
+    //background-image: url('/img/background.png');
 
     font-family: 'Lato';
 }
@@ -137,7 +137,7 @@ img {
 
 .page-footer {
     padding: 15px;
-    border-top: 1px solid #dbdbdb;
+    border-top: 1px solid $gray-lighter;
 
     font-size: 12pt;
     font-weight: 400;
@@ -161,18 +161,19 @@ img {
 }
 
 .follow-up {
-    border-top: 1px solid #aaa;
+    border-top: 1px solid $gray-lighter;
     margin-bottom: 50px;
         
     .body {
         padding: 10px 0px 5px 1px; 
 
         font-family: $body-font;
-        font-size: 1.1em;
+        font-size: 16px;
+        font-weight: 300;
 
         text-align: left;
 
-        color: #555;
+        color: #333;
 
         p {
             padding-top: 10px;
@@ -182,9 +183,14 @@ img {
     .footer {
         padding-top: 10px;
         
+        font-family: $body-font;
         font-size: 1em;
 
         color: $gray-light;
+
+        a {
+            color: $red-dark;
+        }
 
         .whatever-twitter {
             opacity: 0.5;
@@ -211,20 +217,19 @@ img {
 }
 
 .post {
-    border-top: 1px solid #aaa;
+    border-top: 1px solid $gray-lighter;
     margin-bottom: 50px;
 
     .title {
+        font-family: 'Lato';
         font-size: 250%;
-        font-family: $header-font;
+        font-weight: 300;
 
-        color: $red-dark;
+        color: $blue;
 
         a {
-            color: $red-dark;
-
             &:hover {
-                color: $blue-faded;
+                color: $red-dark;
             }
         }
     }
@@ -232,11 +237,12 @@ img {
     .subtitle {
         margin-top: -5px;
         
-        font-size: 120%;
+        font-family: $header-font;
+        font-size: 19px;
+        font-style: italic;
         font-weight: 300;
-        text-transform: uppercase;
         
-        color: $gray-light;
+        color: $gray-dark;
     }
     
     .btn-tag {
@@ -258,11 +264,12 @@ img {
         padding: 10px 0px 5px 1px; 
 
         font-family: $body-font;
-        font-size: 1.2em;
+        font-size: 18px;
+        font-weight: 300;
 
         line-height: 1.5em;
 
-        color: #555;
+        color: #333;
 
         p {
             padding-top: 10px;
@@ -272,6 +279,8 @@ img {
     .footer {
         padding-top: 10px;
 
+        font-family: $body-font;
+
         color: $gray-light;
 
         .continue {
@@ -280,6 +289,14 @@ img {
 
         .topic {
             font-weight: bold;
+
+            a {
+                color: $red-dark; 
+
+                &:hover {
+                    color: #000;
+                }
+            }
         }
 
         clear: both;
@@ -406,7 +423,12 @@ img {
             color: #000;
             
             a {
-                color: #008cba;
+                color: $green;
+                //color: #008cba;
+
+                &:hover {
+                    color: #000;
+                }
             }
 
             p {
@@ -432,6 +454,14 @@ img {
 
         text-align: center;
         
+        a {
+            color: $gray;
+
+            &:hover {
+                color: #000;
+            }
+        }
+
         .active {
             color: $link-color;
 
@@ -465,7 +495,6 @@ img {
         margin-bottom: 2px;
         
         font-family: 'Lato';
-        font-weight: 300;
         font-size: 140%;
 
         color: $gray-dark;
@@ -477,8 +506,8 @@ img {
         
         border-top: 1px solid #ccc;
 
-        font-family: $body-font;
-        font-size: 14pt;
+        font-weight: 300;
+        font-size: 16px;
 
         color: #555;
     }
@@ -658,8 +687,12 @@ img {
             border-top: 1px solid $gray-light;
             padding: 5px 0px 5px 0px;
 
-            a:hover {
-                color: #000;
+            a {
+                color: $red-dark;
+                
+                &:hover {
+                    color: #000;
+                }
             }
             
             .date {

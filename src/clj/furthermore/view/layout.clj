@@ -72,7 +72,7 @@
      [:meta {:http-equiv "content-type" :content "text/html;charset=utf-8"}]
      [:link {:rel "icon" :type "image/png" :href "/favicon.png"}]
      (include-css "http://maxcdn.bootstrapcdn.com/bootswatch/3.3.2/yeti/bootstrap.min.css")
-     [:link {:href "http://fonts.googleapis.com/css?family=Lato:400,300,700|Puritan:400,400italic|Cinzel+Decorative|Cinzel|Crimson+Text:400,400italic|VT323"
+     [:link {:href "http://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i|Puritan:400,400italic|Cinzel+Decorative|Cinzel|Crimson+Text:400,400i|Fira+Mono:400,700"
              :rel "stylesheet"
              :type "text/css"}]
      (include-css "/css/magula.css")
@@ -91,14 +91,14 @@
         "Only slightly more colorful!"[:br]
         "Toast goes in the toaster!"]
        [:div {:class "hidden-xs col-sm-6 text-right small"}
-        "&copy; 2015 Whatever, Akiva"[:br]
+        "&copy; 2015-2016 Whatever, Akiva"[:br]
         "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"]
         [:span {:class "small"} " (v0.7.0&beta;)"]
         [:br]
         "Clojure and ClojureScript are a-okay!"]
        [:div {:class "visible-xs-block hidden-sm hidden-lg text-center small"
               :style "padding-top: 10px;"}
-        "&copy; 2015 Whatever, Akiva"[:br]
+        "&copy; 2015-2016 Whatever, Akiva"[:br]
         "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"]
         [:span {:class "small"} " (v0.7.0&beta;)"]
         [:br]
