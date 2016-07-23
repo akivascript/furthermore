@@ -1,13 +1,11 @@
 (ns furthermore.view.post
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer :all]
-            [typographer.core :refer [smarten]]
+            [typographer.core :as typo]
 
-            [furthermore.entities :refer [get-entity]]
-            [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :as utils :refer [create-url-path
-                                                 create-url-name
-                                                 format-timestamp]]))
+            [furthermore.entities :as ent]
+            [furthermore.view.layout :as layout]
+            [furthermore.utils :as util]))
 
 (defn- display-tags
   [tags]
@@ -17,13 +15,13 @@
       (apply str (interpose ", " (map #(html
                                         (link-to
                                          (str "/tags/"
-                                              (create-url-name %)) %))
+                                              (util/create-url-name %)) %))
                                       (sort tags))))])))
 
 (defn display-follow-up
   [follow-up]
-  (let [follow-up (get-entity {:_id (:_id follow-up)} :follow-up)
-        {:keys [date time]} (utils/format-timestamp (:created-on follow-up))]
+  (let [follow-up (ent/get-entity {:_id (:_id follow-up)} :follow-up)
+        {:keys [date time]} (util/format-timestamp (:created-on follow-up))]
     (html
      [:a {:name (:url follow-up)}]
      [:div {:class "follow-up"}
@@ -42,19 +40,19 @@
 
 (defn display-post
   [post]
-  (let [topic (get-entity {:_id (get-in post [:topic :_id])} :topic)
-        {:keys [date time]} (utils/format-timestamp (:created-on post))
+  (let [topic (ent/get-entity {:_id (get-in post [:topic :_id])} :topic)
+        {:keys [date time]} (util/format-timestamp (:created-on post))
         excerpt? (contains? post :excerpt)]
     (html
      [:div {:class "content"}
       [:div {:class "post-topic"}
-       (link-to (str "/" (create-url-path topic) (:url topic))
-                (smarten (:title topic)))]
+       (link-to (str "/" (util/create-url-path topic) (:url topic))
+                (typo/smarten (:title topic)))]
       [:div {:class "post"}
-       [:div {:class "title"} (smarten (:title post))]
+       [:div {:class "title"} (typo/smarten (:title post))]
        (when (contains? post :subtitle)
          [:div {:class "subtitle"}
-          (smarten (:subtitle post))])
+          (typo/smarten (:subtitle post))])
        [:div {:class "body"} (:body post)]
        [:div {:class "footer"}
         [:div {:class "row"}
@@ -75,8 +73,8 @@
 
 (defn display-post-page
   [url]
-  (let [post (get-entity {:url url} :post)]
-    (display-page
+  (let [post (ent/get-entity {:url url} :post)]
+    (layout/display-page
      :post
      (:title post)
      (html
