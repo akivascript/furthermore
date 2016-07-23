@@ -1,4 +1,5 @@
 (ns furthermore.repository
+  (:refer-clojure :exclude [find sort])
   (:require [clojure.pprint :refer [pprint]]
 
             [clj-time.local :refer [local-now]]
