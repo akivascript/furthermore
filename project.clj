@@ -1,4 +1,4 @@
-(defproject furthermore "0.7.0-SNAPSHOT"
+(defproject furthermore "0.7.1-SNAPSHOT"
   :description "A topical liveblogging platform written in Clojure/ClojureScript."
   :url "https://github.com/akivaschoen/furthermore"
   :license {:name "Eclipse Public License"
@@ -32,9 +32,9 @@
 
   :plugins
   [[lein-autoexpect "1.7.0"]
-   [lein-cljsbuild "1.1.0"]
-   [lein-environ "1.0.1"]
-   [lein-figwheel "0.4.1" :exclusions [cider/cider-nrepl]]
+   [lein-cljsbuild "1.1.3"]
+   [lein-environ "1.0.3"]
+   [lein-figwheel "0.5.5-SNAPSHOT" :exclusions [cider/cider-nrepl]]
    [lein-ring "0.9.7"]]
 
   :source-paths

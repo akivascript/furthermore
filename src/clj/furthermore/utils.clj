@@ -1,13 +1,13 @@
 (ns furthermore.utils
   (:require [clojure.string :as string]
 
-           [clj-time.coerce :refer [from-date to-date]]
-           [clj-time.core :refer [from-time-zone
-                                  time-zone-for-offset
-                                  to-time-zone]]
-           [clj-time.format :refer [formatter unparse]]
-           [clj-time.local :refer [format-local-time]]
-           [environ.core :refer [env]]))
+            [clj-time.coerce :refer [from-date to-date]]
+            [clj-time.core :refer [from-time-zone
+                                   time-zone-for-offset
+                                   to-time-zone]]
+            [clj-time.format :refer [formatter unparse]]
+            [clj-time.local :refer [format-local-time]]
+            [environ.core :refer [env]]))
 
 (def site-url (if (env :dev)
                 "http://localhost:5000/"
@@ -24,16 +24,6 @@
             (map? k))
       m
       (update-in m ks keyword))))
-
-(defn uuid?
-  "Returns true if x is a valid UUID."
-  [x]
-  (if (string? x)
-    (let [result (re-find
-                  #"^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
-                  x)]
-      (if (nil? result) false true))
-    false))
 
 (defn joda-date->java-date
   "Returns a java.util.Date from a Joda-Time."
