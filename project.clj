@@ -48,11 +48,11 @@
 
   :target-path "target/%s"
 
-  :clean-targets ^{:protect false} ["resources/public/js/compiled"]
+  ;; :clean-targets ^{:protect false} ["resources/public/js/compiled"]
 
   :cljsbuild
   {:builds [{:id "main"
-             :source-paths ["src/cljs" "env/prod/cljs"]
+             :source-paths ["src/cljs"]
              :compiler {:output-to "resources/public/js/compiled/furthermore.js"
                         :output-dir "resources/public/js/compiled/out"
                         :asset-path "/js/compiled/out"
@@ -60,7 +60,7 @@
                         :optimizations :advanced
                         :pretty-print false}}
             {:id "dev"
-             :source-paths ["src/cljs" "env/dev/cljs"]
+             :source-paths ["src/cljs" "dev/cljs"]
              :compiler {:output-to "resources/public/js/compiled/furthermore.js"
                         :output-dir "resources/public/js/compiled/dev"
                         :asset-path "/js/compiled/dev"
@@ -74,29 +74,29 @@
 
   :profiles
   {:uberjar {:hooks [leiningen.cljsbuild]
-             :env {:production true}
+             :env {:production "true"}
              :omit-source true
              :aot :all}
 
    :prod [:prod-config
           :twitter
           {:hooks [leiningen.cljsbuild]
-           :env {:production true}
+           :env {:production "true"}
            :omit-source true
            :aot :all}]
 
    :staging [:staging-config
              :twitter
              {:hooks [leiningen.cljsbuild]
-              :env {:production true}
+              :env {:production "true"}
               :omit-source true
               :aot :all}]
 
    :dev [:local-config
          :twitter
-         {:env {:dev true}
+         {:env {:dev "true"}
 
-          :source-paths ["env/dev/clj"]
+          :source-paths ["dev/clj"]
 
           :dependencies
           [[leiningen "2.6.1"]

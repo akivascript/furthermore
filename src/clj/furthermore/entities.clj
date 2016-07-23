@@ -1,15 +1,14 @@
 (ns furthermore.entities
-  (:require [clojure.string :as string]
+  (:require [clojure.string :as cstr]
 
-            [clj-time.local :as l :refer [local-now]]
-            [monger.util :refer [random-uuid]]
+            [clj-time.local :as ltime]
+            [monger.util :as mutil]
 
-            [furthermore.formatters :as formatters :refer :all]
+            [furthermore.formatters :as fmt]
             [furthermore.repository :as repo]
-            [furthermore.utils :refer :all]))
+            [furthermore.utils :as util]))
 
-(declare get-entities)
-(declare get-entity)
+(declare get-entities get-entity)
 
 ;;
 ;; Authors
@@ -67,8 +66,8 @@
 
   java.lang.String
   (->ref [ref]
-    (create-reference (first (string/split ref #"\|"))
-                      (second (string/split ref #"\|")))))
+    (create-reference (first (cstr/split ref #"\|"))
+                      (second (cstr/split ref #"\|")))))
 
 (defn reference?
   "Returns true if x is a Reference."
@@ -99,7 +98,7 @@
   java.lang.String
   (->tags
     [tags]
-    (set (map string/trim (string/split tags #";|,"))))
+    (set (map cstr/trim (cstr/split tags #";|,"))))
 
   clojure.lang.PersistentVector
   (->tags
@@ -109,12 +108,12 @@
 (defn- create-tag*
   [params]
   (let [{:keys [_id created-on last-updated log? title refs url]
-         :or {_id (random-uuid)
-              created-on (local-now)
+         :or {_id (mutil/random-uuid)
+              created-on (ltime/local-now)
               log? true
               title "Miscellania"
               refs #{}
-              url (create-url-name title)}} params]
+              url (util/create-url-name title)}} params]
     (map->Tag {:_id _id
                :created-on created-on
                :kind :tag
@@ -127,7 +126,7 @@
 (defn create-tag
   "Returns a tag entity."
   [x]
-  (cond  
+  (cond
     (nil? x) nil
     (map? x) (create-tag* x)
     :else
@@ -164,17 +163,17 @@
   [params]
   (if (nil? params)
     nil
-    (let [date (local-now)
+    (let [date (ltime/local-now)
           {:keys [_id authors body body-source created-on excerpt excerpt-source
                   last-updated log? parent subtitle refs tags title topic url]
            :or {authors ["John Doe"]
                 created-on date
-                _id (random-uuid)
+                _id (mutil/random-uuid)
                 log? true
                 refs #{}
                 tags #{}
                 title "New Post"
-                url (create-entity-url date title)}} params]
+                url (util/create-entity-url date title)}} params]
       (map->Post {:_id _id
                   :authors (mapv create-author authors)
                   :body body
@@ -202,7 +201,7 @@
   [x]
   (cond
     (nil? x) nil
-    (uuid? x) (get-entity {:_id x} :post)
+    (uuid? (util/uuid x)) (get-entity {:_id x} :post)
     :else
     (get-post (:_id x))))
 
@@ -223,13 +222,13 @@
     (let [{:keys [_id authors body body-source created-on excerpt excerpt-source
                   last-updated log? parent refs tags topic url]
            :or {authors [(create-author {})]
-                created-on (local-now)
-                _id (random-uuid)
+                created-on (ltime/local-now)
+                _id (mutil/random-uuid)
                 log? true
                 refs #{}
                 tags #{}
                 topic (get-in parent [:topic :_id])
-                url (create-url-name _id)}} params]
+                url (util/create-url-name _id)}} params]
       (map->Follow-Up {:_id _id
                        :authors (mapv create-author authors)
                        :body body
@@ -276,13 +275,13 @@
     nil
     (let [{:keys [_id authors body body-source created-on last-updated log?
                   tags title url]
-           :or {_id (random-uuid)
+           :or {_id (mutil/random-uuid)
                 authors [(create-author {})]
-                created-on (local-now)
+                created-on (ltime/local-now)
                 log? true
                 tags #{}
                 title "New Page"
-                url (create-url-name title)}} params]
+                url (util/create-url-name title)}} params]
       (map->Page {:_id _id
                   :authors (mapv create-author authors)
                   :body body
@@ -300,7 +299,7 @@
   [x]
   (cond
     (nil? x) nil
-    (uuid? x) (get-entity {:_id x} :page)
+    (uuid? (util/uuid x)) (get-entity {:_id x} :page)
     :else
     (get-entity {:url x} :page)))
 
@@ -320,14 +319,14 @@
   [params]
   (let [{:keys [_id authors body body-source created-on last-updated
                 log? tags title refs url]
-         :or {_id (random-uuid)
+         :or {_id (mutil/random-uuid)
               authors ["John Doe"]
-              created-on (local-now)
+              created-on (ltime/local-now)
               log? true
               refs #{}
               tags #{}
               title "New Topic"
-              url (create-url-name title)}} params]
+              url (util/create-url-name title)}} params]
     (map->Topic {:_id _id
                  :authors (mapv create-author authors)
                  :created-on created-on
@@ -359,7 +358,7 @@
   [x]
   (cond
     (nil? x) x
-    (uuid? x) (get-entity {:_id x} :topic)
+    (uuid? (util/uuid x)) (get-entity {:_id x} :topic)
     (string? x) (get-entity {:url x} :topic)
     (reference? x) (get-entity {:_id (:_id x)} :topic)
     :else
@@ -477,8 +476,8 @@
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
           entity (-> entity
-                     (assoc :body (formatters/mmd->html (:body-source entity)))
-                     (assoc :excerpt (formatters/mmd->html (:excerpt-source entity))))
+                     (assoc :body (fmt/mmd->html (:body-source entity)))
+                     (assoc :excerpt (fmt/mmd->html (:excerpt-source entity))))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
@@ -494,8 +493,8 @@
                      (update :refs conj (create-reference entity))
                      (assoc :log? false))
           entity (-> entity
-                     (assoc :body (formatters/mmd->html (:body-source entity)))
-                     (assoc :excerpt (formatters/mmd->html (:excerpt-source entity))))
+                     (assoc :body (fmt/mmd->html (:body-source entity)))
+                     (assoc :excerpt (fmt/mmd->html (:excerpt-source entity))))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
@@ -507,7 +506,7 @@
   furthermore.entities.Page
   (add-entity
     [entity]
-    (let [entity (assoc entity :body (formatters/mmd->html (:body-source entity)))
+    (let [entity (assoc entity :body (fmt/mmd->html (:body-source entity)))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)
@@ -525,7 +524,7 @@
   furthermore.entities.Topic
   (add-entity
     [entity]
-    (let [entity (assoc entity :body (formatters/mmd->html (:body-source entity)))
+    (let [entity (assoc entity :body (fmt/mmd->html (:body-source entity)))
           tags (map #(update (get-tag %)
                              :refs conj
                              (create-reference (:_id entity)

@@ -1,30 +1,27 @@
 (ns furthermore.server
   (:require [compojure.core :as cmp :refer [DELETE GET POST defroutes]]
-            [compojure.route :refer [resources]]
+            [compojure.route :as route]
             [environ.core :refer [env]]
-            [medley.core :refer [map-keys]]
+            [medley.core :as med]
             [liberator.core :refer [defresource]]
-            [liberator.dev :as dev]
-            [ring.adapter.jetty :refer [run-jetty]]
+            [liberator.dev :as ldev]
+            [ring.adapter.jetty :as jet]
             [ring.middleware.anti-forgery :refer :all]
-            [ring.middleware.basic-authentication :refer [wrap-basic-authentication]]
+            [ring.middleware.basic-authentication :as auth]
             [ring.middleware.defaults :refer :all]
 
-            [furthermore.entities :refer :all]
-            [furthermore.utils :as utils :refer [create-entity-url
-                                                 create-url-path
-                                                 joda-date->java-date
-                                                 site-url]]
-            [furthermore.repository :refer [initialize-db-connection]]
-            [furthermore.view.admin :refer [display-admin-page]]
-            [furthermore.view.contents :refer [display-contents-page]]
-            [furthermore.view.home :refer [display-home-page]]
-            [furthermore.view.page :as page :refer [display-static-page]]
-            [furthermore.view.post :refer [display-post-page]]
-            [furthermore.view.tags :refer [display-tags-page]]
-            [furthermore.view.topic :as topic :refer [display-topic-page]]
-            [furthermore.view.update :refer [display-update-page]]
-            [furthermore.view.updates :refer [display-updates-page]])
+            [furthermore.entities :as ent]
+            [furthermore.utils :as utils]
+            [furthermore.repository :as repo]
+            [furthermore.view.admin :as admin]
+            [furthermore.view.contents :as contents]
+            [furthermore.view.home :as home]
+            [furthermore.view.page :as page]
+            [furthermore.view.post :as post]
+            [furthermore.view.tags :as tags]
+            [furthermore.view.topic :as topic]
+            [furthermore.view.update :as update]
+            [furthermore.view.updates :as updates])
   (:gen-class))
 
 ;;
@@ -32,7 +29,7 @@
 ;;
 (defn- params->map
   [params]
-  (let [m (map-keys keyword params)]
+  (let [m (med/map-keys keyword params)]
     (if (= clojure.lang.PersistentVector (type (:authors m)))
       m
       (update m :authors vector))))
@@ -54,26 +51,26 @@
 ;;
 (defn- dispatch-update*
   [fn entity]
-  (let [original (get-entity {:_id (:_id entity)} (keyword (:kind entity)))]
-    ((comp add-entity fn) (merge original entity))))
+  (let [original (ent/get-entity {:_id (:_id entity)} (keyword (:kind entity)))]
+    ((comp ent/add-entity fn) (merge original entity))))
 
 (defmulti dispatch-update :kind)
 
 (defmethod dispatch-update "follow-up"
   [entity]
-  (dispatch-update* create-follow-up entity))
+  (dispatch-update* ent/create-follow-up entity))
 
 (defmethod dispatch-update "page"
   [entity]
-  (dispatch-update* create-page entity))
+  (dispatch-update* ent/create-page entity))
 
 (defmethod dispatch-update "post"
   [entity]
-  (dispatch-update* create-post entity))
+  (dispatch-update* ent/create-post entity))
 
 (defmethod dispatch-update "topic"
   [entity]
-  (dispatch-update* create-topic entity))
+  (dispatch-update* ent/create-topic entity))
 
 ;;
 ;; Routes & Resources
@@ -116,7 +113,7 @@
   :allowed-methods [:get]
   :available-media-types ["text/html"]
   :authorized? (fn [{{auth :basic-authentication} :request}] auth)
-  :handle-ok (display-update-page kind mode id)
+  :handle-ok (update/display-update-page kind mode id)
   :handle-unauthorized "It's a secret to everybody.")
 
 (defresource update-site
@@ -131,7 +128,7 @@
                       :kind (:kind form-params)}))
   :delete! (fn [ctx] (let [{:keys [id kind]} (get-in ctx [:request :params])]
                       (println id kind)
-                      (delete-entity id (keyword kind))))
+                      (ent/delete-entity id (keyword kind))))
   :post-redirect? (fn [ctx]
                     {:location (str utils/site-url (redirect ctx))}))
 
@@ -142,31 +139,31 @@
   :handle-ok (pr-str task))
 
 (defroutes public-routes
-  (GET "/" [] (display-home-page))
-  (GET "/contents" [] (display-contents-page))
+  (GET "/" [] (home/display-home-page))
+  (GET "/contents" [] (contents/display-contents-page))
   (GET "/page/:page" [page] (page/display-static-page page))
-  (GET "/post/:title" [title] (display-post-page title))
-  (GET "/tags" [] (display-tags-page))
-  (GET "/tags/:tag" [tag] (display-tags-page tag))
+  (GET "/post/:title" [title] (post/display-post-page title))
+  (GET "/tags" [] (tags/display-tags-page))
+  (GET "/tags/:tag" [tag] (tags/display-tags-page tag))
   (GET "/topic/:topic" [topic] (topic/display-topic-page topic))
-  (GET "/updates" [] (display-updates-page))
+  (GET "/updates" [] (updates/display-updates-page))
   ;; Disabled until RSS feed is fixed (ANY "/rss.xml" [] (get-feed))
-  (resources "/"))
+  (route/resources "/"))
 
 (defroutes api-routes
   (cmp/context "/api" []
-           (GET "/post/:id" [id] (return-result (records->maps (get-post id))))
-           (GET "/posts" [] (return-result (map records->maps (get-entities :posts))))
-           (GET "/tag/:tag" [tag] (return-result (records->maps (get-tag tag))))
-           (GET "/tags" [] (return-result (map records->maps (get-tags))))
-           (GET "/topic/:id" [id] (return-result (map records->maps (get-topic id))))
-           (GET "/topics" [] (return-result (map records->maps (get-entities :topics))))
+           (GET "/post/:id" [id] (return-result (records->maps (ent/get-post id))))
+           (GET "/posts" [] (return-result (map records->maps (ent/get-entities :posts))))
+           (GET "/tag/:tag" [tag] (return-result (records->maps (ent/get-tag tag))))
+           (GET "/tags" [] (return-result (map records->maps (ent/get-tags))))
+           (GET "/topic/:id" [id] (return-result (map records->maps (ent/get-topic id))))
+           (GET "/topics" [] (return-result (map records->maps (ent/get-entities :topics))))
            (POST "/update/:kind" [kind] (update-site kind))
            (DELETE "/update/:kind/:id" [kind] (update-site kind))))
 
 (defroutes admin-routes
   (cmp/context "/admin" []
-           (GET "/" [] (display-admin-page))
+           (GET "/" [] (admin/display-admin-page))
            (cmp/context "/add" []
                     (GET "/follow-up" [] (admin-page :follow-up :new nil))
                     (GET "/page" [] (admin-page :page :new nil))
@@ -180,15 +177,15 @@
 
 (def app
   (do
-    (initialize-db-connection)
+    (repo/initialize-db-connection)
     (cmp/routes
      (-> public-routes
          (cmp/wrap-routes wrap-defaults site-defaults))
      (-> api-routes
-         (dev/wrap-trace :header :ui)
+         (ldev/wrap-trace :header :ui)
          (cmp/wrap-routes wrap-defaults api-defaults))
      (-> admin-routes
-         (cmp/wrap-routes wrap-basic-authentication authenticated?)
+         (cmp/wrap-routes auth/wrap-basic-authentication authenticated?)
          (cmp/wrap-routes wrap-defaults site-defaults)))))
 
 ;;
@@ -199,4 +196,4 @@
   [& port]
   (let [port (Integer. (or (first port) (env :port) 5000))]
     (println "Furthermore up and running on port" port)
-    (run-jetty #'app {:port port :join? false})))
+    (jet/run-jetty #'app {:port port :join? false})))

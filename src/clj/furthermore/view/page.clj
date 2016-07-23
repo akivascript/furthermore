@@ -1,13 +1,13 @@
 (ns furthermore.view.page
   (:require [hiccup.core :refer :all]
-            [typographer.core :as typo :refer [smarten]]
+            [typographer.core :as typo]
 
-            [furthermore.view.layout :as layout :refer [display-page]]
-            [furthermore.entities :as entities :refer [get-page]]))
+            [furthermore.entities :as ent]
+            [furthermore.view.layout :as layout]))
 
 (defn display-static-page
   [page]
-  (let [page (entities/get-page page)]
+  (let [page (ent/get-page page)]
     (layout/display-page
      :page
      (:title page)
