@@ -91,17 +91,50 @@ img {
 }
 
 .nav {
-    font-weight: 300;
+    font-weight: 700;
+}
+
+.navbar {
+    text-transform: uppercase;
+}
+
+.navbar-nav {
+    float: right;
 }
 
 .navbar-default {
-    background-color: $blue-faded;
-    background-image: url('/img/background-tan.png');
+    background-color: #fff;
 
-    .navbar-nav > li {
-        a:hover {
+    border-bottom: 1px solid #eee;
+
+        a {
+        }
+
+    .navbar-brand {
+        color: #000;
+
+        font-weight: 900;
+
+        line-height: 26px;
+
+        &:hover {
+            color: #fff;
+
             background-color: $green-faded;
             background-image: url('/img/background-tan.png');
+        }
+    }
+
+    .navbar-nav > li {
+        a {
+            padding-bottom: 14px;
+
+            color: $red-dark;
+        
+            &:hover {
+                background-color: $green-faded;
+                background-image: url('/img/background-tan.png');
+            }
         }
     }
 }
