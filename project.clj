@@ -31,8 +31,7 @@
    [typographer "1.1.0"]]
 
   :plugins
-  [[lein-autoexpect "1.7.0"]
-   [lein-cljsbuild "1.1.3"]
+  [[lein-cljsbuild "1.1.3"]
    [lein-environ "1.0.3"]
    [lein-figwheel "0.5.5-SNAPSHOT" :exclusions [cider/cider-nrepl]]
    [lein-ring "0.9.7"]]
@@ -100,15 +99,14 @@
           :source-paths ["env/dev/clj"]
 
           :dependencies
-          [[expectations "2.1.9"]
-           [leiningen "2.6.1"]
+          [[leiningen "2.6.1"]
            [javax.servlet/servlet-api "2.5"]
-           [midje "2.0.0-SNAPSHOT"]
            [ring-mock "0.1.5"]]
 
           :figwheel {:http-server-root "public"
                      :server-port 3449
                      :css-dirs ["resources/public/css"]
-                     :server-logfile "tmp/logs/figwheel-server.log"}
+                     :server-logfile "tmp/logs/figwheel-server.log"}}]}
 
-          :repl-options {:init-ns furthermore.dev}}]})
+  :repl-options
+  {:caught clj-stacktrace.repl/pst+})
