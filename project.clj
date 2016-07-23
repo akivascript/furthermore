@@ -74,27 +74,27 @@
 
   :profiles
   {:uberjar {:hooks [leiningen.cljsbuild]
-             :env {:production true}
+             :env {:production "true"}
              :omit-source true
              :aot :all}
 
    :prod [:prod-config
           :twitter
           {:hooks [leiningen.cljsbuild]
-           :env {:production true}
+           :env {:production "true"}
            :omit-source true
            :aot :all}]
 
    :staging [:staging-config
              :twitter
              {:hooks [leiningen.cljsbuild]
-              :env {:production true}
+              :env {:production "true"}
               :omit-source true
               :aot :all}]
 
    :dev [:local-config
          :twitter
-         {:env {:dev true}
+         {:env {:dev "true"}
 
           :source-paths ["env/dev/clj"]
 
