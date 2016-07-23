@@ -1,24 +1,17 @@
 (ns furthermore.repository
-  (:refer-clojure :exclude [find sort])
-  (:require [clojure.pprint :refer [pprint]]
+  (:require [clj-time.local :as ltime]
 
-            [clj-time.local :refer [local-now]]
             [environ.core :refer [env]]
-            [monger.collection :as mc]
-            [monger.core :refer [connect-via-uri]]
-            [monger.joda-time :refer :all]
-            [monger.operators :refer [$options $regex]]
-            [monger.query :refer [find limit sort with-collection]]
-            [monger.result :refer [updated-existing?]]
-            [monger.util :refer [random-uuid]]
+            [monger.collection :as mcoll]
+            [monger.core :as mcore]
+            [monger.joda-time :as mtime]
+            [monger.operators :as mop]
+            [monger.query :as mq]
+            [monger.result :as mres]
+            [monger.util :as mutil]
 
-            [furthermore.utils :refer [create-url-date
-                                       create-url-name
-                                       create-url-path
-                                       get-excerpt
-                                       keywordize
-                                       site-url]]
-            [furthermore.twitter :refer [update-twitter-status]]))
+            [furthermore.utils :as util]
+            [furthermore.twitter :as twt]))
 
 (def kinds
   {:update "updates"
@@ -36,7 +29,7 @@
 (defn initialize-db-connection
   "Establishes a connection to the database."
   [& {:keys [uri]}]
-  (reset! db (:db (connect-via-uri (or uri (env :blog-database-uri))))))
+  (reset! db (:db (mcore/connect-via-uri (or uri (env :blog-database-uri))))))
 
 ;;
 ;; Entities stuff
@@ -48,13 +41,13 @@
   "Creates an update entry for a newly added or updated entity."
   [params]
   (let [{:keys [_id action date entity kind parent ref title topic url]
-         :or {_id (random-uuid)
-              date (local-now)
+         :or {_id (mutil/random-uuid)
+              date (ltime/local-now)
               kind (:kind entity)
               parent (:parent entity)
               ref (:_id entity)
               title (or (:title entity)
-                        (get-excerpt (:body entity) 50))
+                        (util/get-excerpt (:body entity) 50))
               topic (:topic entity)
               url (:url entity)}} params]
     (map->Update {:_id _id
@@ -70,16 +63,16 @@
 (defn remove-entity
   "Removes an entity from the database."
   [entity]
-  (mc/remove-by-id @db (kinds (:kind entity)) (:_id entity))
-  (mc/insert @db "updates" (create-update {:action :delete :entity entity})))
+  (mcoll/remove-by-id @db (kinds (:kind entity)) (:_id entity))
+  (mcoll/insert @db "updates" (create-update {:action :delete :entity entity})))
 
 (defn parse-entity
-  "Keywordizes values in an entity loaded from the database."
+  "Util/Keywordizes values in an entity loaded from the database."
   [entity]
   (let [entity (-> entity
-                 (keywordize :kind)
-                 (keywordize :parent :kind)
-                 (keywordize :topic :kind))
+                 (util/keywordize :kind)
+                 (util/keywordize :parent :kind)
+                 (util/keywordize :topic :kind))
         refs (:refs entity)]
     (if (and (map? refs)
              (seq refs))
@@ -89,22 +82,22 @@
 (defn read-entities
   "Returns entities from the database."
   ([kind]
-   (map parse-entity (mc/find-maps @db (kind kinds))))
+   (map parse-entity (mcoll/find-maps @db (kind kinds))))
   ([kind criteria limit-by]
-   (with-collection @db (kind kinds)
-     (find {})
-     (sort criteria)
-     (limit limit-by))))
+   (mq/with-collection @db (kind kinds)
+     (mq/find {})
+     (mq/sort criteria)
+     (mq/limit limit-by))))
 
 (defn read-entity
   "Returns a single entity from the database. criterion is expected
   to be a map (e.g., {:_id 0de661a...})."
   [kind criterion]
   (let [entity (if (contains? criterion :title)
-                 (mc/find-one-as-map @db (kind kinds) {:title
-                                                    {$regex (:title criterion)
-                                                     $options "i"}})
-                 (mc/find-one-as-map @db (kind kinds) criterion))]
+                 (mcoll/find-one-as-map @db (kind kinds) {:title
+                                                    {mop/$regex (:title criterion)
+                                                     mop/$options "i"}})
+                 (mcoll/find-one-as-map @db (kind kinds) criterion))]
     (when-not (nil? entity)
       (parse-entity entity))))
 
@@ -112,9 +105,9 @@
   "Returns one or more entities from the database. criterion is
   expected to be a map (e.g., {:_id 0de661a...})."
   [kind criterion]
-  (let [entities (mc/find-maps @db (kind kinds)
+  (let [entities (mcoll/find-maps @db (kind kinds)
                                {(first (keys criterion))
-                                {$regex (first (vals criterion)) $options "i"}})]
+                                {mop/$regex (first (vals criterion)) mop/$options "i"}})]
     (map parse-entity entities)))
 
 (defn save-entity
@@ -123,22 +116,26 @@
   (let [kind (:kind entity)
         log? (:log? entity)
         entity (if (true? (:tweet entity))
-                 (let [url (str site-url (create-url-path entity) (create-url-date entity))
-                       resp (update-twitter-status (or (:title entity) (:body entity)) url)]
+                 (let [url (str util/site-url
+                                (util/create-url-path entity)
+                                (util/create-url-date entity))
+                       resp (twt/update-twitter-status (or (:title entity)
+                                                           (:body entity))
+                                                       url)]
                    (conj entity (second resp)))
                  entity)
         entity (-> entity
-                   (assoc :last-updated (local-now))
+                   (assoc :last-updated (ltime/local-now))
                    (dissoc :log?)
                    (dissoc :tweet))]
-    (let [result (mc/upsert @db (kind kinds) {:_id (:_id entity)} entity)]
+    (let [result (mcoll/upsert @db (kind kinds) {:_id (:_id entity)} entity)]
       (when log?
-        (let [action (if (updated-existing? result)
+        (let [action (if (mres/updated-existing? result)
                      :update
                      :new)]
           (when-not (and (= kind :tag)
                          (= action :update))
-            (mc/insert @db "updates" (create-update {:action action :entity entity})))))
+            (mcoll/insert @db "updates" (create-update {:action action :entity entity})))))
       result)))
 
 ;;
@@ -165,7 +162,7 @@
 (defn get-db-queue
   "Returns an entity from the database queue."
   [id]
-  (find @db-queue id))
+  (mq/find @db-queue id))
 
 (defn list-db-queue
   "Returns a map of database queue."
