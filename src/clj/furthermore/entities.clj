@@ -8,8 +8,7 @@
             [furthermore.repository :as repo]
             [furthermore.utils :as util]))
 
-(declare get-entities)
-(declare get-entity)
+(declare get-entities get-entity)
 
 ;;
 ;; Authors
@@ -127,7 +126,7 @@
 (defn create-tag
   "Returns a tag entity."
   [x]
-  (cond  
+  (cond
     (nil? x) nil
     (map? x) (create-tag* x)
     :else
@@ -202,7 +201,7 @@
   [x]
   (cond
     (nil? x) nil
-    (uuid? x) (get-entity {:_id x} :post)
+    (uuid? (util/uuid x)) (get-entity {:_id x} :post)
     :else
     (get-post (:_id x))))
 
@@ -300,7 +299,7 @@
   [x]
   (cond
     (nil? x) nil
-    (uuid? x) (get-entity {:_id x} :page)
+    (uuid? (util/uuid x)) (get-entity {:_id x} :page)
     :else
     (get-entity {:url x} :page)))
 
@@ -359,7 +358,7 @@
   [x]
   (cond
     (nil? x) x
-    (uuid? x) (get-entity {:_id x} :topic)
+    (uuid? (util/uuid x)) (get-entity {:_id x} :topic)
     (string? x) (get-entity {:url x} :topic)
     (reference? x) (get-entity {:_id (:_id x)} :topic)
     :else

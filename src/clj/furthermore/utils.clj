@@ -37,12 +37,14 @@
     :topic "topic/"
     ""))
 
+(declare uuid)
+
 (defn create-url-name
   "Returns a web-friendly url from an entity's title (or 'Untitled')
   if it does not."
   [x]
   (cond
-    (uuid? x) (create-url-name (apply str (take 4 x)))
+    (uuid? (uuid x)) (create-url-name (apply str (take 4 x)))
     :else
     (-> (or x "Untitled")
         (cstr/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
@@ -78,3 +80,14 @@
           text (subs text 0 length)
           text (cstr/replace text #"\W+$" "")]
       (str text "…"))))
+
+(defn uuid
+  "If given a string, produces a Java UUID object from it; otherwise
+  randomly generates a Java UUID randomly."
+  ([]
+   (. java.util.UUID randomUUID))
+  ([s]
+   (when (string? s)
+     (try
+       (. java.util.UUID fromString s)
+       (catch IllegalArgumentException e nil)))))
