@@ -1,12 +1,10 @@
 (ns furthermore.view.updates
   (:require [hiccup.core :refer :all]
-            [hiccup.element :refer :all]
-            [typographer.core :refer [smarten]]
+            [hiccup.element :as el]
 
-            [furthermore.entities :refer [get-entities
-                                          get-entity]]
-            [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :refer [get-excerpt format-timestamp]]))
+            [furthermore.entities :as ent]
+            [furthermore.view.layout :as layout]
+            [furthermore.utils :as util]))
 
 (defn- set-status
   [action kind]
@@ -24,10 +22,10 @@
   [update]
   (let [kind (:kind update)
         topic (when-let [topic (:topic update)]
-                (get-entity {:_id (:_id topic)} :topic))
+                (ent/get-entity {:_id (:_id topic)} :topic))
         parent (when-let [parent (:parent update)]
-                 (get-entity {:_id (:_id parent)} (:kind parent)))
-        {:keys [date time]} (format-timestamp (:date update))]
+                 (ent/get-entity {:_id (:_id parent)} (:kind parent)))
+        {:keys [date time]} (util/format-timestamp (:date update))]
     (html
      [:div {:class "row entry"}
       [:div {:class "col-xs-3 date"}
@@ -44,7 +42,7 @@
                        "")]
          (if (= :follow-up kind)
            [:span
-            (link-to path-fn (:title update))
+            (el/link-to path-fn (:title update))
             [:span.parent
              [:span.whatever-forward {:style "padding-right: 2px;"}]
              (:title parent)]]
@@ -54,7 +52,7 @@
 
 (defn display-updates-page
   []
-  (display-page
+  (layout/display-page
    :updates
    "Updates"
    (html
@@ -62,4 +60,4 @@
            :class "container"}
      [:div {:class "row"}
       [:div {:class "col-xs-12 col-md-10 col-md-offset-1 entries"}
-      (map display-update (get-entities :updates))]]])))
+      (map display-update (ent/get-entities :updates))]]])))

@@ -1,12 +1,10 @@
 (ns furthermore.utils
-  (:require [clojure.string :as string]
+  (:require [clojure.string :as cstr]
 
-            [clj-time.coerce :refer [from-date to-date]]
-            [clj-time.core :refer [from-time-zone
-                                   time-zone-for-offset
-                                   to-time-zone]]
-            [clj-time.format :refer [formatter unparse]]
-            [clj-time.local :refer [format-local-time]]
+            [clj-time.coerce :as coerce]
+            [clj-time.core :as ctime]
+            [clj-time.format :as tformat]
+            [clj-time.local :as local]
             [environ.core :refer [env]]))
 
 (def site-url (if (env :dev)
@@ -28,7 +26,7 @@
 (defn joda-date->java-date
   "Returns a java.util.Date from a Joda-Time."
   [joda-date]
-  (to-date joda-date))
+  (coerce/to-date joda-date))
 
 (defn create-url-path
   "Generates a URL path part based on an entity's type."
@@ -47,14 +45,14 @@
     (uuid? x) (create-url-name (apply str (take 4 x)))
     :else
     (-> (or x "Untitled")
-        (string/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
-        (string/replace #" " "-")
-        string/lower-case)))
+        (cstr/replace #"[\.,-\/#!\?$%\^&\*\'\";:{}=\-_`~()]" "")
+        (cstr/replace #" " "-")
+        cstr/lower-case)))
 
 (defn create-url-date
   "Returns a string representation of an entity's date."
   [date]
-  (format-local-time date :date))
+  (local/format-local-time date :date))
 
 (defn create-entity-url
   ([date title]
@@ -67,9 +65,9 @@
   (let [timestamp (if-not (= java.util.Date (type timestamp))
                     (joda-date->java-date timestamp)
                     timestamp)
-        ts (from-time-zone (from-date timestamp) (time-zone-for-offset +7))]
-    {:date (unparse (formatter "MMMM d, yyyy") ts)
-     :time (unparse (formatter "hh:mm a") ts)}))
+        ts (ctime/from-time-zone (coerce/from-date timestamp) (ctime/time-zone-for-offset +7))]
+    {:date (tformat/unparse (tformat/formatter "MMMM d, yyyy") ts)
+     :time (tformat/unparse (tformat/formatter "hh:mm a") ts)}))
 
 (defn get-excerpt
   "Returns an excerpt of a given text with an ellipses added."
@@ -78,5 +76,5 @@
     text
     (let [length (dec (or length 140))
           text (subs text 0 length)
-          text (string/replace text #"\W+$" "")]
+          text (cstr/replace text #"\W+$" "")]
       (str text "…"))))

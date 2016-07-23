@@ -1,58 +1,51 @@
 (ns furthermore.view.tags
-  (:require [clojure.string :as string]
-            [hiccup.core :refer :all]
-            [hiccup.element :refer :all]
-            [typographer.core :as typo :refer [smarten]]
+  (:require [hiccup.core :refer :all]
+            [hiccup.element :as el]
+            [typographer.core :as typo]
 
-            [furthermore.view.layout :as layout :refer [display-page]]
-            [furthermore.entities :as entities :refer [get-entity
-                                                       get-parent
-                                                       get-tag
-                                                       get-tag-by-url
-                                                       get-topic]]
-            [furthermore.utils :as utils :refer [create-url-name
-                                                 format-timestamp
-                                                 get-excerpt]]))
+            [furthermore.view.layout :as layout]
+            [furthermore.entities :as ent]
+            [furthermore.utils :as util]))
 
 (defmulti display-title :kind)
 
 (defmethod display-title :follow-up
   [follow-up]
-  (let [parent (get-parent follow-up)
-        {:keys [date time]} (format-timestamp (:created-on follow-up))]
+  (let [parent (ent/get-parent follow-up)
+        {:keys [date time]} (util/format-timestamp (:created-on follow-up))]
     (html
-      [:div.col-xs-5.title (link-to (str utils/site-url
-                                        (utils/create-url-path parent)
+      [:div.col-xs-5.title (el/link-to (str util/site-url
+                                        (util/create-url-path parent)
                                         (:url parent))
-                                    (smarten (get-excerpt (:body follow-up) 50)))])))
+                                    (typo/smarten (util/get-excerpt (:body follow-up) 50)))])))
 
 (defmethod display-title :static
   [page]
-  (let [{:keys [date time]} (format-timestamp (:created-on page))]
+  (let [{:keys [date time]} (util/format-timestamp (:created-on page))]
     (html
-     [:div.col-xs-5.title (link-to (str utils/site-url
-                                        (utils/create-url-path page)
+     [:div.col-xs-5.title (el/link-to (str util/site-url
+                                        (util/create-url-path page)
                                         (:url page))
-                                   (smarten (:title page)))])))
+                                   (typo/smarten (:title page)))])))
 
 (defmethod display-title :post
   [post]
-  (let [{:keys [date time]} (format-timestamp (:created-on post))]
+  (let [{:keys [date time]} (util/format-timestamp (:created-on post))]
     (html
-     [:div.col-xs-5.title (link-to (str utils/site-url
-                                        (utils/create-url-path post)
+     [:div.col-xs-5.title (el/link-to (str util/site-url
+                                        (util/create-url-path post)
                                         (:url post))
-                                   (smarten (:title post)))])))
+                                   (typo/smarten (:title post)))])))
 
 (defmethod display-title :topic
   [topic]
-  (let [{:keys [date time]} (format-timestamp (:created-on topic))]
+  (let [{:keys [date time]} (util/format-timestamp (:created-on topic))]
     (html
-     [:div.col-xs-5.title (smarten (:title topic))])))
+     [:div.col-xs-5.title (typo/smarten (:title topic))])))
 
 (defn- display-header
   [tag]
-  (let [tags (entities/get-tags)]
+  (let [tags (ent/get-tags)]
     (html
      [:div.row
       [:div.col-xs-12.col-sm-10.col-sm-offset-1
@@ -61,28 +54,28 @@
                                         (map #(html
                                                (if (= tag %)
                                                  (:title %)
-                                                 (link-to
+                                                 (el/link-to
                                                   (str "/tags/"
-                                                       (utils/create-url-name (:title %)))
+                                                       (util/create-url-name (:title %)))
                                                   (:title %))))
                                              tags)))]]])))
 
 (defn display-post
   [post]
-  (let [topic (entities/get-topic (get-in post [:topic :_id]))
-        {:keys [date time]} (utils/format-timestamp (:created-on post))]
+  (let [topic (ent/get-topic (get-in post [:topic :_id]))
+        {:keys [date time]} (util/format-timestamp (:created-on post))]
     (html
      [:div.post
       (display-title post)
       [:div.col-xs-3.topic (when-let [topic (:title topic)]
-                             (smarten topic))]
+                             (typo/smarten topic))]
       [:div.col-xs-4.date (str date " @ " time)]])))
 
 (defn display-tags-page
   ([tag]
-   (let [tag (get-tag-by-url tag)
+   (let [tag (ent/get-tag-by-url tag)
          posts (sort-by #(or (:title %) (get-in % [:source :body]))
-                        (map #(get-entity {:_id (:_id %)} (:kind %)) (:refs tag)))]
+                        (map #(ent/get-entity {:_id (:_id %)} (:kind %)) (:refs tag)))]
      (layout/display-page
       :tags
       (str "Tags &mdash; " (:title tag))
