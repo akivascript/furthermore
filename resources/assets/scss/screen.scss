@@ -95,7 +95,7 @@ img {
 }
 
 .navbar-default {
-    background-color: $gray;
+    background-color: $blue-faded;
     background-image: url('/img/background-tan.png');
 
     .navbar-nav > li {
@@ -209,7 +209,8 @@ img {
 
     text-align: center;
 
-    color: #dbdbdb;
+    color: $green-faded;
+    // color: #dbdbdb;
 }
 
 .panel {
