@@ -48,7 +48,7 @@
 
   :target-path "target/%s"
 
-  :clean-targets ^{:protect false} ["resources/public/js/compiled"]
+  ;; :clean-targets ^{:protect false} ["resources/public/js/compiled"]
 
   :cljsbuild
   {:builds [{:id "main"
