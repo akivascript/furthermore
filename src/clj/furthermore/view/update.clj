@@ -1,12 +1,12 @@
 (ns furthermore.view.update
-  (:require [clojure.string :as string]
+  (:require [clojure.string :as cstr]
             [hiccup.core :refer :all]
-            [hiccup.form :refer :all]
+            [hiccup.form :as form]
             [monger.util :as mutil :refer [random-uuid]]
 
             [furthermore.entities :as entities]
-            [furthermore.view.layout :refer [display-page]]
-            [furthermore.utils :refer [format-timestamp]]))
+            [furthermore.view.layout :as layout]
+            [furthermore.utils :as util]))
 
 (def ^:private title
   {:page "Page"
@@ -18,7 +18,7 @@
   "Returns an <option> with a value that combines an entity's
   ID and its kind as a pipe-delimited single string."
   [option kind entity]
-  (let [{:keys [date time]} (format-timestamp (:created-on option))
+  (let [{:keys [date time]} (util/format-timestamp (:created-on option))
         selected? (= (:_id option) (get-in entity [(keyword kind) :_id]))]
     (html
      [:option {:value (str (:_id option) "|" (name (:kind option)))
@@ -33,7 +33,7 @@
                  (str "Add " (title kind)))
         entity (when update?
                  (entities/get-entity {:_id id} kind))]
-      (display-page
+      (layout/display-page
        :update
        page-title
        (html
@@ -42,7 +42,7 @@
          [:div {:class "row"}
           [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
            [:div {:class "content"}
-            (form-to
+            (form/form-to
              {:id "update-form"
               :enckind "application/x-www-form-urlencoded"}
              [:post (str "/api/update/" (name kind))]
@@ -54,37 +54,37 @@
                          (= :page kind))
                  [:div
                   [:div
-                   (label "title" "Title")
-                   (text-field {:class "form-control"
+                   (form/label "title" "Title")
+                   (form/text-field {:class "form-control"
                                 :ref "title"}
                                "title"
                                (:title entity))]
                   (when (= :post kind)
                     [:div
-                     (label "subtitle" "Subtitle")
-                     (text-field {:class "form-control"
+                     (form/label "subtitle" "Subtitle")
+                     (form/text-field {:class "form-control"
                                   :ref "subtitle"}
                                  "subtitle"
                                  (:subtitle entity))])])
                [:div
-                (label "authors" "Authors")
-                (text-field {:class "form-control"
+                (form/label "authors" "Authors")
+                (form/text-field {:class "form-control"
                              :ref "authors"}
                             "authors"
-                            (string/join "; " (map :name (:authors entity))))]
+                            (cstr/join "; " (map :name (:authors entity))))]
                [:div
-                (label "tags" "Tags")
-                (text-field {:class "form-control"
+                (form/label "tags" "Tags")
+                (form/text-field {:class "form-control"
                              :ref "tags"}
                             "tags"
                             (when (seq? (:tags entity))
-                              (string/join "; " (:tags entity))))]
+                              (cstr/join "; " (:tags entity))))]
                (when (or (= :post kind)
                          (= :follow-up kind))
                  (let [topics (entities/get-entities :topics)]
                    [:div
                     [:div
-                     [:label {:for "topic"} "Topic"]
+                     [:form/label {:for "topic"} "Topic"]
                      [:select {:id "topics"
                                :class "form-control"
                                :name "topic"
@@ -92,22 +92,22 @@
                       [:option {:value ""} "Select topic..."]
                       (map #(create-option % "topic" entity) topics)]]
                     [:div
-                     [:label {:for "parent"} "Parent"]
+                     [:form/label {:for "parent"} "Parent"]
                      [:select {:id "parents"
                                :class "form-control"
                                :name "parent"
                                :ref "parent"}
                       [:option {:value ""} "Select parent..."]
                       (when (= :post kind)
-                        [:optgroup {:label "Topics"}
+                        [:optgroup {:form/label "Topics"}
                          (map #(create-option % "topic" entity) topics)])
                       [:optgroup {:id "posts"
-                                  :label "Posts"}
+                                  :form/label "Posts"}
                        (let [posts (entities/get-entities :posts)]
                          (map #(create-option % "parent" entity) posts))]]]
                     [:div
                      [:div {:class "checkbox float-left"}
-                      [:label {:for "tweet"}
+                      [:form/label {:for "tweet"}
                        [:input {:type "checkbox"
                                 :name "tweet"
                                 :ref "tweet"}]
@@ -115,10 +115,10 @@
                [:div
                 [:div
                  (if (= :topic kind)
-                   (label "body-source" "Description")
-                   (label "body-source" "Body"))
+                   (form/label "body-source" "Description")
+                   (form/label "body-source" "Body"))
                  (let [rows (if (= :topic kind) 8 16)]
-                   (text-area {:class "form-control"
+                   (form/text-area {:class "form-control"
                                :ref "body-source"
                                :rows rows}
                               "body-source"
@@ -126,17 +126,17 @@
                 (when-not (or (= :page kind)
                               (= :topic kind))
                   [:div
-                   (label "excerpt" "Excerpt")
-                   (text-area {:class "form-control"
+                   (form/label "excerpt" "Excerpt")
+                   (form/text-area {:class "form-control"
                                :ref "excerpt-source"
                                :rows 4}
                               "excerpt-source"
                               (:excerpt-source entity))])]]]
-             (hidden-field {:value kind} "kind")
+             (form/hidden-field {:value kind} "kind")
              (let [id (if (= mode :new)
                         (mutil/random-uuid)
                         (:_id entity))]
-               (hidden-field {:value id} "_id"))
+               (form/hidden-field {:value id} "_id"))
              [:div.row
               [:div.col-xs-6
                (when update?
@@ -145,4 +145,4 @@
                                                      :type "button"
                                                      :value "Delete"}])]
               [:div.col-xs-6.text-right
-               (submit-button {:class "btn btn-default"} page-title)]])]]]]))))
+               (form/submit-button {:class "btn btn-default"} page-title)]])]]]]))))
