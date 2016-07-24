@@ -48,7 +48,6 @@ a {
 
 body {
     background-color: #fff;
-    //background-image: url('/img/background.png');
 
     font-family: 'Lato';
 }
@@ -137,6 +136,22 @@ img {
             }
         }
     }
+
+    .navbar-toggle {
+        padding-top: 11px;
+        padding-bottom: 7px;
+        padding-left: 15px;
+        padding-right: 13px;
+        margin: inherit;
+        margin-right: 0px;
+        font-size: 14pt;
+        
+        &:hover {
+            background-color: $green-faded;
+            background-image: url('/img/background-tan.png');
+            color: #fff;
+        }
+    }
 }
 
 .navbar-header {
@@ -220,10 +235,6 @@ img {
         font-size: 1em;
 
         color: $gray-light;
-
-        a {
-            color: $red-dark;
-        }
 
         .whatever-twitter {
             opacity: 0.5;
@@ -323,14 +334,6 @@ img {
 
         .topic {
             font-weight: bold;
-
-            a {
-                color: $red-dark; 
-
-                &:hover {
-                    color: #000;
-                }
-            }
         }
 
         clear: both;
@@ -484,7 +487,7 @@ img {
     .tags {
         padding: 10px 0 10px 0;
 
-        border-top: 1px solid #ccc;
+        border-top: 1px dotted #aaa;
 
         text-align: center;
         
@@ -514,13 +517,10 @@ img {
     }
 
     .title {
-        font-family: $header-font;
-        font-size: 250%;
-        font-variant: small-caps;
+        font-family: 'Cinzel';
+        font-size: 21px;
 
         text-align: center;
-
-        color: #aa5555;
     }
 }
 
@@ -721,14 +721,6 @@ img {
             border-top: 1px solid $gray-light;
             padding: 5px 0px 5px 0px;
 
-            a {
-                color: $red-dark;
-                
-                &:hover {
-                    color: #000;
-                }
-            }
-            
             .date {
                 padding: 2px 5px 0px 5px;
 

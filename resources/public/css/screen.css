@@ -53,12 +53,12 @@ body {
   font-family: 'Lato';
 }
 
-/* line 56, ../../assets/scss/screen.scss */
+/* line 55, ../../assets/scss/screen.scss */
 code, kbd, pre, samp {
   font-family: "Fira Code";
 }
 
-/* line 60, ../../assets/scss/screen.scss */
+/* line 59, ../../assets/scss/screen.scss */
 img {
   margin: 4px 10px 0px 0px;
   -webkit-border-radius: 10px;
@@ -67,86 +67,102 @@ img {
   border: 1px solid #aaa;
 }
 
-/* line 67, ../../assets/scss/screen.scss */
+/* line 66, ../../assets/scss/screen.scss */
 .btn-delete {
   background-color: #bfa1A1;
   color: #555;
 }
-/* line 72, ../../assets/scss/screen.scss */
+/* line 71, ../../assets/scss/screen.scss */
 .btn-delete:hover {
   background-color: #795454;
   color: #000;
 }
 
-/* line 79, ../../assets/scss/screen.scss */
+/* line 78, ../../assets/scss/screen.scss */
 .img-left {
   margin-right: 10px;
   margin-top: 4px;
   float: left;
 }
 
-/* line 86, ../../assets/scss/screen.scss */
+/* line 85, ../../assets/scss/screen.scss */
 .img-right {
   margin-left: 10px;
   margin-top: 4px;
   float: right;
 }
 
-/* line 93, ../../assets/scss/screen.scss */
+/* line 92, ../../assets/scss/screen.scss */
 .nav {
   font-weight: 700;
 }
 
-/* line 97, ../../assets/scss/screen.scss */
+/* line 96, ../../assets/scss/screen.scss */
 .navbar {
   text-transform: uppercase;
 }
 
-/* line 101, ../../assets/scss/screen.scss */
+/* line 100, ../../assets/scss/screen.scss */
 .navbar-nav {
   float: right;
 }
 
-/* line 105, ../../assets/scss/screen.scss */
+/* line 104, ../../assets/scss/screen.scss */
 .navbar-default {
   background-color: #fff;
   border-bottom: 1px solid #eee;
 }
-/* line 113, ../../assets/scss/screen.scss */
+/* line 112, ../../assets/scss/screen.scss */
 .navbar-default .navbar-brand {
   color: #000;
   font-weight: 900;
   line-height: 26px;
 }
-/* line 120, ../../assets/scss/screen.scss */
+/* line 119, ../../assets/scss/screen.scss */
 .navbar-default .navbar-brand:hover {
   color: #fff;
   background-color: #667977;
   background-image: url("/img/background-tan.png");
 }
-/* line 129, ../../assets/scss/screen.scss */
+/* line 128, ../../assets/scss/screen.scss */
 .navbar-default .navbar-nav > li a {
   padding-bottom: 14px;
   color: #955;
 }
-/* line 134, ../../assets/scss/screen.scss */
+/* line 133, ../../assets/scss/screen.scss */
 .navbar-default .navbar-nav > li a:hover {
   background-color: #667977;
   background-image: url("/img/background-tan.png");
 }
+/* line 140, ../../assets/scss/screen.scss */
+.navbar-default .navbar-toggle {
+  padding-top: 11px;
+  padding-bottom: 7px;
+  padding-left: 15px;
+  padding-right: 13px;
+  margin: inherit;
+  margin-right: 0px;
+  font-size: 14pt;
+}
+/* line 149, ../../assets/scss/screen.scss */
+.navbar-default .navbar-toggle:hover {
+  background-color: #667977;
+  background-image: url("/img/background-tan.png");
+  color: #fff;
+}
 
-/* line 142, ../../assets/scss/screen.scss */
+/* line 157, ../../assets/scss/screen.scss */
 .navbar-header {
   font-family: "Cinzel Decorative";
 }
 
-/* line 146, ../../assets/scss/screen.scss */
+/* line 161, ../../assets/scss/screen.scss */
 .page-header {
   margin-top: 0px;
   border-bottom: none;
 }
 
-/* line 152, ../../assets/scss/screen.scss */
+/* line 167, ../../assets/scss/screen.scss */
 .banner img {
   display: block;
   margin: 0px auto;
@@ -157,14 +173,14 @@ img {
   border: 1px solid #aaa;
 }
 
-/* line 163, ../../assets/scss/screen.scss */
+/* line 178, ../../assets/scss/screen.scss */
 .outline-widget {
   margin-right: 3px;
   cursor: pointer;
   color: #aaa;
 }
 
-/* line 171, ../../assets/scss/screen.scss */
+/* line 186, ../../assets/scss/screen.scss */
 .page-footer {
   padding: 15px;
   border-top: 1px solid #dbdbdb;
@@ -172,28 +188,28 @@ img {
   font-weight: 400;
 }
 
-/* line 179, ../../assets/scss/screen.scss */
+/* line 194, ../../assets/scss/screen.scss */
 .post-topic {
   font-size: 80%;
   text-align: center;
   text-transform: uppercase;
   color: #aaa;
 }
-/* line 187, ../../assets/scss/screen.scss */
+/* line 202, ../../assets/scss/screen.scss */
 .post-topic a {
   color: #aaa;
 }
-/* line 190, ../../assets/scss/screen.scss */
+/* line 205, ../../assets/scss/screen.scss */
 .post-topic a:hover {
   color: #465871;
 }
 
-/* line 196, ../../assets/scss/screen.scss */
+/* line 211, ../../assets/scss/screen.scss */
 .follow-up {
   border-top: 1px solid #dbdbdb;
   margin-bottom: 50px;
 }
-/* line 200, ../../assets/scss/screen.scss */
+/* line 215, ../../assets/scss/screen.scss */
 .follow-up .body {
   padding: 10px 0px 5px 1px;
   font-family: "Lato";
@@ -202,32 +218,28 @@ img {
   text-align: left;
   color: #333;
 }
-/* line 211, ../../assets/scss/screen.scss */
+/* line 226, ../../assets/scss/screen.scss */
 .follow-up .body p {
   padding-top: 10px;
 }
-/* line 216, ../../assets/scss/screen.scss */
+/* line 231, ../../assets/scss/screen.scss */
 .follow-up .footer {
   padding-top: 10px;
   font-family: "Lato";
   font-size: 1em;
   color: #aaa;
 }
-/* line 224, ../../assets/scss/screen.scss */
-.follow-up .footer a {
-  color: #955;
-}
-/* line 228, ../../assets/scss/screen.scss */
+/* line 239, ../../assets/scss/screen.scss */
 .follow-up .footer .whatever-twitter {
   opacity: 0.5;
 }
 
-/* line 234, ../../assets/scss/screen.scss */
+/* line 245, ../../assets/scss/screen.scss */
 .form-control {
   background-color: #fcfcfc;
 }
 
-/* line 238, ../../assets/scss/screen.scss */
+/* line 249, ../../assets/scss/screen.scss */
 .arrow {
   width: 100%;
   font-size: 400%;
@@ -235,28 +247,28 @@ img {
   color: #667977;
 }
 
-/* line 249, ../../assets/scss/screen.scss */
+/* line 260, ../../assets/scss/screen.scss */
 .panel {
   background-color: #f7f5ef;
 }
 
-/* line 253, ../../assets/scss/screen.scss */
+/* line 264, ../../assets/scss/screen.scss */
 .post {
   border-top: 1px solid #dbdbdb;
   margin-bottom: 50px;
 }
-/* line 257, ../../assets/scss/screen.scss */
+/* line 268, ../../assets/scss/screen.scss */
 .post .title {
   font-family: 'Lato';
   font-size: 250%;
   font-weight: 300;
   color: #6495ed;
 }
-/* line 265, ../../assets/scss/screen.scss */
+/* line 276, ../../assets/scss/screen.scss */
 .post .title a:hover {
   color: #955;
 }
-/* line 271, ../../assets/scss/screen.scss */
+/* line 282, ../../assets/scss/screen.scss */
 .post .subtitle {
   margin-top: -5px;
   font-family: "Crimson Text";
@@ -265,7 +277,7 @@ img {
   font-weight: 300;
   color: #555;
 }
-/* line 282, ../../assets/scss/screen.scss */
+/* line 293, ../../assets/scss/screen.scss */
 .post .btn-tag {
   padding: 2px 6px;
   -webkit-border-radius: 5px;
@@ -275,12 +287,12 @@ img {
   border-color: #8798a7;
   font-size: 80%;
 }
-/* line 291, ../../assets/scss/screen.scss */
+/* line 302, ../../assets/scss/screen.scss */
 .post .btn-tag a:hover {
   background-color: #6f7d8a;
   border-color: #6f7d8a;
 }
-/* line 297, ../../assets/scss/screen.scss */
+/* line 308, ../../assets/scss/screen.scss */
 .post .body {
   padding: 10px 0px 5px 1px;
   font-family: "Lato";
@@ -289,75 +301,67 @@ img {
   line-height: 1.5em;
   color: #333;
 }
-/* line 308, ../../assets/scss/screen.scss */
+/* line 319, ../../assets/scss/screen.scss */
 .post .body p {
   padding-top: 10px;
 }
-/* line 313, ../../assets/scss/screen.scss */
+/* line 324, ../../assets/scss/screen.scss */
 .post .footer {
   padding-top: 10px;
   font-family: "Lato";
   color: #aaa;
   clear: both;
 }
-/* line 320, ../../assets/scss/screen.scss */
+/* line 331, ../../assets/scss/screen.scss */
 .post .footer .continue {
   font-size: 90%;
 }
-/* line 324, ../../assets/scss/screen.scss */
+/* line 335, ../../assets/scss/screen.scss */
 .post .footer .topic {
   font-weight: bold;
 }
-/* line 327, ../../assets/scss/screen.scss */
-.post .footer .topic a {
-  color: #955;
-}
-/* line 330, ../../assets/scss/screen.scss */
-.post .footer .topic a:hover {
-  color: #000;
-}
 
-/* line 341, ../../assets/scss/screen.scss */
+/* line 344, ../../assets/scss/screen.scss */
 .twitter a {
   opacity: 0.5;
 }
-/* line 344, ../../assets/scss/screen.scss */
+/* line 347, ../../assets/scss/screen.scss */
 .twitter a:hover {
   opacity: 1.0;
 }
 
-/* line 351, ../../assets/scss/screen.scss */
+/* line 354, ../../assets/scss/screen.scss */
 #admin .topic {
   padding-bottom: 15px;
 }
-/* line 354, ../../assets/scss/screen.scss */
+/* line 357, ../../assets/scss/screen.scss */
 #admin .topic .title {
   border-bottom: 1px solid #aaa;
 }
-/* line 359, ../../assets/scss/screen.scss */
+/* line 362, ../../assets/scss/screen.scss */
 #admin .post {
   display: block;
   margin-bottom: 0px;
   padding-left: 0px;
   border: none;
 }
-/* line 367, ../../assets/scss/screen.scss */
+/* line 370, ../../assets/scss/screen.scss */
 #admin .post .date {
   display: inline-block;
   color: #aaa;
 }
-/* line 373, ../../assets/scss/screen.scss */
+/* line 376, ../../assets/scss/screen.scss */
 #admin .post .follow-up-title {
   display: inline-block;
   margin-left: 0px;
   border: none;
   padding-right: 10px;
 }
-/* line 382, ../../assets/scss/screen.scss */
+/* line 385, ../../assets/scss/screen.scss */
 #admin .post .follow-up-title p {
   display: inline;
 }
-/* line 387, ../../assets/scss/screen.scss */
+/* line 390, ../../assets/scss/screen.scss */
 #admin .post .title {
   display: inline-block;
   padding-right: 10px;
@@ -366,52 +370,52 @@ img {
   font-size: 100%;
 }
 
-/* line 402, ../../assets/scss/screen.scss */
+/* line 405, ../../assets/scss/screen.scss */
 #post .follow-up {
   padding: 10px;
   border-top: 0px;
   /* background-color: #f5f5f5; */
 }
-/* line 409, ../../assets/scss/screen.scss */
+/* line 412, ../../assets/scss/screen.scss */
 #post .follow-up .body {
   padding: 0px 0px 0px 1px;
 }
-/* line 413, ../../assets/scss/screen.scss */
+/* line 416, ../../assets/scss/screen.scss */
 #post .follow-up .footer {
   padding: 0px;
 }
 
-/* line 419, ../../assets/scss/screen.scss */
+/* line 422, ../../assets/scss/screen.scss */
 #page-content {
   margin: 63px 0px 19px 0px;
   padding-top: 9.5px;
   padding-bottom: 9.5px;
 }
 
-/* line 426, ../../assets/scss/screen.scss */
+/* line 429, ../../assets/scss/screen.scss */
 #tags .posts {
   padding: 5px 0px 5px 0px;
   border-top: 1px solid #ccc;
 }
-/* line 431, ../../assets/scss/screen.scss */
+/* line 434, ../../assets/scss/screen.scss */
 #tags .post {
   display: flex;
   margin-bottom: 0px;
   padding-top: 5px;
   border-top: none;
 }
-/* line 438, ../../assets/scss/screen.scss */
+/* line 441, ../../assets/scss/screen.scss */
 #tags .post a:hover {
   color: #000;
 }
-/* line 442, ../../assets/scss/screen.scss */
+/* line 445, ../../assets/scss/screen.scss */
 #tags .post .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   text-align: right;
   color: #7a7a7a;
 }
-/* line 452, ../../assets/scss/screen.scss */
+/* line 455, ../../assets/scss/screen.scss */
 #tags .post .title {
   font-family: 'Lato';
   font-size: 100%;
@@ -419,59 +423,57 @@ img {
   color: #000;
   text-align: left;
 }
-/* line 459, ../../assets/scss/screen.scss */
+/* line 462, ../../assets/scss/screen.scss */
 #tags .post .title a {
   color: #559981;
 }
-/* line 463, ../../assets/scss/screen.scss */
+/* line 466, ../../assets/scss/screen.scss */
 #tags .post .title a:hover {
   color: #000;
 }
-/* line 468, ../../assets/scss/screen.scss */
+/* line 471, ../../assets/scss/screen.scss */
 #tags .post .title p {
   margin: 0px;
 }
-/* line 475, ../../assets/scss/screen.scss */
+/* line 478, ../../assets/scss/screen.scss */
 #tags .post .topic {
   padding: 2px 0px 0px 5px;
   font-size: 90%;
   color: #aaa;
 }
-/* line 484, ../../assets/scss/screen.scss */
+/* line 487, ../../assets/scss/screen.scss */
 #tags .tags {
   padding: 10px 0 10px 0;
-  border-top: 1px solid #ccc;
+  border-top: 1px dotted #aaa;
   text-align: center;
 }
-/* line 491, ../../assets/scss/screen.scss */
+/* line 494, ../../assets/scss/screen.scss */
 #tags .tags a {
   color: #7a7a7a;
 }
-/* line 494, ../../assets/scss/screen.scss */
+/* line 497, ../../assets/scss/screen.scss */
 #tags .tags a:hover {
   color: #000;
 }
-/* line 499, ../../assets/scss/screen.scss */
+/* line 502, ../../assets/scss/screen.scss */
 #tags .tags .active {
   color: #6495ed;
 }
-/* line 502, ../../assets/scss/screen.scss */
+/* line 505, ../../assets/scss/screen.scss */
 #tags .tags .active:hover {
   text-decoration: none;
   color: #465871;
   cursor: pointer;
 }
-/* line 511, ../../assets/scss/screen.scss */
+/* line 514, ../../assets/scss/screen.scss */
 #tags .tags .inactive {
   color: #7a7a7a;
 }
-/* line 516, ../../assets/scss/screen.scss */
+/* line 519, ../../assets/scss/screen.scss */
 #tags .title {
-  font-family: "Crimson Text";
-  font-size: 250%;
-  font-variant: small-caps;
+  font-family: 'Cinzel';
+  font-size: 21px;
   text-align: center;
-  color: #aa5555;
 }
 
 /* line 528, ../../assets/scss/screen.scss */
@@ -637,31 +639,23 @@ img {
   padding: 5px 0px 5px 0px;
 }
 /* line 724, ../../assets/scss/screen.scss */
-#updates .entries .entry a {
-  color: #955;
-}
-/* line 727, ../../assets/scss/screen.scss */
-#updates .entries .entry a:hover {
-  color: #000;
-}
-/* line 732, ../../assets/scss/screen.scss */
 #updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 740, ../../assets/scss/screen.scss */
+/* line 732, ../../assets/scss/screen.scss */
 #updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 750, ../../assets/scss/screen.scss */
+/* line 742, ../../assets/scss/screen.scss */
 #updates .entries .entry .title p {
   margin: 0px;
 }
-/* line 755, ../../assets/scss/screen.scss */
+/* line 747, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;

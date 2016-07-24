@@ -49,16 +49,13 @@
                  :type "button"
                  :data-toggle "collapse"
                  :data-target "#navbar-main"}
-        [:span {:class "icon-bar"}]
-        [:span {:class "icon-bar"}]
-        [:span {:class "icon-bar"}]]
+        [:i {:class "fa fa-bars" :aria-hidden "true"}]]
        [:a {:href home-path
             :class "navbar-brand"} "WhaTEveR"]]
       [:div {:id "navbar-main"
              :class "navbar-collapse collapse"}
        [:ul {:class "nav navbar-nav"}
-        links
-        ]]])))
+        links]]])))
 
 (defn display-page
   ([page content]
@@ -112,7 +109,8 @@
       "http://code.jquery.com/jquery-2.1.3.min.js"
       "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"
       "/js/highlight.pack.js"
-      "/js/compiled/furthermore.js")
+      "/js/compiled/furthermore.js"
+      "https://use.fontawesome.com/50965d2ea2.js")
 
      [:script "hljs.initHighlightingOnLoad ()"]
 
@@ -120,5 +118,4 @@
        :admin [:script "furthermore.core.initialize_contents ()"]
        :contents [:script "furthermore.core.initialize_contents ()"]
        :update [:script "furthermore.core.initialize_update ()"]
-       "")
-     ])))
+       "")])))
