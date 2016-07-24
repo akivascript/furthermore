@@ -7,16 +7,20 @@
             [furthermore.view.layout :as layout]
             [furthermore.utils :as util]))
 
+(defn tag-icon
+  [c]
+  (html
+   (cond
+     (= c 1) [:i {:class "fa fa-tag" :aria-hidden "true"}]
+     (> c 1) [:i {:class "fa fa-tags" :aria-hidden "true"}])))
+
 (defn- display-tags
   [tags]
-  (when (seq tags)
-    (html
-     [:div {:class "tags text-right"}
-      (apply str (interpose ", " (map #(html
-                                        (link-to
-                                         (str "/tags/"
-                                              (util/create-url-name %)) %))
-                                      (sort tags))))])))
+  (apply str (interpose ", " (map #(html
+                                    (link-to
+                                     (str "/tags/"
+                                          (util/create-url-name %)) %))
+                                  (sort tags)))))
 
 (defmulti display-post :kind)
 
@@ -50,7 +54,10 @@
            (link-to (str (util/create-url-path topic) (:url topic)) (typo/smarten (:title topic)))]
           [:br]
           (str date " @ " time)
-          (display-tags (:tags post))
+          (when-not (empty? (first (:tags post)))
+            (let [tags (:tags post)]
+              [:div {:class "tags"}
+               (display-tags tags) [:span " "] (tag-icon (count tags))]))
           (when-let [url (get-in post [:twitter :url])]
             [:span.twitter
              (link-to {:class "whatever-twitter"
@@ -81,7 +88,10 @@
                    (typo/smarten (:title parent)))
           [:br]
           (str date " @ " time)
-          (display-tags (:tags follow-up))
+          (when-not (empty? (first (:tags follow-up)))
+            (let [tags (:tags follow-up)]
+              [:div {:class "tags"}
+               (display-tags tags) [:span " "] (tag-icon (count tags))]))
           (when-let [url (get-in follow-up [:twitter :url])]
             [:span.twitter
              (link-to {:class "whatever-twitter"
