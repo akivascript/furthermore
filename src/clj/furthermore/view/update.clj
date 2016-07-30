@@ -1,5 +1,6 @@
 (ns furthermore.view.update
   (:require [clojure.string :as cstr]
+
             [hiccup.core :refer :all]
             [hiccup.form :as form]
             [monger.util :as mutil :refer [random-uuid]]
@@ -9,9 +10,10 @@
             [furthermore.utils :as util]))
 
 (def title
-  {:page "Page"
+  {:follow-up "Follow-Up"
+   :image "Image"
+   :page "Page"
    :post "Post"
-   :follow-up "Follow-Up"
    :topic "Topic"})
 
 (defn- create-option
@@ -43,15 +45,18 @@
           [:div {:class "col-xs-12 col-sm-8 col-sm-offset-2"}
            [:div {:class "content"}
             (form/form-to
-             {:id "update-form"
-              :enckind "application/x-www-form-urlencoded"}
+             (assoc {:id "update-form"} :enckind
+                    (if (= kind :image)
+                      "multipart/form-data"
+                      "application/x-www-form-urlencoded"))
              [:post (str "/api/update/" (name kind))]
              [:h2 page-title]
              [:div {:class "panel panel-default"}
               [:div {:class "panel-body"}
-               (when (or (= :post kind)
-                         (= :topic kind)
-                         (= :page kind))
+               (when (or (= kind :post)
+                         (= kind :topic)
+                         (= kind :page)
+                         (= kind :image))
                  [:div
                   [:div
                    (form/label "title" "Title")
@@ -59,7 +64,7 @@
                                 :ref "title"}
                                "title"
                                (:title entity))]
-                  (when (= :post kind)
+                  (when (= kind :post)
                     [:div
                      (form/label "subtitle" "Subtitle")
                      (form/text-field {:class "form-control"
@@ -71,7 +76,7 @@
                 (form/text-field {:class "form-control"
                              :ref "authors"}
                             "authors"
-                            (cstr/join "; " (map :name (:authors entity))))]
+                            (cstr/join ", " (map :name (:authors entity))))]
                [:div
                 (form/label "tags" "Tags")
                 (form/text-field {:class "form-control"
@@ -79,8 +84,8 @@
                             "tags"
                             (when-not (empty? (:tags entity))
                               (cstr/join ", " (:tags entity))))]
-               (when (or (= :post kind)
-                         (= :follow-up kind))
+               (when (or (= kind :post)
+                         (= kind :follow-up))
                  (let [topics (entities/get-entities :topics)]
                    [:div
                     [:div
@@ -98,7 +103,7 @@
                                :name "parent"
                                :ref "parent"}
                       [:option {:value ""} "Select parent..."]
-                      (when (= :post kind)
+                      (when (= kind :post)
                         [:optgroup {:form/label "Topics"}
                          (map #(create-option % "topic" entity) topics)])
                       [:optgroup {:id "posts"
@@ -114,17 +119,23 @@
                        "Tweet this?"]]]]))
                [:div
                 [:div
-                 (if (= :topic kind)
-                   (form/label "body-source" "Description")
+                 (condp = kind
+                   :topic (form/label "body-source" "Description")
+                   :image (form/label "image-source" "Image")
                    (form/label "body-source" "Body"))
-                 (let [rows (if (= :topic kind) 8 16)]
-                   (form/text-area {:class "form-control"
-                               :ref "body-source"
-                               :rows rows}
-                              "body-source"
-                              (:body-source entity)))]
-                (when-not (or (= :page kind)
-                              (= :topic kind))
+                 (if (not= kind :image)
+                   (let [rows (if (= kind :topic) 8 16)]
+                     (form/text-area {:class "form-control"
+                                      :ref "body-source"
+                                      :rows rows}
+                                     "body-source"
+                                     (:body-source entity)))
+                   (form/file-upload {:class "form-control"
+                                      :id "image"}
+                                     "image-source"))]
+                (when-not (or (= kind :page)
+                              (= kind :topic)
+                              (= kind :image))
                   [:div
                    (form/label "excerpt" "Excerpt")
                    (form/text-area {:class "form-control"

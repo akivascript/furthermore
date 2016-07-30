@@ -239,7 +239,7 @@ img {
   background-color: #fcfcfc;
 }
 
-/* line 249, ../../assets/scss/screen.scss */
+/* line 250, ../../assets/scss/screen.scss */
 .arrow {
   width: 100%;
   font-size: 400%;
@@ -247,28 +247,28 @@ img {
   color: #667977;
 }
 
-/* line 260, ../../assets/scss/screen.scss */
+/* line 261, ../../assets/scss/screen.scss */
 .panel {
   background-color: #f7f5ef;
 }
 
-/* line 264, ../../assets/scss/screen.scss */
+/* line 265, ../../assets/scss/screen.scss */
 .post {
   border-top: 1px solid #dbdbdb;
   margin-bottom: 50px;
 }
-/* line 268, ../../assets/scss/screen.scss */
+/* line 269, ../../assets/scss/screen.scss */
 .post .title {
   font-family: 'Lato';
   font-size: 250%;
   font-weight: 300;
   color: #6495ed;
 }
-/* line 276, ../../assets/scss/screen.scss */
+/* line 277, ../../assets/scss/screen.scss */
 .post .title a:hover {
   color: #955;
 }
-/* line 282, ../../assets/scss/screen.scss */
+/* line 283, ../../assets/scss/screen.scss */
 .post .subtitle {
   margin-top: -5px;
   font-family: "Crimson Text";
@@ -277,7 +277,7 @@ img {
   font-weight: 300;
   color: #555;
 }
-/* line 293, ../../assets/scss/screen.scss */
+/* line 294, ../../assets/scss/screen.scss */
 .post .btn-tag {
   padding: 2px 6px;
   -webkit-border-radius: 5px;
@@ -287,12 +287,12 @@ img {
   border-color: #8798a7;
   font-size: 80%;
 }
-/* line 302, ../../assets/scss/screen.scss */
+/* line 303, ../../assets/scss/screen.scss */
 .post .btn-tag a:hover {
   background-color: #6f7d8a;
   border-color: #6f7d8a;
 }
-/* line 308, ../../assets/scss/screen.scss */
+/* line 309, ../../assets/scss/screen.scss */
 .post .body {
   padding: 10px 0px 5px 1px;
   font-family: "Lato";
@@ -301,67 +301,67 @@ img {
   line-height: 1.5em;
   color: #333;
 }
-/* line 319, ../../assets/scss/screen.scss */
+/* line 320, ../../assets/scss/screen.scss */
 .post .body p {
   padding-top: 10px;
 }
-/* line 324, ../../assets/scss/screen.scss */
+/* line 325, ../../assets/scss/screen.scss */
 .post .footer {
   padding-top: 10px;
   font-family: "Lato";
   color: #aaa;
   clear: both;
 }
-/* line 331, ../../assets/scss/screen.scss */
+/* line 332, ../../assets/scss/screen.scss */
 .post .footer .continue {
   font-size: 90%;
 }
-/* line 335, ../../assets/scss/screen.scss */
+/* line 336, ../../assets/scss/screen.scss */
 .post .footer .topic {
   font-weight: bold;
 }
 
-/* line 344, ../../assets/scss/screen.scss */
+/* line 345, ../../assets/scss/screen.scss */
 .twitter a {
   opacity: 0.5;
 }
-/* line 347, ../../assets/scss/screen.scss */
+/* line 348, ../../assets/scss/screen.scss */
 .twitter a:hover {
   opacity: 1.0;
 }
 
-/* line 354, ../../assets/scss/screen.scss */
+/* line 355, ../../assets/scss/screen.scss */
 #admin .topic {
   padding-bottom: 15px;
 }
-/* line 357, ../../assets/scss/screen.scss */
+/* line 358, ../../assets/scss/screen.scss */
 #admin .topic .title {
   border-bottom: 1px solid #aaa;
 }
-/* line 362, ../../assets/scss/screen.scss */
+/* line 363, ../../assets/scss/screen.scss */
 #admin .post {
   display: block;
   margin-bottom: 0px;
   padding-left: 0px;
   border: none;
 }
-/* line 370, ../../assets/scss/screen.scss */
+/* line 371, ../../assets/scss/screen.scss */
 #admin .post .date {
   display: inline-block;
   color: #aaa;
 }
-/* line 376, ../../assets/scss/screen.scss */
+/* line 377, ../../assets/scss/screen.scss */
 #admin .post .follow-up-title {
   display: inline-block;
   margin-left: 0px;
   border: none;
   padding-right: 10px;
 }
-/* line 385, ../../assets/scss/screen.scss */
+/* line 386, ../../assets/scss/screen.scss */
 #admin .post .follow-up-title p {
   display: inline;
 }
-/* line 390, ../../assets/scss/screen.scss */
+/* line 391, ../../assets/scss/screen.scss */
 #admin .post .title {
   display: inline-block;
   padding-right: 10px;
@@ -370,52 +370,52 @@ img {
   font-size: 100%;
 }
 
-/* line 405, ../../assets/scss/screen.scss */
+/* line 406, ../../assets/scss/screen.scss */
 #post .follow-up {
   padding: 10px;
   border-top: 0px;
   /* background-color: #f5f5f5; */
 }
-/* line 412, ../../assets/scss/screen.scss */
+/* line 413, ../../assets/scss/screen.scss */
 #post .follow-up .body {
   padding: 0px 0px 0px 1px;
 }
-/* line 416, ../../assets/scss/screen.scss */
+/* line 417, ../../assets/scss/screen.scss */
 #post .follow-up .footer {
   padding: 0px;
 }
 
-/* line 422, ../../assets/scss/screen.scss */
+/* line 423, ../../assets/scss/screen.scss */
 #page-content {
   margin: 63px 0px 19px 0px;
   padding-top: 9.5px;
   padding-bottom: 9.5px;
 }
 
-/* line 429, ../../assets/scss/screen.scss */
+/* line 430, ../../assets/scss/screen.scss */
 #tags .posts {
   padding: 5px 0px 5px 0px;
   border-top: 1px solid #ccc;
 }
-/* line 434, ../../assets/scss/screen.scss */
+/* line 435, ../../assets/scss/screen.scss */
 #tags .post {
   display: flex;
   margin-bottom: 0px;
   padding-top: 5px;
   border-top: none;
 }
-/* line 441, ../../assets/scss/screen.scss */
+/* line 442, ../../assets/scss/screen.scss */
 #tags .post a:hover {
   color: #000;
 }
-/* line 445, ../../assets/scss/screen.scss */
+/* line 446, ../../assets/scss/screen.scss */
 #tags .post .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   text-align: right;
   color: #7a7a7a;
 }
-/* line 455, ../../assets/scss/screen.scss */
+/* line 456, ../../assets/scss/screen.scss */
 #tags .post .title {
   font-family: 'Lato';
   font-size: 100%;
@@ -423,67 +423,67 @@ img {
   color: #000;
   text-align: left;
 }
-/* line 462, ../../assets/scss/screen.scss */
+/* line 463, ../../assets/scss/screen.scss */
 #tags .post .title a {
   color: #559981;
 }
-/* line 466, ../../assets/scss/screen.scss */
+/* line 467, ../../assets/scss/screen.scss */
 #tags .post .title a:hover {
   color: #000;
 }
-/* line 471, ../../assets/scss/screen.scss */
+/* line 472, ../../assets/scss/screen.scss */
 #tags .post .title p {
   margin: 0px;
 }
-/* line 478, ../../assets/scss/screen.scss */
+/* line 479, ../../assets/scss/screen.scss */
 #tags .post .topic {
   padding: 2px 0px 0px 5px;
   font-size: 90%;
   color: #aaa;
 }
-/* line 487, ../../assets/scss/screen.scss */
+/* line 488, ../../assets/scss/screen.scss */
 #tags .tags {
   padding: 10px 0 10px 0;
   border-top: 1px dotted #aaa;
   text-align: center;
 }
-/* line 494, ../../assets/scss/screen.scss */
+/* line 495, ../../assets/scss/screen.scss */
 #tags .tags a {
   color: #7a7a7a;
 }
-/* line 497, ../../assets/scss/screen.scss */
+/* line 498, ../../assets/scss/screen.scss */
 #tags .tags a:hover {
   color: #000;
 }
-/* line 502, ../../assets/scss/screen.scss */
+/* line 503, ../../assets/scss/screen.scss */
 #tags .tags .active {
   color: #6495ed;
 }
-/* line 505, ../../assets/scss/screen.scss */
+/* line 506, ../../assets/scss/screen.scss */
 #tags .tags .active:hover {
   text-decoration: none;
   color: #465871;
   cursor: pointer;
 }
-/* line 514, ../../assets/scss/screen.scss */
+/* line 515, ../../assets/scss/screen.scss */
 #tags .tags .inactive {
   color: #7a7a7a;
 }
-/* line 519, ../../assets/scss/screen.scss */
+/* line 520, ../../assets/scss/screen.scss */
 #tags .title {
   font-family: 'Cinzel';
   font-size: 21px;
   text-align: center;
 }
 
-/* line 528, ../../assets/scss/screen.scss */
+/* line 529, ../../assets/scss/screen.scss */
 #static h3 {
   margin-bottom: 2px;
   font-family: 'Lato';
   font-size: 140%;
   color: #555;
 }
-/* line 537, ../../assets/scss/screen.scss */
+/* line 538, ../../assets/scss/screen.scss */
 #static .body {
   margin-top: -5px;
   padding-top: 10px;
@@ -492,7 +492,7 @@ img {
   font-size: 16px;
   color: #555;
 }
-/* line 549, ../../assets/scss/screen.scss */
+/* line 550, ../../assets/scss/screen.scss */
 #static .title {
   font-family: "Crimson Text";
   font-size: 250%;
@@ -501,7 +501,7 @@ img {
   color: #aa5555;
 }
 
-/* line 561, ../../assets/scss/screen.scss */
+/* line 562, ../../assets/scss/screen.scss */
 #topic .title {
   border-bottom: 1px solid #aaa;
   font-size: 150%;
@@ -509,7 +509,7 @@ img {
   text-transform: uppercase;
   color: #aaa;
 }
-/* line 572, ../../assets/scss/screen.scss */
+/* line 573, ../../assets/scss/screen.scss */
 #topic .body {
   padding: 0px 0px 5px 1px;
   font-family: "Lato";
@@ -517,31 +517,31 @@ img {
   line-height: 1.5em;
   color: #555;
 }
-/* line 582, ../../assets/scss/screen.scss */
+/* line 583, ../../assets/scss/screen.scss */
 #topic .body p {
   padding-top: 10px;
 }
-/* line 587, ../../assets/scss/screen.scss */
+/* line 588, ../../assets/scss/screen.scss */
 #topic .footer {
   padding-bottom: 10px;
   border-bottom: 1px solid #aaa;
   font-size: 1em;
   color: #aaa;
 }
-/* line 597, ../../assets/scss/screen.scss */
+/* line 598, ../../assets/scss/screen.scss */
 #topic .post {
   margin-bottom: 0px;
   padding: 5px 0px 5px 0px;
   border-top: none;
 }
-/* line 603, ../../assets/scss/screen.scss */
+/* line 604, ../../assets/scss/screen.scss */
 #topic .post .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   text-align: right;
   color: #7a7a7a;
 }
-/* line 613, ../../assets/scss/screen.scss */
+/* line 614, ../../assets/scss/screen.scss */
 #topic .post .title {
   padding-left: 5px;
   border-bottom: 0px;
@@ -550,58 +550,58 @@ img {
   text-transform: none;
   text-align: left;
 }
-/* line 622, ../../assets/scss/screen.scss */
+/* line 623, ../../assets/scss/screen.scss */
 #topic .post .title a {
   color: #955;
 }
-/* line 625, ../../assets/scss/screen.scss */
+/* line 626, ../../assets/scss/screen.scss */
 #topic .post .title a:hover {
   color: black;
 }
 
-/* line 636, ../../assets/scss/screen.scss */
+/* line 637, ../../assets/scss/screen.scss */
 #topics .topic {
   margin-bottom: 15px;
   font-family: "Cinzel";
   font-size: 140%;
 }
-/* line 642, ../../assets/scss/screen.scss */
+/* line 643, ../../assets/scss/screen.scss */
 #topics .topic .permalink {
   padding-left: 7px;
   font-size: 75%;
   text-decoration: none;
 }
-/* line 649, ../../assets/scss/screen.scss */
+/* line 650, ../../assets/scss/screen.scss */
 #topics .topic .permalink a {
   color: #aaa;
 }
-/* line 652, ../../assets/scss/screen.scss */
+/* line 653, ../../assets/scss/screen.scss */
 #topics .topic .permalink a:hover {
   color: #465871;
 }
-/* line 658, ../../assets/scss/screen.scss */
+/* line 659, ../../assets/scss/screen.scss */
 #topics .topic .posts {
   border-top: 1px dotted #aaa;
   margin-top: -3px;
   padding-top: 5px;
 }
-/* line 665, ../../assets/scss/screen.scss */
+/* line 666, ../../assets/scss/screen.scss */
 #topics .topic .post {
   margin-top: -2.5px;
   margin-bottom: 0px;
   border-top: 0px;
 }
-/* line 671, ../../assets/scss/screen.scss */
+/* line 672, ../../assets/scss/screen.scss */
 #topics .topic .post .title {
   display: inline-block;
   padding-right: 10px;
   font-size: 100%;
 }
-/* line 678, ../../assets/scss/screen.scss */
+/* line 679, ../../assets/scss/screen.scss */
 #topics .topic .post .title a {
   padding-left: 1px;
 }
-/* line 683, ../../assets/scss/screen.scss */
+/* line 684, ../../assets/scss/screen.scss */
 #topics .topic .post .follow-up-title {
   display: inline-block;
   padding: 0px 10px 0px 25px;
@@ -609,11 +609,11 @@ img {
   font-size: 15px;
   color: #777;
 }
-/* line 693, ../../assets/scss/screen.scss */
+/* line 694, ../../assets/scss/screen.scss */
 #topics .topic .post .follow-up-title p {
   display: inline;
 }
-/* line 698, ../../assets/scss/screen.scss */
+/* line 699, ../../assets/scss/screen.scss */
 #topics .topic .post .date {
   display: inline-block;
   font-family: 'Lato';
@@ -621,41 +621,41 @@ img {
   color: #aaa;
 }
 
-/* line 710, ../../assets/scss/screen.scss */
+/* line 711, ../../assets/scss/screen.scss */
 #updates {
   font-size: 90%;
 }
-/* line 713, ../../assets/scss/screen.scss */
+/* line 714, ../../assets/scss/screen.scss */
 #updates .parent {
   color: #aaa;
 }
-/* line 717, ../../assets/scss/screen.scss */
+/* line 718, ../../assets/scss/screen.scss */
 #updates .entries {
   border-bottom: 1px solid #aaa;
 }
-/* line 720, ../../assets/scss/screen.scss */
+/* line 721, ../../assets/scss/screen.scss */
 #updates .entries .entry {
   border-top: 1px solid #aaa;
   padding: 5px 0px 5px 0px;
 }
-/* line 724, ../../assets/scss/screen.scss */
+/* line 725, ../../assets/scss/screen.scss */
 #updates .entries .entry .date {
   padding: 2px 5px 0px 5px;
   font-size: 90%;
   color: #7a7a7a;
 }
-/* line 732, ../../assets/scss/screen.scss */
+/* line 733, ../../assets/scss/screen.scss */
 #updates .entries .entry .status {
   margin-left: -10px;
   padding: 2px 5px 0px 5px;
   text-overflow: ellipsis;
   font-size: 90%;
 }
-/* line 742, ../../assets/scss/screen.scss */
+/* line 743, ../../assets/scss/screen.scss */
 #updates .entries .entry .title p {
   margin: 0px;
 }
-/* line 747, ../../assets/scss/screen.scss */
+/* line 748, ../../assets/scss/screen.scss */
 #updates .entries .entry .topic {
   padding: 2px 0px 0px 5px;
   text-align: right;
@@ -663,17 +663,25 @@ img {
   color: #aaa;
 }
 
-/* line 760, ../../assets/scss/screen.scss */
+/* line 761, ../../assets/scss/screen.scss */
 .content {
   padding-top: 30px;
 }
 
-/* line 764, ../../assets/scss/screen.scss */
+/* line 765, ../../assets/scss/screen.scss */
 .content > .post:first-child {
   border: none;
 }
 
-/* line 768, ../../assets/scss/screen.scss */
+/* line 769, ../../assets/scss/screen.scss */
 .content > .follow-up:first-child {
   border: none;
+}
+
+/* line 773, ../../assets/scss/screen.scss */
+#image {
+  background-color: transparent;
+  border: 0px;
+  padding: 0px;
+  box-shadow: none;
 }

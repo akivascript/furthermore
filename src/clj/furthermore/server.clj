@@ -166,6 +166,7 @@
            (GET "/" [] (admin/display-admin-page))
            (cmp/context "/add" []
                     (GET "/follow-up" [] (admin-page :follow-up :new nil))
+                    (GET "/image" [] (admin-page :image :new nil))
                     (GET "/page" [] (admin-page :page :new nil))
                     (GET "/post" [] (admin-page :post :new nil))
                     (GET "/topic" [] (admin-page :topic :new nil)))

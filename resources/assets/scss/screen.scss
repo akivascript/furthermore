@@ -246,6 +246,7 @@ img {
     background-color: #fcfcfc;
 }
 
+
 .arrow {
     width: 100%;
 
@@ -767,4 +768,11 @@ img {
 
 .content > .follow-up:first-child {
     border: none;
+}
+
+#image {
+    background-color: transparent;
+    border: 0px;
+    padding: 0px;
+    box-shadow: none;
 }
