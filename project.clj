@@ -48,8 +48,6 @@
 
   :target-path "target/%s"
 
-  ;; :clean-targets ^{:protect false} ["resources/public/js/compiled"]
-
   :cljsbuild
   {:builds [{:id "main"
              :source-paths ["src/cljs"]
@@ -99,8 +97,7 @@
           :source-paths ["dev/clj"]
 
           :dependencies
-          [[leiningen "2.6.1"]
-           [javax.servlet/servlet-api "2.5"]
+          [[javax.servlet/servlet-api "2.5"]
            [ring-mock "0.1.5"]]
 
           :figwheel {:http-server-root "public"
