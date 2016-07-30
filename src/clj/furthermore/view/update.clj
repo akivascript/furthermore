@@ -8,7 +8,7 @@
             [furthermore.view.layout :as layout]
             [furthermore.utils :as util]))
 
-(def ^:private title
+(def title
   {:page "Page"
    :post "Post"
    :follow-up "Follow-Up"
@@ -77,8 +77,8 @@
                 (form/text-field {:class "form-control"
                              :ref "tags"}
                             "tags"
-                            (when (seq? (:tags entity))
-                              (cstr/join "; " (:tags entity))))]
+                            (when-not (empty? (:tags entity))
+                              (cstr/join ", " (:tags entity))))]
                (when (or (= :post kind)
                          (= :follow-up kind))
                  (let [topics (entities/get-entities :topics)]
