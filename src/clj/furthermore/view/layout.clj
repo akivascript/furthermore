@@ -29,13 +29,15 @@
      [:span.caret]]
     [:ul.dropdown-menu {:role "menu"}
      [:li
-      [:a {:href "/admin/add/post"} "New Post"]]
+      [:a {:href "/admin/add/post"} "Post"]]
      [:li
-      [:a {:href "/admin/add/follow-up"} "New Follow-Up"]]
+      [:a {:href "/admin/add/follow-up"} "Follow-Up"]]
      [:li
-      [:a {:href "/admin/add/topic"} "New Topic"]]
+      [:a {:href "/admin/add/topic"} "Topic"]]
      [:li
-      [:a {:href "/admin/add/page"} "New Page"]]]]))
+      [:a {:href "/admin/add/page"} "Page"]]
+     [:li
+      [:a {:href "/admin/add/image"} "Image"]]]]))
 
 (defn nav-bar
   [page]
