@@ -45,20 +45,17 @@
 
 (defn- display-header
   [tag]
-  (let [tags (ent/get-tags)]
+  (let [tags (map #(if (= % tag)
+                     (:title %)
+                     (html (el/link-to
+                            (str "/tags/" (util/create-url-name (:title %)))
+                            (:title %))))
+                  (remove #(empty? (:title %)) (ent/get-tags)))]
     (html
      [:div.row
       [:div.col-xs-12.col-sm-10.col-sm-offset-1
        [:div.title "Tags"]
-       [:div.tags (apply str (interpose " &bull; "
-                                        (map #(html
-                                               (if (= tag %)
-                                                 (:title %)
-                                                 (el/link-to
-                                                  (str "/tags/"
-                                                       (util/create-url-name (:title %)))
-                                                  (:title %))))
-                                             tags)))]]])))
+       [:div.tags (apply str (interpose " &bull; " tags))]]])))
 
 (defn display-post
   [post]
