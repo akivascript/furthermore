@@ -149,6 +149,50 @@
   (get-entities :tags))
 
 ;;
+;; Images
+;;
+(defrecord Image
+    [_id authors created-on file kind last-updated log? refs tags title url])
+
+(defn create-image
+  [params]
+  (if (nil? params)
+    nil
+    (let [date (ltime/local-now)
+          {:keys [_id authors created-on file kind last-updated log? refs tags title url]
+           :or {_id (mutil/random-uuid)
+                authors ["John Doe"]
+                created-on date
+                log? false
+                refs (hash-set)
+                tags (hash-set)
+                title "New Image"
+                url (util/create-entity-url date title)}} params]
+      (map->Image {:_id _id
+                   :authors (into [] create-author authors)
+                   :file file
+                   :kind :image
+                   :log? log?
+                   :refs (set (map ->ref refs))
+                   :ags (-> tags tags)
+                   :title title
+                   :url url}))))
+
+(defn image?
+  "Returns true if x is an Image."
+  [x]
+  (instance? Image x))
+
+(defn image
+  "Returns an image from id."
+  [x]
+  (cond
+    (nil? x) nil
+    (uuid? (util/uuid x)) (get-entity {:_id x} :image)
+    :else
+    (image (:_id x))))
+
+;;
 ;; Posts
 ;;
 (declare get-topic)
@@ -413,6 +457,10 @@
   [criterion kind]
   (get-entity* create-topic criterion kind))
 
+(defmethod get-entity :image
+  [criterion kind]
+  (get-entity* create-image criterion kind))
+
 (defmulti get-entities identity)
 
 (defmethod get-entities :follow-ups
@@ -420,35 +468,35 @@
   (->> (repo/read-entities :post)
        (filter #(contains? #{:follow-up} (keyword (:kind %))))
        (map create-follow-up)
-       vec))
+       (into [])))
 
 (defmethod get-entities :pages
   [_]
   (->> (repo/read-entities :page)
        (map create-page)
        (sort-by :title)
-       vec))
+       (into [])))
 
 (defmethod get-entities :posts
   [_]
   (->> (repo/read-entities :post)
        (filter #(contains? #{:post} (keyword (:kind %))))
        (map create-post)
-       vec))
+       (into [])))
 
 (defmethod get-entities :tags
   [_]
   (->> (repo/read-entities :tag)
        (map create-tag)
        (sort-by :title)
-       vec))
+       (into [])))
 
 (defmethod get-entities :topics
   [_]
   (->> (repo/read-entities :topic)
        (map create-topic)
        (sort-by :title)
-       vec))
+       (into [])))
 
 (defmethod get-entities :updates
   [_]
@@ -456,7 +504,15 @@
        (map repo/create-update)
        (sort-by :date)
        reverse
-       vec))
+       (into [])))
+
+(defmethod get-entities :images
+  [_]
+  (->> (repo/read-entities :image )
+       (map repo/create-image)
+       (sort-by :date)
+       reverse
+       (into [])))
 
 ;; The Ministry of Information Retention
 (defprotocol AddEntity
@@ -501,6 +557,17 @@
                                                :follow-up))
                     (:tags entity))]
       (doseq [e (apply merge [entity parent] tags)] (repo/add-db-queue! e))
+      (commit-entities)))
+
+  furthermore.entities.Image
+  (add-entity
+    [entity]
+    (let [tags (map #(update (get-tag %)
+                             :refs conj
+                             (create-reference (:_id entity)
+                                               :image))
+                    (:tags entity))]
+      (doseq [e (apply merge [entity] tags)] (repo/add-db-queue! e))
       (commit-entities)))
 
   furthermore.entities.Page
