@@ -127,7 +127,7 @@ img {
 /* line 128, ../../assets/scss/screen.scss */
 .navbar-default .navbar-nav > li a {
   padding-bottom: 14px;
-  color: #955;
+  color: #556666;
 }
 /* line 133, ../../assets/scss/screen.scss */
 .navbar-default .navbar-nav > li a:hover {
@@ -661,4 +661,19 @@ img {
   text-align: right;
   font-size: 90%;
   color: #aaa;
+}
+
+/* line 760, ../../assets/scss/screen.scss */
+.content {
+  padding-top: 30px;
+}
+
+/* line 764, ../../assets/scss/screen.scss */
+.content > .post:first-child {
+  border: none;
+}
+
+/* line 768, ../../assets/scss/screen.scss */
+.content > .follow-up:first-child {
+  border: none;
 }
