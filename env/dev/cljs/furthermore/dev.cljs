@@ -1,7 +1,7 @@
 (ns ^:figwheel-no-load furthermore.app
-  (:require [devtools.core :as devtools]
-            [figwheel.client :as figwheel :include-macros true]
-            [furthermore.core :as core]))
+  (:require [furthermore.core :as core]
+            [devtools.core :as devtools]
+            [figwheel.client :as figwheel :include-macros true]))
 
 (enable-console-print!)
 

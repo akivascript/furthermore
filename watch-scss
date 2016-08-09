@@ -1,0 +1,2 @@
+#!/bin/zsh
+scss --watch resources/scss:resources/public/css

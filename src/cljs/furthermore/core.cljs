@@ -1,6 +1,7 @@
 (ns furthermore.core
   (:require [clojure.string :refer [split]]
             [ajax.core :as ajax]
+            [ajax.edn :as edn]
             [dommy.core :as dommy :refer-macros [sel sel1]]
             [goog.dom :as dom]
 
@@ -61,5 +62,8 @@
                          :method :delete
                          :handler (fn [[ok response]]
                                     (set! (-> js/window .-location .-href) "/admin"))
-                         :format (ajax/edn-request-format)
-                         :response-format (ajax/edn-request-format)})))))
+                         :format (edn/edn-request-format)
+                         :response-format (edn/edn-request-format)})))))
+
+(defn init!
+  [])

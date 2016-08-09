@@ -1,12 +1,11 @@
 (ns furthermore.env
   (:require [clojure.tools.logging :as log]
-            [furthermore.dev-middleware :refer [wrap-dev]]
-            [selmer.parser :as parser]))
+
+            [furthermore.dev-middleware :refer [wrap-dev]]))
 
 (def defaults
   {:init
    (fn []
-     (parser/cache-off!)
      (log/info "\n-=[furthermore started successfully using the development profile]=-"))
    :stop
    (fn []
