@@ -54,8 +54,10 @@
     (nil? x) nil
     (map? x) (follow x)))
 
-(def get (comp follow (partial db/entity :follow)))
-(def get-all (comp (partial map follow) (partial db/entities :follow)))
+(defn save
+  "Saves a follow-up (with links to its authors, tags, topic and parent)."
+  [x]
+  (db/save x))
 
 (defn parent
   [follow]
@@ -67,6 +69,9 @@
   (when (follow? follow)
     (topics/get :_id (get-in follow [:topic :_id]))))
 
-(defn- parent-url
+(defn parent-url
   [follow]
   (:url (parent follow)))
+
+(def get (comp follow (partial db/entity :follow)))
+(def get-all (comp (partial map follow) (partial db/entities :follow)))

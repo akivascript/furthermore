@@ -48,5 +48,10 @@
     :else
     (topic {:title x})))
 
+(defn save
+  "Saves a topic (with links with its authors and tags)."
+  [x]
+  (db/save x))
+
 (def get (comp topic (partial db/entity :topic)))
 (def get-all (comp (partial map topic) (partial db/entities :topic)))

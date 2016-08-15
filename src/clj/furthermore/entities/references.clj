@@ -54,6 +54,12 @@
   [x]
   (instance? Reference x))
 
+(defn link
+  "Given a source entity, adds a ref link to the target's :refs key
+  and returns target."
+  [source target]
+  (update target :refs conj (->ref source)))
+
 (defn delete
   "Removes a given reference from an entity."
   [entity ref]
