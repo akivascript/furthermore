@@ -24,6 +24,7 @@
               refs #{}
               tags #{}
               title "New Post"
+              topic parent
               tweet? false
               url (util/entity-url date title)}} params]
     (map->Post {:_id _id
