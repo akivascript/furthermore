@@ -105,10 +105,11 @@
 
 (defn ancestor
   [e]
-  (let [kind (:kind e)]
-    (case = :kind
-      :follow (entity :post :_id (get-in e [:parent :_id]))
-      :post (entity :topic :_id (get-in e [:topic :_id])))))
+  (let [kind (:kind e)
+        t (case kind
+            :follow (entity :post :_id (get-in e [:parent :_id]))
+            :post (entity :topic :_id (get-in e [:topic :_id])))]
+    (refs/link e t)))
 
 (defn authors
   [e]
@@ -118,9 +119,9 @@
 
 (defn tags
   [e]
-  (into #{} (map #(->> (entity :tag :_id (:_id %))
-                       (refs/link e))
-                 (:tags e))))
+  (map #(->> (entity :tag :_id (:_id %))
+             (refs/link e))
+       (:tags e)))
 
 (defn save
   [entity]
