@@ -23,3 +23,4 @@
 (defn rl-rf [] (require '[furthermore.entities.references :as refs :refer [->ref ->refs]] :reload))
 (defn rl-ta [] (require '[furthermore.entities.tags :as tags] :reload))
 (defn rl-tp [] (require '[furthermore.entities.topics :as topics] :reload))
+(defn rl-ut [] (require '[furthermore.util :as util] :reload))
