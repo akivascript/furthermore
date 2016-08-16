@@ -26,16 +26,17 @@
   (coerce/to-date joda-date))
 
 (defn keywordize
-  "Returns a map with a particular key's value as a
-  keyword where ks is a sequence of keys. Returns an
-  unaltered map if the key is not present."
-  [m & ks]
-  (let [ks (if (vector? (first ks)) (first ks) (vec ks))
-        k (get-in m ks)]
-    (if (or (nil? k)
-            (map? k))
-      m
-      (update-in m ks keyword))))
+  "Returns a map tranversed for specific keys and turning values into keywords."
+  [m]
+  (letfn [(kword [acc k] (assoc acc k (into [] (map #(update % :kind keyword) (k acc)))))]
+    (reduce (fn [acc k]
+              (case k
+                (:authors :refs :tags) (kword acc k)
+                (:parent :topic) (update-in acc [k :kind] keyword)
+                :kind (update acc k keyword)
+                acc))
+            m
+            (keys m))))
 
 (defn parent?
   "Returns true if x is the parent of y."

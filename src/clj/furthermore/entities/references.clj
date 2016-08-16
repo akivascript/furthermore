@@ -36,7 +36,7 @@
   (let [{:keys [_id kind]
          :or {_id (mutil/random-uuid)}} params]
     (map->Reference {:_id _id
-                     :kind kind})))
+                     :kind (keyword kind)})))
 
 (defn create
   "Returns a reference entity."
