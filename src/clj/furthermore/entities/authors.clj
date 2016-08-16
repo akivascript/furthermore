@@ -37,5 +37,10 @@
     (map? x) (author x)
     (string? x) (author {:name x})))
 
+(defn save
+  "Saves an author entity to the database."
+  [x]
+  (db/save x))
+
 (def get (comp author (partial db/entity :author)))
 (def get-all (comp (partial map author) (partial db/entities :author)))

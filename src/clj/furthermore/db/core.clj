@@ -10,6 +10,7 @@
             [furthermore.config :refer [env]]
             [furthermore.db.entities.updates :as updates]
             [furthermore.db.queue :as queue]
+            [furthermore.entities.references :as refs :refer [->ref ->refs]]
             [furthermore.twitter :as twitter]
             [furthermore.util :as util]))
 
@@ -88,7 +89,7 @@
   (mc/remove-by-id db (kinds (:kind entity)) (:_id entity))
   (mc/insert db "updates" (updates/create entity :delete)))
 
-(defn save
+(defn save*
   "Saves an entity to the database and returns the result."
   [entity]
   (let [log? (:log? entity)
@@ -101,6 +102,39 @@
     (let [result (mc/upsert db ((:kind entity) kinds) {:_id (:_id entity)} entity)]
       (when log? (log entity result))
       result)))
+
+(defn ancestor
+  [e]
+  (let [kind (:kind e)
+        t (case kind
+            :follow (entity :post :_id (get-in e [:parent :_id]))
+            :post (entity :topic :_id (get-in e [:topic :_id])))]
+    (refs/link e t)))
+
+(defn authors
+  [e]
+  (map #(->> (entity :author :_id (:_id %))
+             (refs/link e))
+       (:authors e)))
+
+(defn tags
+  [e]
+  (map #(->> (entity :tag :_id (:_id %))
+             (refs/link e))
+       (:tags e)))
+
+(defn save
+  [entity]
+  (let [kind (:kind entity)]
+    (case kind
+      (:author :tag) (save* entity)
+      (:image :topic) (do (doseq [a (authors entity)] (save a))
+                          (doseq [t (tags entity)] (save t))
+                          (save* entity))
+      (:post :follow) (do (doseq [a (authors entity)] (save a))
+                          (doseq [t (tags entity)] (save t))
+                          (save (ancestor entity))
+                          (save* entity)))))
 
 (defn search
   "Returns one or more entities from the database. criterion is

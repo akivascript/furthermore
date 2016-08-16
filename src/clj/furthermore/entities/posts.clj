@@ -24,6 +24,7 @@
               refs #{}
               tags #{}
               title "New Post"
+              topic parent
               tweet? false
               url (util/entity-url date title)}} params]
     (map->Post {:_id _id
@@ -57,8 +58,10 @@
     :else
     (post {:title x})))
 
-(def get (comp post (partial db/entity :post)))
-(def get-all (comp (partial map post) (partial db/entities :post)))
+(defn save
+  "Saves a post (with links with its parent/topic, authors, and tags)."
+  [x]
+  (db/save x))
 
 (defn parent
   [post]
@@ -72,3 +75,6 @@
   [post]
   (when (post? post)
     (topics/get :_id (get-in post [:topic :_id]))))
+
+(def get (comp post (partial db/entity :post)))
+(def get-all (comp (partial map post) (partial db/entities :post)))

@@ -21,7 +21,7 @@
       (str text "…"))))
 
 (defn joda-date->java-date
-  "Returns a java.util.Date from a Joda-Time."
+  "Returns a java.util.Date from a joda-date."
   [joda-date]
   (coerce/to-date joda-date))
 

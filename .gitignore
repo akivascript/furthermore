@@ -12,3 +12,4 @@ profiles.clj
 /content
 /.sass-cache
 js/
+screen.css

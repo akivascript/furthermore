@@ -67,5 +67,10 @@
     :else
     (tag {:title x})))
 
+(defn save
+  "Saves a tag to the the database."
+  [x]
+  (db/save x))
+
 (def get (comp tag (partial db/entity :tag)))
 (def get-all (comp (partial map tag) (partial db/entities :tag)))
