@@ -3,6 +3,7 @@
             [monger.util :as mutil]
 
             [furthermore.db.core :as db]
+            [furthermore.entities.common :as common]
             [furthermore.entities.references :as refs :refer [->refs]]
             [furthermore.util :as util]))
 
@@ -55,3 +56,15 @@
 
 (def get (comp topic (partial db/entity :topic)))
 (def get-all (comp (partial map topic) (partial db/entities :topic)))
+
+(defn refs-of
+  "Returns a lazy sequence of a topic's refs filtered by kind."
+  [kind topic]
+  (common/refs-of kind topic))
+
+(defn sorted-by
+  "Returns sequence of all topics sorted by sort-key."
+  ([sort-key]
+   (sorted-by sort-key (get-all)))
+  ([sort-key coll]
+   (common/sorted-by sort-key coll)))
