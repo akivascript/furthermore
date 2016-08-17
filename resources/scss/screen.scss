@@ -208,6 +208,11 @@ img {
             font-size: 16px;
         }
     }
+
+    .narrow {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
 }
 
 .page-footer {
@@ -217,6 +222,89 @@ img {
 
     font-size: 12pt;
     font-weight: 400;
+}
+
+.follows {
+    &:first-child {
+        .entry {
+            border: none;
+        }
+    }
+}
+
+.topic {
+    .title {
+        border-bottom: 1px solid #aaa;
+
+        font-size: 150%;
+
+        text-align: center;
+        text-transform: uppercase;
+
+        color: $gray-light; 
+    }
+
+    .body {
+        padding: 0px 0px 5px 1px; 
+
+        font-family: $body-font;
+        font-size: 1.1em;
+
+        line-height: 1.5em;
+
+        color: #555;
+
+        p {
+            padding-top: 10px;
+        }
+    }
+
+    .footer {
+        padding-bottom: 10px;
+
+        border-bottom: 1px solid #aaa;
+
+        font-size: 1em;
+
+        color: $gray-light;
+    }
+
+    .post {
+        margin-bottom: 0px;
+        padding: 5px 0px 5px 0px;
+
+        border-top: none;
+
+        .date {
+            padding: 2px 5px 0px 5px;
+
+            font-size: 90%;
+
+            text-align: right;
+
+            color: $gray;
+        }
+
+        .title {
+            padding-left: 5px;
+            border-bottom: 0px;
+
+            font-family: 'Lato';
+            font-size: 100%;
+
+            text-transform: none;
+
+            a {
+                color: $red-dark;
+
+                &:hover {
+                    color: black;
+                }
+            }
+
+            text-align: left;
+        }
+    }
 }
 
 // Buttons
@@ -263,6 +351,20 @@ img {
     margin-top: 4px;
 
     float: right;
+}
+
+// ---------------------------------------------------------------------------
+// Decoration
+.arrow {
+    width: 100%;
+
+    margin-bottom: 40px;
+
+    font-size: 400%;
+
+    text-align: center;
+
+    color: $green-faded;
 }
 
 // ---------------------------------------------------------------------------
@@ -364,17 +466,6 @@ img {
     background-color: #fcfcfc;
 }
 
-
-.arrow {
-    width: 100%;
-
-    font-size: 400%;
-
-    text-align: center;
-
-    color: $green-faded;
-    // color: #dbdbdb;
-}
 
 .panel {
     background-color: #f7f5ef;
@@ -673,12 +764,13 @@ img {
     }
 }
 
-#topics {
+.contents {
     .topic {
         margin-bottom: 15px;
 
         font-family: $page-title-font;
         font-size: 140%;
+    }
 
     .permalink {
         padding-left: 7px;
@@ -744,7 +836,6 @@ img {
 
             color: $gray-light;
         }
-    }
     }
 }
 
