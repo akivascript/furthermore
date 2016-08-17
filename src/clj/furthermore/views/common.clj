@@ -17,7 +17,8 @@
         {:keys [date time]} (util/timestamp (:created-on post))]
     [:div.footer
      [:div.row
-      [:div.col-xs-12.col-sm-6 (vutil/continue post)]
+      [:div.col-xs-12.col-sm-6
+       (when-not (= page :post) (vutil/continue post))]
       [:div.col-sx-12.col-sm-6
        [:div.small.text-right.date
         "Filed under "
@@ -49,6 +50,20 @@
 
 (defmulti entry (fn [_ entry] (:kind entry)))
 
+(defmethod entry :follow
+  [page follow]
+  (if (= page :post)
+    [:div.row
+     [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
+      [:div.entry.follow.narrow
+       (vutil/text follow)
+       (footer page follow)]]]
+    [:div.row
+     [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
+      [:div.entry.follow
+       (vutil/text follow)]
+      (footer page follow)]]))
+
 (defmethod entry :post
   [page post]
   (let [topic (posts/topic post)]
@@ -59,12 +74,9 @@
          (link-to (str "/" (util/url-path topic) (:url topic))
                   (typo/smarten (:title topic)))])
       [:div.entry.post
-       (html (for [p (vutil/content post)] p))]
+       (if (= page :post)
+         (for [p [(vutil/title post)
+                  (vutil/subtitle post)
+                  (html [:div.body (:body post)])]] p)
+         (for [p (vutil/content post)] p))]
       (footer page post)]]))
-
-(defmethod entry :follow
-  [page follow]
-    [:div.row
-     [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
-      [:div.entry.follow (vutil/text follow)]
-      (footer page follow)]])

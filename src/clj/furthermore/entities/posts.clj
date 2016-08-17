@@ -3,6 +3,7 @@
             [monger.util :as mutil]
 
             [furthermore.db.core :as db]
+            [furthermore.entities.common :as common]
             [furthermore.entities.references :as refs :refer [->ref ->refs]]
             [furthermore.entities.topics :as topics]
             [furthermore.util :as util]))
@@ -78,3 +79,21 @@
 
 (def get (comp post (partial db/entity :post)))
 (def get-all (comp (partial map post) (partial db/entities :post)))
+
+(defn refs-of
+  "Returns a lazy sequence of a post's refs filtered by kind."
+  [kind post]
+  (common/refs-of kind post))
+
+(defn sorted-by
+  "Returns sequence of all posts sorted by sort-key."
+  ([sort-key]
+   (sorted-by sort-key (get-all)))
+  ([sort-key coll]
+   (common/sorted-by sort-key coll)))
+
+(defn filtered-by
+  "Returns a lazy sequence of posts filtered on k by sequence s of
+  appropriate values."
+  [k s]
+  (map (partial get k) s))

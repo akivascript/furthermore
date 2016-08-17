@@ -32,17 +32,17 @@
    :topic "topics"
    :update "updates"})
 
-(declare log parse tweet)
+(declare log tweet)
 
 (defn entities
   "Returns entities from the database."
   ([kind]
-   (map parse (mc/find-maps db (kind kinds))))
+   (map util/keywordize (mc/find-maps db (kind kinds))))
   ([kind criteria limit-by]
-   (mq/with-collection db (kind kinds)
-     (mq/find {})
-     (mq/sort criteria)
-     (mq/limit limit-by))))
+   (map util/keywordize (mq/with-collection db (kind kinds)
+                          (mq/find {})
+                          (mq/sort criteria)
+                          (mq/limit limit-by)))))
 
 (defn entity
   "Returns a single entity from the database. criterion is expected
@@ -54,7 +54,7 @@
                                                         $options "i"}})
                   (mc/find-one-as-map db (kind kinds) criterion))]
      (when-not (nil? entity)
-       (parse entity))))
+       (util/keywordize entity))))
   ([kind k v]
    (entity kind {k v})))
 
@@ -67,21 +67,6 @@
                    (= :update action))
       (let [entry (updates/create entity action)]
         (mc/insert db "updates" (update entry :date util/joda-date->java-date))))))
-
-(defn parse
-  "Keywordizes values in an entity."
-  [entity]
-  (let [entity (-> entity
-                   (util/keywordize :kind)
-                   (util/keywordize :parent :kind)
-                   (util/keywordize :topic :kind))
-        refs (:refs entity)]
-    (if (and (map? refs)
-             (seq refs))
-      (reduce (fn [m ref] (update-in m [:refs (.indexOf refs ref) :kind] keyword))
-              entity
-              refs)
-      entity)))
 
 (defn delete
   "Deletes an entity from the database."
@@ -144,7 +129,7 @@
                                {(first (keys criterion))
                                 {$regex (first (vals criterion)) $options "i"}})]
     (when-not (nil? entities)
-      (map parse entities))))
+      (map util/keywordize entities))))
 
 (defn tweet
   [entity]
