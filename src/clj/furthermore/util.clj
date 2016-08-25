@@ -8,7 +8,7 @@
 
 (def site-url "http://localhost:3000")
 
-(declare url-name uuid)
+(declare url-name uuid uuid?)
 
 (defn excerpt
   "Returns an excerpt of a given text with an ellipses added."
@@ -99,3 +99,10 @@
      (try
        (. java.util.UUID fromString s)
        (catch IllegalArgumentException e nil)))))
+
+(defn uuid?
+  "Return true if x is a java.util.UUID.
+
+  (Backported from 1.9.0 until prone is fixed)"
+  [x]
+  (instance? java.util.UUID x))
