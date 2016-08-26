@@ -11,10 +11,6 @@
             [furthermore.views.util :as vutil]
             [furthermore.util :as util]))
 
-(def build (comp (partial common/entry :post)
-                 (partial vutil/prepare-text md-to-html-string)
-                 (partial vutil/prepare-text smarten)))
-
 (defn drop-down
   [entity]
   (let [refcount (count (:refs entity))]

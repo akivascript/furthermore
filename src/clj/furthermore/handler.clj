@@ -8,6 +8,7 @@
             [furthermore.routes.contents :as contents]
             [furthermore.routes.home :as home]
             [furthermore.routes.post :as post]
+            [furthermore.routes.tags :as tags]
             [furthermore.views.error :as error]))
 
 (mount/defstate init-app
@@ -22,9 +23,10 @@
 
 (def app-routes
   (routes
+   (wrap-route #'contents/routes)
    (wrap-route #'home/routes)
    (wrap-route #'post/routes)
-   (wrap-route #'contents/routes)
+   (wrap-route #'tags/routes)
    (route/not-found
     (:body
      (error/render {:status 404
