@@ -38,26 +38,26 @@
 
     content
 
-    [:div {:class "page-footer"}
-     [:div {:class "row"}
-      [:div {:class "hidden-xs col-sm-6 text-left small"}
+    [:div.page-footer
+     [:div.row
+      [:div.hidden-xs.col-sm-6.text-left.small
        "RSS feed coming soon!"[:br]
        "Only slightly more colorful!"[:br]
        "Toast goes in the toaster!"]
-      [:div {:class "hidden-xs col-sm-6 text-right small"}
+      [:div.hidden-xs.col-sm-6.text-right.small
        "&copy; 2015-2016 Whatever, Akiva"[:br]
        "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"]
-       [:span {:class "small"} " (v0.7.0&beta;)"]
+       [:span.small " (v0.7.0&beta;)"]
        [:br]
        "Clojure and ClojureScript are a-okay!"]
-      [:div {:class "visible-xs-block hidden-sm hidden-lg text-center small"
-             :style "padding-top: 10px;"}
+      [:div.visible-xs-block.hidden-sm.hidden-lg.text-center.small
+       :style "padding-top: 10px;"
        "&copy; 2015-2016 Whatever, Akiva"[:br]
        "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"]
-       [:span {:class "small"} " (v0.7.0&beta;)"]
+       [:span.small " (v0.7.0&beta;)"]
        [:br]
        "Clojure and ClojureScript are a-okay!"]
-      [:div {:class "visible-xs-block hidden-sm hidden-lg text-center small"}
+      [:div.visible-xs-block.hidden-sm.hidden-lg.text-center.small
        "RSS feed coming soon!"[:br]
        "Only slightly more colorful!"[:br]
        "Toast goes in the toaster!"]]]]))
