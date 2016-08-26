@@ -76,7 +76,7 @@ img {
 
 
 // ---------------------------------------------------------------------------
-// IDs
+// GENERAL LAYOUT
 // ---------------------------------------------------------------------------
 #banner {
     min-height: 300px;
@@ -89,169 +89,9 @@ img {
     padding: 0px;
     box-shadow: none;
 }
-// ===========================================================================
 
-
-// ---------------------------------------------------------------------------
-// PAGES
-// ---------------------------------------------------------------------------
-#home {
-    
-}
-
-#contents {
-    .follows {
-        display: inline-block;
-
-        margin-left: 15px;
-
-        &:first-child {
-            .entry {
-                border: none;
-            }
-        }
-
-        .follow {
-            padding-right: 10px;
-
-            p {
-                display: inline;
-            }
-
-            .title {
-                font-size: 75%;
-            }
-        }
-    }
-}
-// ===========================================================================
-
-
-
-// ---------------------------------------------------------------------------
-// CLASSES
-// ---------------------------------------------------------------------------
 .page-header {
     margin-top: 65px;
-}
-
-
-.row {
-    margin-bottom: 25px;
-
-    &:first-child {
-        .entry {
-            border: none;
-        }
-    }
-
-    .entry {
-        border-top: 1px solid $gray-lighter;
-        margin-bottom: 50px;
-    }
-
-    .post-topic {
-        margin-top: 20px;
-
-        border-bottom: 1px solid $gray-lighter;
-
-        font-size: 80%;
-
-        text-align: center;
-        text-transform: uppercase;
-
-        color: $gray-light;
-
-        a {
-            color: $gray-light;
-
-            &:hover {
-                color: $blue-faded;
-            }
-        }
-    }
-
-    .post {
-        padding-bottom: 10px;
-
-        .body {
-            padding: 10px 0px 5px 1px; 
-
-            font-family: $body-font;
-            font-size: 18px;
-            font-weight: 300;
-
-            line-height: 1.5em;
-
-            color: #333;
-
-            p {
-                padding-top: 10px;
-            }
-        }
-
-        .title {
-            font-family: 'Lato';
-            font-size: 250%;
-            font-weight: 300;
-
-            color: $blue;
-
-            a {
-                &:hover {
-                    color: $red-dark;
-                }
-            }
-        }
-
-        .subtitle {
-            margin-top: -5px;
-
-            font-family: $header-font;
-            font-size: 19px;
-            font-style: italic;
-            font-weight: 300;
-
-            color: $gray-dark;
-        }
-
-        .footer {
-            padding-top: 10px;
-
-            font-family: $body-font;
-
-            color: $gray-light;
-
-            .topic {
-                font-weight: bold;
-            }
-
-            .whatever-twitter {
-                opacity: 0.5;
-            }
-
-            clear: both;
-        }
-    }
-
-    .follow {
-        @extend .post;
-
-        border-top: 1px solid $gray-lighter;
-
-        margin-bottom: 50px;
-
-        .body {
-            padding: 0px 0px 5px 1px;
-
-            font-size: 16px;
-        }
-    }
-
-    .narrow {
-        margin-left: 20px;
-        margin-right: 20px;
-    }
 }
 
 .page-footer {
@@ -261,141 +101,6 @@ img {
 
     font-size: 12pt;
     font-weight: 400;
-}
-
-.topic {
-    .title {
-        border-bottom: 1px solid #aaa;
-
-        font-size: 150%;
-
-        text-align: center;
-        text-transform: uppercase;
-
-        color: $gray-light; 
-    }
-
-    .body {
-        padding: 0px 0px 5px 1px; 
-
-        font-family: $body-font;
-        font-size: 1.1em;
-
-        line-height: 1.5em;
-
-        color: #555;
-
-        p {
-            padding-top: 10px;
-        }
-    }
-
-    .footer {
-        padding-bottom: 10px;
-
-        border-bottom: 1px solid #aaa;
-
-        font-size: 1em;
-
-        color: $gray-light;
-    }
-
-    .post {
-        margin-bottom: 0px;
-        padding: 5px 0px 5px 0px;
-
-        border-top: none;
-
-        .date {
-            padding: 2px 5px 0px 5px;
-
-            font-size: 90%;
-
-            text-align: right;
-
-            color: $gray;
-        }
-
-        .title {
-            padding-left: 5px;
-            border-bottom: 0px;
-
-            font-family: 'Lato';
-            font-size: 100%;
-
-            text-transform: none;
-
-            a {
-                color: $red-dark;
-
-                &:hover {
-                    color: black;
-                }
-            }
-
-            text-align: left;
-        }
-    }
-}
-
-// Buttons
-.btn-delete {
-    background-color: #bfa1A1;
-
-    color: $gray-dark;
-
-    &:hover {
-        background-color: #795454;
-
-        color: #000;
-    }
-}
-
-.btn-tag {
-    @include borders (5px);
-
-    padding: 2px 6px;
-
-    border-color: #8798a7;
-
-    background-color: #8798a7;
-
-    font-size: 80%;
-
-    a:hover {
-        background-color: #6f7d8a;
-        border-color: #6f7d8a;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Images
-.img-left {
-    margin-right: 10px;
-    margin-top: 4px;
-
-    float: left;
-}
-
-.img-right {
-    margin-left: 10px;
-    margin-top: 4px;
-
-    float: right;
-}
-
-// ---------------------------------------------------------------------------
-// Decoration
-.arrow {
-    width: 100%;
-
-    margin-bottom: 40px;
-
-    font-size: 400%;
-
-    text-align: center;
-
-    color: $green-faded;
 }
 
 // ---------------------------------------------------------------------------
@@ -469,6 +174,333 @@ img {
 
 .navbar-nav {
     float: right;
+}
+// ===========================================================================
+
+
+// ---------------------------------------------------------------------------
+// PAGES
+// ---------------------------------------------------------------------------
+#contents {
+    .follows {
+        display: inline-block;
+
+        margin-left: 15px;
+
+        &:first-child {
+            .entry {
+                border: none;
+            }
+        }
+
+        .follow {
+            padding-right: 10px;
+
+            p {
+                display: inline;
+            }
+
+            .title {
+                font-size: 75%;
+            }
+        }
+    }
+
+    .topic {
+        a {
+            color: $green;
+
+            &:hover {
+                color: #000;
+            }
+        }
+
+        .title {
+            a {
+                color: $link-color;
+            }
+        }
+    }
+}
+// ===========================================================================
+
+
+// ---------------------------------------------------------------------------
+// Entries
+// ---------------------------------------------------------------------------
+
+.entry {
+    border-top: 1px solid $gray-lighter;
+    margin-bottom: 50px;
+}
+
+.post {
+    .topic {
+        padding-top: 10px;
+
+        border-bottom: 1px solid $gray-lighter;
+
+        font-size: 80%;
+
+        text-align: center;
+        text-transform: uppercase;
+
+        color: $gray-light;
+
+        a {
+            color: $gray-light;
+
+            &:hover {
+                color: $blue-faded;
+            }
+        }
+    }
+
+    .title {
+        font-family: 'Lato';
+        font-size: 250%;
+        font-weight: 300;
+
+        color: $blue;
+
+        a {
+            &:hover {
+                color: $red-dark;
+            }
+        }
+    }
+
+    .subtitle {
+        margin-top: -5px;
+
+        font-family: $header-font;
+        font-size: 19px;
+        font-style: italic;
+        font-weight: 300;
+
+        color: $gray-dark;
+    }
+
+    .body {
+        padding: 10px 0px 5px 1px; 
+
+        font-family: $body-font;
+        font-size: 18px;
+        font-weight: 300;
+
+        line-height: 1.5em;
+
+        color: #333;
+
+        p {
+            padding-top: 10px;
+        }
+    }
+
+    .footer {
+        padding-top: 10px;
+
+        font-family: $body-font;
+
+        color: $gray-light;
+
+        .topic {
+            font-weight: bold;
+
+            a {
+                color: $link-color;
+            }
+        }
+
+        .whatever-twitter {
+            opacity: 0.5;
+        }
+
+        clear: both;
+    }
+}
+
+.follow {
+    @extend .post;
+
+    border-top: 1px solid $gray-lighter;
+
+    margin-bottom: 50px;
+
+    .body {
+        padding: 0px 0px 5px 1px;
+
+        font-size: 16px;
+    }
+}
+
+.footer {
+    .tags {
+        color: $gray-lighter;
+    }
+}
+
+.row {
+    margin-bottom: 25px;
+
+    &:first-child {
+        .entry {
+            border: none;
+        }
+    }
+
+    .narrow {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+}
+
+.topic {
+
+    .posts {
+        margin-top: -3px;
+
+        border-top: 1px dotted $gray-light;
+
+        .follow {
+            margin-top: -5px;
+
+            padding-top: 0px;
+        }
+
+        .post {
+            padding-bottom: 0px;
+        }
+
+        .title {
+            border-bottom: 0px;
+
+            font-family: 'Lato';
+            font-size: 100%;
+
+            text-transform: none;
+
+            text-align: left;
+            display: inline-block;
+
+            padding-right: 10px;
+            padding-left: 0px;
+
+            a {
+                padding-left: 1px;
+
+                color: $link-color;
+
+                &:hover {
+                    color: #000;
+                }
+            }
+        }
+    }
+}
+
+.topic {
+    .body {
+        padding: 0px 0px 5px 1px; 
+
+        font-family: $body-font;
+        font-size: 1.1em;
+
+        line-height: 1.5em;
+
+        color: #555;
+
+        p {
+            padding-top: 10px;
+        }
+    }
+
+    .footer {
+        padding-bottom: 10px;
+
+        border-bottom: 1px solid #aaa;
+
+        font-size: 1em;
+
+        color: $gray-light;
+    }
+
+    .post {
+        margin-bottom: 0px;
+        padding: 5px 0px 5px 0px;
+
+        border-top: none;
+
+        .date {
+            padding: 2px 5px 0px 5px;
+
+            font-size: 90%;
+
+            text-align: right;
+
+            color: $gray;
+        }
+    }
+}
+
+// Buttons
+.btn-delete {
+    background-color: #bfa1A1;
+
+    color: $gray-dark;
+
+    &:hover {
+        background-color: #795454;
+
+        color: #000;
+    }
+}
+
+.btn-tag {
+    @include borders (5px);
+
+    padding: 2px 6px;
+
+    border-color: #8798a7;
+
+    background-color: #8798a7;
+
+    font-size: 80%;
+
+    a:hover {
+        background-color: #6f7d8a;
+        border-color: #6f7d8a;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Images
+.img-left {
+    margin-right: 10px;
+    margin-top: 4px;
+
+    float: left;
+}
+
+.img-right {
+    margin-left: 10px;
+    margin-top: 4px;
+
+    float: right;
+}
+
+// ---------------------------------------------------------------------------
+// Decoration
+.arrow {
+    width: 100%;
+
+    margin-bottom: 40px;
+
+    font-size: 400%;
+
+    text-align: center;
+
+    color: $green-faded;
 }
 
 // ---------------------------------------------------------------------------
@@ -819,30 +851,11 @@ img {
         }
     }
 
-    .posts {
-        border-top: 1px dotted $gray-light;
-
-        margin-top: -3px;
-        padding-top: 5px;
-    }
-
     .post {
         margin-top: -2.5px;
         margin-bottom: 0px;
 
         border-top: 0px;
-
-        .title {
-            display: inline-block;
-
-            padding-right: 10px;
-
-            font-size: 100%;
-
-            a {
-                padding-left: 1px;
-            }
-        }
 
         .follow {
             display: inline-block;
