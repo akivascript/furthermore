@@ -70,9 +70,10 @@
     [:div.row
      [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       (when (= page :post)
-        [:div.post-topic
-         (link-to (str "/" (util/url-path topic) (:url topic))
-                  (typo/smarten (:title topic)))])
+        [:div.post
+         [:div.topic
+          (link-to (str "/" (util/url-path topic) (:url topic))
+                   (typo/smarten (:title topic)))]])
       [:div.entry.post
        (if (= page :post)
          (for [p [(vutil/title post)

@@ -29,6 +29,6 @@
 
 (defn content
   []
-  [:div.container
+  [:div#home.container
    [:div#banner.page-header
     (html (for [e (entries)] e))]])
