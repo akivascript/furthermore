@@ -93,6 +93,96 @@ img {
 
 
 // ---------------------------------------------------------------------------
+// GENERAL LAYOUT
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Navigation
+.nav {
+    font-weight: 700;
+}
+
+.navbar {
+    margin-bottom: 0px;
+    border-bottom: 1px solid #eee;
+
+    text-transform: uppercase;
+}
+
+.navbar-default {
+    background-color: #fff;
+
+    .navbar-header {
+        font-family: $site-title-font;
+
+        .navbar-brand {
+            padding-right: 21px;
+            padding-bottom: 35px;
+
+            font-weight: 900;
+
+            line-height: 26px;
+
+            color: #000;
+
+            &:hover {
+                background-image: url('/img/background-tan.png');
+                background-color: $green-faded;
+
+                color: #fff;
+            }
+        }
+
+        .navbar-toggle {
+            margin: inherit;
+            margin-right: 0px;
+
+            padding: 11px 13px 7px 15px;
+
+            font-size: 14pt;
+
+            &:hover {
+                background-image: url('/img/background-tan.png');
+                background-color: $green-faded;
+
+                color: #fff;
+            }
+        }
+    }
+
+    .navbar-nav > li {
+        a {
+            padding-top: 13px;
+            padding-bottom: 13px;
+
+            color: $green-dark;
+
+            &:hover {
+                background-color: $green-faded;
+                background-image: url('/img/background-tan.png');
+            }
+        }
+    }
+}
+
+.navbar-nav {
+    float: right;
+}
+
+// ---------------------------------------------------------------------------
+// Page Footer
+.page-footer {
+    padding: 15px;
+
+    border-top: 1px solid $gray-lighter;
+
+    font-size: 12pt;
+    font-weight: 400;
+}
+// ===========================================================================
+
+
+// ---------------------------------------------------------------------------
 // PAGES
 // ---------------------------------------------------------------------------
 #home {
@@ -254,15 +344,6 @@ img {
     }
 }
 
-.page-footer {
-    padding: 15px;
-
-    border-top: 1px solid $gray-lighter;
-
-    font-size: 12pt;
-    font-weight: 400;
-}
-
 .topic {
     .title {
         border-bottom: 1px solid #aaa;
@@ -396,79 +477,6 @@ img {
     text-align: center;
 
     color: $green-faded;
-}
-
-// ---------------------------------------------------------------------------
-// Navigation
-.nav {
-    font-weight: 700;
-}
-
-.navbar {
-    margin-bottom: 0px;
-    border-bottom: 1px solid #eee;
-
-    text-transform: uppercase;
-}
-
-.navbar-default {
-    background-color: #fff;
-
-    .navbar-header {
-        font-family: $site-title-font;
-
-        .navbar-brand {
-            padding-right: 21px;
-            padding-bottom: 35px;
-
-            font-weight: 900;
-
-            line-height: 26px;
-
-            color: #000;
-
-            &:hover {
-                background-image: url('/img/background-tan.png');
-                background-color: $green-faded;
-
-                color: #fff;
-            }
-        }
-
-        .navbar-toggle {
-            margin: inherit;
-            margin-right: 0px;
-
-            padding: 11px 13px 7px 15px;
-
-            font-size: 14pt;
-
-            &:hover {
-                background-image: url('/img/background-tan.png');
-                background-color: $green-faded;
-
-                color: #fff;
-            }
-        }
-    }
-
-    .navbar-nav > li {
-        a {
-            padding-top: 13px;
-            padding-bottom: 13px;
-
-            color: $green-dark;
-
-            &:hover {
-                background-color: $green-faded;
-                background-image: url('/img/background-tan.png');
-            }
-        }
-    }
-}
-
-.navbar-nav {
-    float: right;
 }
 
 // ---------------------------------------------------------------------------
