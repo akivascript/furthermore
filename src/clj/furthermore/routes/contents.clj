@@ -9,4 +9,4 @@
   (layout/render :contents (contents/content)))
 
 (defroutes routes
-  (get "/contents" [] (build)))
+  (GET "/contents" [] (build)))

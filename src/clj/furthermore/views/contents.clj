@@ -15,51 +15,68 @@
                  (partial vutil/prepare-text md-to-html-string)
                  (partial vutil/prepare-text smarten)))
 
-(defn- follow-ups
-  [post]
-  (filter #(= (:kind %) :follow) (:refs post)))
-
-(defn- selector
-  [post]
-  (let [fcount (count (follow-ups post))]
-    (if (pos? fcount)
+(defn drop-down
+  [entity]
+  (let [refcount (count (:refs entity))]
+    (if (pos? refcount)
       (html
-       [:span {:id (:_id post)
+       [:span {:id (:_id entity)
                :class "glyphicon glyphicon-triangle-right small outline-widget"
                :ariaHidden "true"}])
       (html
-       [:span {:id (:_id post)
+       [:span {:id (:_id entity)
                :class "glyphicon glyphicon-triangle-right small outline-widget"
                :style "visibility: hidden"
                :ariaHidden "true"}]))))
 
-(defn post
-  [post]
-  [:div.post
-   (let [url (str "/post/" (:url post))
-         {:keys [date time] (util/timestamp (:created-on post))}]
-     [:div.title
-      ()]
-     )])
+(defmulti title :kind)
 
-(defn topic-title
+(defmethod title :post
+  [post]
+   (let [url (str "/post/" (:url post))
+         {:keys [date]} (util/timestamp (:created-on post))]
+     [:div.post 
+      [:div.title
+       (drop-down post)
+       (link-to (str (util/url-path post) (:url post)) (:title post))]
+      [:div.date.small date]]))
+
+(defmethod title :topic
   [topic]
-  [:span (:title topic)]
-  [:span.permalink (link-to (str (util/url-path topic) (:url topic)))])
+  [:span (link-to (str (util/url-path topic) (:url topic)) (:title topic))])
+
+(defmethod title :follow
+  [follow]
+  (let [parent (posts/get :_id (get-in follow [:parent :_id]))
+        {:keys [date time]} (util/timestamp (:created-on follow))
+        url (str (util/url-path parent)
+                 (:url parent) (:url follow))]
+    [:div.follow {:id (subs (:_id follow) 0 6)}
+     [:div.title
+      (drop-down follow)
+      [:p (link-to url (util/excerpt (:body follow) 50))]]
+     [:div.date.small (str date " @ " time)]]))
 
 (defn content
   []
-  [:div.container
+  [:div#contents.container
    [:div#banner.page-header
     [:div.row.contents
      [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       (for [topic (topics/sorted-by :title)]
         [:div.topic
-         (topic-title topic)
+         (title topic)
          (when-let [post-ids (map :_id (topics/refs-of :post topic))]
            [:div.posts
-            (for [post (-> post-ids
-                           (partial posts/filtered-by :_id)
-                           (partial posts/sorted-by :title))]
+            (for [post (->> post-ids
+                            (posts/filtered-by :_id)
+                            (posts/sorted-by :title))]
+              (html
+               (title post)
+               (when-let [follow-ids (map :_id (posts/refs-of :follow post))]
+                 [:div.follows {:style "display: none;"}
+                  (for [follow-up (->> follow-ids
+                                       (follows/filtered-by :_id)
+                                       (follows/sorted-by :created-on))]
+                    (title follow-up))])))])])]]]])
 
-              )])])]]]])

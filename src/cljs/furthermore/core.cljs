@@ -15,12 +15,13 @@
 (defn ^:export initialize-contents
   []
   (doseq [entry (sel :.glyphicon)]
-    (let [target (dom/getNextElementSibling (dommy/parent (dommy/parent entry)))]
+    (let [target (-> entry dommy/parent dommy/parent
+                     dom/getNextElementSibling)]
       (dommy/listen! entry :click
                      (fn [_]
                        (dommy/toggle-class! entry "glyphicon-triangle-right")
                        (dommy/toggle-class! entry "glyphicon-triangle-bottom")
-                       (dommy/toggle! target))))))
+                       (when-not (nil? target) (dommy/toggle! target)))))))
 
 ;;
 ;; Updates page
@@ -65,5 +66,5 @@
                          :format (edn/edn-request-format)
                          :response-format (edn/edn-request-format)})))))
 
-(defn init!
-  [])
+(defn mount-components [] "Done")
+(defn init! [])

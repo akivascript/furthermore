@@ -93,7 +93,7 @@
    (common/sorted-by sort-key coll)))
 
 (defn filtered-by
-  "Returns a lazy sequence of posts filtered on k by sequence s of
+  "Returns a lazy sequence of entries filtered on k by sequence s of
   appropriate values."
   [k s]
   (map (partial get k) s))
