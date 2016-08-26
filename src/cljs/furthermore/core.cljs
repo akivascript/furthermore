@@ -1,6 +1,7 @@
 (ns furthermore.core
   (:require [clojure.string :refer [split]]
             [ajax.core :as ajax]
+            [ajax.edn :as edn]
             [dommy.core :as dommy :refer-macros [sel sel1]]
             [goog.dom :as dom]
 
@@ -14,12 +15,13 @@
 (defn ^:export initialize-contents
   []
   (doseq [entry (sel :.glyphicon)]
-    (let [target (dom/getNextElementSibling (dommy/parent (dommy/parent entry)))]
+    (let [target (-> entry dommy/parent dommy/parent
+                     dom/getNextElementSibling)]
       (dommy/listen! entry :click
                      (fn [_]
                        (dommy/toggle-class! entry "glyphicon-triangle-right")
                        (dommy/toggle-class! entry "glyphicon-triangle-bottom")
-                       (dommy/toggle! target))))))
+                       (when-not (nil? target) (dommy/toggle! target)))))))
 
 ;;
 ;; Updates page
@@ -61,5 +63,8 @@
                          :method :delete
                          :handler (fn [[ok response]]
                                     (set! (-> js/window .-location .-href) "/admin"))
-                         :format (ajax/edn-request-format)
-                         :response-format (ajax/edn-request-format)})))))
+                         :format (edn/edn-request-format)
+                         :response-format (edn/edn-request-format)})))))
+
+(defn mount-components [] "Done")
+(defn init! [])
