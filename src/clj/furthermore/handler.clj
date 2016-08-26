@@ -5,6 +5,7 @@
 
             [furthermore.env :refer [defaults]]
             [furthermore.middleware :as middleware]
+            [furthermore.routes.contents :as contents]
             [furthermore.routes.home :as home]
             [furthermore.routes.post :as post]
             [furthermore.views.error :as error]))
@@ -23,6 +24,7 @@
   (routes
    (wrap-route #'home/routes)
    (wrap-route #'post/routes)
+   (wrap-route #'contents/routes)
    (route/not-found
     (:body
      (error/render {:status 404
