@@ -222,6 +222,87 @@ img {
         }
     }
 }
+
+#tags {
+    .row {
+        margin-bottom: 0px;
+    }
+
+    .posts {
+        padding: 5px 0px 5px 0px;
+
+        border-top: 1px solid #ccc;
+    }
+
+    .date {
+        padding-top: 5px;
+        padding-left: 0px;
+
+        color: $gray;
+    }
+
+    .post {
+        display: flex;
+
+        margin-bottom: 0px;
+
+        padding-top: 5px;
+
+        .title {
+            font-family: 'Lato';
+            font-size: 100%;
+            font-variant: normal;
+
+        }
+    }
+
+    .topic {
+        padding-right: 10px;
+
+        border: none;
+
+        color: $gray-light;
+    }
+
+    .tags {
+        padding: 10px 0 10px 0;
+
+        border-top: 1px dotted #aaa;
+
+        text-align: center;
+
+        a {
+            color: $gray;
+
+            &:hover {
+                color: #000;
+            }
+        }
+
+        .active {
+            color: $link-color;
+
+            &:hover {
+                text-decoration: none;
+
+                color: $blue-faded;
+
+                cursor: pointer;
+            }
+        }
+
+        .inactive {
+            color: $gray;
+        }
+    }
+
+    .title {
+        font-family: 'Cinzel';
+        font-size: 21px;
+
+        text-align: center;
+    }
+}
 // ===========================================================================
 
 
@@ -618,105 +699,6 @@ img {
     margin: 63px 0px 19px 0px;
     padding-top: 9.5px;
     padding-bottom: 9.5px;
-}
-
-#tags {
-    .posts {
-        padding: 5px 0px 5px 0px;
-        border-top: 1px solid #ccc;
-    }
-
-    .post {
-        display: flex;
-        margin-bottom: 0px;
-        padding-top: 5px;
-
-        border-top: none;
-
-        a:hover {
-            color: #000;
-        }
-
-        .date {
-            padding: 2px 5px 0px 5px;
-
-            font-size: 90%;
-
-            text-align: right;
-
-            color: $gray;
-        }
-
-        .title {
-            font-family: 'Lato';
-            font-size: 100%;
-            font-variant: normal;
-
-            color: #000;
-
-            a {
-                color: $green;
-                //color: #008cba;
-
-                &:hover {
-                    color: #000;
-                }
-            }
-
-            p {
-                margin: 0px;
-            }
-
-            text-align: left;
-        }
-
-        .topic {
-            padding: 2px 0px 0px 5px;
-
-            font-size: 90%;
-
-            color: $gray-light;
-        }
-    }
-
-    .tags {
-        padding: 10px 0 10px 0;
-
-        border-top: 1px dotted #aaa;
-
-        text-align: center;
-
-        a {
-            color: $gray;
-
-            &:hover {
-                color: #000;
-            }
-        }
-
-        .active {
-            color: $link-color;
-
-            &:hover {
-                text-decoration: none;
-
-                color: $blue-faded;
-
-                cursor: pointer;
-            }
-        }
-
-        .inactive {
-            color: $gray;
-        }
-    }
-
-    .title {
-        font-family: 'Cinzel';
-        font-size: 21px;
-
-        text-align: center;
-    }
 }
 
 #static {

@@ -5,6 +5,7 @@
             [monger.util :as mutil]
 
             [furthermore.db.core :as db]
+            [furthermore.entities.common :as common]
             [furthermore.entities.references :as refs :refer [->refs]]
             [furthermore.util :as util]))
 
@@ -74,3 +75,8 @@
 
 (def get (comp tag (partial db/entity :tag)))
 (def get-all (comp (partial map tag) (partial db/entities :tag)))
+
+(defn refs-of
+  "Returns a lazy sequence of a tag's refs filtered by kind."
+  [kind tag]
+  (common/refs-of kind tag))
