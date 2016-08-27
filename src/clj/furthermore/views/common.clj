@@ -21,11 +21,13 @@
        (when-not (= page :post) (vutil/continue post))]
       [:div.col-sx-12.col-sm-6
        [:div.small.text-right.date
-        "Filed under "
-        [:span.topic
-         (link-to (str (util/url-path topic) (:url topic))
-                  (typo/smarten (:title topic)))]
-        [:br]
+        (when-not (= page :post)
+          (html
+           "Filed under "
+           [:span.topic
+            (link-to (str (util/url-path topic) (:url topic))
+                     (typo/smarten (:title topic)))]
+           [:br]))
         (str date " @ " time)
         (vutil/tags post)
         (vutil/twitter post)]]]]))
@@ -39,11 +41,13 @@
       [:div.col-xs-12.col-sm-6 (vutil/continue follow)]
       [:div.col-sx-12.col-sm-6
        [:div.small.text-right.date
-        "A follow-up to "
-        [:span.parent
-         (link-to (str (util/url-path parent) (:url parent))
-                  (typo/smarten (:title parent)))]
-        [:br]
+        (when-not (= page :post)
+          (html
+           "A follow-up to "
+           [:span.parent
+            (link-to (str (util/url-path parent) (:url parent))
+                     (typo/smarten (:title parent)))]
+           [:br]))
         (str date " @ " time)
         (vutil/tags follow)
         (vutil/twitter follow)]]]]))
@@ -71,8 +75,8 @@
      [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       (when (= page :post)
         [:div.post
-         [:div.topic
-          (link-to (str "/" (util/url-path topic) (:url topic))
+         [:div.page-title
+          (link-to (str (util/url-path topic) (:url topic))
                    (typo/smarten (:title topic)))]])
       [:div.entry.post
        (if (= page :post)

@@ -110,6 +110,14 @@ img {
     font-size: 21px;
 
     text-align: center;
+
+    a {
+        color: $red-dark;
+
+        &:hover {
+            color: #000;
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -492,27 +500,6 @@ img {
 }
 
 .post {
-    .topic {
-        padding-top: 10px;
-
-        border-bottom: 1px solid $gray-lighter;
-
-        font-size: 80%;
-
-        text-align: center;
-        text-transform: uppercase;
-
-        color: $gray-light;
-
-        a {
-            color: $gray-light;
-
-            &:hover {
-                color: $blue-faded;
-            }
-        }
-    }
-
     .title {
         font-family: 'Lato';
         font-size: 250%;
