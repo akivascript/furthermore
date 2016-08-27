@@ -28,8 +28,9 @@
 (defn- taglist
   "Returns a string of tag titles, the one matching tag-url unactionable."
   [tags tag-url]
-  (apply str (interpose " &bull; " (map
-                                    (comp (partial link tag-url) prepare) tags))))
+  (let [tags' (sort-by :title (conj tags (tags/create "Untagged")))]
+    (apply str (interpose " &bull; " (map
+                                      (comp (partial link tag-url) prepare) tags')))))
 
 (defn- refsmap
   "Given a tag's url name, return all of that tag's references."
@@ -46,13 +47,21 @@
 (defn- entries
   "Given a tag's url name, return a list of that tag's relevant entities."
   [tag-url]
-  (let [refs (refsmap tag-url)]
+  (if (= tag-url "untagged")
     (sort-by :created-on
-             (flatten
-              (merge
-               (entities posts/get (:post refs))
-               (entities follows/get (:follow refs))
-               (entities topics/get (:topic refs)))))))
+             (tags/untagged
+              (flatten
+               (merge
+                (follows/get-all)
+                (posts/get-all)
+                (topics/get-all)))))
+    (let [refs (refsmap tag-url)]
+      (sort-by :created-on
+               (flatten
+                (merge
+                 (entities posts/get (:post refs))
+                 (entities follows/get (:follow refs))
+                 (entities topics/get (:topic refs))))))))
 
 (defmulti render :kind)
 
@@ -60,41 +69,39 @@
   [entity]
   (let [{:keys [date time]} (util/timestamp (:created-on entity))
         parent (posts/get :_id (get-in entity [:parent :_id]))]
-    [:div.follow
-     [:i.fa.fa-paperclip {:aria-hidden "true"}]
-     [:div.col-xs-5.title (link-to (str (util/url-path entity) (:url entity))
-                                   (smarten (:title entity)))]
-     [:div.col-xs-3.parent (link-to (str (util/url-path parent) (:url parent))
-                                   (smarten (:title parent)))]
-     [:div.col-xs-4.date.small (str date " @ " time)]]))
+    [:div.entry
+     [:div.col-sm-8
+      [:i.fa.fa-paperclip {:aria-hidden "true"}]
+      [:span.text (link-to (str (util/url-path entity) (:url entity))
+                            (smarten (:body entity)))]]
+     [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod render :post
   [entity]
-  (let [{:keys [date time]} (util/timestamp (:created-on entity))
-        topic (topics/get :_id (get-in entity [:topic :_id]))]
-    [:div.post
+  (let [{:keys [date time]} (util/timestamp (:created-on entity))]
+    [:div.entry
      [:div.col-sm-8
-      [:span.topic (link-to (str (util/url-path topic) (:url topic))
-                           (smarten (str (:title topic) ":")))]
-      [:span.title (link-to (str (util/url-path entity) (:url entity))
-                           (smarten (:title entity)))]]
+      [:i.fa.fa-folder {:aria-hidden "true"}]
+      [:span.text (link-to (str (util/url-path entity) (:url entity))
+                            (smarten (:title entity)))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod render :topic
   [entity]
   (let [{:keys [date time]} (util/timestamp (:created-on entity))]
-    [:div.topic
-     [:i.fa.fa-archive {:aria-hidden "true"}]
-     [:div.col-xs-5.title (link-to (str (util/url-path entity) (:url entity))
-                                   (smarten (:title entity)))]
-     [:div.col-xs-5.date.small (str date " @ " time)]]))
+    [:div.entry
+     [:div.col-sm-8
+      [:i.fa.fa-archive {:aria-hidden "true"}]
+      [:span.text (link-to (str (util/url-path entity) (:url entity))
+                            (smarten (:title entity)))]]
+     [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defn content
   "Displays the contents of the tags page."
   ([]
    (content nil))
   ([tag-url]
-   (let [tags (sort-by :title (tags/get-all))]
+   (let [tags (tags/get-all)]
      [:div#tags.container
       [:div#banner.page-header
        [:div.row

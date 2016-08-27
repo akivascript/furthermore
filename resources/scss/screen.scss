@@ -224,6 +224,13 @@ img {
 }
 
 #tags {
+    .title {
+        font-family: 'Cinzel';
+        font-size: 21px;
+
+        text-align: center;
+    }
+
     .row {
         margin-bottom: 0px;
     }
@@ -241,27 +248,34 @@ img {
         color: $gray;
     }
 
-    .post {
+    .entry {
         display: flex;
 
         margin-bottom: 0px;
 
         padding-top: 5px;
 
-        .title {
-            font-family: 'Lato';
-            font-size: 100%;
-            font-variant: normal;
-
-        }
-    }
-
-    .topic {
-        padding-right: 10px;
-
         border: none;
 
-        color: $gray-light;
+        .fa {
+            padding-right: 10px;
+
+            font-size: 90%;
+
+            color: $gray-light;
+        }
+
+        .fa-paperclip {
+            padding-right: 13px;
+        }
+
+        .text {
+            font-family: 'Lato';
+            font-size: 90%;
+            font-variant: normal;
+
+            text-overflow: ellipses;
+        }
     }
 
     .tags {
@@ -294,13 +308,6 @@ img {
         .inactive {
             color: $gray;
         }
-    }
-
-    .title {
-        font-family: 'Cinzel';
-        font-size: 21px;
-
-        text-align: center;
     }
 }
 // ===========================================================================
