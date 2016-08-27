@@ -80,3 +80,8 @@
   "Returns a lazy sequence of a tag's refs filtered by kind."
   [kind tag]
   (common/refs-of kind tag))
+
+(defn untagged
+  "Returns a lazy sequence of coll that have no tags."
+  [coll]
+  (filter (comp (partial empty?) :tags) coll))
