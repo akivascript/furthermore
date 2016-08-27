@@ -72,8 +72,8 @@
     [:div.entry
      [:div.col-sm-8
       [:i.fa.fa-paperclip {:aria-hidden "true"}]
-      [:span.text (link-to (str (util/url-path entity) (:url entity))
-                            (smarten (:body entity)))]]
+      [:span.text [:em (link-to (str (util/url-path entity) (:url entity))
+                              (smarten (:body entity)))]]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod render :post
