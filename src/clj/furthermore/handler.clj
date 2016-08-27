@@ -7,9 +7,9 @@
             [furthermore.middleware :as middleware]
             [furthermore.routes.contents :as contents]
             [furthermore.routes.home :as home]
-            [furthermore.routes.post :as post]
+            [furthermore.routes.posts :as posts]
             [furthermore.routes.tags :as tags]
-            [furthermore.routes.topic :as topic]
+            [furthermore.routes.topics :as topics]
             [furthermore.views.error :as error]))
 
 (mount/defstate init-app
@@ -26,9 +26,9 @@
   (routes
    (wrap-route #'contents/routes)
    (wrap-route #'home/routes)
-   (wrap-route #'post/routes)
+   (wrap-route #'posts/routes)
    (wrap-route #'tags/routes)
-   (wrap-route #'topic/routes)
+   (wrap-route #'topics/routes)
    (route/not-found
     (:body
      (error/render {:status 404

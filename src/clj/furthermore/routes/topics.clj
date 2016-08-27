@@ -1,6 +1,7 @@
-(ns furthermore.routes.topic
+(ns furthermore.routes.topics
   (:require [compojure.core :refer [defroutes GET]]
 
+            [furthermore.entities.topics :as topics]
             [furthermore.layout :as layout]
             [furthermore.views.topic :as topic]))
 
@@ -10,4 +11,4 @@
     (layout/render :topic (:url topic) (topic/content topic))))
 
 (defroutes routes
-  (GET "/topic/:url" [url] (build url)))
+  (GET "/topics/:url" [url] (build url)))

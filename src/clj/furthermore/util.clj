@@ -84,9 +84,10 @@
   "Generates a URL path part based on an entity's type."
   [entity]
   (case (:kind entity)
-    :post "/post/"
-    :page "/page/"
-    :topic "/topic/"
+    :post "/posts/"
+    :page "/pages/"
+    :topic "/topics/"
+    :tag "/tags/"
     ""))
 
 (defn uuid

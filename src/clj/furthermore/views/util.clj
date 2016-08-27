@@ -10,7 +10,7 @@
 
 (defn- link
   [post content]
-  [:a {:href (str "/post/" (:url post))}
+  [:a {:href (str "/posts/" (:url post))}
    content])
 
 (defn continue
