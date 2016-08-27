@@ -15,7 +15,7 @@
 (defn ^:export initialize-contents
   []
   (doseq [entry (sel :.glyphicon)]
-    (let [target (-> entry dommy/parent dommy/parent
+    (let [target (-> entry dommy/parent dommy/parent dommy/parent
                      dom/getNextElementSibling)]
       (dommy/listen! entry :click
                      (fn [_]
