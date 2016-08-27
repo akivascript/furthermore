@@ -237,7 +237,7 @@ img {
             .date {
                 padding-left: 0px;
                 padding-right: 30px;
-                
+
                 color: $gray;
             }
         }
@@ -375,7 +375,7 @@ img {
     .footer {
         padding-bottom: 10px;
 
-        border-bottom: 1px solid #aaa;
+        border-bottom: 1px dotted #aaa;
 
         font-size: 1em;
 
@@ -501,13 +501,14 @@ img {
 
 .post {
     .title {
-        font-family: 'Lato';
         font-size: 250%;
         font-weight: 300;
 
-        color: $blue;
+        color: $blue-faded;
 
         a {
+            color: $blue;
+
             &:hover {
                 color: $red-dark;
             }

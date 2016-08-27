@@ -1,7 +1,7 @@
 (ns furthermore.views.common
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
-            [typographer.core :as typo]
+            [typographer.core :refer [smarten]]
 
             [furthermore.entities.follows :as follows]
             [furthermore.entities.posts :as posts]
@@ -26,7 +26,7 @@
            "Filed under "
            [:span.topic
             (link-to (str (util/url-path topic) (:url topic))
-                     (typo/smarten (:title topic)))]
+                     (smarten (:title topic)))]
            [:br]))
         (str date " @ " time)
         (vutil/tags post)
@@ -46,7 +46,7 @@
            "A follow-up to "
            [:span.parent
             (link-to (str (util/url-path parent) (:url parent))
-                     (typo/smarten (:title parent)))]
+                     (smarten (:title parent)))]
            [:br]))
         (str date " @ " time)
         (vutil/tags follow)
@@ -77,10 +77,10 @@
         [:div.post
          [:div.page-title
           (link-to (str (util/url-path topic) (:url topic))
-                   (typo/smarten (:title topic)))]])
+                   (smarten (:title topic)))]])
       [:div.entry.post
        (if (= page :post)
-         (for [p [(vutil/title post)
+         (for [p [(html [:div.title (smarten (:title post))])
                   (vutil/subtitle post)
                   (html [:div.body (:body post)])]] p)
          (for [p (vutil/content post)] p))]
