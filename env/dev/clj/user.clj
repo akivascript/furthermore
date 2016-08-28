@@ -75,7 +75,8 @@
   (topics/save topic)
   (tags/save tag)
   (posts/save post)
-  (follows/save follow))
+  (Thread/sleep 5000) ; sleep to ensure a different timestamp
+  (follows/save follow)) ; for the follow-up
 
 (defn setup
   "Creates all of the necessary collections for Furthermore.
