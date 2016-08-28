@@ -1,4 +1,5 @@
 (ns furthermore.db.core
+  "A facade for Monger with most functions customized for Furthermmore."
   (:require [clj-time.local :as ltime]
             [monger.core :as mg]
             [monger.collection :as mc]
@@ -13,6 +14,19 @@
             [furthermore.twitter :as twitter]
             [furthermore.util :as util]))
 
+(def kinds
+  {:author "authors"
+   :event "events"
+   :follow "follows"
+   :image "images"
+   :link "links"
+   :page "pages"
+   :post "posts"
+   :tag "tags"
+   :topic "topics"})
+
+
+;; -->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>- MOUNTAGE -->
 (defstate db*
   :start (-> env :database-url mg/connect-via-uri)
   :stop (-> db* :conn mg/disconnect))
@@ -20,17 +34,33 @@
 (defstate db
   :start (:db db*))
 
-(def kinds
-  {:author "authors"
-   :follow "follows"
-   :image "images"
-   :link "links"
-   :page "pages"
-   :post "posts"
-   :tag "tags"
-   :topic "topics"
-   :update "events"})
 
+;; -->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--> COLLECTIONS -->
+(defn create
+  "Creates new collection name."
+  [name]
+  (let [name (name kinds)]
+    (when-not (mc/exists? db name)
+      (mc/create db name {:capped false}))))
+
+(defn kill
+  "Drops collection name as long as it is not empty."
+  [name]
+  (let [name (name kinds)]
+    (when (and (mc/exists? db name)
+               (not (mc/empty? db name)))
+      (mc/drop db name))))
+
+(defn clear
+  "Removes all documents in a collection."
+  [name]
+  (let [name (name kinds)]
+    (when (and (mc/exists? db name)
+               (not (mc/empty? db name)))
+      (mc/remove db name))))
+
+
+;; -->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>- ENTITIES -->
 (declare log tweet)
 
 (defn entities
@@ -48,24 +78,25 @@
   to be a map (e.g., {:_id 0de661a...})."
   ([kind criterion]
    (let [entity (if (contains? criterion :title)
-                  (mc/find-one-as-map db (kind kinds) {:title
-                                                       {$regex (:title criterion)
-                                                        $options "i"}})
+                  (mc/find-one-as-map db (kind kinds)
+                                      {:title
+                                       {$regex (:title criterion)
+                                        $options "i"}})
                   (mc/find-one-as-map db (kind kinds) criterion))]
      (when-not (nil? entity)
        (util/keywordize entity))))
   ([kind k v]
    (entity kind {k v})))
 
-(defn- log
-  [entity result]
-  (let [action (if (mres/updated-existing? result)
-                 :update
-                 :new)]
-    (when-not (and (= :tag (:kind entity))
-                   (= :update action))
-      (let [entry (events/create entity action)]
-        (mc/insert db "events" (update entry :date util/joda-date->java-date))))))
+(defn search
+  "Returns one or more entities from the database. criterion is
+  expected to be a map (e.g., {:_id 0de661a...})."
+  [kind criterion]
+  (let [entities (mc/find-maps db (kind kinds)
+                               {(first (keys criterion))
+                                {$regex (first (vals criterion)) $options "i"}})]
+    (when-not (nil? entities)
+      (map util/keywordize entities))))
 
 (defn delete
   "Deletes an entity from the database."
@@ -73,20 +104,8 @@
   (mc/remove-by-id db (kinds (:kind entity)) (:_id entity))
   (mc/insert db "events" (events/create entity :delete)))
 
-(defn save*
-  "Saves an entity to the database and returns the result."
-  [entity]
-  (let [log? (:log? entity)
-        entity (-> entity
-                   tweet
-                   (update :created-on util/joda-date->java-date)
-                   (assoc :last-updated (util/joda-date->java-date (ltime/local-now)))
-                   (assoc :log? false)
-                   (assoc :tweet? false))]
-    (let [result (mc/upsert db ((:kind entity) kinds) {:_id (:_id entity)} entity)]
-      (when log? (log entity result))
-      result)))
 
+;; -->>---> Saving -->>--->
 (defn ancestor
   [e]
   (let [kind (:kind e)
@@ -107,6 +126,22 @@
              (refs/link e))
        (:tags e)))
 
+(defn save*
+  "Saves an entity to the database and returns the result."
+  [entity]
+  (let [log? (:log? entity)
+        entity (-> entity
+                   tweet
+                   (update :created-on util/joda-date->java-date)
+                   (assoc :last-updated (util/joda-date->java-date
+                                         (ltime/local-now)))
+                   (assoc :log? false)
+                   (assoc :tweet? false))]
+    (let [result (mc/upsert db ((:kind entity) kinds)
+                            {:_id (:_id entity)} entity)]
+      (when log? (log entity result))
+      result)))
+
 (defn save
   [entity]
   (let [kind (:kind entity)]
@@ -120,15 +155,18 @@
                           (save (ancestor entity))
                           (save* entity)))))
 
-(defn search
-  "Returns one or more entities from the database. criterion is
-  expected to be a map (e.g., {:_id 0de661a...})."
-  [kind criterion]
-  (let [entities (mc/find-maps db (kind kinds)
-                               {(first (keys criterion))
-                                {$regex (first (vals criterion)) $options "i"}})]
-    (when-not (nil? entities)
-      (map util/keywordize entities))))
+
+;; -->>---> Supplemental FNs -->>--->
+(defn- log
+  [entity result]
+  (let [action (if (mres/updated-existing? result)
+                 :update
+                 :new)]
+    (when-not (and (= :tag (:kind entity))
+                   (= :update action))
+      (let [entry (events/create entity action)]
+        (mc/insert db "events"
+                   (update entry :date util/joda-date->java-date))))))
 
 (defn tweet
   [entity]
