@@ -16,17 +16,19 @@
          :or {_id (mutil/random-uuid)
               action :new
               date (ltime/local-now)
+              parent (:parent entity)
               title (or (:title entity)
                         (util/excerpt (:body entity) 50))
+              topic (:topic entity)
               url (:url entity)}} params]
-    (map->Update {:_id _id
-                  :action (keyword action)
-                  :date date
-                  :kind :update
-                  :parent parent
-                  :title title
-                  :topic topic
-                  :url url})))
+    (map->Event {:_id _id
+                 :action (keyword action)
+                 :date date
+                 :kind :update
+                 :parent parent
+                 :title title
+                 :topic topic
+                 :url url})))
 
 (defn create
   "Creates a new event entity."
