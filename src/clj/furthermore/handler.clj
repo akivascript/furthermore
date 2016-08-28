@@ -6,6 +6,7 @@
             [furthermore.env :refer [defaults]]
             [furthermore.middleware :as middleware]
             [furthermore.routes.contents :as contents]
+            [furthermore.routes.history :as history]
             [furthermore.routes.home :as home]
             [furthermore.routes.posts :as posts]
             [furthermore.routes.tags :as tags]
@@ -25,6 +26,7 @@
 (def app-routes
   (routes
    (wrap-route #'contents/routes)
+   (wrap-route #'history/routes)
    (wrap-route #'home/routes)
    (wrap-route #'posts/routes)
    (wrap-route #'tags/routes)

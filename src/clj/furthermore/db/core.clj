@@ -8,8 +8,7 @@
             [mount.core :refer [defstate]]
 
             [furthermore.config :refer [env]]
-            [furthermore.db.entities.updates :as updates]
-            [furthermore.db.queue :as queue]
+            [furthermore.db.entities.events :as events]
             [furthermore.entities.references :as refs :refer [->ref ->refs]]
             [furthermore.twitter :as twitter]
             [furthermore.util :as util]))
@@ -30,7 +29,7 @@
    :post "posts"
    :tag "tags"
    :topic "topics"
-   :update "updates"})
+   :update "events"})
 
 (declare log tweet)
 
@@ -65,14 +64,14 @@
                  :new)]
     (when-not (and (= :tag (:kind entity))
                    (= :update action))
-      (let [entry (updates/create entity action)]
-        (mc/insert db "updates" (update entry :date util/joda-date->java-date))))))
+      (let [entry (events/create entity action)]
+        (mc/insert db "events" (update entry :date util/joda-date->java-date))))))
 
 (defn delete
   "Deletes an entity from the database."
   [entity]
   (mc/remove-by-id db (kinds (:kind entity)) (:_id entity))
-  (mc/insert db "updates" (updates/create entity :delete)))
+  (mc/insert db "events" (events/create entity :delete)))
 
 (defn save*
   "Saves an entity to the database and returns the result."
