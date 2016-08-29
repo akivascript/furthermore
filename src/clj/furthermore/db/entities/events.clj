@@ -21,8 +21,9 @@
                  :kind :event
                  :parent (when-let [parent (:parent entity)]
                            (->ref parent))
-                 :title (or (:title entity)
-                            (util/excerpt (:body entity) 50)
+                 :title (or (:name entity)
+                            (:title entity)
+                            (subs (:body entity) 0 99)
                             "Untitled")
                  :topic (when-let [topic (:topic entity)]
                           (->ref topic))
