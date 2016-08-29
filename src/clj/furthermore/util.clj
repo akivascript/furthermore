@@ -49,13 +49,21 @@
   (= (:_id x) (:_id y)))
 
 (defn timestamp
-  [timestamp]
-  (let [ts (if (= (type timestamp) java.util.Date)
-             timestamp
-             (joda-date->java-date timestamp))
-        ts' (ctime/from-time-zone (coerce/from-date ts) (ctime/time-zone-for-offset +7))]
-    {:date (tformat/unparse (tformat/formatter "MMMM d, yyyy") ts')
-     :time (tformat/unparse (tformat/formatter "hh:mm a") ts')}))
+  ([ts]
+   (timestamp ts false))
+  ([timestamp terse?]
+   (let [ts (if (= (type timestamp) java.util.Date)
+              timestamp
+              (joda-date->java-date timestamp))
+         ts (ctime/from-time-zone (coerce/from-date ts) (ctime/time-zone-for-offset +7))
+         df (if terse?
+              "yyyy-MM-dd"
+              "MMMM d, yyyy")
+         tf (if terse?
+              "HH:mm"
+              "hh:mm a")]
+     {:date (tformat/unparse (tformat/formatter df) ts)
+      :time (tformat/unparse (tformat/formatter tf) ts)})))
 
 (defn url-date
   "Returns a string representation of an entity's date."
@@ -84,9 +92,10 @@
   "Generates a URL path part based on an entity's type."
   [entity]
   (case (:kind entity)
-    :post "/post/"
-    :page "/page/"
-    :topic "/topic/"
+    :post "/posts/"
+    :page "/pages/"
+    :topic "/topics/"
+    :tag "/tags/"
     ""))
 
 (defn uuid

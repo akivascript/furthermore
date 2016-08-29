@@ -103,6 +103,23 @@ img {
     font-weight: 400;
 }
 
+.page-title {
+    border-bottom: 1px dotted #aaa;
+
+    font-family: 'Cinzel';
+    font-size: 21px;
+
+    text-align: center;
+
+    a {
+        color: $red-dark;
+
+        &:hover {
+            color: #000;
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Navigation
 .nav {
@@ -182,55 +199,101 @@ img {
 // PAGES
 // ---------------------------------------------------------------------------
 #contents {
-    .follows {
-        display: inline-block;
+    .topics {
+        padding-top: 5px;
 
-        margin-left: 15px;
-
-        &:first-child {
-            .entry {
-                border: none;
-            }
-        }
-
-        .follow {
-            padding-right: 10px;
-
-            p {
-                display: inline;
-            }
-
-            .title {
-                font-size: 75%;
-            }
-        }
-    }
-
-    .topic {
         a {
-            color: $green;
+            color: $red-dark;
 
             &:hover {
                 color: #000;
             }
         }
+    }
 
-        .title {
-            a {
-                color: $link-color;
+    .posts {
+        display: inline-block;
+        width: 100%;
+
+        margin-left: 15px;
+
+        .post {
+            .title {
+                font-family: 'Lato';
+                font-size: 90%;
+                font-variant: normal;
+
+                text-overflow: ellipses;
+
+                a {
+                    color: $link-color;
+
+                    &:hover {
+                        color: #000; 
+                    }
+                }
+            }
+
+            .date {
+                padding-left: 0px;
+                padding-right: 30px;
+
+                color: $gray;
+            }
+        }
+    }
+
+    .follows {
+        display: inline-block;
+        width: 100%;
+
+        .follow {
+            padding-right: 10px;
+
+            border: none;
+
+            .title {
+                font-style: italic;
+
+                text-overflow: ellipses;
+
+                a {
+                    color: $gray;
+
+                    &:hover {
+                        color: #000; 
+                    }
+                }
+            }
+
+            .date {
+                padding-left: 0px;
+                padding-right: 20px;
             }
         }
     }
 }
 
-#tags {
-    .title {
-        font-family: 'Cinzel';
-        font-size: 21px;
-
-        text-align: center;
+#history {
+    .row {
+        margin-bottom: 0px;
     }
 
+    .history
+    {
+        padding: 10px 0 10px 0;
+
+        .date {
+            padding-right: 0px;
+        }
+
+        .action {
+            padding: 0px;
+        }
+    }
+}
+
+#tags {
     .row {
         margin-bottom: 0px;
     }
@@ -273,15 +336,11 @@ img {
             font-family: 'Lato';
             font-size: 90%;
             font-variant: normal;
-
-            text-overflow: ellipses;
         }
     }
 
     .tags {
         padding: 10px 0 10px 0;
-
-        border-top: 1px dotted #aaa;
 
         text-align: center;
 
@@ -310,6 +369,139 @@ img {
         }
     }
 }
+
+#topic {
+    .row {
+        margin-bottom: 0px;
+    }
+
+    .body {
+        padding: 10px 0px 10px 0px;
+
+        line-height: 1.5em;
+
+        color: #555;
+
+        p {
+            padding-top: 10px;
+        }
+    }
+
+    .footer {
+        padding-bottom: 10px;
+
+        border-bottom: 1px dotted #aaa;
+
+        font-size: 1em;
+
+        color: $gray-light;
+    }
+
+    .post {
+        margin-bottom: 0px;
+        padding: 5px 0px 5px 0px;
+
+        border-top: none;
+
+        .date {
+            padding: 2px 5px 0px 5px;
+
+            font-size: 90%;
+
+            text-align: right;
+
+            color: $gray;
+        }
+
+        .title {
+            padding-left: 5px;
+            border-bottom: 0px;
+
+            font-family: 'Lato';
+            font-size: 100%;
+
+            text-transform: none;
+
+            a {
+                color: $red-dark;
+
+                &:hover {
+                    color: black;
+                }
+            }
+
+            text-align: left;
+        }
+    }
+
+    .posts {
+        margin-top: -3px;
+
+        border-top: 1px dotted $gray-light;
+
+        .follow {
+            margin-top: -5px;
+
+            padding-top: 0px;
+        }
+
+        .post {
+            padding-bottom: 0px;
+        }
+
+        .footer {
+            padding-bottom: 10px;
+
+            border-bottom: 1px solid #aaa;
+
+            font-size: 1em;
+
+            color: $gray-light;
+        }
+
+        .post {
+            margin-bottom: 0px;
+            padding: 5px 0px 5px 0px;
+
+            border-top: none;
+
+            .date {
+                padding: 2px 5px 0px 5px;
+
+                font-size: 90%;
+
+                text-align: right;
+
+                color: $gray;
+            }
+        }
+
+        .title {
+            border-bottom: 0px;
+
+            font-family: 'Lato';
+            font-size: 100%;
+
+            text-transform: none;
+
+            text-align: left;
+            display: inline-block;
+
+            padding-right: 10px;
+            padding-left: 0px;
+
+            a {
+                padding-left: 1px;
+
+                color: $link-color;
+
+                &:hover {
+                    color: #000;
+                }
+            }
+        }
+    }
+}
 // ===========================================================================
 
 
@@ -323,35 +515,15 @@ img {
 }
 
 .post {
-    .topic {
-        padding-top: 10px;
-
-        border-bottom: 1px solid $gray-lighter;
-
-        font-size: 80%;
-
-        text-align: center;
-        text-transform: uppercase;
-
-        color: $gray-light;
-
-        a {
-            color: $gray-light;
-
-            &:hover {
-                color: $blue-faded;
-            }
-        }
-    }
-
     .title {
-        font-family: 'Lato';
         font-size: 250%;
         font-weight: 300;
 
-        color: $blue;
+        color: $blue-faded;
 
         a {
+            color: $blue;
+
             &:hover {
                 color: $red-dark;
             }
@@ -443,93 +615,6 @@ img {
     }
 }
 
-.topic {
-
-    .posts {
-        margin-top: -3px;
-
-        border-top: 1px dotted $gray-light;
-
-        .follow {
-            margin-top: -5px;
-
-            padding-top: 0px;
-        }
-
-        .post {
-            padding-bottom: 0px;
-        }
-
-        .title {
-            border-bottom: 0px;
-
-            font-family: 'Lato';
-            font-size: 100%;
-
-            text-transform: none;
-
-            text-align: left;
-            display: inline-block;
-
-            padding-right: 10px;
-            padding-left: 0px;
-
-            a {
-                padding-left: 1px;
-
-                color: $link-color;
-
-                &:hover {
-                    color: #000;
-                }
-            }
-        }
-    }
-}
-
-.topic {
-    .body {
-        padding: 0px 0px 5px 1px; 
-
-        font-family: $body-font;
-        font-size: 1.1em;
-
-        line-height: 1.5em;
-
-        color: #555;
-
-        p {
-            padding-top: 10px;
-        }
-    }
-
-    .footer {
-        padding-bottom: 10px;
-
-        border-bottom: 1px solid #aaa;
-
-        font-size: 1em;
-
-        color: $gray-light;
-    }
-
-    .post {
-        margin-bottom: 0px;
-        padding: 5px 0px 5px 0px;
-
-        border-top: none;
-
-        .date {
-            padding: 2px 5px 0px 5px;
-
-            font-size: 90%;
-
-            text-align: right;
-
-            color: $gray;
-        }
-    }
-}
 
 // Buttons
 .btn-delete {
@@ -741,7 +826,7 @@ img {
     }
 }
 
-#topic {
+#topic-old {
     .title {
         border-bottom: 1px solid #aaa;
 
@@ -816,7 +901,7 @@ img {
     }
 }
 
-.contents {
+.contents1 {
     .topic {
         margin-bottom: 15px;
 

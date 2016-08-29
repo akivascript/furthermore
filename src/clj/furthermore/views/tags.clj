@@ -72,8 +72,8 @@
     [:div.entry
      [:div.col-sm-8
       [:i.fa.fa-paperclip {:aria-hidden "true"}]
-      [:span.text (link-to (str (util/url-path entity) (:url entity))
-                            (smarten (:body entity)))]]
+      [:span.text [:em (link-to (str (util/url-path entity) (:url entity))
+                              (smarten (:body entity)))]]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod render :post
@@ -106,11 +106,10 @@
       [:div#banner.page-header
        [:div.row
         [:div.col-xs-12.col-sm-10.col-sm-offset-1
-         [:div.title "Tags"]
+         [:div.page-title "Tags"]
          [:div.tags (taglist tags tag-url)]]]
        (when-not (nil? tag-url)
          [:div.row
           [:div.col-xs-12.col-sm-10.col-sm-offset-1
            [:div.posts
-            (for [entry (entries tag-url)] (render entry))]
-           ]])]])))
+            (for [entry (entries tag-url)] (render entry))]]])]])))

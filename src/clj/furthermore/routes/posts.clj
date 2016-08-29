@@ -1,4 +1,4 @@
-(ns furthermore.routes.post
+(ns furthermore.routes.posts
   (:require [compojure.core :refer [defroutes GET]]
 
             [furthermore.entities.posts :as posts]
@@ -11,4 +11,4 @@
     (layout/render :post (:title post) (post/content post))))
 
 (defroutes routes
-  (GET "/post/:url" [url] (build url)))
+  (GET "/posts/:url" [url] (build url)))
