@@ -69,20 +69,21 @@
    (map util/keywordize (mc/find-maps db (kind kinds))))
   ([kind criteria limit-by]
    (map util/keywordize (mq/with-collection db (kind kinds)
-                          (mq/find {})
-                          (mq/sort criteria)
-                          (mq/limit limit-by)))))
+                         (mq/find {})
+                         (mq/sort criteria)
+                         (mq/limit limit-by)))))
 
 (defn entity
   "Returns a single entity from the database. criterion is expected
   to be a map (e.g., {:_id 0de661a...})."
   ([kind criterion]
-   (let [entity (if (contains? criterion :title)
-                  (mc/find-one-as-map db (kind kinds)
-                                      {:title
-                                       {$regex (:title criterion)
-                                        $options "i"}})
-                  (mc/find-one-as-map db (kind kinds) criterion))]
+   (let [entity
+         (if (contains? criterion :title)
+           (mc/find-one-as-map db (kind kinds)
+                               {:title
+                                {$regex (:title criterion)
+                                 $options "i"}})
+           (mc/find-one-as-map db (kind kinds) criterion))]
      (when-not (nil? entity)
        (util/keywordize entity))))
   ([kind k v]
@@ -102,7 +103,7 @@
   "Deletes an entity from the database."
   [entity]
   (mc/remove-by-id db (kinds (:kind entity)) (:_id entity))
-  (mc/insert db "events" (events/create entity :delete)))
+  (mc/insert db "events" (events/create :delete entity)))
 
 
 ;; -->>---> Saving -->>--->
@@ -164,7 +165,7 @@
                  :new)]
     (when-not (and (= :tag (:kind entity))
                    (= :update action))
-      (let [entry (events/create entity action)]
+      (let [entry (events/create action entity)]
         (mc/insert db "events"
                    (update entry :date util/joda-date->java-date))))))
 
