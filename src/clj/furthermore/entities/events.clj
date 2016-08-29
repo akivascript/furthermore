@@ -16,13 +16,13 @@
   [params]
   (let [{:keys [_id action date entity kind parent title topic url]} params]
     (map->Event {:_id _id
-                 :action action
+                 :action (keyword action)
                  :date date
-                 :entity entity
-                 :kind kind
-                 :parent parent
+                 :entity (->ref entity)
+                 :kind (keyword kind)
+                 :parent (when-not (nil? parent) (->ref parent))
                  :title title
-                 :topic topic
+                 :topic (when-not (nil? topic) (->ref topic))
                  :url url})))
 
 (def get (comp event (partial db/entity :event)))

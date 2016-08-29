@@ -4,7 +4,8 @@
   (:require [clj-time.local :as ltime]
             [monger.util :as mutil]
 
-            [furthermore.util :as util]))
+            [furthermore.util :as util]
+            [furthermore.entities.references :as refs :refer [->ref]]))
 
 (defrecord Event
     [_id action date entity kind parent title topic url])
@@ -12,25 +13,22 @@
 (defn- event
   "Creates an event entry for a newly added or updated entity."
   [params]
-  (let [{:keys [_id action date entity kind parent title topic url]
-         :or {_id (mutil/random-uuid)
-              action :new
-              date (ltime/local-now)
-              parent (:parent entity)
-              title (or (:title entity)
-                        (util/excerpt (:body entity) 50))
-              topic (:topic entity)
-              url (:url entity)}} params]
-    (map->Event {:_id _id
+  (let [{:keys [_id action date entity kind parent title topic url]} params]
+    (map->Event {:_id (mutil/random-uuid)
                  :action (keyword action)
-                 :date date
-                 :kind :update
-                 :parent parent
-                 :title title
-                 :topic topic
-                 :url url})))
+                 :date (ltime/local-now)
+                 :entity (->ref entity)
+                 :kind :event
+                 :parent (when-let [parent (:parent entity)]
+                           (->ref parent))
+                 :title (or (:title entity)
+                            (util/excerpt (:body entity) 50)
+                            "Untitled")
+                 :topic (when-let [topic (:topic entity)]
+                          (->ref topic))
+                 :url (:url entity)})))
 
 (defn create
   "Creates a new event entity."
-  [entity action]
+  [action entity]
   (event {:action action :entity entity}))
