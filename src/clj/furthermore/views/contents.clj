@@ -30,8 +30,7 @@
 
 (defmethod title :post
   [post]
-   (let [url (str "/post/" (:url post))
-         {:keys [date time]} (util/timestamp (:created-on post))]
+   (let [{:keys [date time]} (util/timestamp (:created-on post))]
      [:div
       [:div.col-sm-8
        [:span.title
@@ -54,8 +53,7 @@
   [follow]
   (let [parent (posts/get :_id (get-in follow [:parent :_id]))
         {:keys [date time]} (util/timestamp (:created-on follow))
-        url (str (util/url-path parent)
-                 (:url parent) (:url follow))]
+        url (str (util/url-path follow) (:url follow))]
     [:div
      [:div.col-sm-8
       [:span.title

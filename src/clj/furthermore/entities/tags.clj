@@ -42,7 +42,6 @@
          :or {_id (mutil/random-uuid)
               created-on (ltime/local-now)
               log? true
-              title "Miscellania"
               refs #{}
               url (util/url-name title)}} params]
     (map->Tag {:_id _id
@@ -61,12 +60,14 @@
 
 (defn create
   "Returns a tag entity."
-  [x]
-  (cond
-    (nil? x) nil
-    (map? x) (tag x)
-    :else
-    (tag {:title x})))
+  ([]
+   (tag {:title "Miscellaneous"}))
+  ([x]
+   (cond
+     (nil? x) nil
+     (map? x) (tag x)
+     :else
+     (tag {:title x}))))
 
 (defn save
   "Saves a tag to the the database."

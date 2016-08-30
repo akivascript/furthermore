@@ -3,6 +3,7 @@
             [hiccup.element :refer [link-to]]
             [typographer.core :refer [smarten]]
 
+            [furthermore.entities.common :as common]
             [furthermore.entities.follows :as follows]
             [furthermore.entities.posts :as posts]
             [furthermore.entities.topics :as topics]
@@ -38,7 +39,8 @@
         {:keys [date time]} (util/timestamp (:created-on follow))]
     [:div.footer
      [:div.row
-      [:div.col-xs-12.col-sm-6 (vutil/continue follow)]
+      [:div.col-xs-12.col-sm-6
+       (when-not (= page :post) (vutil/continue follow))]
       [:div.col-sx-12.col-sm-6
        [:div.small.text-right.date
         (when-not (= page :post)

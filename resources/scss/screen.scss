@@ -901,62 +901,6 @@ img {
     }
 }
 
-.contents1 {
-    .topic {
-        margin-bottom: 15px;
-
-        font-family: $page-title-font;
-        font-size: 140%;
-    }
-
-    .permalink {
-        padding-left: 7px;
-
-        font-size: 75%;
-
-        text-decoration: none;
-
-        a {
-            color: $gray-light;
-
-            &:hover {
-                color: $blue-faded;
-            }
-        }
-    }
-
-    .post {
-        margin-top: -2.5px;
-        margin-bottom: 0px;
-
-        border-top: 0px;
-
-        .follow {
-            display: inline-block;
-
-            padding: 0px 10px 0px 25px;
-
-            font-family: 'Lato';
-            font-size: 15px;
-
-            color: #777;
-
-            p {
-                display: inline;
-            }
-        }
-
-        .date {
-            display: inline-block;
-
-            font-family: 'Lato';
-            font-size: 12px;
-
-            color: $gray-light;
-        }
-    }
-}
-
 #updates {
     font-size: 90%;
 
