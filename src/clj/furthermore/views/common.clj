@@ -35,7 +35,7 @@
 
 (defmethod footer :follow
   [page follow]
-  (let [parent (posts/parent follow)
+  (let [parent (follows/parent follow)
         {:keys [date time]} (util/timestamp (:created-on follow))]
     [:div.footer
      [:div.row

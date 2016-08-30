@@ -25,7 +25,6 @@
               tags #{}
               tweet? false}} params
         parent' (posts/get (->ref parent))]
-    (println parent')
     (map->Follow {:_id _id
                   :authors (->refs authors)
                   :body body
@@ -73,3 +72,19 @@
   appropriate values."
   [k s]
   (map (partial get k) s))
+
+(defn parent
+  [follow]
+  (when (follow? follow)
+    (let [parent (:parent follow)]
+      (condp = (:kind parent)
+        :topic (topics/get parent)
+        :post (posts/get parent)))))
+
+(defn topic
+  [follow]
+  (when (follow? follow)
+    (let [topic (:topic follow)]
+      (condp = (:kind topic)
+        :topic (topics/get topic)
+        :post (posts/get topic)))))

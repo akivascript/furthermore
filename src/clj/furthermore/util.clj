@@ -91,12 +91,13 @@
 (defn url-path
   "Generates a URL path part based on an entity's type."
   [entity]
-  (case (:kind entity)
-    :post "/posts/"
-    :page "/pages/"
-    :topic "/topics/"
-    :tag "/tags/"
-    ""))
+  (let [kind (:kind entity)]
+    (case kind
+          (:follow :post) "/posts/"
+          :page "/pages/"
+          :topic "/topics/"
+          :tag "/tags/"
+          "")))
 
 (defn uuid
   "If given a string, produces a Java UUID object from it; otherwise

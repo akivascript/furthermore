@@ -6,9 +6,9 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
-            [furthermore.entities.authors :as authors]
             [furthermore.entities.events :as events]
             [furthermore.entities.posts :as posts]
+            [furthermore.entities.topics :as topics]
             [furthermore.util :as util]))
 
 (defn- action
@@ -51,11 +51,6 @@
 ;; -->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--> LAYOUT -->
 (declare render)
 
-(defmulti handler event-type)
-
-(defmethod handler :post
-  [event]
-  ())
 (defn content
   []
   [:div#history
@@ -85,6 +80,7 @@
     [:div.container-fluid
      [:div.row.event
       [:div.col-sm-2.action.small (describe event)]
-      [:div.col-sm-7.title.small (link-to (:url event)
+      [:div.col-sm-7.title.small (link-to (str (util/url-path (:entity event))
+                                               (:url event))
                                           (:title event))]
       [:div.col-sm-3.date.small.text-right (str date " @ " time)]]]))
