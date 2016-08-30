@@ -4,33 +4,36 @@
 
             [furthermore.db.core :as db]
             [furthermore.entities.authors :as authors]
-            [furthermore.entities.tags :as tags :refer [->tags]]
+            [furthermore.entities.references :as refs :refer [->ref ->refs]]
             [furthermore.util :as util]))
 
 (defrecord Page
     [_id authors body created-on last-updated
-     log? tags title tweet? url])
+     log? refs tags title tweet? url])
 
 (defn- page
+  "Takes a map as input and returns a Page entity."
   [params]
   (let [{:keys [_id authors body created-on last-updated
-                log? tags title tweet? url]
+                log? refs tags title tweet? url]
          :or {_id (mutil/random-uuid)
-              authors ["John Doe"]
+              authors #{}
               created-on (ltime/local-now)
               log? true
+              refs #{}
               tags #{}
-              title "New Page"
+              title "Untitled Page"
               tweet? false
               url (util/url-name title)}} params]
     (map->Page {:_id _id
-                :authors (into [] (map authors/create authors))
+                :authors (->refs authors)
                 :body body
                 :created-on created-on
                 :kind :page
                 :last-updated last-updated
                 :log? log?
-                :tags (->tags tags)
+                :refs (->refs refs)
+                :tags (->refs tags)
                 :title title
                 :tweet? tweet?
                 :url url})))
@@ -51,3 +54,8 @@
 
 (def get (comp page (partial db/entity :page)))
 (def get-all (comp (partial map page) (partial db/entities :page)))
+
+(defn save
+  "Commits a page to the datastore."
+  [x]
+  (db/save x))

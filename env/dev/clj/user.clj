@@ -9,6 +9,7 @@
             [furthermore.entities.authors :as authors]
             [furthermore.entities.events :as events]
             [furthermore.entities.follows :as follows]
+            [furthermore.entities.pages :as pages]
             [furthermore.entities.posts :as posts]
             [furthermore.entities.references :as refs :refer [->ref ->refs]]
             [furthermore.entities.tags :as tags]
