@@ -103,6 +103,23 @@ img {
     font-weight: 400;
 }
 
+.page-title {
+    border-bottom: 1px dotted #aaa;
+
+    font-family: 'Cinzel';
+    font-size: 21px;
+
+    text-align: center;
+
+    a {
+        color: $red-dark;
+
+        &:hover {
+            color: #000;
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Navigation
 .nav {
@@ -182,42 +199,305 @@ img {
 // PAGES
 // ---------------------------------------------------------------------------
 #contents {
-    .follows {
-        display: inline-block;
+    .topics {
+        padding-top: 5px;
 
-        margin-left: 15px;
+        a {
+            color: $red-dark;
 
-        &:first-child {
-            .entry {
-                border: none;
-            }
-        }
-
-        .follow {
-            padding-right: 10px;
-
-            p {
-                display: inline;
-            }
-
-            .title {
-                font-size: 75%;
+            &:hover {
+                color: #000;
             }
         }
     }
 
-    .topic {
+    .posts {
+        display: inline-block;
+        width: 100%;
+
+        margin-left: 15px;
+
+        .post {
+            .title {
+                font-family: 'Lato';
+                font-size: 90%;
+                font-variant: normal;
+
+                text-overflow: ellipses;
+
+                a {
+                    color: $link-color;
+
+                    &:hover {
+                        color: #000; 
+                    }
+                }
+            }
+
+            .date {
+                padding-left: 0px;
+                padding-right: 30px;
+
+                color: $gray;
+            }
+        }
+    }
+
+    .follows {
+        display: inline-block;
+        width: 100%;
+
+        .follow {
+            padding-right: 10px;
+
+            border: none;
+
+            .title {
+                font-style: italic;
+
+                text-overflow: ellipses;
+
+                a {
+                    color: $gray;
+
+                    &:hover {
+                        color: #000; 
+                    }
+                }
+            }
+
+            .date {
+                padding-left: 0px;
+                padding-right: 20px;
+            }
+        }
+    }
+}
+
+#history {
+    .row {
+        margin-bottom: 0px;
+    }
+
+    .history
+    {
+        padding: 10px 0 10px 0;
+
+        .date {
+            padding-right: 0px;
+        }
+
+        .action {
+            padding: 0px;
+        }
+    }
+}
+
+#tags {
+    .row {
+        margin-bottom: 0px;
+    }
+
+    .posts {
+        padding: 5px 0px 5px 0px;
+
+        border-top: 1px solid #ccc;
+    }
+
+    .date {
+        padding-top: 5px;
+        padding-left: 0px;
+
+        color: $gray;
+    }
+
+    .entry {
+        display: flex;
+
+        margin-bottom: 0px;
+
+        padding-top: 5px;
+
+        border: none;
+
+        .fa {
+            padding-right: 10px;
+
+            font-size: 90%;
+
+            color: $gray-light;
+        }
+
+        .fa-paperclip {
+            padding-right: 13px;
+        }
+
+        .text {
+            font-family: 'Lato';
+            font-size: 90%;
+            font-variant: normal;
+        }
+    }
+
+    .tags {
+        padding: 10px 0 10px 0;
+
+        text-align: center;
+
         a {
-            color: $green;
+            color: $gray;
 
             &:hover {
                 color: #000;
             }
         }
 
+        .active {
+            color: $link-color;
+
+            &:hover {
+                text-decoration: none;
+
+                color: $blue-faded;
+
+                cursor: pointer;
+            }
+        }
+
+        .inactive {
+            color: $gray;
+        }
+    }
+}
+
+#topic {
+    .row {
+        margin-bottom: 0px;
+    }
+
+    .body {
+        padding: 10px 0px 10px 0px;
+
+        line-height: 1.5em;
+
+        color: #555;
+
+        p {
+            padding-top: 10px;
+        }
+    }
+
+    .footer {
+        padding-bottom: 10px;
+
+        border-bottom: 1px dotted #aaa;
+
+        font-size: 1em;
+
+        color: $gray-light;
+    }
+
+    .post {
+        margin-bottom: 0px;
+        padding: 5px 0px 5px 0px;
+
+        border-top: none;
+
+        .date {
+            padding: 2px 5px 0px 5px;
+
+            font-size: 90%;
+
+            text-align: right;
+
+            color: $gray;
+        }
+
         .title {
+            padding-left: 5px;
+            border-bottom: 0px;
+
+            font-family: 'Lato';
+            font-size: 100%;
+
+            text-transform: none;
+
             a {
+                color: $red-dark;
+
+                &:hover {
+                    color: black;
+                }
+            }
+
+            text-align: left;
+        }
+    }
+
+    .posts {
+        margin-top: -3px;
+
+        border-top: 1px dotted $gray-light;
+
+        .follow {
+            margin-top: -5px;
+
+            padding-top: 0px;
+        }
+
+        .post {
+            padding-bottom: 0px;
+        }
+
+        .footer {
+            padding-bottom: 10px;
+
+            border-bottom: 1px solid #aaa;
+
+            font-size: 1em;
+
+            color: $gray-light;
+        }
+
+        .post {
+            margin-bottom: 0px;
+            padding: 5px 0px 5px 0px;
+
+            border-top: none;
+
+            .date {
+                padding: 2px 5px 0px 5px;
+
+                font-size: 90%;
+
+                text-align: right;
+
+                color: $gray;
+            }
+        }
+
+        .title {
+            border-bottom: 0px;
+
+            font-family: 'Lato';
+            font-size: 100%;
+
+            text-transform: none;
+
+            text-align: left;
+            display: inline-block;
+
+            padding-right: 10px;
+            padding-left: 0px;
+
+            a {
+                padding-left: 1px;
+
                 color: $link-color;
+
+                &:hover {
+                    color: #000;
+                }
             }
         }
     }
@@ -235,35 +515,15 @@ img {
 }
 
 .post {
-    .topic {
-        padding-top: 10px;
-
-        border-bottom: 1px solid $gray-lighter;
-
-        font-size: 80%;
-
-        text-align: center;
-        text-transform: uppercase;
-
-        color: $gray-light;
-
-        a {
-            color: $gray-light;
-
-            &:hover {
-                color: $blue-faded;
-            }
-        }
-    }
-
     .title {
-        font-family: 'Lato';
         font-size: 250%;
         font-weight: 300;
 
-        color: $blue;
+        color: $blue-faded;
 
         a {
+            color: $blue;
+
             &:hover {
                 color: $red-dark;
             }
@@ -355,93 +615,6 @@ img {
     }
 }
 
-.topic {
-
-    .posts {
-        margin-top: -3px;
-
-        border-top: 1px dotted $gray-light;
-
-        .follow {
-            margin-top: -5px;
-
-            padding-top: 0px;
-        }
-
-        .post {
-            padding-bottom: 0px;
-        }
-
-        .title {
-            border-bottom: 0px;
-
-            font-family: 'Lato';
-            font-size: 100%;
-
-            text-transform: none;
-
-            text-align: left;
-            display: inline-block;
-
-            padding-right: 10px;
-            padding-left: 0px;
-
-            a {
-                padding-left: 1px;
-
-                color: $link-color;
-
-                &:hover {
-                    color: #000;
-                }
-            }
-        }
-    }
-}
-
-.topic {
-    .body {
-        padding: 0px 0px 5px 1px; 
-
-        font-family: $body-font;
-        font-size: 1.1em;
-
-        line-height: 1.5em;
-
-        color: #555;
-
-        p {
-            padding-top: 10px;
-        }
-    }
-
-    .footer {
-        padding-bottom: 10px;
-
-        border-bottom: 1px solid #aaa;
-
-        font-size: 1em;
-
-        color: $gray-light;
-    }
-
-    .post {
-        margin-bottom: 0px;
-        padding: 5px 0px 5px 0px;
-
-        border-top: none;
-
-        .date {
-            padding: 2px 5px 0px 5px;
-
-            font-size: 90%;
-
-            text-align: right;
-
-            color: $gray;
-        }
-    }
-}
 
 // Buttons
 .btn-delete {
@@ -620,105 +793,6 @@ img {
     padding-bottom: 9.5px;
 }
 
-#tags {
-    .posts {
-        padding: 5px 0px 5px 0px;
-        border-top: 1px solid #ccc;
-    }
-
-    .post {
-        display: flex;
-        margin-bottom: 0px;
-        padding-top: 5px;
-
-        border-top: none;
-
-        a:hover {
-            color: #000;
-        }
-
-        .date {
-            padding: 2px 5px 0px 5px;
-
-            font-size: 90%;
-
-            text-align: right;
-
-            color: $gray;
-        }
-
-        .title {
-            font-family: 'Lato';
-            font-size: 100%;
-            font-variant: normal;
-
-            color: #000;
-
-            a {
-                color: $green;
-                //color: #008cba;
-
-                &:hover {
-                    color: #000;
-                }
-            }
-
-            p {
-                margin: 0px;
-            }
-
-            text-align: left;
-        }
-
-        .topic {
-            padding: 2px 0px 0px 5px;
-
-            font-size: 90%;
-
-            color: $gray-light;
-        }
-    }
-
-    .tags {
-        padding: 10px 0 10px 0;
-
-        border-top: 1px dotted #aaa;
-
-        text-align: center;
-
-        a {
-            color: $gray;
-
-            &:hover {
-                color: #000;
-            }
-        }
-
-        .active {
-            color: $link-color;
-
-            &:hover {
-                text-decoration: none;
-
-                color: $blue-faded;
-
-                cursor: pointer;
-            }
-        }
-
-        .inactive {
-            color: $gray;
-        }
-    }
-
-    .title {
-        font-family: 'Cinzel';
-        font-size: 21px;
-
-        text-align: center;
-    }
-}
-
 #static {
     h3 {
         margin-bottom: 2px;
@@ -752,7 +826,7 @@ img {
     }
 }
 
-#topic {
+#topic-old {
     .title {
         border-bottom: 1px solid #aaa;
 
@@ -823,62 +897,6 @@ img {
             }
 
             text-align: left;
-        }
-    }
-}
-
-.contents {
-    .topic {
-        margin-bottom: 15px;
-
-        font-family: $page-title-font;
-        font-size: 140%;
-    }
-
-    .permalink {
-        padding-left: 7px;
-
-        font-size: 75%;
-
-        text-decoration: none;
-
-        a {
-            color: $gray-light;
-
-            &:hover {
-                color: $blue-faded;
-            }
-        }
-    }
-
-    .post {
-        margin-top: -2.5px;
-        margin-bottom: 0px;
-
-        border-top: 0px;
-
-        .follow {
-            display: inline-block;
-
-            padding: 0px 10px 0px 25px;
-
-            font-family: 'Lato';
-            font-size: 15px;
-
-            color: #777;
-
-            p {
-                display: inline;
-            }
-        }
-
-        .date {
-            display: inline-block;
-
-            font-family: 'Lato';
-            font-size: 12px;
-
-            color: $gray-light;
         }
     }
 }

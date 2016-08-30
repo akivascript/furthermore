@@ -1,8 +1,9 @@
 (ns furthermore.views.common
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
-            [typographer.core :as typo]
+            [typographer.core :refer [smarten]]
 
+            [furthermore.entities.common :as common]
             [furthermore.entities.follows :as follows]
             [furthermore.entities.posts :as posts]
             [furthermore.entities.topics :as topics]
@@ -21,11 +22,13 @@
        (when-not (= page :post) (vutil/continue post))]
       [:div.col-sx-12.col-sm-6
        [:div.small.text-right.date
-        "Filed under "
-        [:span.topic
-         (link-to (str (util/url-path topic) (:url topic))
-                  (typo/smarten (:title topic)))]
-        [:br]
+        (when-not (= page :post)
+          (html
+           "Filed under "
+           [:span.topic
+            (link-to (str (util/url-path topic) (:url topic))
+                     (smarten (:title topic)))]
+           [:br]))
         (str date " @ " time)
         (vutil/tags post)
         (vutil/twitter post)]]]]))
@@ -36,14 +39,17 @@
         {:keys [date time]} (util/timestamp (:created-on follow))]
     [:div.footer
      [:div.row
-      [:div.col-xs-12.col-sm-6 (vutil/continue follow)]
+      [:div.col-xs-12.col-sm-6
+       (when-not (= page :post) (vutil/continue follow))]
       [:div.col-sx-12.col-sm-6
        [:div.small.text-right.date
-        "A follow-up to "
-        [:span.parent
-         (link-to (str (util/url-path parent) (:url parent))
-                  (typo/smarten (:title parent)))]
-        [:br]
+        (when-not (= page :post)
+          (html
+           "A follow-up to "
+           [:span.parent
+            (link-to (str (util/url-path parent) (:url parent))
+                     (smarten (:title parent)))]
+           [:br]))
         (str date " @ " time)
         (vutil/tags follow)
         (vutil/twitter follow)]]]]))
@@ -71,12 +77,12 @@
      [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       (when (= page :post)
         [:div.post
-         [:div.topic
-          (link-to (str "/" (util/url-path topic) (:url topic))
-                   (typo/smarten (:title topic)))]])
+         [:div.page-title
+          (link-to (str (util/url-path topic) (:url topic))
+                   (smarten (:title topic)))]])
       [:div.entry.post
        (if (= page :post)
-         (for [p [(vutil/title post)
+         (for [p [(html [:div.title (smarten (:title post))])
                   (vutil/subtitle post)
                   (html [:div.body (:body post)])]] p)
          (for [p (vutil/content post)] p))]

@@ -1,4 +1,6 @@
-(ns furthermore.entities.common)
+(ns furthermore.entities.common
+  (:require [furthermore.db.core :as db]
+            [furthermore.entities.references :as refs]))
 
 (defn refs-of
   "Returns a lazy sequence of refs filtered by kind from an entity."
@@ -9,3 +11,7 @@
   "Returns sequence of all entries sorted by sort-key from a coll."
   [sort-key coll]
   (sort-by sort-key coll))
+
+(defn get
+  [entity]
+  (db/entity entity))

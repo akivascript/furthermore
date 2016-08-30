@@ -7,7 +7,7 @@
    :contents "/contents"
    :home "/"
    :tags "/tags"
-   :updates "/updates"})
+   :history "/history"})
 
 (def ^:private default
   (html
@@ -16,7 +16,7 @@
    [:li
     [:a {:href (:tags path)} "Tags"]]
    [:li
-    [:a {:href (:updates path)} "Updates"]]
+    [:a {:href (:history path)} "History"]]
    [:li
     [:a {:href (:about path)} "About"]]))
 

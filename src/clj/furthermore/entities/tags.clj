@@ -5,6 +5,7 @@
             [monger.util :as mutil]
 
             [furthermore.db.core :as db]
+            [furthermore.entities.common :as common]
             [furthermore.entities.references :as refs :refer [->refs]]
             [furthermore.util :as util]))
 
@@ -41,7 +42,6 @@
          :or {_id (mutil/random-uuid)
               created-on (ltime/local-now)
               log? true
-              title "Miscellania"
               refs #{}
               url (util/url-name title)}} params]
     (map->Tag {:_id _id
@@ -60,12 +60,14 @@
 
 (defn create
   "Returns a tag entity."
-  [x]
-  (cond
-    (nil? x) nil
-    (map? x) (tag x)
-    :else
-    (tag {:title x})))
+  ([]
+   (tag {:title "Miscellaneous"}))
+  ([x]
+   (cond
+     (nil? x) nil
+     (map? x) (tag x)
+     :else
+     (tag {:title x}))))
 
 (defn save
   "Saves a tag to the the database."
@@ -74,3 +76,13 @@
 
 (def get (comp tag (partial db/entity :tag)))
 (def get-all (comp (partial map tag) (partial db/entities :tag)))
+
+(defn refs-of
+  "Returns a lazy sequence of a tag's refs filtered by kind."
+  [kind tag]
+  (common/refs-of kind tag))
+
+(defn untagged
+  "Returns a lazy sequence of coll that have no tags."
+  [coll]
+  (filter (comp (partial empty?) :tags) coll))

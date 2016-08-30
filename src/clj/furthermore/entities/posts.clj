@@ -25,7 +25,6 @@
               refs #{}
               tags #{}
               title "New Post"
-              topic parent
               tweet? false
               url (util/entity-url date title)}} params]
     (map->Post {:_id _id
@@ -64,21 +63,21 @@
   [x]
   (db/save x))
 
+(def get (comp post (partial db/entity :post)))
+(def get-all (comp (partial map post) (partial db/entities :post)))
+
 (defn parent
   [post]
   (when (post? post)
-    (let [[_id kind] (:parent post)]
-      (condp = kind
-        :topic (topics/get :_id _id)
-        :post (get :_id _id)))))
+    (let [parent (:parent post)]
+      (condp = (:kind parent)
+        :topic (topics/get post)
+        :post (get post)))))
 
 (defn topic
   [post]
   (when (post? post)
-    (topics/get :_id (get-in post [:topic :_id]))))
-
-(def get (comp post (partial db/entity :post)))
-(def get-all (comp (partial map post) (partial db/entities :post)))
+    (topics/get (:topic post))))
 
 (defn refs-of
   "Returns a lazy sequence of a post's refs filtered by kind."

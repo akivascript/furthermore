@@ -9,8 +9,6 @@
             [furthermore.entities.topics :as topics]
             [furthermore.util :as util]))
 
-(declare parent-url)
-
 (defrecord Follow
     [_id authors body created-on excerpt kind
      last-updated log? parent refs tags topic tweet? url])
@@ -25,9 +23,8 @@
               log? true
               refs #{}
               tags #{}
-              topic (:topic parent)
-              tweet? false
-              url (str (parent-url parent) "#" (util/url-name _id))}} params]
+              tweet? false}} params
+        parent' (posts/get (->ref parent))]
     (map->Follow {:_id _id
                   :authors (->refs authors)
                   :body body
@@ -39,9 +36,9 @@
                   :parent (->ref parent)
                   :refs (->refs refs)
                   :tags (->refs tags)
-                  :topic (->ref topic)
+                  :topic (->ref (:topic parent'))
                   :tweet? tweet?
-                  :url url})))
+                  :url (str (:url parent') "#" (util/url-name _id))})))
 
 (defn follow?
   "Returns true if x is a follow."
@@ -60,20 +57,6 @@
   [x]
   (db/save x))
 
-(defn parent
-  [follow]
-  (when (follow? follow)
-    (posts/get :_id (get-in follow [:parent :_id]))))
-
-(defn topic
-  [follow]
-  (when (follow? follow)
-    (topics/get :_id (get-in follow [:topic :_id]))))
-
-(defn parent-url
-  [follow]
-  (:url (parent follow)))
-
 (def get (comp follow (partial db/entity :follow)))
 (def get-all (comp (partial map follow) (partial db/entities :follow)))
 
@@ -89,3 +72,19 @@
   appropriate values."
   [k s]
   (map (partial get k) s))
+
+(defn parent
+  [follow]
+  (when (follow? follow)
+    (let [parent (:parent follow)]
+      (condp = (:kind parent)
+        :topic (topics/get parent)
+        :post (posts/get parent)))))
+
+(defn topic
+  [follow]
+  (when (follow? follow)
+    (let [topic (:topic follow)]
+      (condp = (:kind topic)
+        :topic (topics/get topic)
+        :post (posts/get topic)))))
