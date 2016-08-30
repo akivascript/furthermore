@@ -12,6 +12,15 @@
 
 (defmulti footer (fn [_ entry] (:kind entry)))
 
+(defmethod footer :page
+  [_ page]
+  (let [created-date (util/timestamp (:created-on page))
+        updated-date (util/timestamp (:last-updated page))]
+    [:div.footer
+     [:div.col-sx-12
+      [:div.small.text-right.date
+       (str (:date updated-date) " @ " (:time updated-date))]]]))
+
 (defmethod footer :post
   [page post]
   (let [topic (posts/topic post)

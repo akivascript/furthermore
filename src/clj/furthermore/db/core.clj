@@ -149,7 +149,7 @@
   [entity]
   (let [kind (:kind entity)]
     (case kind
-      (:author :tag) (save* entity)
+      (:author :page :tag) (save* entity)
       (:image :topic) (do (doseq [a (authors entity)] (save a))
                           (doseq [t (tags entity)] (save t))
                           (save* entity))

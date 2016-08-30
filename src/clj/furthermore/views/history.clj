@@ -6,6 +6,7 @@
             [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
+            [furthermore.entities.authors :as authors]
             [furthermore.entities.events :as events]
             [furthermore.entities.posts :as posts]
             [furthermore.entities.topics :as topics]
