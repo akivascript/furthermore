@@ -3,6 +3,7 @@
             [hiccup.element :refer [link-to]]
             [typographer.core :refer [smarten]]
 
+            [furthermore.entities.common :as common]
             [furthermore.entities.follows :as follows]
             [furthermore.entities.posts :as posts]
             [furthermore.entities.topics :as topics]
@@ -34,7 +35,7 @@
 
 (defmethod footer :follow
   [page follow]
-  (let [parent (follows/parent follow)
+  (let [parent (posts/parent follow)
         {:keys [date time]} (util/timestamp (:created-on follow))]
     [:div.footer
      [:div.row

@@ -87,7 +87,9 @@
      (when-not (nil? entity)
        (util/keywordize entity))))
   ([kind k v]
-   (entity kind {k v})))
+   (entity kind {k v}))
+  ([ref]
+   (entity (:kind ref) :_id (:_id ref))))
 
 (defn search
   "Returns one or more entities from the database. criterion is

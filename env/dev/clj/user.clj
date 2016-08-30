@@ -46,11 +46,6 @@
 
 
 ;; -->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>--->>- DATABASE -->
-(declare create-author
-         create-follow
-         create-post
-         create-tag
-         create-topic)
 
 (def colls [:author
             :event
@@ -72,98 +67,44 @@
   "Drops and recreates all Furthermore collections and fills them with
   some test data."
   []
-  (authors/save (create-author))
-  (topics/save (create-topic))
-  (tags/save (create-tag))
-  (posts/save (create-post))
-  (Thread/sleep 1000) ; sleep to ensure a different timestamp
-  (follows/save (create-follow))) ; for the follow-up
-
-(defn setup
-  "Creates all of the necessary collections for Furthermore.
-  Note that if a collection already exists, it is skipped."
-  []
-  (doseq [c colls] (db/create c)))
-
-(def reset (comp populate setup kill))
-
-
-;; -->>---> Author -->>--->
-(defn create-author
-  []
-  (authors/create
-   {:_id "29806481-9d65-4a61-b831-eaac9d23ed4b"
-    :name "Akiva"
-    :refs #{#furthermore.entities.references.Reference
-            {:_id "b2f28143-0d74-4cc4-ae48-f4f68dfb8ae4" :kind :post}
-            #furthermore.entities.references.Reference
-            {:_id "7c5e4b51-92f5-440b-9b8e-e4814d9075a1" :kind :topic}}}))
-
-;; -->>---> Follow -->>--->
-(defn create-follow
-  []
-  (follows/create
-   {:_id "34a84d0a-1ecd-4090-9e23-5dee14a1d0f1"
-    :authors #{#furthermore.entities.references.Reference
-               {:_id "29806481-9d65-4a61-b831-eaac9d23ed4b" :kind :author}}
-    :body "Zazen practice is the direct expression of our true nature. Strictly
-speaking, for a human being, there is no other practice than this practice;
-there is no other way of life than this way of life."
-    :excerpt "Zazen practice is the direct expression of our true nature."
-    :parent #furthermore.entities.references.Reference
-    {:_id "b2f28143-0d74-4cc4-ae48-f4f68dfb8ae4", :kind :post}
-    :tags #{#furthermore.entities.references.Reference
-            {:_id "3a3358c5-b3a1-4b7b-83fd-e34b7eabf429", :kind :tag}}
-    :topic #furthermore.entities.references.Reference
-    {:_id "7c5e4b51-92f5-440b-9b8e-e4814d9075a1", :kind :topic}}))
-
-;; -->>---> Post -->>--->
-(defn create-post
-  []
-  (posts/create
-   {:_id "b2f28143-0d74-4cc4-ae48-f4f68dfb8ae4"
-    :authors #{#furthermore.entities.references.Reference
-               {:_id "29806481-9d65-4a61-b831-eaac9d23ed4b", :kind :author}}
-    :body "People say that practicing Zen is difficult, but there is a
+  (let [author (authors/create {:name "Akiva"})
+        topic (topics/create
+               {:authors #{author}
+                :title "Spirituality"
+                :body "This covers all manner of theist, atheist, and apatheist subjects."})
+        tag (tags/create {:title "Zen"})
+        post (posts/create
+              {:authors #{author}
+               :parent topic
+               :topic topic
+               :tags #{tag}
+               :body "People say that practicing Zen is difficult, but there is a
 misunderstanding as to why. It is not difficult because it is hard to sit in
 the cross-legged position, or to attain enlightenment. It is difficult because
 it is hard to keep our mind pure and our practice pure in its fundamental
 sense. The Zen school developed in many ways after it was established in China,
 but at the same time, it became more and more impure. But I do not want to talk
 about Chinese Zen or the history of Zen."
-    :excerpt "People say that practicing Zen is difficult, but there is a
+               :excerpt "People say that practicing Zen is difficult, but there is a
 misunderstanding as to why. It is not difficult because it is hard to sit in
 the cross-legged position, or to attain enlightenment. It is difficult because
 it is hard to keep our mind pure and our practice pure in its fundamental sense."
-    :parent #furthermore.entities.references.Reference
-    {:_id "7c5e4b51-92f5-440b-9b8e-e4814d9075a1", :kind :topic}
-    :subtitle "A Look from the Beginner's Mind"
-    :tags #{#furthermore.entities.references.Reference
-            {:_id "3a3358c5-b3a1-4b7b-83fd-e34b7eabf429", :kind :tag}}
-    :title "The Difficulty of Zen"
-    :topic #furthermore.entities.references.Reference
-    {:_id "7c5e4b51-92f5-440b-9b8e-e4814d9075a1", :kind :topic}}))
+               :title "The Difficulty of Zen"
+               :subtitle "A Look from the Beginner's Mind"})
+        follow (follows/create
+                {:authors #{author}
+                 :parent post
+                 :topic (:parent post)
+                 :tags #{tag}
+                 :body "Zazen practice is the direct expression of our true nature. Strictly
+speaking, for a human being, there is no other practice than this practice;
+there is no other way of life than this way of life."
+                 :excerpt "Zazen practice is the direct expression of our true nature."})]
+    (authors/save author)
+    (topics/save topic)
+    (tags/save tag)
+    (posts/save post)
+    (Thread/sleep 1000) ; sleep to ensure a different timestamp
+    (follows/save follow))) ; for the follow-up
 
-;; -->>---> Tag -->>--->
-(defn create-tag
-  []
-  (tags/create
-   {:_id "3a3358c5-b3a1-4b7b-83fd-e34b7eabf429"
-    :refs
-    #{#furthermore.entities.references.Reference
-      {:_id "b2f28143-0d74-4cc4-ae48-f4f68dfb8ae4", :kind :post}
-      #furthermore.entities.references.Reference
-      {:_id "34a84d0a-1ecd-4090-9e23-5dee14a1d0f1", :kind :follow}}
-    :title "Zen"}))
-
-;; -->>---> Topic -->>--->
-(defn create-topic
-  []
-  (topics/create
-   {:_id "7c5e4b51-92f5-440b-9b8e-e4814d9075a1"
-    :authors #{#furthermore.entities.references.Reference
-               {:_id "29806481-9d65-4a61-b831-eaac9d23ed4b", :kind :author}}
-    :body "This covers all manner of theist, atheist, and apatheist subjects."
-    :refs #{#furthermore.entities.references.Reference
-            {:_id "b2f28143-0d74-4cc4-ae48-f4f68dfb8ae4", :kind :post}}
-    :title "Spirituality"}))
+(def reset (comp populate kill))
