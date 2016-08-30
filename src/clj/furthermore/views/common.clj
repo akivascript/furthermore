@@ -3,6 +3,7 @@
             [hiccup.element :refer [link-to]]
             [typographer.core :refer [smarten]]
 
+            [furthermore.entities.authors :as authors]
             [furthermore.entities.common :as common]
             [furthermore.entities.follows :as follows]
             [furthermore.entities.posts :as posts]
@@ -19,7 +20,8 @@
     [:div.footer
      [:div.col-sx-12
       [:div.small.text-right.date
-       (str (:date updated-date) " @ " (:time updated-date))]]]))
+       [:div (str (:date updated-date) " @ " (:time updated-date))]
+       [:div (vutil/authors page)]]]]))
 
 (defmethod footer :post
   [page post]
@@ -30,6 +32,7 @@
       [:div.col-xs-12.col-sm-6
        (when-not (= page :post) (vutil/continue post))]
       [:div.col-sx-12.col-sm-6
+       [:div.small.text-right.author (vutil/authors post)]
        [:div.small.text-right.date
         (when-not (= page :post)
           (html
@@ -51,6 +54,7 @@
       [:div.col-xs-12.col-sm-6
        (when-not (= page :post) (vutil/continue follow))]
       [:div.col-sx-12.col-sm-6
+       [:div.small.text-right.author (vutil/authors follow)]
        [:div.small.text-right.date
         (when-not (= page :post)
           (html
