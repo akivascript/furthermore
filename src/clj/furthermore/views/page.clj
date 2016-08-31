@@ -8,8 +8,8 @@
             [furthermore.views.common :as common]
             [furthermore.views.util :as vutil]))
 
-(def build (comp (partial vutil/prepare-text md-to-html-string)
-                 (partial vutil/prepare-text smarten)))
+(def build (comp (partial vutil/prepare-text smarten)
+                 (partial vutil/prepare-text md-to-html-string)))
 
 (defn content
   "Displays the content of a static page."
@@ -20,5 +20,5 @@
        [:div.row
         [:div.col-xs-12.col-sm-10.col-sm-offset-1
          [:div.page-title (:title page)]
-         [:div.page (:body page)]
+         [:div.page (md-to-html-string (smarten (:body page)))]
          (common/footer :page page)]]]])))
