@@ -7,24 +7,27 @@
             [furthermore.util :as util]))
 
 (defrecord Image
-    [_id authors created-on image-source kind
-     last-updated log? refs tags title tweet? url])
+    [_id alt-text authors created-on filename image-source
+     kind last-updated log? refs tags title tweet? url])
 
 (defn- image
   [params]
   (let [date (ltime/local-now)
-        {:keys [_id authors created-on image-source kind
-                last-updated log? refs tags title tweet? url]
+        {:keys [_id alt-text authors created-on filename image-source
+                kind last-updated log? refs tags title tweet? url]
          :or {_id (mutil/random-uuid)
+              alt-text "image"
               created-on date
               log? false
               refs #{}
               tags #{}
               title "New Image"
               tweet? false
-              url (util/entity-url date title)}} params]
+              url (util/entity-url title)}} params]
     (map->Image {:_id _id
+                 :alt-text alt-text
                  :authors (->refs authors)
+                 :filename filename
                  :image-source image-source
                  :kind :image
                  :log? log?
@@ -35,18 +38,21 @@
                  :url url})))
 
 (defn image?
-  "Returns true if x is an Image."
-  [x]
-  (instance? Image x))
+  "Returns true if img is an Image."
+  [img]
+  (instance? Image img))
 
 (defn create
   "Returns an image entity."
-  [x]
+  [img]
   (cond
-    (nil? x) nil
-    (map? x) (image x)
-    :else
-    (image {:image-source x})))
+    (nil? img) nil
+    (map? img) (image img)))
+
+(defn save
+  "Commits an image entity to the datastore."
+  [img]
+  (db/save img))
 
 (def get (comp image (partial db/entity :image)))
 (def get-all (comp (partial map image) (partial db/entities :image)))
