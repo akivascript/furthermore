@@ -4,7 +4,6 @@
             [typographer.core :refer [smarten]]
 
             [furthermore.entities.follows :as follows]
-            [furthermore.entities.images :as images]
             [furthermore.entities.posts :as posts]
             [furthermore.views.common :as common]
             [furthermore.views.util :as vutil]))
@@ -17,8 +16,7 @@
   []
   (flatten (merge
             (posts/get-all)
-            (follows/get-all)
-            (images/get-all))))
+            (follows/get-all))))
 
 (defn- entries
   []
