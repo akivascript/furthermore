@@ -12,6 +12,7 @@ profiles.clj
 /content
 /.sass-cache
 /resources
+/assets
 js/
 screen.css
 screen.css.map
