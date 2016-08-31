@@ -1,7 +1,9 @@
 (ns furthermore.views.util
-  (:require [hiccup.core :refer :all]
+  (:require [clojure.java.shell :as shell]
+
+            [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
-            [typographer.core :as typo]
+            [typographer.core :refer [smarten]]
 
             [furthermore.entities.authors :as authors]
             [furthermore.entities.posts :as posts]
@@ -28,20 +30,17 @@
     [:div.small
      (link post "Continue &raquo;")]))
 
-(defn prepare-text
-  [fn entity]
-  (case (:kind entity)
-    (:follow :post) (-> entity
-                        (update :body fn)
-                        (update :excerpt fn))
-    (:page :topic) (update entity :body fn)
-    entity))
+(defn mmd->html
+  [text]
+  (if (empty? text)
+    text
+    (:out (shell/sh "multimarkdown" :in text))))
 
 (defn subtitle
   [post]
   (when-let [subtitle (:subtitle post)]
     [:div.subtitle
-     (typo/smarten subtitle)]))
+     (smarten subtitle)]))
 
 (defn tag-icon
   [c]
@@ -66,14 +65,14 @@
 (defn text
   [post]
   (if (nil? (:excerpt post))
-    [:div.body (:body post)]
-    [:div.body (:excerpt post)]))
+    [:div.body (mmd->html (:body post))]
+    [:div.body (mmd->html (:excerpt post))]))
 
 (defn title
   [post]
   (when-let [title (:title post)]
     [:div.title
-     (link post (typo/smarten title))]))
+     (link post (smarten title))]))
 
 (defn twitter
   [post]

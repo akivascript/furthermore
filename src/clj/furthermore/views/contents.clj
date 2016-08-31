@@ -1,7 +1,6 @@
 (ns furthermore.views.contents
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
-            [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities.follows :as follows]
@@ -35,7 +34,7 @@
       [:div.col-sm-8
        [:span.title
         (drop-down post)
-        (link-to (str (util/url-path post) (:url post)) (:title post))]]
+        (link-to (str (util/url-path post) (:url post)) (smarten (:title post)))]]
       [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod title :topic
@@ -46,7 +45,7 @@
      [:div.col-sm-8
       [:span.title
        (drop-down topic)
-       (link-to (str (util/url-path topic) (:url topic)) (:title topic))]]
+       (link-to (str (util/url-path topic) (:url topic)) (smarten (:title topic)))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod title :follow
@@ -58,7 +57,7 @@
      [:div.col-sm-8
       [:span.title
        (drop-down follow)
-       (link-to url (util/excerpt (:body follow) 50))]]
+       (link-to url (util/excerpt (smarten (vutil/mmd->html (:body follow))) 50))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defn content
@@ -86,4 +85,3 @@
                                         (follows/sorted-by :created-on))]
                      [:div.follow {:id (subs (:_id follow-up) 0 6)}
                       (title follow-up)])])])])])]]]]])
-
