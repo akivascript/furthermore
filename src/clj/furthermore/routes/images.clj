@@ -1,12 +1,13 @@
 (ns furthermore.routes.images
   (:require [compojure.core :refer [defroutes GET]]
 
-            [furthermore.layout :as layout]
+            [furthermore.entities.images :as images]
             [furthermore.views.image :as image]))
 
 (defn build
-  [url]
-  (layout/render :image (image/content url)))
+  [image]
+  (let [img (images/get :filename image)]
+    (image/content img)))
 
 (defroutes routes
-  (GET "/images/:url" [image] (build image)))
+  (GET "/images/:image" [image] (build image)))
