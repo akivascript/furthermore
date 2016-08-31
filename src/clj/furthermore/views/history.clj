@@ -15,9 +15,9 @@
 (defn- action
   "Returns the action type for the event."
   [event]
-  ({:deleted "Deleted"
+  ({:delete "Deleted"
     :new "Added"
-    :updated "Updated"} (:action event)))
+    :update "Updated"} (:action event)))
 
 (defn- target
   [event]
