@@ -1,7 +1,6 @@
 (ns furthermore.views.tags
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
-            [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities.follows :as follows]
@@ -10,10 +9,6 @@
             [furthermore.entities.topics :as topics]
             [furthermore.views.util :as vutil]
             [furthermore.util :as util]))
-
-(def prepare (comp (partial vutil/prepare-text md-to-html-string)
-                   (partial vutil/prepare-text smarten)
-                   :title))
 
 (defn- link
   "Return a list of HTML anchors. If a tag matches
