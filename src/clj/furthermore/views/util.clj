@@ -3,10 +3,19 @@
             [hiccup.element :refer [link-to]]
             [typographer.core :as typo]
 
+            [furthermore.entities.authors :as authors]
             [furthermore.entities.posts :as posts]
             [furthermore.entities.tags :as tags]
             [furthermore.entities.topics :as topics]
             [furthermore.util :as util]))
+
+(defn authors
+  [entity]
+  (let [authors (map authors/get (:authors entity))]
+    (apply str (interpose ", " (map #(html (link-to
+                                            (str "https://twitter.com/"
+                                                 (:twitter %))
+                                            (:twitter %))) authors)))))
 
 (defn- link
   [post content]

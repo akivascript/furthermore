@@ -3,26 +3,31 @@
             [monger.util :as mutil]
 
             [furthermore.db.core :as db]
-            [furthermore.entities.references :as refs :refer [->refs]]))
+            [furthermore.entities.references :as refs :refer [->refs]]
+            [furthermore.util :as util]))
 
 (defrecord Author
-    [_id created-on kind last-updated log? name refs url])
+    [_id about created-on facebook kind last-updated log? name refs twitter url])
 
 (defn- author
   [params]
-  (let [{:keys [_id created-on kind last-updated log? name refs]
+  (let [{:keys [_id about created-on facebook kind last-updated log? name refs twitter url]
          :or {_id (mutil/random-uuid)
               created-on (ltime/local-now)
               log? true
               name "John Doe"
               refs #{}}} params]
     (map->Author {:_id _id
+                  :about about
                   :created-on created-on
+                  :facebook facebook
                   :kind :author
                   :last-updated last-updated
                   :log? log?
                   :name name
-                  :refs (->refs refs)})))
+                  :refs (->refs refs)
+                  :twitter twitter
+                  :url url})))
 
 (defn author?
   "Returns true if x is an Author."
