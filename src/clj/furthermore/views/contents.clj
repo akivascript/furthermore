@@ -57,7 +57,7 @@
      [:div.col-sm-8
       [:span.title
        (drop-down follow)
-       (link-to url (util/excerpt (smarten (vutil/mmd->html (:body follow))) 50))]]
+       (link-to url (vutil/mmd->html (:body follow)))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defn content
