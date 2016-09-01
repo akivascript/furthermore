@@ -1,7 +1,6 @@
 (ns furthermore.views.contents
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
-            [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities.follows :as follows]
@@ -30,13 +29,12 @@
 
 (defmethod title :post
   [post]
-   (let [url (str "/post/" (:url post))
-         {:keys [date time]} (util/timestamp (:created-on post))]
+   (let [{:keys [date time]} (util/timestamp (:created-on post))]
      [:div
       [:div.col-sm-8
        [:span.title
         (drop-down post)
-        (link-to (str (util/url-path post) (:url post)) (:title post))]]
+        (link-to (str (util/url-path post) (:url post)) (smarten (:title post)))]]
       [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod title :topic
@@ -47,20 +45,19 @@
      [:div.col-sm-8
       [:span.title
        (drop-down topic)
-       (link-to (str (util/url-path topic) (:url topic)) (:title topic))]]
+       (link-to (str (util/url-path topic) (:url topic)) (smarten (:title topic)))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod title :follow
   [follow]
   (let [parent (posts/get :_id (get-in follow [:parent :_id]))
         {:keys [date time]} (util/timestamp (:created-on follow))
-        url (str (util/url-path parent)
-                 (:url parent) (:url follow))]
+        url (str (util/url-path follow) (:url follow))]
     [:div
      [:div.col-sm-8
       [:span.title
        (drop-down follow)
-       (link-to url (util/excerpt (:body follow) 50))]]
+       (link-to url (vutil/mmd->html (:body follow)))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defn content
@@ -88,4 +85,3 @@
                                         (follows/sorted-by :created-on))]
                      [:div.follow {:id (subs (:_id follow-up) 0 6)}
                       (title follow-up)])])])])])]]]]])
-

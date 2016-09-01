@@ -1,7 +1,6 @@
 (ns furthermore.views.tags
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
-            [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities.follows :as follows]
@@ -10,10 +9,6 @@
             [furthermore.entities.topics :as topics]
             [furthermore.views.util :as vutil]
             [furthermore.util :as util]))
-
-(def prepare (comp (partial vutil/prepare-text md-to-html-string)
-                   (partial vutil/prepare-text smarten)
-                   :title))
 
 (defn- link
   "Return a list of HTML anchors. If a tag matches
@@ -71,9 +66,9 @@
         parent (posts/get :_id (get-in entity [:parent :_id]))]
     [:div.entry
      [:div.col-sm-8
-      [:i.fa.fa-paperclip {:aria-hidden "true"}]
-      [:span.text [:em (link-to (str (util/url-path entity) (:url entity))
-                              (smarten (:body entity)))]]]
+      [:span.text
+       [:i.fa.fa-paperclip {:aria-hidden "true"}]
+       (link-to (str (util/url-path entity) (:url entity)) (:body entity))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
 (defmethod render :post
@@ -81,8 +76,9 @@
   (let [{:keys [date time]} (util/timestamp (:created-on entity))]
     [:div.entry
      [:div.col-sm-8
-      [:i.fa.fa-folder {:aria-hidden "true"}]
-      [:span.text (link-to (str (util/url-path entity) (:url entity))
+      [:span.text
+       [:i.fa.fa-folder {:aria-hidden "true"}]
+       (link-to (str (util/url-path entity) (:url entity))
                             (smarten (:title entity)))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 
@@ -91,8 +87,9 @@
   (let [{:keys [date time]} (util/timestamp (:created-on entity))]
     [:div.entry
      [:div.col-sm-8
-      [:i.fa.fa-archive {:aria-hidden "true"}]
-      [:span.text (link-to (str (util/url-path entity) (:url entity))
+      [:span.text
+       [:i.fa.fa-archive {:aria-hidden "true"}]
+       (link-to (str (util/url-path entity) (:url entity))
                             (smarten (:title entity)))]]
      [:div.col-sm-4.date.small.text-right (str date " @ " time)]]))
 

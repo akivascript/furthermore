@@ -60,6 +60,7 @@ body {
     background-color: #fff;
 
     font-family: 'Lato';
+    font-weight: 300;
 }
 
 code, kbd, pre, samp {
@@ -209,21 +210,22 @@ img {
                 color: #000;
             }
         }
+
+        .title {
+            font-weight: 400;
+        }
     }
 
     .posts {
-        display: inline-block;
         width: 100%;
 
         margin-left: 15px;
 
         .post {
             .title {
-                font-family: 'Lato';
                 font-size: 90%;
                 font-variant: normal;
-
-                text-overflow: ellipses;
+                font-weight: 300;
 
                 a {
                     color: $link-color;
@@ -253,15 +255,25 @@ img {
             border: none;
 
             .title {
+                display: block;
+
+                padding-top: 2px;
+
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
                 font-style: italic;
 
-                text-overflow: ellipses;
+                p {
+                    display: initial;
+                }
 
                 a {
                     color: $gray;
 
                     &:hover {
-                        color: #000; 
+                        color: #000;
                     }
                 }
             }
@@ -291,6 +303,29 @@ img {
             padding: 0px;
         }
     }
+
+    .title {
+        display: block;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+#page {
+    .page {
+        margin-bottom: 10px;
+        padding: 10px 5px 10px 5px;
+
+        border-bottom: 1px dotted #aaa;
+
+        font-weight: 300;
+    }
+
+    .date {
+        color: #aaa;
+    }
 }
 
 #tags {
@@ -301,7 +336,7 @@ img {
     .posts {
         padding: 5px 0px 5px 0px;
 
-        border-top: 1px solid #ccc;
+        border-top: 1px dotted #aaa;
     }
 
     .date {
@@ -333,9 +368,16 @@ img {
         }
 
         .text {
-            font-family: 'Lato';
+            display: block;
+
             font-size: 90%;
             font-variant: normal;
+
+            color: $link-color;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 
@@ -417,7 +459,6 @@ img {
             padding-left: 5px;
             border-bottom: 0px;
 
-            font-family: 'Lato';
             font-size: 100%;
 
             text-transform: none;
@@ -479,7 +520,6 @@ img {
         .title {
             border-bottom: 0px;
 
-            font-family: 'Lato';
             font-size: 100%;
 
             text-transform: none;
@@ -595,6 +635,10 @@ img {
 }
 
 .footer {
+    font-weight: 400;
+
+    color: $gray;
+
     .tags {
         color: $gray-lighter;
     }
@@ -797,7 +841,6 @@ img {
     h3 {
         margin-bottom: 2px;
 
-        font-family: 'Lato';
         font-size: 140%;
 
         color: $gray-dark;
@@ -883,7 +926,6 @@ img {
             padding-left: 5px;
             border-bottom: 0px;
 
-            font-family: 'Lato';
             font-size: 100%;
 
             text-transform: none;
@@ -897,62 +939,6 @@ img {
             }
 
             text-align: left;
-        }
-    }
-}
-
-.contents1 {
-    .topic {
-        margin-bottom: 15px;
-
-        font-family: $page-title-font;
-        font-size: 140%;
-    }
-
-    .permalink {
-        padding-left: 7px;
-
-        font-size: 75%;
-
-        text-decoration: none;
-
-        a {
-            color: $gray-light;
-
-            &:hover {
-                color: $blue-faded;
-            }
-        }
-    }
-
-    .post {
-        margin-top: -2.5px;
-        margin-bottom: 0px;
-
-        border-top: 0px;
-
-        .follow {
-            display: inline-block;
-
-            padding: 0px 10px 0px 25px;
-
-            font-family: 'Lato';
-            font-size: 15px;
-
-            color: #777;
-
-            p {
-                display: inline;
-            }
-        }
-
-        .date {
-            display: inline-block;
-
-            font-family: 'Lato';
-            font-size: 12px;
-
-            color: $gray-light;
         }
     }
 }
@@ -982,8 +968,6 @@ img {
             .status {
                 margin-left: -10px;
                 padding: 2px 5px 0px 5px;
-
-                text-overflow: ellipsis;
 
                 font-size: 90%;
             }

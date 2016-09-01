@@ -11,6 +11,7 @@ profiles.clj
 /log
 /content
 /.sass-cache
+/assets
 js/
 screen.css
 screen.css.map
