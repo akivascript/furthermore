@@ -34,7 +34,7 @@
   [text]
   (if (empty? text)
     text
-    (:out (shell/sh "multimarkdown" :in text))))
+    (:out (shell/sh "kramdown" :in text))))
 
 (defn subtitle
   [post]
