@@ -7,11 +7,8 @@
             [furthermore.entities.posts :as posts]
             [furthermore.entities.topics :as topics]
             [furthermore.views.common :as common]
-            [furthermore.views.util :as vutil]
+            [furthermore.views.util :as vutil :refer [mmd->html]]
             [furthermore.util :as util]))
-
-(def prepare (comp (partial vutil/prepare-text md-to-html-string)
-                   (partial vutil/prepare-text smarten)))
 
 (defn- entries
   "Return a list of posts, sorted by title, for the given topic."
@@ -34,7 +31,7 @@
   (let [{:keys [date time]} (util/timestamp (:created-on topic))]
     [:div.topic
      [:div.page-title (smarten (:title topic))]
-     [:div.body (prepare (:body topic))]
+     [:div.body (mmd->html (:body topic))]
      [:div.footer
       [:div.row
        [:div.col-xs-12.col-sm-6

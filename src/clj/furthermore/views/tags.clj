@@ -18,14 +18,13 @@
     (if (or (nil? tag-url)
             (not= tag-url tag-url'))
       (html (link-to (str "/tags/" tag-url') tag))
-      tag)))
+      (smarten tag))))
 
 (defn- taglist
   "Returns a string of tag titles, the one matching tag-url unactionable."
   [tags tag-url]
-  (let [tags' (sort-by :title (conj tags (tags/create "Untagged")))]
-    (apply str (interpose " &bull; " (map
-                                      (comp (partial link tag-url) prepare) tags')))))
+  (let [tags' (conj (sort-by :title tags) (tags/create "Untagged"))]
+    (apply str (interpose " &bull; " (map (partial link tag-url) tags')))))
 
 (defn- refsmap
   "Given a tag's url name, return all of that tag's references."
