@@ -3,7 +3,6 @@
   in chronological order all updates (events) to the blog."
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
-            [markdown.core :refer [md-to-html-string]]
             [typographer.core :refer [smarten]]
 
             [furthermore.entities.authors :as authors]
@@ -15,9 +14,9 @@
 (defn- action
   "Returns the action type for the event."
   [event]
-  ({:deleted "Deleted"
+  ({:delete "Deleted"
     :new "Added"
-    :updated "Updated"} (:action event)))
+    :update "Updated"} (:action event)))
 
 (defn- target
   [event]
@@ -72,7 +71,7 @@
     [:div.container-fluid
      [:div.row.event
       [:div.col-sm-2.action.small (describe event)]
-      [:div.col-sm-7.title.small (:name author)]
+      [:div.col-sm-7.title.small (smarten (:name author))]
       [:div.col-sm-3.date.small.text-right (str date " @ " time)]]]))
 
 (defmethod render :default
@@ -83,5 +82,5 @@
       [:div.col-sm-2.action.small (describe event)]
       [:div.col-sm-7.title.small (link-to (str (util/url-path (:entity event))
                                                (:url event))
-                                          (:title event))]
+                                          (smarten (:title event)))]
       [:div.col-sm-3.date.small.text-right (str date " @ " time)]]]))

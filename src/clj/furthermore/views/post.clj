@@ -16,10 +16,10 @@
   [post]
   [:div.container
    [:div#banner.page-header
-    (build post)
+    (common/entry :post post)
     (when-let [fs (filter #(= (:kind %) :follow) (:refs post))]
       (html
        [:div.glyphicon.glyphicon-triangle-bottom.arrow]
        [:div.follows
         (for [follow (sort-by :created-on (map #(follows/get :_id (:_id %)) fs))]
-          (build follow))]))]])
+          (common/entry :post follow))]))]])
