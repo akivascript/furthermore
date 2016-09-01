@@ -9,7 +9,7 @@
 
                  [org.webjars/bootstrap "4.0.0-alpha.2"]
                  [bouncer "1.0.0"]
-                 [buddy "1.0.0"]
+                 [buddy/buddy-auth "1.1.0"]
                  [clj-time "0.12.0"]
                  [cljs-ajax "0.5.8"]
                  [compojure "1.5.1"]

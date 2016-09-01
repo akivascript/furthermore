@@ -18,6 +18,10 @@
             [furthermore.views.error :as error])
   (:import [javax.servlet ServletContext]))
 
+(def rules
+  [{:uri "/admin"
+    :handler authenticated?}])
+
 (defn wrap-context [handler]
   (fn [request]
     (binding [*app-context*
@@ -81,6 +85,8 @@
 
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
+      (wrap-access-rules {:rules rules :on-error on-error})
+      (wrap-authentication (session-backend))
       wrap-auth
       wrap-webjars
       wrap-flash

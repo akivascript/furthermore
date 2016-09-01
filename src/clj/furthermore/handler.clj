@@ -5,6 +5,7 @@
 
             [furthermore.env :refer [defaults]]
             [furthermore.middleware :as middleware]
+            [furthermore.routes.admin :as admin]
             [furthermore.routes.contents :as contents]
             [furthermore.routes.history :as history]
             [furthermore.routes.home :as home]
@@ -27,6 +28,9 @@
 
 (def app-routes
   (routes
+   (-> #'admin/routes
+       (wrap-routes middleware/wrap-csrf)
+       (wrap-routes middleware/wrap-restricted))
    (wrap-route #'contents/routes)
    (wrap-route #'history/routes)
    (wrap-route #'home/routes)
