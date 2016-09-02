@@ -1,8 +1,33 @@
 (ns furthermore.routes.admin
-  (:require [compojure.core :refer [context defroutes GET]]
+  (:require [buddy.hashers :as hasher]
+            [compojure.core :refer [context defroutes GET]]
 
+            [furthermore.entities.authors :as authors]
             [furthermore.layout :as layout]
             [furthermore.views.admin :as admin]))
+
+(defn- authenticate
+  [user password]
+  (when-let [user (authors/get :user user)]
+    (when (hasher/check password (:password user))
+      user)))
+
+(defn- authenticated?
+  [{user :user :as req}]
+  (not (nil? user)))
+
+(defn- login
+  [{{user "user" password "password"} :form-params
+    session :session :as req}]
+  #_(if-let [user (authenticate user password)]
+    (assoc (redirect "/")
+           :session (assoc session :identity user))   ; enter admin session
+    ())) ; return to login page
+
+(defn- logout
+  [{session :session}]
+  #_(assoc (redirect "/admin")
+         :session (dissoc session :identity)))
 
 (defn build
   ([kind]

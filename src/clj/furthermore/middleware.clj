@@ -13,14 +13,11 @@
             [ring.middleware.webjars :refer [wrap-webjars]]
 
             [furthermore.config :refer [env]]
+            [furthermore.entities.authors :as authors]
             [furthermore.env :refer [defaults]]
             [furthermore.layout :refer [*app-context* *identity*]]
             [furthermore.views.error :as error])
   (:import [javax.servlet ServletContext]))
-
-(def rules
-  [{:uri "/admin"
-    :handler authenticated?}])
 
 (defn wrap-context [handler]
   (fn [request]
@@ -85,8 +82,6 @@
 
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
-      (wrap-access-rules {:rules rules :on-error on-error})
-      (wrap-authentication (session-backend))
       wrap-auth
       wrap-webjars
       wrap-flash

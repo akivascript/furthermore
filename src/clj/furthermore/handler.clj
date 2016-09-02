@@ -20,6 +20,12 @@
   :start ((or (:init defaults) identity))
   :stop  ((or (:stop defaults) identity)))
 
+(defn wrap-admin
+  [route]
+  (-> route
+      (wrap-routes middleware/wrap-csrf)
+      (wrap-routes middleware/wrap-restricted)))
+
 (defn wrap-route
   [route]
   (-> route
@@ -28,9 +34,7 @@
 
 (def app-routes
   (routes
-   (-> #'admin/routes
-       (wrap-routes middleware/wrap-csrf)
-       (wrap-routes middleware/wrap-restricted))
+   (wrap-admin #'admin/routes)
    (wrap-route #'contents/routes)
    (wrap-route #'history/routes)
    (wrap-route #'home/routes)
