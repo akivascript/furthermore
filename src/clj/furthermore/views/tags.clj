@@ -14,16 +14,16 @@
   "Return a list of HTML anchors. If a tag matches
   the tag-url, it is returned, too, but not as an anchor."
   [tag-url tag]
-  (let [tag-url' (util/url-name tag)]
-    (if (or (nil? tag-url)
-            (not= tag-url tag-url'))
-      (html (link-to (str "/tags/" tag-url') tag))
-      (smarten tag))))
+  (if (or (nil? tag-url)
+          (not= tag-url (:url tag)))
+    (html (link-to (str "/tags/" (:url tag)) (:title tag)))
+    (smarten (:title tag))))
 
 (defn- taglist
   "Returns a string of tag titles, the one matching tag-url unactionable."
   [tags tag-url]
-  (let [tags' (conj (sort-by :title tags) (tags/create "Untagged"))]
+  (println tag-url)
+  (let [tags' (conj (into [] (sort-by :title tags)) (tags/create "Untagged"))]
     (apply str (interpose " &bull; " (map (partial link tag-url) tags')))))
 
 (defn- refsmap
