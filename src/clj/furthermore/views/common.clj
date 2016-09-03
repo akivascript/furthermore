@@ -26,7 +26,7 @@
 (defmethod footer :post
   [page post]
   (let [topic (posts/topic post)
-        {:keys [date time]} (util/timestamp (:created-on post))]
+        {:keys [date time]} (util/timestamp (:created-on post) :long)]
     [:div.footer
      [:div.row
       [:div.col-xs-12.col-sm-6
@@ -48,7 +48,7 @@
 (defmethod footer :follow
   [page follow]
   (let [parent (follows/parent follow)
-        {:keys [date time]} (util/timestamp (:created-on follow))]
+        {:keys [date time]} (util/timestamp (:created-on follow) :long)]
     [:div.footer
      [:div.row
       [:div.col-xs-12.col-sm-6
