@@ -174,7 +174,7 @@
 (defn tweet
   [entity]
   (if (:tweet entity)
-    (let [url (str util/site-url
+    (let [url (str "http://whatever.akiva.wtf/"
                    (util/url-path entity)
                    (util/url-date entity))
           resp (twitter/update (or (:title entity)

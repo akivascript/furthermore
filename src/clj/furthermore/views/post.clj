@@ -8,10 +8,6 @@
             [furthermore.views.common :as common]
             [furthermore.views.util :as vutil]))
 
-(def build (comp (partial common/entry :post)
-                 (partial vutil/prepare-text md-to-html-string)
-                 (partial vutil/prepare-text smarten)))
-
 (defn content
   [post]
   [:div.container

@@ -6,8 +6,6 @@
             [clj-time.format :as tformat]
             [clj-time.local :as local]))
 
-(def site-url "http://localhost:3000")
-
 (declare url-name uuid uuid?)
 
 (defn excerpt
@@ -58,7 +56,7 @@
          ts (ctime/from-time-zone (coerce/from-date ts) (ctime/time-zone-for-offset +7))
          df (if terse?
               "yyyy-MM-dd"
-              "MMMM d, yyyy")
+              "MMM d, yyyy")
          tf (if terse?
               "HH:mm"
               "hh:mm a")]
