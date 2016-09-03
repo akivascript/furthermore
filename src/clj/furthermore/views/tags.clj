@@ -35,8 +35,11 @@
 (defn- entities
   "Return a list of entities from a coll of refs by calling function f."
   [f coll]
-  (if (seq coll)
-    (map (comp (partial f :_id) :_id) coll)
+  (println coll)
+  (cond
+    (seq coll) (map (comp (partial f :_id) :_id) coll)
+    (nil? coll) '()
+    :else
     coll))
 
 (defn- entries
