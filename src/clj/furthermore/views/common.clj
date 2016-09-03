@@ -15,8 +15,8 @@
 
 (defmethod footer :page
   [_ page]
-  (let [created-date (util/timestamp (:created-on page))
-        updated-date (util/timestamp (:last-updated page))]
+  (let [created-date (util/timestamp (:created-on page) :long)
+        updated-date (util/timestamp (:last-updated page) :long)]
     [:div.footer
      [:div.col-sx-12
       [:div.small.text-right.date
