@@ -48,17 +48,18 @@
 
 (defn timestamp
   ([ts]
-   (timestamp ts false))
-  ([timestamp terse?]
+   (timestamp ts nil))
+  ([timestamp style]
    (let [ts (if (= (type timestamp) java.util.Date)
               timestamp
               (joda-date->java-date timestamp))
          ts (ctime/from-time-zone (coerce/from-date ts) (ctime/time-zone-for-offset +7))
-         df (if terse?
-              "yyyy-MM-dd"
+         df (condp = style
+              :terse "yyyy-MM-dd"
+              :long "MMMM d, yyyy"
               "MMM d, yyyy")
-         tf (if terse?
-              "HH:mm"
+         tf (condp = style
+              :terse "HH:mm"
               "hh:mm a")]
      {:date (tformat/unparse (tformat/formatter df) ts)
       :time (tformat/unparse (tformat/formatter tf) ts)})))

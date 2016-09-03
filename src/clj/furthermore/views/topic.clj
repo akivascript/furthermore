@@ -28,7 +28,7 @@
 
 (defmethod render :topic
   [topic]
-  (let [{:keys [date time]} (util/timestamp (:created-on topic))]
+  (let [{:keys [date time]} (util/timestamp (:created-on topic) :long)]
     [:div.topic
      [:div.page-title (smarten (:title topic))]
      [:div.body (mmd->html (:body topic))]

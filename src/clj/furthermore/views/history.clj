@@ -66,7 +66,7 @@
 
 (defmethod render :author
   [event]
-  (let [{:keys [date time]} (util/timestamp (:date event) true)
+  (let [{:keys [date time]} (util/timestamp (:date event) :terse)
         author (authors/get :_id (get-in event [:entity :_id]))]
     [:div.container-fluid
      [:div.row.event
@@ -76,7 +76,7 @@
 
 (defmethod render :default
   [event]
-  (let [{:keys [date time]} (util/timestamp (:date event) true)]
+  (let [{:keys [date time]} (util/timestamp (:date event) :terse)]
     [:div.container-fluid
      [:div.row.event
       [:div.col-sm-2.action.small (describe event)]
