@@ -75,7 +75,7 @@
     [:div.row
      [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       [:div.entry.follow.narrow
-       (vutil/text follow)
+       [:div.body (vutil/mmd->html (:body follow))]
        (footer page follow)]]]
     [:div.row
      [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
@@ -97,6 +97,6 @@
        (if (= page :post)
          (for [p [(html [:div.title (smarten (:title post))])
                   (vutil/subtitle post)
-                  (html [:div.body (:body post)])]] p)
+                  (html [:div.body (vutil/mmd->html (:body post))])]] p)
          (for [p (vutil/content post)] p))]
       (footer page post)]]))

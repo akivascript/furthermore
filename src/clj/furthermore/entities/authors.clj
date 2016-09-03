@@ -1,5 +1,6 @@
 (ns furthermore.entities.authors
-  (:require [clj-time.local :as ltime]
+  (:require [buddy.hashers :as hash]
+            [clj-time.local :as ltime]
             [monger.util :as mutil]
 
             [furthermore.db.core :as db]
@@ -7,11 +8,13 @@
             [furthermore.util :as util]))
 
 (defrecord Author
-    [_id about created-on facebook kind last-updated log? name refs twitter url])
+    [_id about created-on facebook kind last-updated
+     log? name password refs twitter url user])
 
 (defn- author
   [params]
-  (let [{:keys [_id about created-on facebook kind last-updated log? name refs twitter url]
+  (let [{:keys [_id about created-on facebook kind last-updated
+                log? name password refs twitter url user]
          :or {_id (mutil/random-uuid)
               created-on (ltime/local-now)
               log? true
@@ -25,9 +28,11 @@
                   :last-updated last-updated
                   :log? log?
                   :name name
+                  :password password
                   :refs (->refs refs)
                   :twitter twitter
-                  :url url})))
+                  :url url
+                  :user user})))
 
 (defn author?
   "Returns true if x is an Author."
@@ -36,11 +41,12 @@
 
 (defn create
   "Returns an author entity."
-  [x]
-  (cond
-    (nil? x) nil
-    (map? x) (author x)
-    (string? x) (author {:name x})))
+  ([x]
+   (cond
+     (nil? x) nil
+     (map? x) (author x)))
+  ([name password user]
+   (create {:name name :password (hash/encrypt password) :user user})))
 
 (defn save
   "Saves an author entity to the database."
