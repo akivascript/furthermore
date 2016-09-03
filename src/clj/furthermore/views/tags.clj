@@ -1,4 +1,6 @@
 (ns furthermore.views.tags
+  "This namespace provides a view of posts and follow-ups grouped
+  by their tags (or untagged if, uh, untagged)."
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
             [typographer.core :refer [smarten]]
@@ -20,9 +22,8 @@
     (smarten (:title tag))))
 
 (defn- taglist
-  "Returns a string of tag titles, the one matching tag-url unactionable."
+  "Returns a string of tag titles with 'Untagged' added to the end."
   [tags tag-url]
-  (println tag-url)
   (let [tags' (conj (into [] (sort-by :title tags)) (tags/create "Untagged"))]
     (apply str (interpose " &bull; " (map (partial link tag-url) tags')))))
 
@@ -34,9 +35,9 @@
 (defn- entities
   "Return a list of entities from a coll of refs by calling function f."
   [f coll]
-  (if (empty? coll)
-    '()
-    (map (comp (partial f :_id) :_id) coll)))
+  (if (seq coll)
+    (map (comp (partial f :_id) :_id) coll)
+    coll))
 
 (defn- entries
   "Given a tag's url name, return a list of that tag's relevant entities."
