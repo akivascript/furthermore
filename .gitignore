@@ -9,7 +9,6 @@ tmp/
 *.md
 profiles.clj
 /log
-/content
 /.sass-cache
 /assets/images
 /assets/content
