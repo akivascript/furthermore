@@ -13,6 +13,7 @@
             [ring.middleware.webjars :refer [wrap-webjars]]
 
             [furthermore.config :refer [env]]
+            [furthermore.entities.authors :as authors]
             [furthermore.env :refer [defaults]]
             [furthermore.layout :refer [*app-context* *identity*]]
             [furthermore.views.error :as error])

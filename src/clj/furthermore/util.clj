@@ -6,8 +6,6 @@
             [clj-time.format :as tformat]
             [clj-time.local :as local]))
 
-(def site-url "http://localhost:3000")
-
 (declare url-name uuid uuid?)
 
 (defn excerpt
@@ -50,17 +48,18 @@
 
 (defn timestamp
   ([ts]
-   (timestamp ts false))
-  ([timestamp terse?]
+   (timestamp ts nil))
+  ([timestamp style]
    (let [ts (if (= (type timestamp) java.util.Date)
               timestamp
               (joda-date->java-date timestamp))
          ts (ctime/from-time-zone (coerce/from-date ts) (ctime/time-zone-for-offset +7))
-         df (if terse?
-              "yyyy-MM-dd"
-              "MMMM d, yyyy")
-         tf (if terse?
-              "HH:mm"
+         df (condp = style
+              :terse "yyyy-MM-dd"
+              :long "MMMM d, yyyy"
+              "MMM d, yyyy")
+         tf (condp = style
+              :terse "HH:mm"
               "hh:mm a")]
      {:date (tformat/unparse (tformat/formatter df) ts)
       :time (tformat/unparse (tformat/formatter tf) ts)})))

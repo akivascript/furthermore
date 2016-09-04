@@ -15,8 +15,8 @@
 
 (defmethod footer :page
   [_ page]
-  (let [created-date (util/timestamp (:created-on page))
-        updated-date (util/timestamp (:last-updated page))]
+  (let [created-date (util/timestamp (:created-on page) :long)
+        updated-date (util/timestamp (:last-updated page) :long)]
     [:div.footer
      [:div.col-sx-12
       [:div.small.text-right.date
@@ -26,7 +26,7 @@
 (defmethod footer :post
   [page post]
   (let [topic (posts/topic post)
-        {:keys [date time]} (util/timestamp (:created-on post))]
+        {:keys [date time]} (util/timestamp (:created-on post) :long)]
     [:div.footer
      [:div.row
       [:div.col-xs-12.col-sm-6
@@ -48,7 +48,7 @@
 (defmethod footer :follow
   [page follow]
   (let [parent (follows/parent follow)
-        {:keys [date time]} (util/timestamp (:created-on follow))]
+        {:keys [date time]} (util/timestamp (:created-on follow) :long)]
     [:div.footer
      [:div.row
       [:div.col-xs-12.col-sm-6
@@ -75,7 +75,7 @@
     [:div.row
      [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       [:div.entry.follow.narrow
-       (vutil/text follow)
+       [:div.body (vutil/mmd->html (:body follow))]
        (footer page follow)]]]
     [:div.row
      [:div.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
@@ -97,6 +97,6 @@
        (if (= page :post)
          (for [p [(html [:div.title (smarten (:title post))])
                   (vutil/subtitle post)
-                  (html [:div.body (:body post)])]] p)
+                  (html [:div.body (vutil/mmd->html (:body post))])]] p)
          (for [p (vutil/content post)] p))]
       (footer page post)]]))

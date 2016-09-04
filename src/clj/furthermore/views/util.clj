@@ -36,12 +36,6 @@
     text
     (:out (shell/sh "kramdown" :in text))))
 
-(defn subtitle
-  [post]
-  (when-let [subtitle (:subtitle post)]
-    [:div.subtitle
-     (smarten subtitle)]))
-
 (defn tag-icon
   [c]
   (cond
@@ -55,6 +49,12 @@
                                      (str "/tags/" (:url %))
                                      (:title %)))
                                   (sort (map tags/get tags))))))
+
+(defn subtitle
+  [post]
+  (when-let [subtitle (:subtitle post)]
+    [:div.subtitle
+     (smarten subtitle)]))
 
 (defn tags
   [post]

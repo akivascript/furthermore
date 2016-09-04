@@ -1,4 +1,6 @@
 (ns furthermore.views.tags
+  "This namespace provides a view of posts and follow-ups grouped
+  by their tags (or untagged if, uh, untagged)."
   (:require [hiccup.core :refer :all]
             [hiccup.element :refer [link-to]]
             [typographer.core :refer [smarten]]
@@ -14,18 +16,16 @@
   "Return a list of HTML anchors. If a tag matches
   the tag-url, it is returned, too, but not as an anchor."
   [tag-url tag]
-  (let [tag-url' (util/url-name tag)]
-    (if (or (nil? tag-url)
-            (not= tag-url tag-url'))
-      (html (link-to (str "/tags/" tag-url') tag))
-      tag)))
+  (if (or (nil? tag-url)
+          (not= tag-url (:url tag)))
+    (html (link-to (str "/tags/" (:url tag)) (:title tag)))
+    (smarten (:title tag))))
 
 (defn- taglist
-  "Returns a string of tag titles, the one matching tag-url unactionable."
+  "Returns a string of tag titles with 'Untagged' added to the end."
   [tags tag-url]
-  (let [tags' (sort-by :title (conj tags (tags/create "Untagged")))]
-    (apply str (interpose " &bull; " (map
-                                      (comp (partial link tag-url) prepare) tags')))))
+  (let [tags' (conj (into [] (sort-by :title tags)) (tags/create "Untagged"))]
+    (apply str (interpose " &bull; " (map (partial link tag-url) tags')))))
 
 (defn- refsmap
   "Given a tag's url name, return all of that tag's references."
@@ -35,9 +35,12 @@
 (defn- entities
   "Return a list of entities from a coll of refs by calling function f."
   [f coll]
-  (if (empty? coll)
-    '()
-    (map (comp (partial f :_id) :_id) coll)))
+  (println coll)
+  (cond
+    (seq coll) (map (comp (partial f :_id) :_id) coll)
+    (nil? coll) '()
+    :else
+    coll))
 
 (defn- entries
   "Given a tag's url name, return a list of that tag's relevant entities."
