@@ -13,9 +13,10 @@
   [:div.container
    [:div#banner.page-header
     (common/entry :post post)
-    (when-let [fs (filter #(= (:kind %) :follow) (:refs post))]
-      (html
-       [:div.glyphicon.glyphicon-triangle-bottom.arrow]
-       [:div.follows
-        (for [follow (sort-by :created-on (map #(follows/get :_id (:_id %)) fs))]
-          (common/entry :post follow))]))]])
+    (let [fs (filter #(= (:kind %) :follow) (:refs post))]
+      (when (seq fs)
+        (html
+         [:div.glyphicon.glyphicon-triangle-bottom.arrow]
+         [:div.follows
+          (for [follow (sort-by :created-on (map #(follows/get :_id (:_id %)) fs))]
+            (common/entry :post follow))])))]])

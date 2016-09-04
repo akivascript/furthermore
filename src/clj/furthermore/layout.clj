@@ -46,14 +46,14 @@
        "Toast goes in the toaster!"]
       [:div.hidden-xs.col-sm-6.text-right.small
        "&copy; 2015-2016 Whatever, Akiva"[:br]
-       "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"]
+       "Powered by " [:a {:href "https://github.com/akivascript/furthermore"} "Furthermore"]
        [:span.small " (v0.8.0&beta;)"]
        [:br]
        "Clojure and ClojureScript are a-okay!"]
       [:div.visible-xs-block.hidden-sm.hidden-lg.text-center.small
        :style "padding-top: 10px;"
        "&copy; 2015-2016 Whatever, Akiva"[:br]
-       "Powered by " [:a {:href "https://github.com/akivaschoen/furthermore"} "Furthermore"]
+       "Powered by " [:a {:href "https://github.com/akivascript/furthermore"} "Furthermore"]
        [:span.small " (v0.8.0&beta;)"]
        [:br]
        "Clojure and ClojureScript are a-okay!"]
