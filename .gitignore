@@ -16,3 +16,4 @@ profiles.clj
 /resources/public
 screen.css
 screen.css.map
+watch-scss
