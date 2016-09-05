@@ -1,4 +1,4 @@
-(defproject furthermore "0.7.5-SNAPSHOT"
+(defproject furthermore "0.8.0"
   :description "A topical liveblogging platform written in Clojure/ClojureScript."
   :url "https://github.com/akivaschoen/furthermore"
   :license {:name "Eclipse Public License"
