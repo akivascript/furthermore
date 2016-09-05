@@ -18,6 +18,11 @@
           text (cstr/replace text #"\W+$" "")]
       (str text "…"))))
 
+(defn filename
+  "Returns the filename portion of a url/path."
+  [path]
+  (re-find #"[^\/]+$" path))
+
 (defn joda-date->java-date
   "Returns a java.util.Date from a joda-date."
   [joda-date]
