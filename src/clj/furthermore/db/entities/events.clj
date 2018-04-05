@@ -23,7 +23,7 @@
                            (->ref parent))
                  :title (or (:name entity)
                             (:title entity)
-                            (subs (:body entity) 0 99)
+                            (:body entity)
                             "Untitled")
                  :topic (when-let [topic (:topic entity)]
                           (->ref topic))

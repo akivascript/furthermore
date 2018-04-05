@@ -48,7 +48,7 @@
                                     (link-to
                                      (str "/tags/" (:url %))
                                      (:title %)))
-                                  (sort (map tags/get tags))))))
+                                  (sort-by :title (map tags/get tags))))))
 
 (defn subtitle
   [post]
